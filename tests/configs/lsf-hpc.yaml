@@ -1,0 +1,9 @@
+executors:
+  lsf-hpc:
+    ssh:
+      host: test@192.168.1.10
+      gateway:
+        host: test@192.168.2.10:2222
+    queue_system:
+      lsf: {}
+    work_dir: /home/test/workspace

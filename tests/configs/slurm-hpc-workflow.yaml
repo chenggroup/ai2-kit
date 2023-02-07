@@ -1,0 +1,14 @@
+executors:
+  slurm-hpc:
+    workflow:
+      deepmd:
+        template:
+          header: |
+            #SBATCH -N 1
+            #SBATCH --ntasks-per-node=4
+            #SBATCH -t 1:0:0
+            #SBATCH --job-name=litrain
+            #SBATCH --partition=GPU_s_cg
+            #SBATCH --gres=gpu:1
+          setup: |
+            conda activate deepmd-gpu

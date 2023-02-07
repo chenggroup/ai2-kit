@@ -1,0 +1,45 @@
+artifacts:
+  train/h2o:
+    path: data/train/h2o
+
+  train/h3o:
+    path: data/train/h3o
+
+  train/oh:
+    path: data/train/oh
+
+  explore/h2o_64:
+    path: data/explore/h2o_64
+    attrs:
+      uks: false
+      charge: 0
+
+  explore/h3o_64:
+    path: data/explore/h3o_64
+    attrs:
+      uks: false
+      charge: 1
+
+  explore/oh_64:
+    path: data/explore/oh_64
+    attrs:
+      uks: false
+      charge: -1
+
+  explore/h2o_128:
+    path: data/explore/h2o_128
+    attrs:
+      uks: false
+      charge: 0
+
+  explore/h3o_128:
+    path: data/explore/h3o_128
+    attrs:
+      uks: false
+      charge: 1
+
+  explore/oh_128:
+    path: data/explore/oh_128
+    attrs:
+      uks: false
+      charge: -1

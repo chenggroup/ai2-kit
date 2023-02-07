@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "ai2-kit"
+version = "0.1.0"
+description = ""
+authors = ["weihong.xu <xuweihong.cn@gmail.com>"]
+readme = "README.md"
+packages = [{include = "ai2_kit"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fire = "^0.4.0"
+fabric = "^2.7.1"
+pydantic = "^1.10.2"
+invoke = "^1.7.3"
+ruamel-yaml = "^0.17.21"
+cloudpickle = "^2.2.0"
+shortuuid = "^1.0.11"
+dpdata = "^0.2.13"
+pandas = "^1.5.3"
+cp2k-input-tools = "^0.8.2"
+
+
+[[tool.poetry.source]]
+name = "ustc"
+url = "https://pypi.mirrors.ustc.edu.cn/simple/"
+default = true
+secondary = false
+
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.0.0"
+pytest = "^7.2.0"
+pylint = "^2.15.10"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+ai2-kit= "ai2_kit.main:main"

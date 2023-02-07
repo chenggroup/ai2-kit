@@ -1,0 +1,137 @@
+executors:
+  lsf-hpc:
+    ssh:
+      host: test@192.168.1.10
+      gateway:
+        host: test@192.168.2.10:2222
+    queue_system:
+      lsf: {}
+    work_dir: /home/test/workspace
+
+    workflow:
+      deepmd:
+        template:
+          header: |
+            #BSUB -L /bin/bash
+            #BSUB -J "ab"
+            #BSUB -n 4
+            #BSUB -R "span[ptile=4]"
+            #BSUB -gpu "num=1"
+            #BSUB -q "gpu3"
+          setup: |
+            module load deepmd/2.0-cuda11.3
+
+  slurm-hpc:
+    ssh:
+      host: test@192.168.3.10
+    queue_system:
+      slurm: {}
+    work_dir: /home/test/workspace
+    workflow:
+      deepmd:
+        template:
+          header: |
+            #SBATCH -N 1
+            #SBATCH --ntasks-per-node=4
+            #SBATCH -t 1:0:0
+            #SBATCH --job-name=litrain
+            #SBATCH --partition=GPU_s_cg
+            #SBATCH --gres=gpu:1
+          setup: |
+            conda activate deepmd-gpu
+
+artifacts:
+  train/h2o:
+    path: data/train/h2o
+
+  train/h3o:
+    path: data/train/h3o
+
+  train/oh:
+    path: data/train/oh
+
+  explore/h2o_64:
+    path: data/explore/h2o_64
+    attrs:
+      uks: false
+      charge: 0
+
+  explore/h3o_64:
+    path: data/explore/h3o_64
+    attrs:
+      uks: false
+      charge: 1
+
+  explore/oh_64:
+    path: data/explore/oh_64
+    attrs:
+      uks: false
+      charge: -1
+
+  explore/h2o_128:
+    path: data/explore/h2o_128
+    attrs:
+      uks: false
+      charge: 0
+
+  explore/h3o_128:
+    path: data/explore/h3o_128
+    attrs:
+      uks: false
+      charge: 1
+
+  explore/oh_128:
+    path: data/explore/oh_128
+    attrs:
+      uks: false
+      charge: -1
+
+workflow:
+
+  deepmd:
+    model_num: 4
+    systems: [train/h2o, train/h3o, train/oh]
+
+    input_template:
+      model:
+        descriptor:
+          type: se_a
+          sel: [50, 100]
+          rcut_smth: 0.5
+          rcut: 6.0
+          neuron: [25, 50, 100]
+          resnet_dt: false
+          axis_neuron: 16
+          seed: 1
+        fitting_net:
+          neuron: [240, 240, 240]
+          resnet_dt: true
+          seed: 1
+      learning_rate:
+        type: exp
+        start_lr: 0.001
+        decay_steps: 2000
+        decay_rate: 0.95
+      loss:
+        start_pref_e: 0.02
+        limit_pref_e: 1
+        start_pref_f: 1000
+        limit_pref_f: 1
+        start_pref_v: 0
+        limit_pref_v: 0
+      training:
+        stop_batch: 200000
+        batch_size: 1
+        seed: 1
+        disp_freq: 100
+        numb_test: 10
+        save_freq: 1000
+        disp_training: true
+        time_training: true
+        profiling: false
+
+        disp_file: lcurve.out
+        save_ckpt: model.ckpt
+        systems: []
+        set_prefix: set
+        profiling_file: timeline.json

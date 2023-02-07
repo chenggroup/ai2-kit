@@ -1,0 +1,16 @@
+executors:
+  lsf-hpc:
+    workflow:
+      deepmd:
+        template:
+          header: |
+            #BSUB -L /bin/bash
+            #BSUB -J "ab"
+            #BSUB -o "./logs/%J.stdout"
+            #BSUB -e "./logs/%J.stderr"
+            #BSUB -n 4
+            #BSUB -R "span[ptile=4]"
+            #BSUB -gpu "num=1"
+            #BSUB -q "gpu3"
+          setup: |
+            module load deepmd/2.0-cuda11.3

@@ -1,0 +1,7 @@
+executors:
+  slurm-hpc:
+    ssh:
+      host: test@192.168.3.10
+    queue_system:
+      slurm: {}
+    work_dir: /home/test/workspace

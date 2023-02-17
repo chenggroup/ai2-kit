@@ -1,7 +1,7 @@
 from ai2_kit.core.executor import Executor
 from ai2_kit.core.artifact import Artifact
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.job import DummyFuture
+from ai2_kit.core.future import DummyFuture
 
 from typing import List
 from io import StringIO

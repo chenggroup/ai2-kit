@@ -2,7 +2,8 @@ from ai2_kit.core.artifact import Artifact
 from ai2_kit.core.script import BashTemplate
 from ai2_kit.core.executor import Executor
 from ai2_kit.core.script import BashScript, BashStep
-from ai2_kit.core.job import JobFuture, GatherJobsFuture, retry_fn, map_future
+from ai2_kit.core.job import JobFuture, GatherJobsFuture, retry_fn
+from ai2_kit.core.future import map_future
 from ai2_kit.core.log import get_logger
 
 from pydantic import BaseModel

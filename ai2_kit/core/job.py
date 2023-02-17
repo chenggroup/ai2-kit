@@ -1,7 +1,8 @@
-from typing import List, Callable, TypeVar, Generic, Optional
+from typing import List, Callable, TypeVar, Optional
 from enum import Enum
 from abc import abstractmethod
 import time
+from .future import IFuture
 
 # Copy from parsl
 # TODO:
@@ -30,32 +31,6 @@ class JobState(bytes, Enum):
 
 class TimeoutError(RuntimeError):
     ...
-
-T = TypeVar('T')
-
-# TODO: refactor design of IFuture for more general use case
-# mimic the API of concurrent.future.Future
-class IFuture(Generic[T]):
-
-    @abstractmethod
-    def done(self) -> bool:
-        pass
-
-    @abstractmethod
-    def result(self, timeout: Optional[float] = None) -> T:
-        pass
-
-class DummyFuture(IFuture[T]):
-
-    def __init__(self, value: T) -> None:
-        self.value = value
-
-    def done(self):
-        return True
-
-    def result(self, timeout: Optional[float] = None) -> T:
-        return self.value
-
 
 class JobFuture(IFuture[JobState]):
 
@@ -139,24 +114,3 @@ class GatherJobsFuture(IFuture[List[JobState]]):
                 time.sleep(self._polling_interval)
         else:
             raise TimeoutError('Wait for jobs timeout!')
-
-
-NT = TypeVar('NT')
-
-MapFn = Callable[[T], NT]
-
-class MapFuture(IFuture[NT]):
-
-    def __init__(self, future: IFuture[T], map_fn: MapFn):
-        self._future = future
-        self._map_fn = map_fn
-
-    def done(self):
-        return self._future.done()
-
-    def result(self, timeout=None) -> NT:
-        result = self._future.result(timeout)
-        return self._map_fn(result)
-
-def map_future(future: IFuture, value: T):
-    return MapFuture[T](future, lambda _ : value)

@@ -2,7 +2,8 @@ from ai2_kit.core.script import BashTemplate, BashStep, BashScript
 from ai2_kit.core.artifact import Artifact
 from ai2_kit.core.executor import Executor
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.job import GatherJobsFuture, retry_fn, map_future
+from ai2_kit.core.job import GatherJobsFuture, retry_fn
+from ai2_kit.core.future import map_future
 
 from typing import List, Literal, Optional
 from pydantic import BaseModel
@@ -179,7 +180,7 @@ def general_lammps(input: GeneralLammpsInput, ctx: GeneralLammpsContext):
     # 4. build scripts and submit
     lammps_cmd = ctx.config.lammps_cmd
     base_cmd = f'{lammps_cmd} -i {lammps_input_file_name}'
-    cmd = f'''if [ -f md.restart.10000 ]; then {base_cmd} -v restart 1; else {base_cmd} -v restart 0; fi'''
+    cmd = f'''if [ -f md.restart.* ]; then {base_cmd} -v restart 1; else {base_cmd} -v restart 0; fi'''
 
     # group tasks by concurrency
     concurrency = ctx.config.concurrency

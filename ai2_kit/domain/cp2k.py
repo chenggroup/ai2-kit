@@ -1,7 +1,9 @@
 from ai2_kit.core.executor import Executor
 from ai2_kit.core.artifact import Artifact
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
-from ai2_kit.core.job import GatherJobsFuture, MapFuture, retry_fn, DummyFuture, IFuture
+from ai2_kit.core.job import GatherJobsFuture, retry_fn
+
+from ai2_kit.core.future import MapFuture, DummyFuture, IFuture
 
 from ai2_kit.core.util import merge_dict
 from ai2_kit.core.log import get_logger

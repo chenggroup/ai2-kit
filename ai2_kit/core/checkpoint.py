@@ -3,9 +3,12 @@ from threading import Lock
 import functools
 import cloudpickle
 import os
+import types
+
+from .future import IFuture
 
 _lock = Lock()
-_checkpoint_path: str = None
+_checkpoint_file: str = None
 _checkpoint_data: dict = None
 
 
@@ -20,26 +23,21 @@ KeyFn = Callable[[FnInfo], str]
 EMPTY = object()
 
 
-def set_checkpoint_path(path: str):
-    global _checkpoint_path
-    if _checkpoint_path is not None:
+def set_checkpoint_file(path: str):
+    global _checkpoint_file
+    if _checkpoint_file is not None:
         raise RuntimeError(
-            "checkpoint path has been set to {}".format(_checkpoint_path))
-    _checkpoint_path = path
+            "checkpoint path has been set to {}".format(_checkpoint_file))
+    _checkpoint_file = path
 
 
-# TODO: support Future/IFuture !!!  Hint: use object proxy pattern
-# TODO: refactor after IFuture refactor is done
 def checkpoint(key_fn: Union[str, KeyFn], disable = False):
     """
     Checkpoint for function.
 
-    This checkpoint implementation doesn't support multiprocess.
+    Note: This checkpoint implementation doesn't support multiprocess.
     To support multiple process we need to have a dedicated background process to read/write checkpoint,
     which will require message queue (e.g. nanomsg or nng) to implement it.
-
-    I don't think we need to support multiprocess though as there is no use case for now.
-    (Actually there are rare use cases for even multithread.)
 
     Example:
 
@@ -63,7 +61,7 @@ def checkpoint(key_fn: Union[str, KeyFn], disable = False):
                 )
                 key = key_fn(fn_info)
 
-            if disable or _checkpoint_path is None:
+            if disable or _checkpoint_file is None:
                 return fn(*args, **kwargs)
 
             ret = _get_checkpoint(key)
@@ -71,7 +69,16 @@ def checkpoint(key_fn: Union[str, KeyFn], disable = False):
                 return ret
 
             ret = fn(*args, **kwargs)
-            _set_checkpoint(key, ret)
+
+            if isinstance(ret, IFuture):
+                result_fn = ret.result
+                def _wrap_fn(self, timeout=None):
+                    _ret = result_fn(timeout)
+                    _set_checkpoint(key, ret)
+                    return _ret
+                ret.result = types.MethodType(_wrap_fn, ret)
+            else:
+                _set_checkpoint(key, ret)
 
             return ret
 
@@ -84,9 +91,9 @@ def _load_checkpoint():
     global _checkpoint_data
     if _checkpoint_data is not None:
         return
-    assert _checkpoint_path is not None, '_checkpoint_path should not be None!'
-    if os.path.exists(_checkpoint_path):
-        with open(_checkpoint_path, 'rb') as f:
+    assert _checkpoint_file is not None, '_checkpoint_path should not be None!'
+    if os.path.exists(_checkpoint_file):
+        with open(_checkpoint_file, 'rb') as f:
             _checkpoint_data = cloudpickle.load(f)
     else:
         _checkpoint_data = dict()
@@ -94,7 +101,7 @@ def _load_checkpoint():
 
 def _dump_checkpoint():
     assert _checkpoint_data is not None, '_checkpoint_data should not be None!'
-    with open(_checkpoint_path, 'wb') as f:
+    with open(_checkpoint_file, 'wb') as f:
         cloudpickle.dump(_checkpoint_data, f)
 
 

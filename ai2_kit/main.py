@@ -1,12 +1,7 @@
 from fire import Fire
 from ai2_kit.workflow.cll_mlp import cll_train_mlp
-from ai2_kit.workflow.fep import fep_train_mlp
-from collections import UserDict
+from ai2_kit.workflow.ec_fep import fep_train_mlp
 
-
-
-# a placeholder to cheating Fire
-nil_fn = lambda: None
 
 class Group:
 
@@ -15,11 +10,9 @@ class Group:
         self.__dict__.update(items)
 
 
-toolkit = Group({
-    'ec': Group({
-        'fep': Group({
-            'train-mlp': fep_train_mlp,
-        }),
+kit = Group({
+    'ec-fep': Group({
+        'train-mlp': fep_train_mlp,
     }),
     'cll-workflow': Group({
         'train-mlp': cll_train_mlp,
@@ -28,9 +21,8 @@ toolkit = Group({
 
 
 
-
 def main():
-    Fire(toolkit)
+    Fire(kit)
 
 if __name__ == '__main__':
     main()

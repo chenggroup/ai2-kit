@@ -1,15 +1,20 @@
 from .queue_system import QueueSystemConfig, BaseQueueSystem, Slrum, Lsf
-from .job import JobState
+from .job import JobFuture
 from .artifact import Artifact
 from .connector import SshConfig, BaseConnector, SshConnector, LocalConnector
+from .util import s_uuid
+from .log import get_logger
+
+logger = get_logger(__name__)
 
 from pydantic import BaseModel
-from typing import Optional, Dict, List, TypeVar, Callable
+from typing import Optional, Dict, List, TypeVar, Callable, Mapping
 from abc import ABC, abstractmethod
 from invoke import Result
 import os
 import shlex
 import base64
+import bz2
 import cloudpickle
 
 
@@ -19,11 +24,19 @@ class BaseExecutorConfig(BaseModel):
     work_dir: str
     python_cmd: str = 'python'
 
+ExecutorMap = Mapping[str, BaseExecutorConfig]
+
 FnType = TypeVar('FnType', bound=Callable)
 
 class Executor(ABC):
 
     name: str
+    work_dir: str
+    tmp_dir: str
+    python_cmd: str
+
+    def init(self):
+        ...
 
     @abstractmethod
     def mkdir(self, path: str):
@@ -35,10 +48,6 @@ class Executor(ABC):
 
     @abstractmethod
     def run_python_fn(self, fn: FnType, python_cmd=None) -> FnType:
-        ...
-
-    @abstractmethod
-    def get_full_path(self, path: str) -> str:
         ...
 
     @abstractmethod
@@ -58,7 +67,7 @@ class Executor(ABC):
         ...
 
     @abstractmethod
-    def submit(self, script: str, **kwargs) -> JobState:
+    def submit(self, script: str, **kwargs) -> JobFuture:
         ...
 
     @abstractmethod
@@ -70,13 +79,15 @@ class Executor(ABC):
         ...
 
     @abstractmethod
-    def sym_link(self, from_artifact: Artifact, to_dir: str) -> Artifact:
+    def resolve_artifact(self, artifact: Artifact) -> List[str]:
         ...
 
-    @abstractmethod
-    def unpack_artifact(self, artifact: Artifact) -> List[str]:
-        ...
-
+    def setup_workspace(self, workspace_dir: str, dirs: List[str]):
+        paths = [os.path.join(workspace_dir, dir) for dir in dirs]
+        for path in paths :
+            self.mkdir(path)
+            logger.info('create path: %s', path)
+        return paths
 
 class HpcExecutor(Executor):
 
@@ -108,9 +119,11 @@ class HpcExecutor(Executor):
         self.queue_system = queue_system
         self.work_dir = work_dir
         self.python_cmd = python_cmd
+        self.tmp_dir = os.path.join(self.work_dir, '.tmp')  # TODO: make it configurable
 
-    def get_full_path(self, path: str):
-        return os.path.join(self.work_dir, path)
+    def init(self):
+        self.mkdir(self.work_dir)
+        self.mkdir(self.tmp_dir)
 
     def mkdir(self, path: str):
         return self.connector.run('mkdir -p {}'.format(shlex.quote(path)))
@@ -128,26 +141,38 @@ class HpcExecutor(Executor):
     def run(self, script: str, **kwargs):
         return self.connector.run(script, **kwargs)
 
-    def run_python_script(self, script: str, python_cmd=None):
+    def run_python_script(self, script: str, python_cmd=None, cwd=None):
         if python_cmd is None:
             python_cmd = self.python_cmd
-        return self.connector.run('{} -c {}'.format(python_cmd, shlex.quote(script)))
+        if cwd is None:
+            cwd = self.work_dir
+        cd_cwd = f'cd {shlex.quote(cwd)}  &&'
+        script_len = len(script)
+        logger.info('the size of generated python script is %s', script_len)
+        if script_len < 100_000: # ssh connection will be closed of the size of command is too large
+            return self.connector.run(f'{cd_cwd} {python_cmd} -c {shlex.quote(script)}', hide=True)
+        else:
+            script_path = os.path.join(self.tmp_dir, f'run_python_script_{s_uuid()}.py')
+            self.dump_text(script, script_path)
+            ret = self.connector.run(f'{cd_cwd} {python_cmd} {shlex.quote(script_path)}', hide=True)
+            self.connector.run(f'rm {shlex.quote(script_path)}')
+            return ret
 
-    def run_python_fn(self, fn: FnType, python_cmd=None) -> FnType:
+    def run_python_fn(self, fn: FnType, python_cmd=None, cwd=None) -> FnType:
         def remote_fn(*args, **kwargs):
             script = fn_to_script(lambda: fn(*args, **kwargs), delimiter='@')
-            ret = self.run_python_script(script=script, python_cmd=python_cmd)
+            ret = self.run_python_script(script=script, python_cmd=python_cmd, cwd=None)
             _, r = ret.stdout.rsplit('@')
-            return cloudpickle.loads(base64.b64decode(r))
+            return cloudpickle.loads(bz2.decompress(base64.b64decode(r)))
         return remote_fn  # type: ignore
 
     def submit(self, script: str, cwd: str, **kwargs):
         return self.queue_system.submit(script, cwd=cwd, **kwargs)
 
-    def unpack_artifact(self, artifact: Artifact) -> List[str]:
-        if artifact.glob is None:
+    def resolve_artifact(self, artifact: Artifact) -> List[str]:
+        if artifact.includes is None:
             return [artifact.url]
-        pattern = os.path.join(artifact.url, artifact.glob)
+        pattern = os.path.join(artifact.url, artifact.includes)
         return self.glob(pattern)
 
     def upload(self, from_artifact: Artifact, to_dir: str) -> Artifact:
@@ -165,14 +190,6 @@ class HpcExecutor(Executor):
             attrs=from_artifact.attrs,
         ) # type: ignore
 
-    def sym_link(self, from_artifact: Artifact, to_dir: str) -> Artifact:
-        dest_path = self.connector.sym_link(from_artifact.url, to_dir)
-        return Artifact(
-            executor=from_artifact.executor,
-            url=dest_path,
-            attrs=from_artifact.attrs,
-        ) # type: ignore
-
 
 def create_executor(config: BaseExecutorConfig, name: str) -> Executor:
     if config.queue_system is not None:
@@ -181,7 +198,7 @@ def create_executor(config: BaseExecutorConfig, name: str) -> Executor:
 
 
 class ExecutorManager:
-    def __init__(self, executor_configs: Dict[str, BaseExecutorConfig]):
+    def __init__(self, executor_configs: Mapping[str, BaseExecutorConfig]):
         self._executor_configs = executor_configs
         self._executors: Dict[str, Executor] = dict()
 
@@ -199,10 +216,12 @@ class ExecutorManager:
 
 
 def fn_to_script(fn: Callable, delimiter='@'):
-    dumped_fn = base64.b64encode(cloudpickle.dumps(fn, protocol=cloudpickle.DEFAULT_PROTOCOL))
+    dumped_fn = base64.b64encode(bz2.compress(cloudpickle.dumps(fn, protocol=cloudpickle.DEFAULT_PROTOCOL), 5))
     script = [
-        f'''import base64,cloudpickle as cp''',
-        f'''r=cp.loads(base64.b64decode({repr(dumped_fn)}))()''',
-        f'''print({repr(delimiter)}+base64.b64encode(cp.dumps(r, protocol=cp.DEFAULT_PROTOCOL)).decode('ascii'))''',
+        f'''import base64,bz2,sys,cloudpickle as cp''',
+        f'''r=cp.loads(bz2.decompress(base64.b64decode({repr(dumped_fn)})))()''',
+        f'''sys.stdout.flush()''',  # avoid overlapping
+        f'''print({repr(delimiter)}+base64.b64encode(bz2.compress(cp.dumps(r, protocol=cp.DEFAULT_PROTOCOL),5)).decode('ascii'))''',
+        f'''sys.stdout.flush()''',  # ensure all output is printed
     ]
     return ';'.join(script)

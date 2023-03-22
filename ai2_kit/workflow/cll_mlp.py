@@ -1,17 +1,24 @@
-from ai2_kit.core.executor import BaseExecutorConfig, ExecutorManager
+from ai2_kit.core.executor import BaseExecutorConfig
 from ai2_kit.core.artifact import ArtifactMap
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.util import load_yaml_files
-from ai2_kit.domain import deepmd
-from ai2_kit.domain import lammps
-from ai2_kit.domain import selector
-from ai2_kit.domain import cp2k
-from ai2_kit.domain import constant as const
+from ai2_kit.core.util import load_yaml_files, merge_dict
+from ai2_kit.core.resource_manager import ResourceManager
+from ai2_kit.domain import (
+    deepmd,
+    lammps,
+    selector,
+    cp2k,
+    constant as const,
+    updater,
+    cll,
+)
 
 from pydantic import BaseModel
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from fire import Fire
 
+import itertools
+import copy
 import os
 
 logger = get_logger(__name__)
@@ -20,13 +27,13 @@ logger = get_logger(__name__)
 class CllWorkflowExecutorConfig(BaseExecutorConfig):
     class Context(BaseModel):
         class Train(BaseModel):
-            deepmd: deepmd.GeneralDeepmdContextConfig
+            deepmd: deepmd.GenericDeepmdContextConfig
 
         class Explore(BaseModel):
-            lammps: lammps.GeneralLammpsContextConfig
+            lammps: lammps.GenericLammpsContextConfig
 
         class Label(BaseModel):
-            cp2k: cp2k.GeneralCp2kContextConfig
+            cp2k: cp2k.GenericCp2kContextConfig
 
         train: Train
         explore: Explore
@@ -35,34 +42,39 @@ class CllWorkflowExecutorConfig(BaseExecutorConfig):
     context: Context
 
 
+class WorkflowConfig(BaseModel):
+    class General(BaseModel):
+        type_map: List[str]
+        mass_map: List[float]
+        max_iters: int = 10
+
+    class Label(BaseModel):
+        cp2k: cp2k.GenericCp2kInputConfig
+
+    class Train(BaseModel):
+        deepmd: deepmd.GenericDeepmdInputConfig
+
+    class Explore(BaseModel):
+        lammps: lammps.GenericLammpsInputConfig
+
+    class Select(BaseModel):
+        by_threshold: selector.ThresholdSelectorInputConfig
+
+    class Update(BaseModel):
+        walkthrough: updater.WalkthroughUpdaterInputConfig
+
+    general: General
+    train: Train
+    explore: Explore
+    select: Select
+    label: Label
+    update: Update
+
 class CllWorkflowConfig(BaseModel):
-    class Workflow(BaseModel):
-        class General(BaseModel):
-            type_map: List[str]
-            mass_map: List[float]
-            max_iters: int = 10
-
-        class Train(BaseModel):
-            deepmd: deepmd.GeneralDeepmdInputConfig
-
-        class Explore(BaseModel):
-            lammps: lammps.GeneralLammpsInputConfig
-
-        class Select(BaseModel):
-            threshold: selector.GeneralThresholdInputConfig
-
-        class Label(BaseModel):
-            cp2k: cp2k.GeneralCp2kInputConfig
-
-        general: General
-        train: Train
-        explore: Explore
-        select: Select
-        label: Label
 
     executors: Dict[str, CllWorkflowExecutorConfig]
     artifacts: ArtifactMap
-    workflow: Workflow
+    workflow: Any  # Keep it raw here, it should be parsed later in iteration
 
 
 def cll_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Optional[str] = None):
@@ -78,98 +90,128 @@ def cll_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
     if path_prefix is None:
         raise ValueError('path_prefix should not be empty')
 
-    executor_manager = ExecutorManager(config.executors)  # type: ignore
-    default_executor = executor_manager.get_executor(executor)
-
-    context_cfg = config.executors[executor].context
-
-    type_map = config.workflow.general.type_map
-    mass_map = config.workflow.general.mass_map
-
-    # Init Setting
-    deepmd_input = deepmd.GeneralDeepmdInput(
-        config=config.workflow.train.deepmd,
-        type_map=type_map,
-        old_data=[],
-        new_data=[config.artifacts[key] for key in config.workflow.train.deepmd.init_data],
+    resource_manager = ResourceManager(
+        executor_configs=config.executors,
+        artifacts=config.artifacts,
+        default_executor=executor,
     )
-    deepmd_context = deepmd.GeneralDeepmdContext(
-        path_prefix='',
-        executor=default_executor,
-        config=context_cfg.train.deepmd,
-    )
+
+    context_config = config.executors[executor].context
+    raw_workflow_config = copy.deepcopy(config.workflow)
+
+    # output of each step
+    label_output: Optional[cll.ICllLabelOutput] = None
+    selector_output: Optional[cll.ICllSelectorOutput] = None
+    train_output: Optional[cll.ICllTrainOutput] = None
+    explore_output: Optional[cll.ICllExploreOutput] = None
+
+
+    # cursor of update table
+    update_cursor = 0
 
     # Start iteration
-    for i in range(config.workflow.general.max_iters):
-        # update path prefix for each iteration
+    for i in itertools.count(0):
+
+        # parse workflow config
+        workflow_config = WorkflowConfig.parse_obj(raw_workflow_config)
+        if i >= workflow_config.general.max_iters:
+            logger.info(f'Iteration {i} exceeds max_iters, stop iteration.')
+            break
+
+        # shortcut for type_map and mass_map
+        type_map = workflow_config.general.type_map
+        mass_map = workflow_config.general.mass_map
+
+        # decide path prefix for each iteration
         iter_path_prefix = os.path.join(path_prefix, f'iters-{str(i).zfill(3)}')
 
-        # TODO: change order to: label -> train -> explore -> select
-        # TODO: support more tools
-        # TODO: support more options
+        # label
+        if workflow_config.label.cp2k:
+            cp2k_input = cp2k.GenericCp2kInput(
+                config=workflow_config.label.cp2k,
+                type_map=type_map,
+                system_files=[] if selector_output is None else selector_output.get_model_devi_dataset(),
+                initiated= i > 0,
+            )
+            cpk2_context = cp2k.GenericCp2kContext(
+                config=context_config.label.cp2k,
+                path_prefix=os.path.join(iter_path_prefix, 'label-cp2k'),
+                resource_manager=resource_manager,
+            )
+            label_output = cp2k.generic_cp2k(cp2k_input, cpk2_context).result()
+        else:
+            raise ValueError('No label method is specified')
 
         # train
-        deepmd_context.path_prefix = os.path.join(iter_path_prefix, 'train-deepmd')
-        deepmd_output = deepmd.general_deepmd(deepmd_input, deepmd_context).result()
+        if workflow_config.train.deepmd:
+            deepmd_input = deepmd.GenericDeepmdInput(
+                config=workflow_config.train.deepmd,
+                type_map=type_map,
+                old_dataset=[] if train_output is None else train_output.get_training_dataset(),
+                new_dataset=label_output.get_labeled_system_dataset(),
+                initiated= i > 0,
+            )
+            deepmd_context = deepmd.GenericDeepmdContext(
+                path_prefix=os.path.join(iter_path_prefix, 'train-deepmd'),
+                config=context_config.train.deepmd,
+                resource_manager=resource_manager,
+            )
+            train_output = deepmd.generic_deepmd(deepmd_input, deepmd_context).result()
+        else:
+            raise ValueError('No train method is specified')
 
         # explore
-        models = [a.output_dir.join(a.output_dir.attrs['frozen_model']) for a in deepmd_output.results]
-        lammps_iters = config.workflow.explore.lammps.iters
-        md_vars = lammps_iters[ i if i < len(lammps_iters) else (len(lammps_iters) - 1) ]
-
-        lammps_input = lammps.GeneralLammpsInput(
-            config=config.workflow.explore.lammps,
-            type_map=type_map,
-            mass_map=mass_map,
-            md_vars=md_vars,
-            system_vars=[config.artifacts[key] for key in md_vars.system_vars],
-            md_options=lammps.GeneralLammpsInput.MdOptions(models=models)
-        )
-        lammps_context = lammps.GeneralLammpsContext(
-            config=context_cfg.explore.lammps,
-            path_prefix=os.path.join(iter_path_prefix, 'explore-lammps'),
-            executor=default_executor,
-        )
-        lammps_output = lammps.general_lammps(lammps_input, lammps_context).result()
+        if workflow_config.explore.lammps:
+            md_options = lammps.GenericLammpsInput.MdOptions(
+                models=train_output.get_mlp_models(),
+            )
+            lammps_input = lammps.GenericLammpsInput(
+                config=workflow_config.explore.lammps,
+                type_map=type_map,
+                mass_map=mass_map,
+                md_options=md_options,
+            )
+            lammps_context = lammps.GenericLammpsContext(
+                path_prefix=os.path.join(iter_path_prefix, 'explore-lammps'),
+                config=context_config.explore.lammps,
+                resource_manager=resource_manager,
+            )
+            explore_output = lammps.generic_lammps(lammps_input, lammps_context).result()
+        else:
+            raise ValueError('No explore method is specified')
 
         # select
-        selector_input = selector.LammpsGeneralThresholdInput(
-            config=config.workflow.select.threshold,
-            candidates=lammps_output.candidates,
-            model_devi_out_file=const.MODEL_DEVI_OUT,
-        )
-        selector_context = selector.GeneralThresholdContext(
-            executor=default_executor,
-        )
-        selector_output = selector.lammps_general_threshold(selector_input, selector_context).result()
+        if workflow_config.select.by_threshold:
+            selector_input = selector.ThresholdSelectorInput(
+                config=workflow_config.select.by_threshold,
+                model_devi_data=explore_output.get_model_devi_dataset(),
+                model_devi_out_filename=const.MODEL_DEVI_OUT,
+            )
+            selector_context = selector.ThresholdSelectorContext(
+                path_prefix=os.path.join(iter_path_prefix, 'selector-threshold'),
+                resource_manager=resource_manager,
+            )
+            selector_output = selector.threshold_selector(selector_input, selector_context).result()
+        else:
+            raise ValueError('No select method is specified')
 
-        # label
-        cp2k_input = cp2k.GeneralCp2kInput(
-            config=config.workflow.label.cp2k,
-            type_map=config.workflow.general.type_map,
-            candidates=selector_output.candidates,
-            basic_set_file=config.artifacts.get(config.workflow.label.cp2k.basic_set_file or ''),
-            potential_file=config.artifacts.get(config.workflow.label.cp2k.potential_file or ''),
-        )
-        cp2k_context = cp2k.GeneralCp2kContext(
-            config=context_cfg.label.cp2k,
-            path_prefix=os.path.join(iter_path_prefix, 'label-cp2k'),
-            executor=default_executor,
-        )
-        cp2k_output = cp2k.general_cp2k(cp2k_input, cp2k_context).result()
+        # Update
+        update_config = workflow_config.update.walkthrough
 
-        # update input for the next round
-        deepmd_input.old_data.extend(deepmd_input.new_data)
-        deepmd_input.new_data = cp2k_output.dp_data_sets
+        # nothing to update because the table is empty
+        if not update_config.table:
+            continue
+        # keep using the latest config when it reach the end of table
+        if update_cursor >= len(update_config.table):
+            continue
 
-        # deepmd_input, lammps_input, selector_input, cp2k_input = smart_update(
-        #     i,
-        #     deepmd_output, lammps_output, selector_output, cp2k_output,
-        #     deepmd_input, lammps_input, selector_input, cp2k_input,
-        # )
-
+        # move cursor to next row if passing rate pass threshold
+        if selector_output.get_passing_rate() > update_config.passing_rate_threshold:
+            raw_workflow_config = merge_dict(copy.deepcopy(
+                config.workflow), update_config.table[update_cursor])
+            update_cursor += 1
 
 
 if __name__ == '__main__':
-    # for test, e.g:
+    # use python-fire to parse command line arguments
     Fire(cll_train_mlp)

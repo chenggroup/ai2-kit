@@ -1,19 +1,19 @@
 from ai2_kit.core.script import BashTemplate, BashStep, BashScript
 from ai2_kit.core.artifact import Artifact
-from ai2_kit.core.executor import Executor
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.job import GatherJobsFuture, retry_fn
 from ai2_kit.core.future import map_future
 
-from typing import List, Literal, Optional
+from typing import List, Literal, Optional, Union, Mapping, Sequence
 from pydantic import BaseModel
 from dataclasses import dataclass
 from string import Template
 import os
-import math
 import itertools
 import random
 
+
+from .cll import BaseCllContext, ICllExploreOutput
 from .constant import (
     MODEL_DEVI_OUT,
     MODEL_DEVI_NEU_OUT,
@@ -21,36 +21,82 @@ from .constant import (
     LAMMPS_TRAJ_DIR,
     LAMMPS_TRAJ_SUFFIX,
 )
+from .data_helper import LammpsOutputHelper, PoscarHelper, convert_to_lammps_input_data
 
 logger = get_logger(__name__)
 
-class MdVariants(BaseModel):
-    system_vars: List[str]  # vars = variants
-    temp_vars: List[int]
-    pres_vars: List[float]
-    lambda_vars: Optional[List[float]]
-    trj_freq: int
-    nsteps: int
-    ensemble: Literal['nvt', 'nvt-i', 'nvt-a', 'nvt-iso', 'nvt-aniso', 'npt', 'npt-t', 'npt-tri', 'nve']
+Scalar = Union[str, int, float, bool]
+
+class ExploreVariants(BaseModel):
+    temp: List[float]
+    """Temperatures variants."""
+
+    pres: List[float]
+    """Pressures variants."""
+
+    others: Mapping[str, Sequence[Scalar]] = dict()
+    """
+    Other variants to be combined with.
+    The key is the name of the variant, and the value is the list of values.
+    For example, if you want to combine the variant 'LAMBDA' with values [0.0, 0.5, 1.0],
+    you can set the others field to {'LAMBDA': [0.0, 0.5, 1.0]}.
+    And in LAMMPS input template, you can use the variable ${LAMBDA} and v_LAMBDA to access the value.
+    """
 
 
-class GeneralLammpsInputConfig(BaseModel):
-    iters: List[MdVariants]  # Explore Options for each iteration
+class GenericLammpsInputConfig(BaseModel):
+
+    explore_vars: ExploreVariants
+    """Variants to be explored."""
+
+    n_wise: int = 0
+    """The way of combining variants.
+    0 means cartesian product, 2 means 2-wise, etc.
+    If n_wise is less than 2 or greater than total fields,
+    the full combination will be used.
+    It is strongly recommended to use n_wise when the full combination is too large.
+    """
+
+    system_files: List[str]
+    """Artifacts of initial system data."""
+
     no_pbc: bool = False
     tau_t: float = 0.1
     tau_p: float = 0.5
     timestep: float = 0.0005
+    sample_freq: int
+    nsteps: int
+    ensemble: Literal['nvt', 'nvt-i', 'nvt-a', 'nvt-iso', 'nvt-aniso', 'npt', 'npt-t', 'npt-tri', 'nve']
+    """Ensemble to be used.
+    nvt means constant volume and temperature.
+    nvt-i means constant volume and temperature, with isotropic scaling.
+    nvt-a means constant volume and temperature, with anisotropic scaling.
+    nvt-iso means constant volume and temperature, with isotropic scaling.
+    npt means constant pressure and temperature.
+    npt-t means constant pressure and temperature, with isotropic scaling.
+    npt-tri means constant pressure and temperature, with anisotropic scaling.
+    nve means constant energy.
+    """
+
     input_template: Optional[str]
+    """Lammps input template file content."""
+
+    post_variables_section: str = ''
+    post_init_section: str = ''
+    post_read_data_section: str = ''
+    post_force_field_section: str = ''
+    post_md_section: str = ''
+    post_run_section: str = ''
 
 
-class GeneralLammpsContextConfig(BaseModel):
+class GenericLammpsContextConfig(BaseModel):
     script_template: BashTemplate
     lammps_cmd: str = 'lmp'
     concurrency: int = 5
 
 
 @dataclass
-class GeneralLammpsInput:
+class GenericLammpsInput:
 
     @dataclass
     class MdOptions:
@@ -61,12 +107,9 @@ class GeneralLammpsInput:
         red_models: List[Artifact]
         neu_models: List[Artifact]
 
-    config: GeneralLammpsInputConfig
+    config: GenericLammpsInputConfig
     type_map: List[str]
     mass_map: List[float]
-
-    md_vars: MdVariants
-    system_vars: List[Artifact]
 
     # The following options are mutex
     md_options: Optional[MdOptions] = None
@@ -74,110 +117,125 @@ class GeneralLammpsInput:
 
 
 @dataclass
-class GeneralLammpsContext:
-    config: GeneralLammpsContextConfig
-    path_prefix: str
-    executor: Executor
+class GenericLammpsContext(BaseCllContext):
+    config: GenericLammpsContextConfig
+
 
 @dataclass
-class GeneralLammpsOutput:
-    candidates: List[Artifact]
+class GenericLammpsOutput(ICllExploreOutput):
+    model_devi_outputs: List[Artifact]
 
-def general_lammps(input: GeneralLammpsInput, ctx: GeneralLammpsContext):
-    """
-    1. resolve system file path
-    2. convert system into lammps format
-    3. build configuration file
-    4. build script and submit
-    """
+    def get_model_devi_dataset(self) -> List[Artifact]:
+        return self.model_devi_outputs
 
-    # 0. setup dirs
-    work_dir = ctx.executor.get_full_path(ctx.path_prefix)
-    ctx.executor.mkdir(work_dir)
-    logger.info('work_dir is %s', work_dir)
 
-    input_data_dir = os.path.join(work_dir, 'input_data')
-    ctx.executor.mkdir(input_data_dir)
-    logger.info('data_dir is %s', input_data_dir)
+def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
+    executor = ctx.resource_manager.default_executor
 
-    tasks_dir = os.path.join(work_dir, 'tasks')
-    ctx.executor.mkdir(tasks_dir)
-    logger.info('tasks_dir is %s', tasks_dir)
+    # setup workspace
+    work_dir = os.path.join(executor.work_dir, ctx.path_prefix)
+    input_data_dir, tasks_dir = executor.setup_workspace(work_dir, ['input_data', 'tasks'])
 
-    # 1. resolve file path
-    system_files_set = set()
-    for system_opt in input.system_vars:
-        system_files_set.update(ctx.executor.unpack_artifact(system_opt))
-    system_files = sorted(system_files_set)
+    systems = ctx.resource_manager.resolve_artifacts(input.config.system_files)
 
-    # 2. convert system into lammps format
-    lammps_data_files = []
-    zfill_size = math.ceil(math.log10(len(system_files)))
-    for i, sys_file in enumerate(system_files):
-        file_name = f'{str(i).zfill(zfill_size)}-{os.path.basename(sys_file)}.lammps.data'
-        lammps_data_files.append(os.path.join(input_data_dir, file_name))
+    # prepare lammps input data
+    # TODO: refactor the way of handling different types of input
+    # TODO: handle more data format, for example, cp2k output
+    poscar_files: List[Artifact] = []
 
-    def to_lammps_input(input_files: List[str], output_files: List[str], type_map: List[str], fmt='vasp/poscar'):
-        import dpdata
-        for i in range(len(input_files)):
-            dpdata.System(input_files[i], fmt=fmt, type_map=type_map).to_lammps_lmp(output_files[i])  # type: ignore
+    for system_file in systems:
+        if PoscarHelper.is_match(system_file):
+            poscar_files.append(system_file)
+        else:
+            raise ValueError(f'unsupported system file type: {system_file}')
 
-    ctx.executor.run_python_fn(to_lammps_input)(system_files, lammps_data_files, input.type_map)
+    input_data_files: List[str] = executor.run_python_fn(convert_to_lammps_input_data)(
+        poscar_files=[a.to_dict() for a in poscar_files],
+        base_dir=input_data_dir,
+        type_map=input.type_map,
+    )
 
-    # 3. build configuration files
-    md_vars = input.md_vars
+    combination_fields: List[str] = [
+        'data_file',
+        'temp',
+        'pres'
+    ]
+    combination_values: Sequence[Sequence[Scalar]] = [
+        input_data_files,
+        input.config.explore_vars.temp,
+        input.config.explore_vars.pres,
+    ]
+
+    for k, v in input.config.explore_vars.others.items():
+        combination_fields.append(k)
+        combination_values.append(v)  # type: ignore
+
+    if 1 < input.config.n_wise <= len(combination_fields):
+        #TODO: implement n-wise combination
+        raise NotImplementedError('n-wise combination is not implemented yet')
+    else:
+        combinations = itertools.product(*combination_values)
 
     lammps_task_dirs = []
     lammps_input_file_name = 'lammps.input'
-    task_counter = itertools.count(0)
-    for lammps_data_file in lammps_data_files:
-        for temp in md_vars.temp_vars:
-            for pres in md_vars.pres_vars:
-                task_num = next(task_counter)
-                lammps_task_dir = os.path.join(tasks_dir, str(task_num).zfill(zfill_size + 3))  # TODO: optimize zfill
-                ctx.executor.mkdir(os.path.join(lammps_task_dir, LAMMPS_TRAJ_DIR))  # create dump directory for lammps or else will get error
-                lambda_vars = md_vars.lambda_vars
-                lambda_f = lambda_vars[task_num % len(lambda_vars)] if lambda_vars else None
 
-                # TODO: ensure only one of md, fep is set
-                if input.md_options:
-                    models = [a.url for a in input.md_options.models]
-                    force_field_settings = make_md_force_field_settings(models=models)
-                    template = input.config.input_template or DEFAULT_MD_INPUT_TEMPLATE
+    for i, combination in enumerate(combinations):
+        data_file, temp, pres = combination[:3]
+        others_dict = dict(zip(combination_fields[3:], combination[3:]))
+        lammps_task_dir = os.path.join(tasks_dir, str(i).zfill(6))
+        executor.mkdir(os.path.join(lammps_task_dir, LAMMPS_TRAJ_DIR))  # create dump directory for lammps or else will get error
 
-                elif input.fep_options:
-                    if lambda_f is None:
-                        raise ValueError('lambda_vars must be set when fep is used!')
-                    neu_models = [a.url for a in input.fep_options.neu_models]
-                    red_models = [a.url for a in input.fep_options.red_models]
-                    force_field_settings = make_fep_force_field_settings(neu_models=neu_models, red_models=red_models)
-                    template = input.config.input_template or DEFAULT_FEP_INPUT_TEMPLATE
-                else:
-                    raise ValueError('one and only one of md_options or fep_options must be set')
+        if input.md_options:
+            force_field_section = make_md_force_field_section(
+                models=[a.url for a in input.md_options.models],
+            )
+        elif input.fep_options:
+            logger.info('FEP mode is used, please remember to set LAMBDA_f in others variants')
+            if 'LAMBDA_f' not in others_dict:
+                raise ValueError('LAMBDA_f must be set when using FEP mode!')
+            # inject the following variables for FEP mode
+            others_dict['LAMBDA_i'] = '1 - v_LAMBDA_f'
+            others_dict['plus'] = 1
+            others_dict['minus'] = -1
+            force_field_section = make_fep_force_field_section(
+                neu_models=[a.url for a in input.fep_options.neu_models],
+                red_models=[a.url for a in input.fep_options.red_models],
+            )
+        else:
+            raise ValueError('one and only one of md_options or fep_options must be set')
+        template = input.config.input_template or  DEFAULT_LAMMPS_INPUT_TEMPLATE
 
-                input_text = make_lammps_input(
-                    template=template,
-                    data_file=lammps_data_file,
-                    temp=temp,
-                    pres=pres,
-                    lambda_f=lambda_f,
-                    force_field_settings=force_field_settings,
+        input_text = make_lammps_input(data_file=data_file,
+                          nsteps=input.config.nsteps,
+                          timestep=input.config.timestep,
+                          trj_freq=input.config.sample_freq,
+                          temp=temp,
+                          pres=pres,
+                          tau_t=input.config.tau_t,
+                          tau_p=input.config.tau_p,
+                          ensemble=input.config.ensemble,
+                          mass_map=input.mass_map,
+                          others_dict=others_dict,
 
-                    nsteps=md_vars.nsteps,
-                    trj_freq=md_vars.trj_freq,
-                    ensemble=md_vars.ensemble,
+                          force_field_section=force_field_section,
 
-                    tau_p=input.config.tau_p,
-                    tau_t=input.config.tau_t,
-                    timestep=input.config.timestep,
+                          template=template,
+                          post_variables_section=input.config.post_variables_section,
+                          post_init_section=input.config.post_init_section,
+                          post_read_data_section=input.config.post_read_data_section,
+                          post_force_field_section=input.config.post_force_field_section,
+                          post_md_section=input.config.post_md_section,
+                          post_run_section=input.config.post_run_section,
 
-                    mass_map=input.mass_map,
-                )
-                input_file_path = os.path.join(lammps_task_dir, lammps_input_file_name)
-                ctx.executor.dump_text(input_text, input_file_path)
-                lammps_task_dirs.append(lammps_task_dir)
+                          no_pbc=False,
+                          rand_start=1_000_000,
+                          )
 
-    # 4. build scripts and submit
+        input_file_path = os.path.join(lammps_task_dir, lammps_input_file_name)
+        executor.dump_text(input_text, input_file_path)
+        lammps_task_dirs.append(lammps_task_dir)
+
+    # build scripts and submit
     lammps_cmd = ctx.config.lammps_cmd
     base_cmd = f'{lammps_cmd} -i {lammps_input_file_name}'
     cmd = f'''if [ -f md.restart.* ]; then {base_cmd} -v restart 1; else {base_cmd} -v restart 0; fi'''
@@ -204,23 +262,26 @@ def general_lammps(input: GeneralLammpsInput, ctx: GeneralLammpsContext):
             template=ctx.config.script_template,
             steps=steps,
         )
-        job = ctx.executor.submit(script.render(), cwd=tasks_dir)
+        job = executor.submit(script.render(), cwd=tasks_dir)
         jobs.append(job)
 
     outputs = [
-        Artifact(
+        Artifact.of(
             url=task_dir,
-            executor=ctx.executor.name,
-            attrs=dict(by='lammps'),
+            executor=executor.name,
+            format=LammpsOutputHelper.format,
+            attrs=dict(
+            ),  # TODO: inherit from input file
         ) for task_dir in lammps_task_dirs]  # type: ignore
 
     future = GatherJobsFuture(jobs, done_fn=retry_fn(max_tries=2), raise_exception=True)
-    return map_future(future, GeneralLammpsOutput(
-        candidates=outputs
+
+    return map_future(future, GenericLammpsOutput(
+        model_devi_outputs=outputs,
     ))
 
 
-def make_md_force_field_settings(models: List[str]):
+def make_md_force_field_section(models: List[str]):
     deepmd_args = ""
     settings = [
         'pair_style deepmd %s out_freq ${THERMO_FREQ} out_file %s %s' % (' '.join(models), MODEL_DEVI_OUT, deepmd_args),
@@ -229,7 +290,7 @@ def make_md_force_field_settings(models: List[str]):
     return settings
 
 
-def make_fep_force_field_settings(neu_models: List[str], red_models: List[str]):
+def make_fep_force_field_section(neu_models: List[str], red_models: List[str]):
     deepmd_args = ""
     settings = [
         'pair_style hybrid/overlay &',
@@ -246,8 +307,7 @@ def make_fep_force_field_settings(neu_models: List[str], red_models: List[str]):
     return settings
 
 
-def make_lammps_input(template: str,
-                      data_file: str,
+def make_lammps_input(data_file: str,
                       nsteps: int,
                       timestep: float,
                       trj_freq: int,
@@ -257,17 +317,29 @@ def make_lammps_input(template: str,
                       tau_p: float,
                       ensemble: str,
                       mass_map: List[float],
-                      force_field_settings: List[str],
-                      lambda_f: Optional[float] = None,
+                      others_dict: Mapping[str, Scalar],
+
+                      template: str,
+                      post_variables_section: str,
+                      post_init_section: str,
+                      post_read_data_section: str,
+                      post_force_field_section: str,
+                      post_md_section: str,
+                      post_run_section: str,
+
+                      force_field_section: List[str],
+
                       no_pbc=False,
                       rand_start=1_000_000,
                       ):
 
-    # FIXME: Is it a good idea to fix pres or just raise error?
+    # FIXME: I am not sure if it is a good idea to fix it automatically
+    # maybe we should consider raise an error here
     if not ensemble.startswith('npt'):
         pres = -1
 
     variables = [
+        '# required variables',
         'variable NSTEPS      equal %d' % nsteps,
         'variable THERMO_FREQ equal %d' % trj_freq,
         'variable DUMP_FREQ   equal %d' % trj_freq,
@@ -275,68 +347,77 @@ def make_lammps_input(template: str,
         'variable PRES        equal %f' % pres,
         'variable TAU_T       equal %f' % tau_t,
         'variable TAU_P       equal %f' % tau_p,
+        '',
+        '# custom variables (if any)',
     ]
 
-    if lambda_f is not None:
-        variables.extend([
-            '',
-            'variable LAMBDA_f    equal %.2f' % lambda_f,
-            'variable LAMBDA_i    equal 1-v_LAMBDA_f',
-        ])
+    for k, v in others_dict.items():
+        variables.append(f'variable {k} equal {v}')
 
-    init_settings = [
+    init_section = [
         'boundary ' + ('f f f' if no_pbc else 'p p p'),
     ]
 
-    atom_settings = [
+    read_data_section = [
         '''if "${restart} > 0" then "read_restart md.restart.*" else "read_data %s"''' % data_file,
         *("mass {id} {mass}".format(id=i+1, mass=m) for i, m in enumerate(mass_map))
     ]
 
-    md_settings = [
+    md_section = [
         '''if "${restart} == 0" then "velocity all create ${TEMP} %d"''' % (random.randrange(rand_start - 1) + 1)
     ]
 
     if ensemble.startswith('npt') and no_pbc:
         raise ValueError('ensemble npt conflict with no_pcb')
     if ensemble in ('npt', 'npt-i', 'npt-iso',):
-        md_settings.append('fix 1 all npt temp ${TEMP} ${TEMP} ${TAU_T} iso ${PRES} ${PRES} ${TAU_P}')
+        md_section.append('fix 1 all npt temp ${TEMP} ${TEMP} ${TAU_T} iso ${PRES} ${PRES} ${TAU_P}')
     elif ensemble in ('npt-a', 'npt-aniso',):
-        md_settings.append('fix 1 all npt temp ${TEMP} ${TEMP} ${TAU_T} aniso ${PRES} ${PRES} ${TAU_P}')
+        md_section.append('fix 1 all npt temp ${TEMP} ${TEMP} ${TAU_T} aniso ${PRES} ${PRES} ${TAU_P}')
     elif ensemble in ('npt-t', 'npt-tri',):
-        md_settings.append('fix 1 all npt temp ${TEMP} ${TEMP} ${TAU_T} tri ${PRES} ${PRES} ${TAU_P}')
+        md_section.append('fix 1 all npt temp ${TEMP} ${TEMP} ${TAU_T} tri ${PRES} ${PRES} ${TAU_P}')
     elif ensemble in ('nvt',):
-        md_settings.append('fix 1 all nvt temp ${TEMP} ${TEMP} ${TAU_T}')
+        md_section.append('fix 1 all nvt temp ${TEMP} ${TEMP} ${TAU_T}')
     elif ensemble in ('nve',):
-        md_settings.append('fix 1 all nve')
+        md_section.append('fix 1 all nve')
     else:
         raise ValueError('unknown ensemble: ' + ensemble)
 
     if no_pbc:
-        md_settings.extend([
+        md_section.extend([
             'velocity all zero linear',
             'fix      fm all momentum 1 linear 1 1 1',
         ])
 
-    md_settings.extend([
+    md_section.extend([
         'thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz',
         'thermo       ${THERMO_FREQ}',
         'dump         1 all custom ${DUMP_FREQ} %s/*%s id type x y z fx fy fz' % (LAMMPS_TRAJ_DIR, LAMMPS_TRAJ_SUFFIX),
         'restart      10000 md.restart',
     ])
 
-    run_settings = [
+    run_section = [
         'timestep %f' % timestep,
         'run      ${NSTEPS} upto',
     ]
 
     return LammpsInputTemplate(template).substitute(dict(
-        variable_settings='\n'.join(variables),
-        init_settings='\n'.join(init_settings),
-        atom_settings='\n'.join(atom_settings),
-        md_settings='\n'.join(md_settings),
-        force_field_settings='\n'.join(force_field_settings),
-        run_settings='\n'.join(run_settings),
+        variables_section='\n'.join(variables),
+        post_variables_section=post_variables_section,
+
+        init_section='\n'.join(init_section),
+        post_init_section=post_init_section,
+
+        read_data_section='\n'.join(read_data_section),
+        post_read_data_section=post_read_data_section,
+
+        md_section='\n'.join(md_section),
+        post_md_section=post_md_section,
+
+        force_field_section='\n'.join(force_field_section),
+        post_force_field_section=post_force_field_section,
+
+        run_section='\n'.join(run_section),
+        post_run_section=post_run_section,
     ))
 
 
@@ -347,62 +428,36 @@ class LammpsInputTemplate(Template):
     delimiter = '$$'
 
 
-DEFAULT_MD_INPUT_TEMPLATE = '''# MD INPUT
+DEFAULT_LAMMPS_INPUT_TEMPLATE = '''\
+## variables_section
+$$variables_section
+## post_variables_section
+$$post_variables_section
 
-## VARIABLES
-$$variable_settings
-
-## INITIALIZATION SETTINGS
+## init_section
 units      metal
 atom_style atomic
-neighbor   1.0 bin
-box        tilt large
+$$init_section
+## post_init_section
+$$post_init_section
 
-$$init_settings
+## read_data_section
+$$read_data_section
+## post_read_data_section
+$$post_read_data_section
 
-## ATOM SETTINGS
-$$atom_settings
+## force_field_section
+$$force_field_section
+## post_force_field_section
+$$post_force_field_section
 
-change_box all triclinic
+## md_section
+$$md_section
+## post_md_section
+$$post_md_section
 
-## FORCE FIELD SETTINGS
-$$force_field_settings
-
-## MD SETTINGS
-$$md_settings
-
-## RUN SETTINGS
-$$run_settings
-'''
-
-DEFAULT_FEP_INPUT_TEMPLATE = '''# FEP INPUT
-
-## VARIABLES
-$$variable_settings
-
-variable plus  equal 1
-variable minus equal -1
-
-## INITIALIZATION SETTINGS
-units        metal
-atom_style   atomic
-atom_modify  map yes
-neighbor     2.0 bin
-neigh_modify every 1
-
-$$init_settings
-
-## ATOM SETTINGS
-$$atom_settings
-
-change_box all triclinic
-
-## FORCE FIELD SETTINGS
-$$force_field_settings
-
-## MD SETTINGS
-$$md_settings
-
-## RUN SETTINGS
-$$run_settings
+## run_section
+$$run_section
+## post_run_section
+$$post_run_section
 '''

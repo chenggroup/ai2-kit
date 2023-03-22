@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from ai2_kit.core.executor import BaseExecutorConfig, ExecutorManager, Slrum, Lsf, SshConnector, HpcExecutor
 from ai2_kit.core.util import load_yaml_file
+from ai2_kit.core.artifact import Artifact
 from typing import Dict
 from unittest import TestCase
 from pathlib import Path
@@ -24,7 +25,7 @@ class TestConfig(TestCase):
 
         self.assertIsNone(config.executors['lsf-hpc'].queue_system.slurm)
         self.assertIsNotNone(config.executors['lsf-hpc'].queue_system.lsf)
-        self.assertIsNotNone(config.executors['lsf-hpc'].ssh.gateway)
+        self.assertIsNotNone(config.executors['lsf-hpc'].ssh.gateway)  # type: ignore
 
 
 class TestExecutor(TestCase):
@@ -47,3 +48,18 @@ class TestExecutor(TestCase):
         self.assertIsInstance(executor, HpcExecutor)
         self.assertIsInstance(executor.queue_system, Lsf)
         self.assertIsInstance(executor.connector, SshConnector)
+
+
+class TestArtifact(TestCase):
+
+    def test_artifact_transform(self):
+        artifact = Artifact(
+            url='to/data/path',
+            executor='hpc01',
+            attrs={'a': 1, 'b': 2},
+            includes=None,
+            format='',
+            referrer=None,
+        )
+        dict_obj = artifact.to_dict()
+        Artifact.of(**dict_obj)

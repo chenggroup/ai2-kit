@@ -1,4 +1,4 @@
-from typing import TypeVar, Union, Callable, NamedTuple
+from typing import TypeVar, Union, Callable, NamedTuple, Optional
 from threading import Lock
 import functools
 import cloudpickle
@@ -8,8 +8,8 @@ import types
 from .future import IFuture
 
 _lock = Lock()
-_checkpoint_file: str = None
-_checkpoint_data: dict = None
+_checkpoint_file: Optional[str] = None
+_checkpoint_data: Optional[dict] = None
 
 
 class FnInfo(NamedTuple):
@@ -82,7 +82,7 @@ def checkpoint(key_fn: Union[str, KeyFn], disable = False):
 
             return ret
 
-        return wrapper
+        return wrapper # type: ignore
 
     return _checkpoint
 
@@ -101,7 +101,7 @@ def _load_checkpoint():
 
 def _dump_checkpoint():
     assert _checkpoint_data is not None, '_checkpoint_data should not be None!'
-    with open(_checkpoint_file, 'wb') as f:
+    with open(_checkpoint_file, 'wb') as f:  # type: ignore
         cloudpickle.dump(_checkpoint_data, f)
 
 
@@ -109,7 +109,7 @@ def _get_checkpoint(key: str):
     try:
         with _lock:
             _load_checkpoint()
-            return _checkpoint_data.get(key, EMPTY)
+            return _checkpoint_data.get(key, EMPTY)  # type: ignore
     except Exception as e:
         print("Fail to get checkpoint", e)
         return EMPTY
@@ -118,7 +118,7 @@ def _get_checkpoint(key: str):
 def _set_checkpoint(key: str, value):
     try:
         with _lock:
-            _checkpoint_data[key] = value
+            _checkpoint_data[key] = value  # type: ignore
             _dump_checkpoint()
     except Exception as e:
         print('Fail to set checkpoint', e)

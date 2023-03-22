@@ -1,21 +1,29 @@
 from ruamel.yaml import YAML
 from pathlib import Path
-from typing import Tuple
+from typing import Tuple, List, TypeVar
+from dataclasses import field
+from cp2k_input_tools.parser import CP2KInputParserSimplified
+
 import shortuuid
 import copy
-from dataclasses import field
+import os
+import io
+
+from .log import get_logger
+
+logger = get_logger(__name__)
 
 def default_mutable_field(obj):
     return field(default_factory=lambda: copy.copy(obj))
 
 def __merge_dict():
-    """
-    merge two dict, the left dict will be overridden
-    this method won't merge list
-
-    cloudpickle compatible: https://stackoverflow.com/questions/75292769
-    """
+    """cloudpickle compatible: https://stackoverflow.com/questions/75292769"""
     def merge_dict(lo: dict, ro: dict, path=None):
+        """
+        merge two dict, the left dict will be overridden
+
+        this method won't merge list
+        """
         if path is None:
             path = []
 
@@ -44,9 +52,25 @@ def load_yaml_files(*paths: Tuple[Path]):
     d = {}
     for path in paths:
         print('load yaml file: ', path)
-        d = merge_dict(d, load_yaml_file(Path(path)))
+        d = merge_dict(d, load_yaml_file(Path(path)))  # type: ignore
     return d
 
 
-def tmpfile_name():
+def s_uuid():
+    """short uuid"""
     return shortuuid.uuid()
+
+
+def parse_cp2k_input(text: str):
+    parser = CP2KInputParserSimplified()
+    return parser.parse(io.StringIO(text))
+
+
+def sort_unique_str_list(l: List[str]) -> List[str]:
+    """remove duplicate str and sort"""
+    return list(sorted(set(l)))
+
+
+T = TypeVar('T')
+def flatten(l: List[List[T]]) -> List[T]:
+    return [item for sublist in l for item in sublist]

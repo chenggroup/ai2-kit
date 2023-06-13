@@ -20,6 +20,7 @@ pandas = "^1.5.3"
 cp2k-input-tools = "^0.8.2"
 ase = "^3.22.1"
 pymatgen = "^2023.2.22"
+mdanalysis = "^2.4.3"
 
 
 [[tool.poetry.source]]

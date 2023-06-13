@@ -1,5 +1,12 @@
 # Changelogs
 
+## v0.2.0
+* feat: proton transfer analysis toolkit
+
+## v0.1.0
+* feat: cll-mlp-training workflow
+* feat: fep-mlp-training workflow
+
 ## v0.0.2
 * feat: support providing initial structures for label task at first iteration.
 * feat: support dynamic configuration update for each iterations.

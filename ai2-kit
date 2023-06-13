@@ -1,0 +1,2 @@
+#! /bin/bash
+poetry run python -m ai2_kit.main "$@"

@@ -32,6 +32,7 @@ poetry install
 ## Manuals
 
 * [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
+* [ASE Toolkit](doc/manual/ase.md)
 * [CLL MLP Training Workflow](doc/manual/cll-workflow.md)
 * [FEP MLP Training Workflow](doc/manual/fep-workflow.md)
 

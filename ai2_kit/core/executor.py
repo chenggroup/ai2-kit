@@ -1,4 +1,4 @@
-from .queue_system import QueueSystemConfig, BaseQueueSystem, Slrum, Lsf
+from .queue_system import QueueSystemConfig, BaseQueueSystem, Slurm, Lsf
 from .job import JobFuture
 from .artifact import Artifact
 from .connector import SshConfig, BaseConnector, SshConnector, LocalConnector
@@ -15,6 +15,7 @@ import os
 import shlex
 import base64
 import bz2
+import pickle
 import cloudpickle
 
 
@@ -99,7 +100,7 @@ class HpcExecutor(Executor):
             connector = LocalConnector()
         queue_system = None
         if config.queue_system.slurm:
-            queue_system = Slrum()
+            queue_system = Slurm()
             queue_system.config = config.queue_system.slurm
         elif config.queue_system.lsf:
             queue_system = Lsf()

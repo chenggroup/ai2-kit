@@ -114,7 +114,6 @@ def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
 
         # create dp train input file
         # NOTE: dp v1 format is supported currently
-        # TODO: migrate to dp v2 format
         # TODO: support more params if it is necessary
 
         # ref: https://github.com/deepmodeling/dpgen2/blob/master/examples/ch4/param_CH4_deepmd-kit-2.1.1.json
@@ -142,14 +141,23 @@ def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
         # set training data
         systems = [a.url for a in input.old_dataset + input.new_dataset]
         training['systems'] = systems
-
-        # set other params
-        dp_input['model']['type_map'] = input.type_map
         set_prefix: str = training.setdefault(
             'set_prefix', 'set')  # respect user input
         auto_prob_str = "prob_sys_size"
         training.setdefault('batch_size', 'auto')
         training['auto_prob_style'] = auto_prob_str
+
+        # v2 training data
+        training_data = {
+            'systems': training['systems'],
+            'set_prefix': training['set_prefix'],
+            'auto_prob_style': training['auto_prob_style'],
+            'batch_size': training['batch_size'],
+        }
+        training['training_data'] = training_data
+
+        # other params
+        dp_input['model']['type_map'] = input.type_map
 
         # write config to executor
         dp_input_text = json.dumps(dp_input, indent=2)

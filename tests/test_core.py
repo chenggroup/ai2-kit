@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from ai2_kit.core.executor import BaseExecutorConfig, ExecutorManager, Slrum, Lsf, SshConnector, HpcExecutor
+from ai2_kit.core.executor import BaseExecutorConfig, ExecutorManager, Slurm, Lsf, SshConnector, HpcExecutor
 from ai2_kit.core.util import load_yaml_file
 from ai2_kit.core.artifact import Artifact
 from typing import Dict
@@ -41,7 +41,7 @@ class TestExecutor(TestCase):
 
         executor: HpcExecutor = executor_manager.get_executor('slurm-hpc')  # type: ignore
         self.assertIsInstance(executor, HpcExecutor)
-        self.assertIsInstance(executor.queue_system, Slrum)
+        self.assertIsInstance(executor.queue_system, Slurm)
         self.assertIsInstance(executor.connector, SshConnector)
 
         executor: HpcExecutor = executor_manager.get_executor('lsf-hpc')  # type: ignore

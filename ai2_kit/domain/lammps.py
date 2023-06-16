@@ -190,11 +190,10 @@ def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
                 models=[a.url for a in input.md_options.models],
             )
         elif input.fep_options:
-            logger.info('FEP mode is used, please remember to set LAMBDA_f in others variants')
             if 'LAMBDA_f' not in others_dict:
                 raise ValueError('LAMBDA_f must be set when using FEP mode!')
             # inject the following variables for FEP mode
-            others_dict['LAMBDA_i'] = '1 - v_LAMBDA_f'
+            others_dict['LAMBDA_i'] = '1-v_LAMBDA_f' # should not have space, or you must quote
             others_dict['plus'] = 1
             others_dict['minus'] = -1
             force_field_section = make_fep_force_field_section(

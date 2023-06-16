@@ -62,9 +62,20 @@ def s_uuid():
 
 
 def parse_cp2k_input(text: str):
-    parser = CP2KInputParserSimplified()
+    parser = CP2KInputParserSimplified(key_trafo=str.upper)
     return parser.parse(io.StringIO(text))
 
+def dict_nested_get(d: dict, keys: List[str]):
+    """get value from nested dict"""
+    for key in keys:
+        d = d[key]
+    return d
+
+def dict_nested_set(d: dict, keys: List[str], value):
+    """set value to nested dict"""
+    for key in keys[:-1]:
+        d = d[key]
+    d[keys[-1]] = value
 
 def sort_unique_str_list(l: List[str]) -> List[str]:
     """remove duplicate str and sort"""

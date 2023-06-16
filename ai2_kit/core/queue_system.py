@@ -6,6 +6,7 @@ import os
 import re
 import shortuuid
 import time
+import asyncio
 
 
 from .connector import BaseConnector
@@ -106,7 +107,7 @@ class BaseQueueSystem(ABC):
         return job
 
 
-class Slrum(BaseQueueSystem):
+class Slurm(BaseQueueSystem):
 
     config: QueueSystemConfig.Slurm
 
@@ -272,17 +273,17 @@ class QueueJobFuture(JobFuture):
         return self.get_job_state().terminal
 
     def result(self, timeout: float = float('inf')) -> JobState:
+        return asyncio.run(self.async_result(timeout))
 
+    async def async_result(self, timeout: float = float('inf')) -> JobState:
         timeout_ts = time.time() + timeout
-
         while time.time() < timeout_ts:
             if self.done():
                 return self.get_job_state()
             else:
-                time.sleep(self._polling_interval)
+                await asyncio.sleep(self._polling_interval)
         else:
-            raise RuntimeError(
-                'Timeout of polling job: {}'.format(self._job_id))
+            raise RuntimeError(f'Timeout of polling job: {self._job_id}')
 
     def __repr__(self):
         return repr(dict(

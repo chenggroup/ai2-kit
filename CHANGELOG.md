@@ -1,5 +1,10 @@
 # Changelogs
 
+## v0.3.0
+* feat: ase toolkit
+* fix: fep training workflow
+* improvement: speed up command line interface with lazy import
+
 ## v0.2.0
 * feat: proton transfer analysis toolkit
 

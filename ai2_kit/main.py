@@ -1,33 +1,60 @@
 from fire import Fire
-from ai2_kit.workflow.cll_mlp import cll_train_mlp
-from ai2_kit.workflow.ec_fep import fep_train_mlp
-from ai2_kit.algorithm import proton_transfer
 
 
 class Group:
-
     def __init__(self, items: dict, doc: str = '') -> None:
         self.__doc__ = doc
         self.__dict__.update(items)
 
 
-# TODO: use lazy loading to speed up the startup time
+class ProtonTransferGroup:
+    @property
+    def analyze(self):
+        from ai2_kit.algorithm import proton_transfer
+        return proton_transfer.proton_transfer_detection
+
+    @property
+    def visualize(self):
+        from ai2_kit.algorithm import proton_transfer
+        return proton_transfer.visualize_transfer
+
+    @property
+    def show_transfer_paths(self):
+        from ai2_kit.algorithm import proton_transfer
+        return proton_transfer.analysis_transfer_paths
+
+    @property
+    def show_type_change(self):
+        from ai2_kit.algorithm import proton_transfer
+        return proton_transfer.detect_type_change
+
+
+class WorkflowGroup:
+    @property
+    def cll_mlp_training(self):
+        from ai2_kit.workflow.cll_mlp import cll_train_mlp
+        return cll_train_mlp
+
+    @property
+    def fep_mlp_training(self):
+        from ai2_kit.workflow.fep_mlp import fep_train_mlp
+        return fep_train_mlp
+
+class ToolGroup:
+
+    @property
+    def ase(self):
+        from ai2_kit.tool.ase import AseHelper
+        return AseHelper
+
+
 kit = Group({
-    'workflow': Group({
-        'cll-mlp-training': cll_train_mlp,
-        'fep-mlp-training': fep_train_mlp,
-
-    }),
+    'workflow': WorkflowGroup(),
     'algorithm': Group({
-        'proton-transfer': Group({
-            'analyze': proton_transfer.proton_transfer_detection,
-            'visualize': proton_transfer.visualize_transfer,
-            'show-transfer-paths': proton_transfer.analysis_transfer_paths,
-            'show-type-change': proton_transfer.detect_type_change,
-        })
+        'proton-transfer': ProtonTransferGroup(),
     }),
+    'tool': ToolGroup(),
 }, doc="Welcome to use ai2-kit!")
-
 
 
 def main():

@@ -4,7 +4,7 @@ from ai2_kit.core.job import GatherJobsFuture, retry_fn
 
 from ai2_kit.core.future import DummyFuture, IFuture, map_future
 
-from ai2_kit.core.util import merge_dict, parse_cp2k_input
+from ai2_kit.core.util import merge_dict, parse_cp2k_input, dict_nested_get, dict_nested_set
 from ai2_kit.core.log import get_logger
 
 from typing import List, Union
@@ -81,18 +81,23 @@ def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> IFuture[Ge
     else:
         input_template = copy.deepcopy(input.config.input_template)
 
-    # resolve artifacts resources in the input template
-    basic_set_file: str = input_template['FORCE_EVAL']['DFT']['BASIS_SET_FILE_NAME']
-    if basic_set_file.startswith('@'):
-        logger.info(f'resolve artifact {basic_set_file}')
-        input_template['FORCE_EVAL']['DFT']['BASIS_SET_FILE_NAME'] = \
-            ctx.resource_manager.resolve_artifact(basic_set_file[1:])[0].url
-
-    potential_file: str = input_template['FORCE_EVAL']['DFT']['POTENTIAL_FILE_NAME']
-    if potential_file.startswith('@'):
-        logger.info(f'resolve artifact {potential_file}')
-        input_template['FORCE_EVAL']['DFT']['POTENTIAL_FILE_NAME'] = \
-            ctx.resource_manager.resolve_artifact(potential_file[1:])[0].url
+    fields_with_artifact = [
+        ['FORCE_EVAL', 'DFT', 'BASIS_SET_FILE_NAME'],
+        ['FORCE_EVAL', 'DFT', 'POTENTIAL_FILE_NAME'],
+        ['FORCE_EVAL', 'DFT', 'XC', 'VDW_POTENTIAL', 'PAIR_POTENTIAL', 'PARAMETER', 'PARAMETER_FILE_NAME' ],
+    ]
+    for field_path in fields_with_artifact:
+        try :
+            field_value = dict_nested_get(input_template, field_path)
+            if isinstance(field_value, str) and field_value.startswith('@'):
+                logger.info(f'resolve artifact {field_value}')
+                dict_nested_set(
+                    input_template,
+                    field_path,
+                    ctx.resource_manager.resolve_artifact(field_value[1:])[0].url
+                )
+        except KeyError:
+            pass
 
     # resolve data files
     lammps_dump_files: List[Artifact] = []

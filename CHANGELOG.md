@@ -1,5 +1,8 @@
 # Changelogs
 
+## v0.3.1
+* feat: async job polling
+
 ## v0.3.0
 * feat: ase toolkit
 * fix: fep training workflow

@@ -123,6 +123,10 @@ class HpcExecutor(Executor):
         self.tmp_dir = os.path.join(self.work_dir, '.tmp')  # TODO: make it configurable
 
     def init(self):
+        # if work_dir is relative path, it will be relative to user home
+        if not os.path.isabs(self.work_dir):
+            user_home = self.run('echo $HOME', hide=True).stdout.strip()
+            self.work_dir = os.path.join(user_home, self.work_dir)
         self.mkdir(self.work_dir)
         self.mkdir(self.tmp_dir)
 

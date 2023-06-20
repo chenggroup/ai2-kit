@@ -32,13 +32,13 @@ class ProtonTransferGroup:
 class WorkflowGroup:
     @property
     def cll_mlp_training(self):
-        from ai2_kit.workflow.cll_mlp import cll_train_mlp
-        return cll_train_mlp
+        from ai2_kit.workflow.cll_mlp import run_workflow
+        return run_workflow
 
     @property
     def fep_mlp_training(self):
-        from ai2_kit.workflow.fep_mlp import fep_train_mlp
-        return fep_train_mlp
+        from ai2_kit.workflow.fep_mlp import run_workflow
+        return run_workflow
 
 class ToolGroup:
 

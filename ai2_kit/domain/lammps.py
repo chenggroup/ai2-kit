@@ -1,8 +1,8 @@
 from ai2_kit.core.script import BashTemplate, BashStep, BashScript
 from ai2_kit.core.artifact import Artifact
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.job import GatherJobsFuture, retry_fn
-from ai2_kit.core.future import map_future
+from ai2_kit.core.job import gather_jobs
+from ai2_kit.core.util import split_list
 
 from typing import List, Literal, Optional, Union, Mapping, Sequence
 from pydantic import BaseModel
@@ -130,7 +130,7 @@ class GenericLammpsOutput(ICllExploreOutput):
         return self.model_devi_outputs
 
 
-def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
+async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
     executor = ctx.resource_manager.default_executor
 
     # setup workspace
@@ -241,30 +241,28 @@ def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
     base_cmd = f'{lammps_cmd} -i {lammps_input_file_name}'
     cmd = f'''if [ -f md.restart.* ]; then {base_cmd} -v restart 1; else {base_cmd} -v restart 0; fi'''
 
-    # group tasks by concurrency
-    concurrency = ctx.config.concurrency
-    steps_group = [ list() for _ in range(concurrency)]
-
-    for i, lammps_task_dir in enumerate(lammps_task_dirs):
-        steps = steps_group[i % concurrency]
-        step = BashStep(
+    # generate steps
+    steps = []
+    for lammps_task_dir in lammps_task_dirs:
+        steps.append(BashStep(
             cwd=lammps_task_dir,
             cmd=cmd,
             checkpoint='lammps',
-        )
-        steps.append(step)
+        ))
 
     # submit jobs
     jobs = []
-    for steps in steps_group:
-        if not steps:
+    for steps_group in split_list(steps, ctx.config.concurrency):
+        if not steps_group:
             continue
         script = BashScript(
             template=ctx.config.script_template,
-            steps=steps,
+            steps=steps_group,
         )
         job = executor.submit(script.render(), cwd=tasks_dir)
         jobs.append(job)
+
+    await gather_jobs(jobs, max_tries=2)
 
     outputs = [
         Artifact.of(
@@ -275,11 +273,7 @@ def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
             ),  # TODO: inherit from input file
         ) for task_dir in lammps_task_dirs]  # type: ignore
 
-    future = GatherJobsFuture(jobs, done_fn=retry_fn(max_tries=2), raise_exception=True)
-
-    return map_future(future, GenericLammpsOutput(
-        model_devi_outputs=outputs,
-    ))
+    return GenericLammpsOutput(model_devi_outputs=outputs)
 
 
 def make_md_force_field_section(models: List[str]):

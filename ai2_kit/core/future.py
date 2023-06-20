@@ -1,12 +1,10 @@
-from typing import Generic, Optional, TypeVar, Callable
+from typing import Generic, Optional, TypeVar, Callable, Awaitable
 from abc import abstractmethod
 
 
 T = TypeVar('T')
 
 
-# TODO: use RxPY Observable instead
-# mimic the API of concurrent.future.Future
 class IFuture(Generic[T]):
 
     @abstractmethod
@@ -16,6 +14,9 @@ class IFuture(Generic[T]):
     @abstractmethod
     def result(self, timeout: Optional[float] = None) -> T:
         pass
+
+    async def result_async(self, timeout: Optional[float] = None) -> T:
+        ...
 
 class DummyFuture(IFuture[T]):
 

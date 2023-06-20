@@ -14,7 +14,7 @@ import random
 import sys
 import json
 
-from .cll import ICllTrainInput, ICllTrainOutput, BaseCllContext
+from .cll import ICllTrainOutput, BaseCllContext
 from .data_helper import Cp2kOutputHelper, DeepmdNpyHelper, DeepmdModelHelper, convert_to_deepmd_npy
 from .constant import (
     DP_CHECKPOINT_FILE,
@@ -39,7 +39,7 @@ class GenericDeepmdContextConfig(BaseModel):
 
 
 @dataclass
-class GenericDeepmdInput(ICllTrainInput):
+class GenericDeepmdInput:
     config: GenericDeepmdInputConfig
     type_map: List[str]
     old_dataset: List[Artifact]  # training data used by previous iteration

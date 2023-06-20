@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, Dict
+from typing import Optional, Dict, Awaitable
 from abc import ABC, abstractmethod
 import shlex
 import os
@@ -62,6 +62,7 @@ class BaseQueueSystem(ABC):
     def _post_submit(self, job: 'QueueJobFuture'):
         ...
 
+    # TODO: integrate with checkpoint system
     def submit(self, script: str, cwd: str, name: Optional[str] = None, success_indicator: Optional[str] = None):
 
         if name is None:
@@ -247,18 +248,22 @@ class QueueJobFuture(JobFuture):
 
         return state
 
+    # Deprecated, use resubmit
     def redo(self):
+        job = self.resubmit()
+        self._done_state = None
+        self._tries += 1
+        self._job_id = job._job_id
+
+    def resubmit(self):
         if not self.done():
-            raise RuntimeError('Cannot redo an unfinished job!')
-        job = self._queue_system.submit(
+            raise RuntimeError('Cannot resubmit an unfinished job!')
+        return self._queue_system.submit(
             script=self._script,
             cwd=self._cwd,
             name=self._name,
             success_indicator=self._success_indicator,
         )
-        self._done_state = None
-        self._tries += 1
-        self._job_id = job._job_id
 
     def get_tries(self):
         return self._tries
@@ -273,9 +278,13 @@ class QueueJobFuture(JobFuture):
         return self.get_job_state().terminal
 
     def result(self, timeout: float = float('inf')) -> JobState:
-        return asyncio.run(self.async_result(timeout))
+        return asyncio.run(self.result_async(timeout))
 
-    async def async_result(self, timeout: float = float('inf')) -> JobState:
+    async def result_async(self, timeout: float = float('inf')) -> JobState:
+        '''
+        Though this is not fully async, as the job submission and state polling are still blocking,
+        but it is already good enough to handle thousands of jobs (I guess).
+        '''
         timeout_ts = time.time() + timeout
         while time.time() < timeout_ts:
             if self.done():
@@ -294,4 +303,3 @@ class QueueJobFuture(JobFuture):
             polling_interval=self._polling_interval,
             state=self.get_job_state(),
         ))
-

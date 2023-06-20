@@ -82,8 +82,8 @@ def __convert_to_deepmd_npy():
             atoms_list.extend(dp_system.to_ase_structure())  # type: ignore
 
         output_dirs = []
-        for symbols, atoms_group in groupby(atoms_list, key=lambda x: str(x.symbols)):
-            output_dir = os.path.join(base_dir, symbols)
+        for i, (symbols, atoms_group) in enumerate(groupby(atoms_list, key=lambda x: str(x.symbols))):
+            output_dir = os.path.join(base_dir, f'{i:03d}')
             atoms_group = list(atoms_group)
             if not atoms_group:
                 continue
@@ -107,7 +107,7 @@ def __convert_to_lammps_input_data():
 
         lammps_data_files = []
         for i, poscar_file in enumerate(poscar_files):
-            output_file = os.path.join(base_dir, f'{str(i).zfill(6)}-.lammps.data')
+            output_file = os.path.join(base_dir, f'{i:06d}.lammps.data')
             dpdata.System(poscar_file['url'], fmt='vasp/poscar', type_map=type_map).to_lammps_lmp(output_file)  # type: ignore
             lammps_data_files.append(output_file)
         # TODO: return ArtifactDict

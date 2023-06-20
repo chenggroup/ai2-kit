@@ -10,7 +10,7 @@ from dataclasses import dataclass
 import pandas as pd
 
 from .data_helper import LammpsOutputHelper
-from .cll import ICllSelectorInput, ICllSelectorOutput, BaseCllContext
+from .cll import ICllSelectorOutput, BaseCllContext
 
 logger = get_logger(__name__)
 
@@ -36,14 +36,13 @@ class ThresholdSelectorOutput(ICllSelectorOutput):
         return self.passing_rate
 
 @dataclass
-class ThresholdSelectorInput(ICllSelectorInput):
+class ThresholdSelectorInput:
     config: ThresholdSelectorInputConfig
     model_devi_data: List[Artifact]
     model_devi_out_filename: str
 
     def set_model_devi_dataset(self, data: List[Artifact]):
         self.model_devi_data = data
-
 
 def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelectorContext):
     executor = ctx.resource_manager.default_executor

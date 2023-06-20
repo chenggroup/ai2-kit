@@ -81,7 +81,13 @@ def sort_unique_str_list(l: List[str]) -> List[str]:
     """remove duplicate str and sort"""
     return list(sorted(set(l)))
 
-
 T = TypeVar('T')
 def flatten(l: List[List[T]]) -> List[T]:
     return [item for sublist in l for item in sublist]
+
+def format_env_string(s: str) -> str:
+    return s.format(**os.environ)
+
+def split_list(l: List[T], n: int) -> List[List[T]]:
+    """split a list into n chunks, the last chunk may be smaller than others"""
+    return [l[i:i + n] for i in range(0, len(l), n)]

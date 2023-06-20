@@ -15,7 +15,7 @@ import copy
 import os
 
 from .data_helper import LammpsOutputHelper, XyzHelper, Cp2kOutputHelper, ase_atoms_to_cp2k_input_data
-from .cll import ICllLabelInput, ICllLabelOutput, BaseCllContext
+from .cll import ICllLabelOutput, BaseCllContext
 
 logger = get_logger(__name__)
 
@@ -39,15 +39,11 @@ class GenericCp2kContextConfig(BaseModel):
     concurrency: int = 5
 
 @dataclass
-class GenericCp2kInput(ICllLabelInput):
-
+class GenericCp2kInput:
     config: GenericCp2kInputConfig
     system_files: List[Artifact]
     type_map: List[str]
     initiated: bool = False
-
-    def set_systems(self, systems: List[Artifact]):
-        self.system_files = systems
 
 
 @dataclass
@@ -105,7 +101,8 @@ def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> IFuture[Ge
 
     # TODO: support POSCAR in the future
     # TODO: refactor the way of handling different file formats
-    for system_file in input.system_files:
+    system_files = ctx.resource_manager.resolve_artifacts(input.system_files)
+    for system_file in system_files:
         if LammpsOutputHelper.is_match(system_file):
             lammps_out = LammpsOutputHelper(system_file)
             lammps_dump_files.extend(lammps_out.get_passed_dump_files())
@@ -175,9 +172,6 @@ def __make_cp2k_task_dirs():
                             input_file_name: str = 'input.inp',
                             ) -> List[str]:
         """Generate CP2K input files from LAMMPS dump files or XYZ files."""
-
-        # TODO: pymatgen has a better support for cp2k input, replace cp2k_input_tools with pymatgen in the future
-        # https://pymatgen.org/pymatgen.io.cp2k.inputs.html#pymatgen.io.cp2k.inputs.Cp2kInput
         from cp2k_input_tools import DEFAULT_CP2K_INPUT_XML
         from cp2k_input_tools.generator import CP2KInputGenerator
 
@@ -192,7 +186,7 @@ def __make_cp2k_task_dirs():
         for dump_file in lammps_dump_files:
             atoms_list += ase.io.read(dump_file, ':', format='lammps-dump-text', order=False, specorder=type_map)  # type: ignore
         for xyz_file in xyz_files:
-            atoms_list += ase.io.read(xyz_file, ':', format='extxyz', order=False)  # type: ignore
+            atoms_list += ase.io.read(xyz_file, ':', format='extxyz')  # type: ignore
 
         if limit > 0:
             atoms_list = atoms_list[:limit]

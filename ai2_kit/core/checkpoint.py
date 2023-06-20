@@ -4,8 +4,7 @@ import functools
 import cloudpickle
 import os
 import types
-
-from .future import IFuture
+import inspect
 
 _lock = Lock()
 _checkpoint_file: Optional[str] = None
@@ -69,21 +68,17 @@ def checkpoint(key_fn: Union[str, KeyFn], disable = False):
                 return ret
 
             ret = fn(*args, **kwargs)
-
-            if isinstance(ret, IFuture):
-                result_fn = ret.result
-                def _wrap_fn(self, timeout=None):
-                    _ret = result_fn(timeout)
-                    _set_checkpoint(key, ret)
+            if inspect.isawaitable(ret):
+                async def _wrap_fn():
+                    _ret = await ret
+                    _set_checkpoint(key, _ret)
                     return _ret
-                ret.result = types.MethodType(_wrap_fn, ret)
+                return _wrap_fn()
             else:
                 _set_checkpoint(key, ret)
-
-            return ret
+                return ret
 
         return wrapper # type: ignore
-
     return _checkpoint
 
 

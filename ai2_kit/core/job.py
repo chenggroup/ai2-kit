@@ -1,12 +1,12 @@
-from typing import List, Callable, TypeVar, Optional
+from typing import List, Callable, Optional, Awaitable
 from enum import Enum
 from abc import abstractmethod
 import time
+import asyncio
+
 from .future import IFuture
 
 # Copy from parsl
-# TODO:
-
 class JobState(bytes, Enum):
     """Defines a set of states that a job can be in"""
     def __new__(cls, value: int, terminal: bool, status_name: str) -> "JobState":
@@ -76,6 +76,28 @@ def retry_fn(max_tries=2) -> DoneFn:
     return callback  # type: ignore
 
 
+async def gather_jobs(jobs: List[JobFuture], timeout = None, max_tries: int = 1) -> List[JobState]:
+    async def wait_job(job: JobFuture) -> JobState:
+        state = JobState.UNKNOWN
+        tries = 0
+        while True:
+            try:
+                state = await job.result_async(timeout)
+                if state is JobState.COMPLETED:
+                    break
+            except TimeoutError:
+                state = JobState.TIMEOUT
+            tries += 1
+
+            if tries >= max_tries:
+                break
+            job.redo()
+
+        return state
+    return await asyncio.gather(*[wait_job(job) for job in jobs])
+
+
+# Deprecated
 class GatherJobsFuture(IFuture[List[JobState]]):
 
     def __init__(self, jobs: List[JobFuture],
@@ -88,12 +110,12 @@ class GatherJobsFuture(IFuture[List[JobState]]):
         self._raise_exception = raise_exception
         self._polling_interval = polling_interval
 
-
     def done(self):
         all_done = True
         for job in self._jobs:
             all_done = all_done and job.done() and self._done_fn(job)
         return all_done
+
 
     def result(self, timeout: Optional[float] = None):
         if timeout is None:

@@ -8,6 +8,7 @@ from typing import List, Literal, Optional, Union, Mapping, Sequence
 from pydantic import BaseModel
 from dataclasses import dataclass
 from string import Template
+from allpairspy import AllPairs
 import os
 import itertools
 import random
@@ -171,9 +172,10 @@ def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
         combination_values.append(v)  # type: ignore
 
     if 1 < input.config.n_wise <= len(combination_fields):
-        #TODO: implement n-wise combination
-        raise NotImplementedError('n-wise combination is not implemented yet')
+        logger.info('using %d-wise combination', input.config.n_wise)
+        combinations = AllPairs(combination_values, n=input.config.n_wise)
     else:
+        logger.info('using full combination')
         combinations = itertools.product(*combination_values)
 
     lammps_task_dirs = []

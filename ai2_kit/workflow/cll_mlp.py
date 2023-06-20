@@ -17,6 +17,7 @@ from pydantic import BaseModel
 from typing import Dict, List, Optional, Any
 from fire import Fire
 
+import asyncio
 import itertools
 import copy
 import os
@@ -77,11 +78,10 @@ class CllWorkflowConfig(BaseModel):
     workflow: Any  # Keep it raw here, it should be parsed later in iteration
 
 
-def cll_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Optional[str] = None):
+def run_workflow(*config_files, executor: Optional[str] = None, path_prefix: Optional[str] = None):
     """
     Run Closed-Loop Learning (CLL) workflow to train Machine Learning Potential (MLP) models.
     """
-
     config_data = load_yaml_files(*config_files)
     config = CllWorkflowConfig.parse_obj(config_data)
 
@@ -95,7 +95,10 @@ def cll_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
         artifacts=config.artifacts,
         default_executor=executor,
     )
+    return asyncio.run(cll_mlp_training_workflow(config, resource_manager, executor, path_prefix))
 
+
+async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager: ResourceManager, executor: str, path_prefix: str):
     context_config = config.executors[executor].context
     raw_workflow_config = copy.deepcopy(config.workflow)
 
@@ -104,7 +107,6 @@ def cll_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
     selector_output: Optional[cll.ICllSelectorOutput] = None
     train_output: Optional[cll.ICllTrainOutput] = None
     explore_output: Optional[cll.ICllExploreOutput] = None
-
 
     # cursor of update table
     update_cursor = 0
@@ -138,7 +140,7 @@ def cll_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
                 path_prefix=os.path.join(iter_path_prefix, 'label-cp2k'),
                 resource_manager=resource_manager,
             )
-            label_output = cp2k.generic_cp2k(cp2k_input, cpk2_context).result()
+            label_output = await cp2k.generic_cp2k(cp2k_input, cpk2_context)
         else:
             raise ValueError('No label method is specified')
 
@@ -156,7 +158,7 @@ def cll_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
                 config=context_config.train.deepmd,
                 resource_manager=resource_manager,
             )
-            train_output = deepmd.generic_deepmd(deepmd_input, deepmd_context).result()
+            train_output = await deepmd.generic_deepmd(deepmd_input, deepmd_context)
         else:
             raise ValueError('No train method is specified')
 
@@ -176,7 +178,7 @@ def cll_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
                 config=context_config.explore.lammps,
                 resource_manager=resource_manager,
             )
-            explore_output = lammps.generic_lammps(lammps_input, lammps_context).result()
+            explore_output = await lammps.generic_lammps(lammps_input, lammps_context)
         else:
             raise ValueError('No explore method is specified')
 
@@ -191,7 +193,7 @@ def cll_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
                 path_prefix=os.path.join(iter_path_prefix, 'selector-threshold'),
                 resource_manager=resource_manager,
             )
-            selector_output = selector.threshold_selector(selector_input, selector_context).result()
+            selector_output = await selector.threshold_selector(selector_input, selector_context)
         else:
             raise ValueError('No select method is specified')
 
@@ -214,4 +216,4 @@ def cll_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
 
 if __name__ == '__main__':
     # use python-fire to parse command line arguments
-    Fire(cll_train_mlp)
+    Fire(run_workflow)

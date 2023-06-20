@@ -1,8 +1,7 @@
 from ai2_kit.core.artifact import Artifact
 from ai2_kit.core.script import BashTemplate
 from ai2_kit.core.script import BashScript, BashStep
-from ai2_kit.core.job import JobFuture, GatherJobsFuture, retry_fn
-from ai2_kit.core.future import map_future
+from ai2_kit.core.job import JobFuture, gather_jobs
 from ai2_kit.core.log import get_logger
 
 from pydantic import BaseModel
@@ -15,7 +14,7 @@ import sys
 import json
 
 from .cll import ICllTrainOutput, BaseCllContext
-from .data_helper import Cp2kOutputHelper, DeepmdNpyHelper, DeepmdModelHelper, convert_to_deepmd_npy
+from .data_helper import Cp2kOutputHelper, DeepmdNpyHelper, convert_to_deepmd_npy
 from .constant import (
     DP_CHECKPOINT_FILE,
     DP_DISP_FILE,
@@ -31,7 +30,6 @@ class GenericDeepmdInputConfig(BaseModel):
     model_num: int = 4
     init_dataset: List[str]
     input_template: dict
-
 
 class GenericDeepmdContextConfig(BaseModel):
     script_template: BashTemplate
@@ -65,7 +63,7 @@ class GenericDeepmdOutput(ICllTrainOutput):
     def get_training_dataset(self) -> List[Artifact]:
         return self.input.new_dataset + self.input.old_dataset
 
-def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
+async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
     executor = ctx.resource_manager.default_executor
 
     # setup workspace
@@ -182,14 +180,14 @@ def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
         job = executor.submit(dp_train_script.render(), cwd=task_dir)
         jobs.append(job)
 
-    future = GatherJobsFuture(jobs, done_fn=retry_fn(max_tries=2), raise_exception=True)
+    await gather_jobs(jobs, max_tries=2)
 
-    return map_future(future, GenericDeepmdOutput(
+    return GenericDeepmdOutput(
         input=input,
         outputs=[Artifact.of(
             url=url,
         ) for url in output_dirs]
-    ))
+    )
 
 def _random_seed():
     return random.randrange(sys.maxsize) % (1 << 32)

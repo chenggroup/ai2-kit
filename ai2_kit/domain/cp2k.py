@@ -1,10 +1,7 @@
 from ai2_kit.core.artifact import Artifact
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
-from ai2_kit.core.job import GatherJobsFuture, retry_fn
-
-from ai2_kit.core.future import DummyFuture, IFuture, map_future
-
-from ai2_kit.core.util import merge_dict, parse_cp2k_input, dict_nested_get, dict_nested_set
+from ai2_kit.core.job import gather_jobs
+from ai2_kit.core.util import merge_dict, parse_cp2k_input, dict_nested_get, dict_nested_set, split_list
 from ai2_kit.core.log import get_logger
 
 from typing import List, Union
@@ -59,8 +56,7 @@ class GenericCp2kOutput(ICllLabelOutput):
         return self.cp2k_outputs
 
 
-def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> IFuture[GenericCp2kOutput]:
-
+async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> GenericCp2kOutput:
     executor = ctx.resource_manager.default_executor
 
     # For the first round
@@ -124,33 +120,28 @@ def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> IFuture[Ge
         )
     else:
         logger.warn('no available candidates, skip')
-        return DummyFuture(GenericCp2kOutput(cp2k_outputs=[]))
+        return GenericCp2kOutput(cp2k_outputs=[])
 
-    # group cp2k tasks by concurrency
-    concurrency = ctx.config.concurrency
-    steps_group = [list() for _ in range(concurrency)]
-    for i, cp2k_task_dir in enumerate(cp2k_task_dirs):
-        steps = steps_group[i % concurrency]
-        step = BashStep(
+    # build commands
+    steps = []
+    for cp2k_task_dir in cp2k_task_dirs:
+        steps.append(BashStep(
             cwd=cp2k_task_dir,
             cmd=[ctx.config.cp2k_cmd, '-i input.inp 1>> output 2>> output'],
             checkpoint='cp2k',
-        )
-        steps.append(step)
+        ))
 
-    # run tasks
+    # submit tasks and wait for completion
     jobs = []
-    for steps in steps_group:
-        if not steps:
+    for steps_group in split_list(steps, ctx.config.concurrency):
+        if not steps_group:
             continue
         script = BashScript(
             template=ctx.config.script_template,
-            steps=steps,
+            steps=steps_group,
         )
-        job = executor.submit(script.render(), cwd=tasks_dir)
-        jobs.append(job)
-
-    future = GatherJobsFuture(jobs, done_fn=retry_fn(max_tries=2), raise_exception=True)
+        jobs.append(executor.submit(script.render(), cwd=tasks_dir))
+    jobs = await gather_jobs(jobs, max_tries=2)
 
     cp2k_outputs = [Artifact.of(
         url=url,
@@ -159,7 +150,7 @@ def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> IFuture[Ge
         attrs=dict(),  # TODO: success from input
     ) for url in cp2k_task_dirs]
 
-    return map_future(future, GenericCp2kOutput(cp2k_outputs=cp2k_outputs))
+    return GenericCp2kOutput(cp2k_outputs=cp2k_outputs)
 
 
 def __make_cp2k_task_dirs():

@@ -88,6 +88,9 @@ def flatten(l: List[List[T]]) -> List[T]:
 def format_env_string(s: str) -> str:
     return s.format(**os.environ)
 
+
 def split_list(l: List[T], n: int) -> List[List[T]]:
-    """split a list into n chunks, the last chunk may be smaller than others"""
-    return [l[i:i + n] for i in range(0, len(l), n)]
+    """split list into n chunks"""
+    # ref: https://stackoverflow.com/questions/2130016/splitting-a-list-into-n-parts-of-approximately-equal-length
+    k, m = divmod(len(l), n)
+    return [l[i*k+min(i, m) : (i+1)*k+min(i+1, m)] for i in range(n)]

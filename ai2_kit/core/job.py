@@ -57,26 +57,7 @@ class JobFuture(IFuture[JobState]):
     def is_retriable(self) -> bool:
         return True
 
-
-DoneFn = Callable[[JobFuture], bool]
-
-def _default_done_fn(_): return True
-
-def retry_fn(max_tries=2) -> DoneFn:
-
-    def callback(job: JobFuture):
-        if job.is_success():
-            return True
-        if job.get_tries() >= max_tries:
-            return True
-        if job.is_retriable():
-            job.redo()
-            return False
-
-    return callback  # type: ignore
-
-
-async def gather_jobs(jobs: List[JobFuture], timeout = None, max_tries: int = 1) -> List[JobState]:
+async def gather_jobs(jobs: List[JobFuture], timeout = float('inf'), max_tries: int = 1) -> List[JobState]:
     async def wait_job(job: JobFuture) -> JobState:
         state = JobState.UNKNOWN
         tries = 0
@@ -92,47 +73,6 @@ async def gather_jobs(jobs: List[JobFuture], timeout = None, max_tries: int = 1)
             if tries >= max_tries:
                 break
             job.redo()
-
         return state
+
     return await asyncio.gather(*[wait_job(job) for job in jobs])
-
-
-# Deprecated
-class GatherJobsFuture(IFuture[List[JobState]]):
-
-    def __init__(self, jobs: List[JobFuture],
-                 done_fn: DoneFn = _default_done_fn,
-                 raise_exception = True,
-                 polling_interval = 10,
-                 ):
-        self._jobs = jobs
-        self._done_fn = done_fn
-        self._raise_exception = raise_exception
-        self._polling_interval = polling_interval
-
-    def done(self):
-        all_done = True
-        for job in self._jobs:
-            all_done = all_done and job.done() and self._done_fn(job)
-        return all_done
-
-
-    def result(self, timeout: Optional[float] = None):
-        if timeout is None:
-            timeout = float('inf')
-        timeout_ts = time.time() + timeout
-
-        while time.time() < timeout_ts:
-            if self.done():
-                if self._raise_exception:
-                    failed_jobs = [
-                        job for job in self._jobs if not job.is_success()]
-                    if failed_jobs:
-                        raise RuntimeError(
-                            'Soem jobs are failed: {}'.format(failed_jobs))
-                return [job.result() for job in self._jobs]
-
-            else:
-                time.sleep(self._polling_interval)
-        else:
-            raise TimeoutError('Wait for jobs timeout!')

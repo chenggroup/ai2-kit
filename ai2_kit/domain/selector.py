@@ -1,7 +1,5 @@
-from ai2_kit.core.executor import Executor
 from ai2_kit.core.artifact import Artifact
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.future import DummyFuture
 
 from typing import List
 from io import StringIO
@@ -44,7 +42,7 @@ class ThresholdSelectorInput:
     def set_model_devi_dataset(self, data: List[Artifact]):
         self.model_devi_data = data
 
-def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelectorContext):
+async def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelectorContext):
     executor = ctx.resource_manager.default_executor
 
     f_trust_lo = input.config.f_trust_lo
@@ -85,8 +83,7 @@ def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelectorCont
         total_count += len(df)
         passed_count += len(passed_df)
 
-
-    return DummyFuture(ThresholdSelectorOutput(
+    return ThresholdSelectorOutput(
         model_devi_data=input.model_devi_data,
         passing_rate=passed_count / total_count,
-    ))
+    )

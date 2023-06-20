@@ -17,6 +17,7 @@ from pydantic import BaseModel
 from typing import Dict, List, Optional, Any
 from fire import Fire
 
+import asyncio
 import copy
 import itertools
 import os
@@ -60,7 +61,7 @@ class FepWorkflowConfig(BaseModel):
     artifacts: ArtifactMap
     workflow: Any
 
-def fep_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Optional[str] = None):
+def run_workflow(*config_files, executor: Optional[str] = None, path_prefix: Optional[str] = None):
     """
     Training ML potential for FEP
     """
@@ -78,7 +79,10 @@ def fep_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
         artifacts=config.artifacts,
         default_executor=executor,
     )
+    return asyncio.run(cll_mlp_training_workflow(config, resource_manager, executor, path_prefix))
 
+
+async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager: ResourceManager, executor: str, path_prefix: str):
     context_config = config.executors[executor].context
     raw_workflow_config = copy.deepcopy(config.workflow)
 
@@ -137,12 +141,10 @@ def fep_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
             resource_manager=resource_manager,
         )
 
-
-        red_label_output_future = cp2k.generic_cp2k(red_cp2k_input, red_cpk2_context)
-        neu_label_output_future = cp2k.generic_cp2k(neu_cp2k_input, neu_cp2k_context)
-
-        red_label_output = red_label_output_future.result()
-        neu_label_output = neu_label_output_future.result()
+        red_label_output, neu_label_output = await asyncio.gather(
+            cp2k.generic_cp2k(red_cp2k_input, red_cpk2_context),
+            cp2k.generic_cp2k(neu_cp2k_input, neu_cp2k_context),
+        )
 
         # Train
         red_deepmd_input = deepmd.GenericDeepmdInput(
@@ -171,11 +173,10 @@ def fep_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
             resource_manager=resource_manager,
         )
 
-        red_train_output_future = deepmd.generic_deepmd(red_deepmd_input, red_deepmd_context)
-        neu_train_output_future = deepmd.generic_deepmd(neu_deepmd_input, neu_deepmd_context)
-
-        red_train_output = red_train_output_future.result()
-        neu_train_output = neu_train_output_future.result()
+        red_train_output, neu_train_output = await asyncio.gather(
+            deepmd.generic_deepmd(red_deepmd_input, red_deepmd_context),
+            deepmd.generic_deepmd(neu_deepmd_input, neu_deepmd_context),
+        )
 
         # explore
         lammps_input = lammps.GenericLammpsInput(
@@ -192,8 +193,7 @@ def fep_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
             config=context_config.lammps,
             resource_manager=resource_manager,
         )
-        explore_output = lammps.generic_lammps(lammps_input, lammps_context).result()
-
+        explore_output = await lammps.generic_lammps(lammps_input, lammps_context)
 
         # select
         red_selector_input = selector.ThresholdSelectorInput(
@@ -216,12 +216,10 @@ def fep_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
             resource_manager=resource_manager,
         )
 
-        red_selector_output_future = selector.threshold_selector(red_selector_input, red_selector_context)
-        neu_selector_output_future = selector.threshold_selector(neu_selector_input, neu_selector_context)
-
-        red_selector_output = red_selector_output_future.result()
-        neu_selector_output = neu_selector_output_future.result()
-
+        red_selector_output, neu_selector_output = await asyncio.gather(
+            selector.threshold_selector( red_selector_input, red_selector_context),
+            selector.threshold_selector( neu_selector_input, neu_selector_context),
+        )
 
         # Update
         update_config = workflow_config.update.walkthrough
@@ -238,4 +236,4 @@ def fep_train_mlp(*config_files, executor: Optional[str] = None, path_prefix: Op
 
 if __name__ == '__main__':
     # use python-fire to parse command line arguments
-    Fire(fep_train_mlp)
+    Fire(run_workflow)

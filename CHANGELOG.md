@@ -1,5 +1,8 @@
 # Changelogs
 
+## v0.3.2
+* improvement: support relative work_dir
+
 ## v0.3.1
 * feat: async job polling
 
@@ -18,11 +21,10 @@
 ## v0.0.2
 * feat: support providing initial structures for label task at first iteration.
 * feat: support dynamic configuration update for each iterations.
-* improve: reduce size of remote python script by compressing it with bz2.
+* improvement: reduce size of remote python script by compressing it with bz2.
 * fix: ssh connection closed when running large remote python script.
 * refactor: design common interface for CLL workflow.
 * refactor: use ase.Atoms as the universal in-memory data structure.
-* refactor: replace cp2k-input-tools with pymatgen.
 * refactor: use ResourceManager to manage executors and artifacts.
 
 ## v0.0.1

@@ -43,19 +43,12 @@ class JobFuture(IFuture[JobState]):
         ...
 
     @abstractmethod
-    def redo(self):
-        ...
-
-    @abstractmethod
-    def get_tries(self) -> int:
-        ...
-
-    @abstractmethod
     def is_success(self) -> bool:
         ...
 
-    def is_retriable(self) -> bool:
-        return True
+    @abstractmethod
+    def resubmit(self) -> 'JobFuture':
+        ...
 
 async def gather_jobs(jobs: List[JobFuture], timeout = float('inf'), max_tries: int = 1) -> List[JobState]:
     async def wait_job(job: JobFuture) -> JobState:
@@ -72,7 +65,7 @@ async def gather_jobs(jobs: List[JobFuture], timeout = float('inf'), max_tries: 
 
             if tries >= max_tries:
                 break
-            job.redo()
+            job = job.resubmit()
         return state
 
     return await asyncio.gather(*[wait_job(job) for job in jobs])

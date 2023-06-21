@@ -12,6 +12,7 @@ from ai2_kit.domain import (
     updater,
     cll,
 )
+from ai2_kit.core.checkpoint import set_checkpoint_file, apply_checkpoint
 
 from pydantic import BaseModel
 from typing import Dict, List, Optional, Any
@@ -61,10 +62,14 @@ class FepWorkflowConfig(BaseModel):
     artifacts: ArtifactMap
     workflow: Any
 
-def run_workflow(*config_files, executor: Optional[str] = None, path_prefix: Optional[str] = None):
+
+def run_workflow(*config_files, executor: Optional[str] = None,
+                 path_prefix: Optional[str] = None, checkpoint: Optional[str] = None):
     """
     Training ML potential for FEP
     """
+    if checkpoint is not None:
+        set_checkpoint_file(checkpoint)
 
     config_data = load_yaml_files(*config_files)
     config = FepWorkflowConfig.parse_obj(config_data)
@@ -115,13 +120,15 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
 
         # decide path prefix for each iteration
         iter_path_prefix = os.path.join(path_prefix, f'iters-{i:03d}')
+        # prefix of checkpoint
+        cp_prefix = f'iters-{i:03d}'
 
         # label: cp2k
         red_cp2k_input = cp2k.GenericCp2kInput(
             config=workflow_config.red.cp2k,
             type_map=type_map,
             system_files=[] if red_selector_output is None else red_selector_output.get_model_devi_dataset(),
-            initiated= i > 0,
+            initiated=i > 0,
         )
         red_cpk2_context = cp2k.GenericCp2kContext(
             config=context_config.cp2k,
@@ -133,7 +140,7 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
             config=workflow_config.neu.cp2k,
             type_map=type_map,
             system_files=[] if neu_selector_output is None else neu_selector_output.get_model_devi_dataset(),
-            initiated= i > 0,
+            initiated=i > 0,
         )
         neu_cp2k_context = cp2k.GenericCp2kContext(
             config=context_config.cp2k,
@@ -142,8 +149,8 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
         )
 
         red_label_output, neu_label_output = await asyncio.gather(
-            cp2k.generic_cp2k(red_cp2k_input, red_cpk2_context),
-            cp2k.generic_cp2k(neu_cp2k_input, neu_cp2k_context),
+            apply_checkpoint(f'{cp_prefix}/cp2k/red')(cp2k.generic_cp2k)(red_cp2k_input, red_cpk2_context),
+            apply_checkpoint(f'{cp_prefix}/cp2k/neu')(cp2k.generic_cp2k)(neu_cp2k_input, neu_cp2k_context),
         )
 
         # Train
@@ -152,20 +159,19 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
             type_map=type_map,
             old_dataset=[] if red_train_output is None else red_train_output.get_training_dataset(),
             new_dataset=red_label_output.get_labeled_system_dataset(),
-            initiated= i > 0,
+            initiated=i > 0,
         )
         red_deepmd_context = deepmd.GenericDeepmdContext(
             path_prefix=os.path.join(iter_path_prefix, 'red-train-deepmd'),
             config=context_config.deepmd,
             resource_manager=resource_manager,
         )
-
         neu_deepmd_input = deepmd.GenericDeepmdInput(
             config=workflow_config.neu.deepmd,
             type_map=type_map,
             old_dataset=[] if neu_train_output is None else neu_train_output.get_training_dataset(),
             new_dataset=neu_label_output.get_labeled_system_dataset(),
-            initiated= i > 0,
+            initiated=i > 0,
         )
         neu_deepmd_context = deepmd.GenericDeepmdContext(
             path_prefix=os.path.join(iter_path_prefix, 'neu-train-deepmd'),
@@ -174,8 +180,8 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
         )
 
         red_train_output, neu_train_output = await asyncio.gather(
-            deepmd.generic_deepmd(red_deepmd_input, red_deepmd_context),
-            deepmd.generic_deepmd(neu_deepmd_input, neu_deepmd_context),
+            apply_checkpoint(f'{cp_prefix}/deepmd/red')(deepmd.generic_deepmd)(red_deepmd_input, red_deepmd_context),
+            apply_checkpoint(f'{cp_prefix}/deepmd/neu')(deepmd.generic_deepmd)(neu_deepmd_input, neu_deepmd_context),
         )
 
         # explore
@@ -193,7 +199,7 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
             config=context_config.lammps,
             resource_manager=resource_manager,
         )
-        explore_output = await lammps.generic_lammps(lammps_input, lammps_context)
+        explore_output = await apply_checkpoint(f'{cp_prefix}/lammps')(lammps.generic_lammps)(lammps_input, lammps_context)
 
         # select
         red_selector_input = selector.ThresholdSelectorInput(
@@ -202,7 +208,8 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
             model_devi_out_filename=const.MODEL_DEVI_RED_OUT,
         )
         red_selector_context = selector.ThresholdSelectorContext(
-            path_prefix=os.path.join(iter_path_prefix, 'red-selector-threshold'),
+            path_prefix=os.path.join(
+                iter_path_prefix, 'red-selector-threshold'),
             resource_manager=resource_manager,
         )
 
@@ -217,8 +224,8 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
         )
 
         red_selector_output, neu_selector_output = await asyncio.gather(
-            selector.threshold_selector( red_selector_input, red_selector_context),
-            selector.threshold_selector( neu_selector_input, neu_selector_context),
+            apply_checkpoint(f'{cp_prefix}/selector/red')(selector.threshold_selector)(red_selector_input, red_selector_context),
+            apply_checkpoint(f'{cp_prefix}/selector/neu')(selector.threshold_selector)(neu_selector_input, neu_selector_context),
         )
 
         # Update

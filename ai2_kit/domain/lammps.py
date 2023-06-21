@@ -252,14 +252,15 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
 
     # submit jobs
     jobs = []
-    for steps_group in split_list(steps, ctx.config.concurrency):
+    for i, steps_group in enumerate(split_list(steps, ctx.config.concurrency)):
         if not steps_group:
             continue
         script = BashScript(
             template=ctx.config.script_template,
             steps=steps_group,
         )
-        job = executor.submit(script.render(), cwd=tasks_dir)
+        job = executor.submit(script.render(), cwd=tasks_dir,
+                              checkpoint_key=f'submit-job/lammps/{i}@{tasks_dir}')
         jobs.append(job)
 
     await gather_jobs(jobs, max_tries=2)

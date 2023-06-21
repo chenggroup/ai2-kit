@@ -88,8 +88,6 @@ ai2-kit algorithm proton-transfer visualize \
 
 Now we can use tools such as ASE or VMD to visualize the output trajectory. 
 
-![proton-transfer-video](../res/proton-transfer.mp4)
-
 https://github.com/chenggroup/ai2-kit/assets/3314130/a973cd0e-044f-405a-8476-ee37a9b4d1b7
 
 

@@ -1,10 +1,9 @@
 from pydantic import BaseModel
-from typing import Optional, Dict, Awaitable
+from typing import Optional, Dict
 from abc import ABC, abstractmethod
 import shlex
 import os
 import re
-import shortuuid
 import time
 import asyncio
 
@@ -12,8 +11,11 @@ import asyncio
 from .connector import BaseConnector
 from .log import get_logger
 from .job import JobFuture, JobState
+from .checkpoint import apply_checkpoint, del_checkpoint
+from .util import short_hash
 
 logger = get_logger(__name__)
+
 
 class QueueSystemConfig(BaseModel):
     class Slurm(BaseModel):
@@ -62,13 +64,18 @@ class BaseQueueSystem(ABC):
     def _post_submit(self, job: 'QueueJobFuture'):
         ...
 
-    # TODO: integrate with checkpoint system
-    def submit(self, script: str, cwd: str, name: Optional[str] = None, success_indicator: Optional[str] = None):
+    def submit(self, script: str, cwd: str,
+               name: Optional[str] = None,
+               checkpoint_key: Optional[str] = None,
+               success_indicator: Optional[str] = None,
+               ):
 
+        # use hash instead of uuid to ensure idempotence
         if name is None:
-            name = shortuuid.uuid() + self.get_script_suffix()
+            name = 'job-' + short_hash(script) + self.get_script_suffix()
         quoted_cwd = shlex.quote(cwd)
 
+        # a placeholder file that will be created when the script end without error
         if success_indicator is None:
             success_indicator = name + '.success'
 
@@ -76,40 +83,46 @@ class BaseQueueSystem(ABC):
         script = '\n'.join([
             script,
             '',
-            'touch {}'.format(shlex.quote(success_indicator)),
+            f'touch {shlex.quote(success_indicator)}',
             '',
         ])
 
-        path = os.path.join(cwd, name)
-        self.connector.run('mkdir -p {}'.format(quoted_cwd))
-        self.connector.dump_text(script, path)
+        script_path = os.path.join(cwd, name)
+        self.connector.run(f'mkdir -p {quoted_cwd}')
+        self.connector.dump_text(script, script_path)
 
         # submit script
-        cmd = "cd {cwd} && {submit_cmd} {script}".format(
-            cwd=quoted_cwd,
-            submit_cmd=self.get_submit_cmd(),
-            script=shlex.quote(name),
-        )
-        result = self.connector.run(cmd)
+        cmd = f"cd {quoted_cwd} && {self.get_submit_cmd()} {shlex.quote(name)}"
 
-        m = re.search(self.get_job_id_pattern(), result.stdout)
-        if m is None:
-            raise RuntimeError("Unable to parse job id")
-        job_id = m.group(1)
+        # apply checkpoint
+        submit_cmd_fn = self._submit_cmd
+        if checkpoint_key is not None:
+            submit_cmd_fn = apply_checkpoint(checkpoint_key)(submit_cmd_fn)
+
+        logger.info(f'Submit batch script: {script_path}')
+        job_id = submit_cmd_fn(cmd)
+
         job = QueueJobFuture(self,
-                       job_id=job_id,
-                       success_indicator=success_indicator,
-                       name=name,
-                       script=script,
-                       cwd=cwd,
-                       polling_interval=self.get_polling_interval() // 2,
-                       )
+                             job_id=job_id,
+                             name=name,
+                             script=script,
+                             cwd=cwd,
+                             checkpoint_key=checkpoint_key,
+                             success_indicator=success_indicator,
+                             polling_interval=self.get_polling_interval() // 2,
+                             )
         self._post_submit(job)
         return job
 
+    def _submit_cmd(self, cmd: str):
+        result = self.connector.run(cmd)
+        m = re.search(self.get_job_id_pattern(), result.stdout)
+        if m is None:
+            raise RuntimeError("Unable to parse job id")
+        return m.group(1)
+
 
 class Slurm(BaseQueueSystem):
-
     config: QueueSystemConfig.Slurm
 
     _last_states: Optional[Dict[str, JobState]]
@@ -218,10 +231,11 @@ class QueueJobFuture(JobFuture):
     def __init__(self,
                  queue_system: BaseQueueSystem,
                  job_id: str,
-                 success_indicator: str,
                  script: str,
                  cwd: str,
                  name: str,
+                 success_indicator: str,
+                 checkpoint_key: Optional[str],
                  polling_interval=10,
                  ):
         self._queue_system = queue_system
@@ -229,44 +243,41 @@ class QueueJobFuture(JobFuture):
         self._script = script
         self._cwd = cwd
         self._job_id = job_id
+        self._checkpoint_key = checkpoint_key
         self._success_indicator = success_indicator
         self._polling_interval = polling_interval
-        self._tries = 1
-        self._done_state = None
+        self._final_state = None
 
     @property
     def success_indicator_path(self):
         return os.path.join(self._cwd, self._success_indicator)
 
     def get_job_state(self):
-        if self._done_state is not None:
-            return self._done_state
+        if self._final_state is not None:
+            return self._final_state
 
-        state = self._queue_system.get_job_state(self._job_id, self.success_indicator_path)
+        state = self._queue_system.get_job_state(
+            self._job_id, self.success_indicator_path)
         if state.terminal:
-            self._done_state = state
+            self._final_state = state
 
         return state
-
-    # Deprecated, use resubmit
-    def redo(self):
-        job = self.resubmit()
-        self._done_state = None
-        self._tries += 1
-        self._job_id = job._job_id
 
     def resubmit(self):
         if not self.done():
             raise RuntimeError('Cannot resubmit an unfinished job!')
+
+        # delete checkpoint on resubmit
+        if self._checkpoint_key is not None:
+            del_checkpoint(self._checkpoint_key)
+
         return self._queue_system.submit(
             script=self._script,
             cwd=self._cwd,
             name=self._name,
+            checkpoint_key=self._checkpoint_key,
             success_indicator=self._success_indicator,
         )
-
-    def get_tries(self):
-        return self._tries
 
     def is_success(self):
         return self.get_job_state() is JobState.COMPLETED

@@ -133,14 +133,16 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
 
     # submit tasks and wait for completion
     jobs = []
-    for steps_group in split_list(steps, ctx.config.concurrency):
+    for i, steps_group in enumerate(split_list(steps, ctx.config.concurrency)):
         if not steps_group:
             continue
         script = BashScript(
             template=ctx.config.script_template,
             steps=steps_group,
         )
-        jobs.append(executor.submit(script.render(), cwd=tasks_dir))
+        job = executor.submit(script.render(), cwd=tasks_dir,
+                              checkpoint_key=f'submit-job/cp2k/{i}@{tasks_dir}')
+        jobs.append(job)
     jobs = await gather_jobs(jobs, max_tries=2)
 
     cp2k_outputs = [Artifact.of(

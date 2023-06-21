@@ -1,4 +1,4 @@
-from typing import Generic, Optional, TypeVar, Callable, Awaitable
+from typing import Generic, Optional, TypeVar
 from abc import abstractmethod
 
 

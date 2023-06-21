@@ -16,12 +16,7 @@ class AseHelper:
 
     def write(self, filename: str, **kwargs):
         ase.io.write(filename, self._atoms_list, **kwargs)
-        return self
 
     def write_each_frame(self, filename: str, **kwargs):
         for i, atoms in enumerate(self._atoms_list):
             ase.io.write(filename.format(i=i), atoms, **kwargs)
-        return self
-
-    def done(self):
-        ...

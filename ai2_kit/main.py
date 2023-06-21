@@ -47,6 +47,10 @@ class ToolGroup:
         from ai2_kit.tool.ase import AseHelper
         return AseHelper
 
+    @property
+    def checkpoint(self):
+        from ai2_kit.core.checkpoint import CheckpointCmd
+        return CheckpointCmd
 
 kit = Group({
     'workflow': WorkflowGroup(),

@@ -7,6 +7,7 @@ from .log import get_logger
 
 logger = get_logger(__name__)
 
+
 from pydantic import BaseModel
 from typing import Optional, Dict, List, TypeVar, Callable, Mapping
 from abc import ABC, abstractmethod
@@ -15,7 +16,6 @@ import os
 import shlex
 import base64
 import bz2
-import pickle
 import cloudpickle
 
 

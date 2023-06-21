@@ -1,5 +1,9 @@
 # Changelogs
 
+## v0.3.4
+* feat: apply checkpoint to all workflows and job submission 
+* feat: add checkpoint command line interface
+
 ## v0.3.3
 * refactor: using asyncio to implement tasks and workflows
 

@@ -1,5 +1,8 @@
 # ai<sup>2</sup>-kit
 
+[![PyPI version](https://badge.fury.io/py/ai2-kit.svg)](https://badge.fury.io/py/ai2-kit)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ai2-kit)](https://pypi.org/project/ai2-kit/)
+
 A toolkit featured ***a**rtificial **i**ntelligence × **a**b **i**nitio* for computational chemistry research.
 
 *Please be advised that `ai2-kit` is still under heavy development and you should expect things to change often. We encourage people to play and explore with `ai2-kit`, and stay tuned with us for more features to come.*

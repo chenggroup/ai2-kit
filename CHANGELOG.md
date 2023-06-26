@@ -1,11 +1,11 @@
-# Changelogs
+# Change Logs
 
 ## v0.3.4
-* feat: apply checkpoint to all workflows and job submission 
+* feat: apply checkpoint to all workflows and job submission steps
 * feat: add checkpoint command line interface
 
 ## v0.3.3
-* refactor: using asyncio to implement tasks and workflows
+* refactor: using async.io to implement tasks and workflows
 
 ## v0.3.2
 * improvement: support relative work_dir

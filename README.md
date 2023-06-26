@@ -31,7 +31,6 @@ poetry install
 
 ./ai2-kit --help
 ```
-
 Note that instead of running global `ai2-kit` command, you should run `./ai2-kit` to run the command from source.
 
 ## Manuals
@@ -44,6 +43,7 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 ### Build-in Functionalities
 * [Checkpoint Mechanism](doc/manual/checkpoint.md)
 * [ASE Toolkit](doc/manual/ase.md)
+* [FAQ](doc/manual/faq.md)
 
 ## Tutorials
 

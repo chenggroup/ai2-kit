@@ -136,3 +136,4 @@ out/
 result*
 *.ckpt
 *.checkpoint
+*.pickle

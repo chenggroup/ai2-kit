@@ -15,6 +15,8 @@ from .log import get_logger
 
 logger = get_logger(__name__)
 
+EMPTY = object()
+
 def default_mutable_field(obj):
     return field(default_factory=lambda: copy.copy(obj))
 
@@ -47,6 +49,7 @@ merge_dict = __merge_dict()
 # TODO: support http(s) url
 def load_yaml_file(path: Path):
     yaml = YAML(typ='safe')
+    JoinTag.register(yaml)
     return yaml.load(path)
 
 
@@ -68,9 +71,11 @@ def parse_cp2k_input(text: str):
     return parser.parse(io.StringIO(text))
 
 
-def dict_nested_get(d: dict, keys: List[str]):
+def dict_nested_get(d: dict, keys: List[str], default=EMPTY):
     """get value from nested dict"""
     for key in keys:
+        if key not in d and default is not EMPTY:
+            return default
         d = d[key]
     return d
 
@@ -106,7 +111,28 @@ def split_list(l: List[T], n: int) -> List[List[T]]:
 def short_hash(s: str) -> str:
     """short hash string"""
     digest = hashlib.sha1(s.encode('utf-8')).digest()
+    # use urlsafe encode to avoid '/' in the string, as it will cause problem in file path
     return base64.urlsafe_b64encode(digest).decode('utf-8')[:-2]
 
 async def to_awaitable(value: T) -> T:
     return value
+
+
+class JoinTag:
+    """a tag to join strings in a list"""
+
+    yaml_tag = u'!join'
+
+    @classmethod
+    def from_yaml(cls, constructor, node):
+        seq = constructor.construct_sequence(node)
+        return ''.join([str(i) for i in seq])
+
+    @classmethod
+    def to_yaml(cls, dumper, data):
+        # do nothing
+        return dumper.represent_sequence(cls.yaml_tag, data)
+
+    @classmethod
+    def register(cls, yaml: YAML):
+        yaml.register_class(cls)

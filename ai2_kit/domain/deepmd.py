@@ -177,7 +177,7 @@ async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
         output_dirs.append(task_dir)
 
         # submit job
-        job = executor.submit(dp_train_script.render(), cwd=task_dir, checkpoint_key=f'submit-job/dp-train/{i}@{task_dir}')
+        job = executor.submit(dp_train_script.render(), cwd=task_dir, checkpoint_key=f'submit-job/dp-train/{i}:{task_dir}')
         jobs.append(job)
 
     await gather_jobs(jobs, max_tries=2)

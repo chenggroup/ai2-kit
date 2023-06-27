@@ -79,6 +79,7 @@ def run_workflow(*config_files, executor: Optional[str] = None,
     if path_prefix is None:
         raise ValueError('path_prefix should not be empty')
 
+    cll.init_artifacts(config.artifacts)
     resource_manager = ResourceManager(
         executor_configs=config.executors,
         artifacts=config.artifacts,

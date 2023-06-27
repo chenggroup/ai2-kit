@@ -57,6 +57,7 @@ class Cp2kOutputHelper(DataHelper):
     format = 'cp2k-output-dir'
 
 
+
 def __ase_atoms_to_cp2k_input_data():
     """workaround for cloudpickle issue"""
     def ase_atoms_to_cp2k_input_data(atoms: Atoms) -> Tuple[List[str], List[List[float]]]:
@@ -76,15 +77,19 @@ def __convert_to_deepmd_npy():
         import dpdata
         from itertools import groupby
 
-        atoms_list: List[Atoms] = []
+        atoms_list: List[Tuple[ArtifactDict, Atoms]] = []
         for cp2k_output in cp2k_outputs:
             dp_system = dpdata.LabeledSystem(os.path.join(cp2k_output['url'], 'output'), fmt='cp2k/output', type_map=type_map)
-            atoms_list.extend(dp_system.to_ase_structure())  # type: ignore
+            atoms_list += [
+                (cp2k_output, atoms)
+                for atoms in dp_system.to_ase_structure()  # type: ignore
+            ]
 
         output_dirs = []
-        for i, (symbols, atoms_group) in enumerate(groupby(atoms_list, key=lambda x: str(x.symbols))):
-            output_dir = os.path.join(base_dir, f'{i:03d}')
-            atoms_group = list(atoms_group)
+        # group dataset by ancestor key
+        for i, (key, atoms_group) in enumerate(groupby(atoms_list, key=lambda x: x[0]['attrs']['ancestor'])):
+            output_dir = os.path.join(base_dir, key.replace('/', '_'))
+            atoms_group = list(item[1] for item in atoms_group)
             if not atoms_group:
                 continue
             dp_system = dpdata.LabeledSystem(atoms_group[0], fmt='ase/structure')
@@ -104,13 +109,14 @@ def __convert_to_lammps_input_data():
     def convert_to_lammps_input_data(poscar_files: List[ArtifactDict], base_dir: str, type_map: List[str]):
         import dpdata
         import os
-
         lammps_data_files = []
         for i, poscar_file in enumerate(poscar_files):
             output_file = os.path.join(base_dir, f'{i:06d}.lammps.data')
             dpdata.System(poscar_file['url'], fmt='vasp/poscar', type_map=type_map).to_lammps_lmp(output_file)  # type: ignore
-            lammps_data_files.append(output_file)
-        # TODO: return ArtifactDict
+            lammps_data_files.append({
+                'url': output_file,
+                'attrs': poscar_file['attrs'],
+            })
         return lammps_data_files
 
     return convert_to_lammps_input_data

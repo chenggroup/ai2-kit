@@ -59,7 +59,6 @@ class TestArtifact(TestCase):
             attrs={'a': 1, 'b': 2},
             includes=None,
             format='',
-            referrer=None,
         )
         dict_obj = artifact.to_dict()
         Artifact.of(**dict_obj)

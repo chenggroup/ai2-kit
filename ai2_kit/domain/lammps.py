@@ -1,10 +1,10 @@
 from ai2_kit.core.script import BashTemplate, BashStep, BashScript
-from ai2_kit.core.artifact import Artifact
+from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import split_list
+from ai2_kit.core.util import split_list, dict_nested_get
 
-from typing import List, Literal, Optional, Union, Mapping, Sequence
+from typing import List, Literal, Optional, Union, Mapping, Sequence, Any
 from pydantic import BaseModel
 from dataclasses import dataclass
 from string import Template
@@ -26,7 +26,6 @@ from .data_helper import LammpsOutputHelper, PoscarHelper, convert_to_lammps_inp
 
 logger = get_logger(__name__)
 
-Scalar = Union[str, int, float, bool]
 
 class ExploreVariants(BaseModel):
     temp: List[float]
@@ -35,7 +34,7 @@ class ExploreVariants(BaseModel):
     pres: List[float]
     """Pressures variants."""
 
-    others: Mapping[str, Sequence[Scalar]] = dict()
+    others: Mapping[str, Sequence[Any]] = dict()
     """
     Other variants to be combined with.
     The key is the name of the variant, and the value is the list of values.
@@ -60,6 +59,9 @@ class GenericLammpsInputConfig(BaseModel):
 
     system_files: List[str]
     """Artifacts of initial system data."""
+
+    plumed_config: Optional[str]
+    """Plumed config file content."""
 
     no_pbc: bool = False
     tau_t: float = 0.1
@@ -150,7 +152,7 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
         else:
             raise ValueError(f'unsupported system file type: {system_file}')
 
-    input_data_files: List[str] = executor.run_python_fn(convert_to_lammps_input_data)(
+    input_data_files: List[ArtifactDict] = executor.run_python_fn(convert_to_lammps_input_data)(
         poscar_files=[a.to_dict() for a in poscar_files],
         base_dir=input_data_dir,
         type_map=input.type_map,
@@ -161,7 +163,7 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
         'temp',
         'pres'
     ]
-    combination_values: Sequence[Sequence[Scalar]] = [
+    combination_values: Sequence[Sequence[Any]] = [
         input_data_files,
         input.config.explore_vars.temp,
         input.config.explore_vars.pres,
@@ -178,13 +180,14 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
         logger.info('using full combination')
         combinations = itertools.product(*combination_values)
 
-    lammps_task_dirs = []
+    lammps_task_dirs: List[ArtifactDict] = []
     lammps_input_file_name = 'lammps.input'
 
     for i, combination in enumerate(combinations):
-        data_file, temp, pres = combination[:3]
+        data_file: ArtifactDict = combination[0]
+        temp, pres = combination[1:3]
         others_dict = dict(zip(combination_fields[3:], combination[3:]))
-        lammps_task_dir = os.path.join(tasks_dir, str(i).zfill(6))
+        lammps_task_dir = os.path.join(tasks_dir, f'{i:06d}')
         executor.mkdir(os.path.join(lammps_task_dir, LAMMPS_TRAJ_DIR))  # create dump directory for lammps or else will get error
 
         if input.md_options:
@@ -204,37 +207,50 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
             )
         else:
             raise ValueError('one and only one of md_options or fep_options must be set')
+
+        plumed_file = None
+        # plumed_config could be overrided by the attrs of data_file
+        plumed_config = dict_nested_get(data_file, ['attrs', 'lammps', 'plumed_config'],
+                                        input.config.plumed_config)
+
+        if plumed_config and isinstance(plumed_config, str):
+            plumed_file = 'plumed.input'
+            plumed_file_path = os.path.join(lammps_task_dir, plumed_file)
+            logger.info(f'found plumed config, generate {plumed_file_path}')
+            executor.dump_text(plumed_config, plumed_file_path)
+
         template = input.config.input_template or  DEFAULT_LAMMPS_INPUT_TEMPLATE
 
-        input_text = make_lammps_input(data_file=data_file,
-                          nsteps=input.config.nsteps,
-                          timestep=input.config.timestep,
-                          trj_freq=input.config.sample_freq,
-                          temp=temp,
-                          pres=pres,
-                          tau_t=input.config.tau_t,
-                          tau_p=input.config.tau_p,
-                          ensemble=input.config.ensemble,
-                          mass_map=input.mass_map,
-                          others_dict=others_dict,
+        input_text = make_lammps_input(data_file=data_file['url'],
+                                       nsteps=input.config.nsteps,
+                                       timestep=input.config.timestep,
+                                       trj_freq=input.config.sample_freq,
+                                       temp=temp,
+                                       pres=pres,
+                                       tau_t=input.config.tau_t,
+                                       tau_p=input.config.tau_p,
+                                       ensemble=input.config.ensemble,
+                                       mass_map=input.mass_map,
+                                       others_dict=others_dict,
 
-                          force_field_section=force_field_section,
+                                       force_field_section=force_field_section,
 
-                          template=template,
-                          post_variables_section=input.config.post_variables_section,
-                          post_init_section=input.config.post_init_section,
-                          post_read_data_section=input.config.post_read_data_section,
-                          post_force_field_section=input.config.post_force_field_section,
-                          post_md_section=input.config.post_md_section,
-                          post_run_section=input.config.post_run_section,
-
-                          no_pbc=False,
-                          rand_start=1_000_000,
-                          )
-
+                                       template=template,
+                                       post_variables_section=input.config.post_variables_section,
+                                       post_init_section=input.config.post_init_section,
+                                       post_read_data_section=input.config.post_read_data_section,
+                                       post_force_field_section=input.config.post_force_field_section,
+                                       post_md_section=input.config.post_md_section,
+                                       post_run_section=input.config.post_run_section,
+                                       plumed_file=plumed_file,
+                                       no_pbc=False,
+                                       rand_start=1_000_000,
+                                       )
         input_file_path = os.path.join(lammps_task_dir, lammps_input_file_name)
+        logger.info(f'generate lammps config {input_file_path}')
+
         executor.dump_text(input_text, input_file_path)
-        lammps_task_dirs.append(lammps_task_dir)
+        lammps_task_dirs.append({'url': lammps_task_dir, 'attrs': data_file['attrs']})  # type: ignore
 
     # build scripts and submit
     lammps_cmd = ctx.config.lammps_cmd
@@ -244,13 +260,9 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
     # generate steps
     steps = []
     for lammps_task_dir in lammps_task_dirs:
-        steps.append(BashStep(
-            cwd=lammps_task_dir,
-            cmd=cmd,
-            checkpoint='lammps',
-        ))
+        steps.append(BashStep(cwd=lammps_task_dir['url'], cmd=cmd, checkpoint='lammps'))
 
-    # submit jobs
+    # submit jobs by the number of concurrency
     jobs = []
     for i, steps_group in enumerate(split_list(steps, ctx.config.concurrency)):
         if not steps_group:
@@ -260,18 +272,17 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
             steps=steps_group,
         )
         job = executor.submit(script.render(), cwd=tasks_dir,
-                              checkpoint_key=f'submit-job/lammps/{i}@{tasks_dir}')
+                              checkpoint_key=f'submit-job/lammps/{i}:{tasks_dir}')
         jobs.append(job)
 
     await gather_jobs(jobs, max_tries=2)
 
     outputs = [
         Artifact.of(
-            url=task_dir,
+            url=task_dir['url'],
             executor=executor.name,
             format=LammpsOutputHelper.format,
-            attrs=dict(
-            ),  # TODO: inherit from input file
+            attrs=task_dir['attrs'],
         ) for task_dir in lammps_task_dirs]  # type: ignore
 
     return GenericLammpsOutput(model_devi_outputs=outputs)
@@ -313,7 +324,7 @@ def make_lammps_input(data_file: str,
                       tau_p: float,
                       ensemble: str,
                       mass_map: List[float],
-                      others_dict: Mapping[str, Scalar],
+                      others_dict: Mapping[str, Any],
 
                       template: str,
                       post_variables_section: str,
@@ -324,7 +335,7 @@ def make_lammps_input(data_file: str,
                       post_run_section: str,
 
                       force_field_section: List[str],
-
+                      plumed_file: Optional[str] = None,
                       no_pbc=False,
                       rand_start=1_000_000,
                       ):
@@ -377,6 +388,9 @@ def make_lammps_input(data_file: str,
         md_section.append('fix 1 all nve')
     else:
         raise ValueError('unknown ensemble: ' + ensemble)
+
+    if plumed_file:
+        md_section.append(f'fix dpgen_plm all plumed plumedfile {plumed_file} outfile plumed.out')
 
     if no_pbc:
         md_section.extend([

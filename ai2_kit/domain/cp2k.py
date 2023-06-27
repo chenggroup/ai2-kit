@@ -1,10 +1,10 @@
-from ai2_kit.core.artifact import Artifact
+from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
 from ai2_kit.core.util import merge_dict, parse_cp2k_input, dict_nested_get, dict_nested_set, split_list
 from ai2_kit.core.log import get_logger
 
-from typing import List, Union
+from typing import List, Union, Tuple
 from pydantic import BaseModel
 from dataclasses import dataclass
 
@@ -111,8 +111,8 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
     cp2k_task_dirs = []
     if lammps_dump_files or xyz_files:
         cp2k_task_dirs = executor.run_python_fn(make_cp2k_task_dirs)(
-            lammps_dump_files=[a.url for a in lammps_dump_files],
-            xyz_files=[a.url for a in xyz_files],
+            lammps_dump_files=[a.to_dict() for a in lammps_dump_files],
+            xyz_files=[a.to_dict() for a in xyz_files],
             type_map=input.type_map,
             base_dir=tasks_dir,
             input_template=input_template,
@@ -126,7 +126,7 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
     steps = []
     for cp2k_task_dir in cp2k_task_dirs:
         steps.append(BashStep(
-            cwd=cp2k_task_dir,
+            cwd=cp2k_task_dir['url'],
             cmd=[ctx.config.cp2k_cmd, '-i input.inp 1>> output 2>> output'],
             checkpoint='cp2k',
         ))
@@ -141,29 +141,29 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
             steps=steps_group,
         )
         job = executor.submit(script.render(), cwd=tasks_dir,
-                              checkpoint_key=f'submit-job/cp2k/{i}@{tasks_dir}')
+                              checkpoint_key=f'submit-job/cp2k/{i}:{tasks_dir}')
         jobs.append(job)
     jobs = await gather_jobs(jobs, max_tries=2)
 
     cp2k_outputs = [Artifact.of(
-        url=url,
+        url=a['url'],
         format=Cp2kOutputHelper.format,
         executor=executor.name,
-        attrs=dict(),  # TODO: success from input
-    ) for url in cp2k_task_dirs]
+        attrs=a['attrs'],
+    ) for a in cp2k_task_dirs]
 
     return GenericCp2kOutput(cp2k_outputs=cp2k_outputs)
 
 
 def __make_cp2k_task_dirs():
-    def make_cp2k_task_dirs(lammps_dump_files: List[str],
-                            xyz_files: List[str],
+    def make_cp2k_task_dirs(lammps_dump_files: List[ArtifactDict],
+                            xyz_files: List[ArtifactDict],
                             type_map: List[str],
                             input_template: dict,
                             base_dir: str,
                             limit: int = 0,
                             input_file_name: str = 'input.inp',
-                            ) -> List[str]:
+                            ) -> List[ArtifactDict]:
         """Generate CP2K input files from LAMMPS dump files or XYZ files."""
         from cp2k_input_tools import DEFAULT_CP2K_INPUT_XML
         from cp2k_input_tools.generator import CP2KInputGenerator
@@ -173,18 +173,24 @@ def __make_cp2k_task_dirs():
 
         cp2k_generator = CP2KInputGenerator(DEFAULT_CP2K_INPUT_XML)
         task_dirs = []
-        atoms_list: List[Atoms] = []
+        atoms_list: List[Tuple[ArtifactDict, Atoms]] = []
 
         # read atoms
         for dump_file in lammps_dump_files:
-            atoms_list += ase.io.read(dump_file, ':', format='lammps-dump-text', order=False, specorder=type_map)  # type: ignore
+            atoms_list += [
+                (dump_file, atoms)
+                for atoms in ase.io.read(dump_file['url'], ':', format='lammps-dump-text', order=False, specorder=type_map)
+            ]  # type: ignore
         for xyz_file in xyz_files:
-            atoms_list += ase.io.read(xyz_file, ':', format='extxyz')  # type: ignore
+            atoms_list += [
+                (xyz_file, atoms)
+                for atoms in ase.io.read(xyz_file['url'], ':', format='extxyz')
+            ]  # type: ignore
 
         if limit > 0:
             atoms_list = atoms_list[:limit]
 
-        for i, atoms in enumerate(atoms_list):
+        for i, (file, atoms) in enumerate(atoms_list):
             # create task dir
             task_dir = os.path.join(base_dir, f'{str(i).zfill(6)}')
             os.makedirs(task_dir, exist_ok=True)
@@ -209,7 +215,14 @@ def __make_cp2k_task_dirs():
             input_text = '\n'.join(cp2k_generator.line_iter(input_data))
             with open(os.path.join(task_dir, input_file_name), 'w') as f:
                 f.write(input_text)
-            task_dirs.append(task_dir)
+
+            # inherit attrs from input file
+            # TODO: inherit only ancestor key should be enough
+            task_dirs.append({
+                'url': task_dir,
+                'attrs': file['attrs'],
+            })
+
         return task_dirs
 
     return make_cp2k_task_dirs

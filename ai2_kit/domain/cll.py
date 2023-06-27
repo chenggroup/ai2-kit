@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from ai2_kit.core.artifact import Artifact
+from ai2_kit.core.artifact import Artifact, ArtifactMap
 from ai2_kit.core.future import IFuture
 from ai2_kit.core.resource_manager import ResourceManager
 from typing import List, Callable, Any
@@ -67,3 +67,8 @@ class ICllSelectorOutput(ABC):
         ...
 
 CllSelectorTaskType = Callable[[Any, BaseCllContext], IFuture[ICllSelectorOutput]]
+
+
+def init_artifacts(artifacts: ArtifactMap):
+    for key, artifact in artifacts.items():
+        artifact.attrs.setdefault('ancestor', key)

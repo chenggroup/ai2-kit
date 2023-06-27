@@ -20,11 +20,18 @@ class ResourceManager:
                  ) -> None:
 
         self._executor_configs = executor_configs
-        self._artifacts = artifacts
         self._default_executor_name = default_executor
         self._executors: Dict[str, Executor] = dict()
+        # runtime check to ensure quick failure
+        self.default_executor
 
-        self.default_executor  # runtime check!
+        # fill in default values
+        for key, artifact in artifacts.items():
+            if artifact.executor is None:
+                artifact.executor = self.default_executor.name
+            if artifact.key is None:
+                artifact.key = key
+        self._artifacts = artifacts
 
     def get_executor(self, name: Optional[str] = None) -> Executor:
         if name is None:
@@ -60,7 +67,6 @@ class ResourceManager:
             format=artifact.format,
             includes=None,  # has been consumed
             attrs=copy.deepcopy(artifact.attrs),
-            referrer=artifact,
             executor=self.default_executor.name,
         ) for path in paths]
 

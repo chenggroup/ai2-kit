@@ -45,6 +45,3 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 * [ASE Toolkit](doc/manual/ase.md)
 * [FAQ](doc/manual/faq.md)
 
-## Tutorials
-
-## Notebooks

@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.3.5
+* feat: support plumed config in cll workflow
+* feat: support artifacts attributes inheritance in workflow
+
 ## v0.3.4
 * feat: apply checkpoint to all workflows and job submission steps
 * feat: add checkpoint command line interface

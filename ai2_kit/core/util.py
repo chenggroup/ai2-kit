@@ -50,6 +50,7 @@ merge_dict = __merge_dict()
 def load_yaml_file(path: Path):
     yaml = YAML(typ='safe')
     JoinTag.register(yaml)
+    ReadTag.register(yaml)
     return yaml.load(path)
 
 
@@ -66,6 +67,7 @@ def s_uuid():
     return shortuuid.uuid()
 
 
+# TODO: this should be moved out from core module
 def parse_cp2k_input(text: str):
     parser = CP2KInputParserSimplified(key_trafo=str.upper)
     return parser.parse(io.StringIO(text))
@@ -127,6 +129,28 @@ class JoinTag:
     def from_yaml(cls, constructor, node):
         seq = constructor.construct_sequence(node)
         return ''.join([str(i) for i in seq])
+
+    @classmethod
+    def to_yaml(cls, dumper, data):
+        # do nothing
+        return dumper.represent_sequence(cls.yaml_tag, data)
+
+    @classmethod
+    def register(cls, yaml: YAML):
+        yaml.register_class(cls)
+
+
+class ReadTag:
+    """a tag to read string from file"""
+
+    yaml_tag = u'!read'
+
+    @classmethod
+    def from_yaml(cls, constructor, node):
+        seq = constructor.construct_sequence(node)
+        path = os.path.join(*seq)
+        with open(path, 'r') as f:
+            return f.read()
 
     @classmethod
     def to_yaml(cls, dumper, data):

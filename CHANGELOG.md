@@ -1,8 +1,12 @@
 # Change Logs
 
+## v0.3.6
+* feat: implement read tag for yaml parser
+
 ## v0.3.5
 * feat: support plumed config in cll workflow
 * feat: support artifacts attributes inheritance in workflow
+* feat: implement join tag for yaml parser
 
 ## v0.3.4
 * feat: apply checkpoint to all workflows and job submission steps

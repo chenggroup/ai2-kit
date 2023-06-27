@@ -12,16 +12,26 @@ pip install nglview
 jupyter nbextension enable --py widgetsnbextension
 ```
 
-## Use `!join` tag to simplify YAML configuration
+## Use custom tags to simplify YAML configuration
 
-`ai2-kit` implement a customized tag for YAML parser named `!join` to join elements in a list into a single string. This is useful when you have to use a lot of absolution paths that shares the same based directory in your configuration. For example,
+`ai2-kit` implement a customized tag for YAML parser to simplify the configuration. 
+
+### `!read`
+`!read` can be used to read a file and use its content as the value of the tag. It accepts a list of strings as the argument. The strings will be joined together to form the path of the file to be read. For example,
+
+```yaml
+data: !read [/path/to/data/folder, data.csv]
+```
+
+### `!join`
+`!join` can be used to join elements in a list into a single string. This is useful when you have to use a lot of absolution paths that shares the same based directory in your configuration. For example,
 
 ```yaml
 .data_dir: &data_dir /data/in/a/very/long/path/
 data1: !join [*data_dir, data1.csv]
 data2: !join [*data_dir, data2.csv]
 ```
-Which is equivalent to
+which is equivalent to
 
 ```yaml
 data1: /data/in/a/very/long/path/data1.csv

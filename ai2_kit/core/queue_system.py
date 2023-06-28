@@ -24,13 +24,13 @@ class QueueSystemConfig(BaseModel):
         scancel_bin: str = 'scancel'
         polling_interval: int = 10
 
-    class Lsf(BaseModel):
+    class LSF(BaseModel):
         bsub_bin: str = 'bsub'
         bjobs_bin: str = 'bjobs'
         polling_interval: int = 10
 
     slurm: Optional[Slurm]
-    lsf: Optional[Lsf]
+    lsf: Optional[LSF]
 
 
 class BaseQueueSystem(ABC):
@@ -202,7 +202,7 @@ class Slurm(BaseQueueSystem):
 
 class Lsf(BaseQueueSystem):
 
-    config: QueueSystemConfig.Lsf
+    config: QueueSystemConfig.LSF
 
     def get_polling_interval(self):
         return self.config.polling_interval

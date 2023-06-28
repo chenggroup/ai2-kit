@@ -56,6 +56,9 @@ class DeepmdModelHelper(DataHelper):
 class Cp2kOutputHelper(DataHelper):
     format = 'cp2k-output-dir'
 
+class VaspOutputHelper(DataHelper):
+    format = 'vasp-output-dir'
+
 
 
 def __ase_atoms_to_cp2k_input_data():

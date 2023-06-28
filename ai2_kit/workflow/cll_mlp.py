@@ -9,6 +9,7 @@ from ai2_kit.domain import (
     lammps,
     selector,
     cp2k,
+    vasp,
     constant as const,
     updater,
     cll,
@@ -35,7 +36,8 @@ class CllWorkflowExecutorConfig(BaseExecutorConfig):
             lammps: lammps.GenericLammpsContextConfig
 
         class Label(BaseModel):
-            cp2k: cp2k.GenericCp2kContextConfig
+            cp2k: Optional[cp2k.GenericCp2kContextConfig]
+            vasp: Optional[vasp.GenericVaspContextConfig]
 
         train: Train
         explore: Explore
@@ -51,7 +53,8 @@ class WorkflowConfig(BaseModel):
         max_iters: int = 10
 
     class Label(BaseModel):
-        cp2k: cp2k.GenericCp2kInputConfig
+        cp2k: Optional[cp2k.GenericCp2kInputConfig]
+        vasp: Optional[vasp.GenericVaspInputConfig]
 
     class Train(BaseModel):
         deepmd: deepmd.GenericDeepmdInputConfig
@@ -144,12 +147,29 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager:
                 system_files=[] if selector_output is None else selector_output.get_model_devi_dataset(),
                 initiated=i > 0,
             )
-            cpk2_context = cp2k.GenericCp2kContext(
+            if context_config.label.cp2k is None:
+                raise ValueError('label > cp2k should not be empty')
+            cp2k_context = cp2k.GenericCp2kContext(
                 config=context_config.label.cp2k,
                 path_prefix=os.path.join(iter_path_prefix, 'label-cp2k'),
                 resource_manager=resource_manager,
             )
-            label_output = await apply_checkpoint(f'{cp_prefix}/label-cp2k')(cp2k.generic_cp2k)(cp2k_input, cpk2_context)
+            label_output = await apply_checkpoint(f'{cp_prefix}/label-cp2k')(cp2k.generic_cp2k)(cp2k_input, cp2k_context)
+        elif workflow_config.label.vasp:
+            vasp_input = vasp.GenericVaspInput(
+                config=workflow_config.label.vasp,
+                type_map=type_map,
+                system_files=[] if selector_output is None else selector_output.get_model_devi_dataset(),
+                initiated=i > 0,
+            )
+            if context_config.label.vasp is None:
+                raise ValueError('label > vasp should not be empty')
+            vasp_context = vasp.GenericVaspContext(
+                config=context_config.label.vasp,
+                path_prefix=os.path.join(iter_path_prefix, 'label-vasp'),
+                resource_manager=resource_manager,
+            )
+            label_output = await apply_checkpoint(f'{cp_prefix}/label-vasp')(vasp.generic_vasp)(vasp_input, vasp_context)
         else:
             raise ValueError('No label method is specified')
 

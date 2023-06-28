@@ -21,6 +21,7 @@ from .constant import (
     DP_PROFILING_FILE,
     DP_INPUT_FILE,
     DP_FROZEN_MODEL,
+    DP_ORIGINAL_MODEL
 )
 
 logger = get_logger(__name__)
@@ -30,6 +31,7 @@ class GenericDeepmdInputConfig(BaseModel):
     model_num: int = 4
     init_dataset: List[str]
     input_template: dict
+    compress_model: bool = False
 
 class GenericDeepmdContextConfig(BaseModel):
     script_template: BashTemplate
@@ -48,9 +50,11 @@ class GenericDeepmdInput:
         self.old_dataset += self.new_dataset
         self.new_dataset = dataset
 
+
 @dataclass
 class GenericDeepmdContext(BaseCllContext):
     config: GenericDeepmdContextConfig
+
 
 @dataclass
 class GenericDeepmdOutput(ICllTrainOutput):
@@ -63,16 +67,19 @@ class GenericDeepmdOutput(ICllTrainOutput):
     def get_training_dataset(self) -> List[Artifact]:
         return self.input.new_dataset + self.input.old_dataset
 
+
 async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
     executor = ctx.resource_manager.default_executor
 
     # setup workspace
     work_dir = os.path.join(executor.work_dir, ctx.path_prefix)
-    [converted_data_dir, tasks_dir] = executor.setup_workspace(work_dir, ['converted_input_data', 'tasks'])
+    [converted_data_dir, tasks_dir] = executor.setup_workspace(
+        work_dir, ['converted_input_data', 'tasks'])
 
     # initialization
     if not input.initiated:
-        input.new_dataset += ctx.resource_manager.resolve_artifacts(input.config.init_dataset)
+        input.new_dataset += ctx.resource_manager.resolve_artifacts(
+            input.config.init_dataset)
 
     # convert data type if necessary, only needed for new data as old data is already converted
     new_deepmd_npy_data: List[Artifact] = []
@@ -165,14 +172,24 @@ async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
         # build script
         dp_cmd = ctx.config.dp_cmd
         dp_train_cmd = [dp_cmd, 'train', DP_INPUT_FILE]
-        dp_freeze_cmd = [dp_cmd, 'freeze', '-o', DP_FROZEN_MODEL]
+
+        steps = [
+            BashStep(cmd=dp_train_cmd, checkpoint='dp-train') # type: ignore
+        ]
+
+        if input.config.compress_model:
+            dp_freeze_cmd = [dp_cmd, 'freeze', '-o', DP_ORIGINAL_MODEL]
+            dp_compress_cmd = \
+                [dp_cmd, 'compress', '-i', DP_ORIGINAL_MODEL, '-o', DP_FROZEN_MODEL]
+            steps.append(BashStep(cmd=dp_freeze_cmd)) # type: ignore
+            steps.append(BashStep(cmd=dp_compress_cmd)) # type: ignore
+        else:
+            dp_freeze_cmd = [dp_cmd, 'freeze', '-o', DP_FROZEN_MODEL]
+            steps.append(BashStep(cmd=dp_freeze_cmd)) # type: ignore
 
         dp_train_script = BashScript(
             template=ctx.config.script_template,
-            steps=[
-                BashStep(cmd=dp_train_cmd, checkpoint='dp-train'),  # type: ignore
-                BashStep(cmd=dp_freeze_cmd),  # type: ignore
-            ] # type: ignore
+            steps=steps # type: ignore
         )
         output_dirs.append(task_dir)
 
@@ -188,6 +205,7 @@ async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
             url=url,
         ) for url in output_dirs]
     )
+
 
 def _random_seed():
     return random.randrange(sys.maxsize) % (1 << 32)

@@ -50,7 +50,7 @@ class JobFuture(IFuture[JobState]):
     def resubmit(self) -> 'JobFuture':
         ...
 
-async def gather_jobs(jobs: List[JobFuture], timeout = float('inf'), max_tries: int = 1) -> List[JobState]:
+async def gather_jobs(jobs: List[JobFuture], timeout = float('inf'), max_tries: int = 1, raise_error=True) -> List[JobState]:
     async def wait_job(job: JobFuture) -> JobState:
         state = JobState.UNKNOWN
         tries = 0
@@ -58,7 +58,7 @@ async def gather_jobs(jobs: List[JobFuture], timeout = float('inf'), max_tries: 
             try:
                 state = await job.result_async(timeout)
                 if state is JobState.COMPLETED:
-                    break
+                    return state
             except TimeoutError:
                 state = JobState.TIMEOUT
             tries += 1
@@ -66,6 +66,10 @@ async def gather_jobs(jobs: List[JobFuture], timeout = float('inf'), max_tries: 
             if tries >= max_tries:
                 break
             job = job.resubmit()
-        return state
+
+        if raise_error:
+            raise RuntimeError(f'Job {job} failed with state {state}')
+        else:
+            return state
 
     return await asyncio.gather(*[wait_job(job) for job in jobs])

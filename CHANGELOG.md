@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.8
+* feat: ase tool support set_cell and set_pbc commands
+
 ## v0.3.7
 * feat: support VASP in cll training workflow
 * feat: support `compress_model` option in deepmd step

@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.9
+* fix: raise error on job failure
+
 ## v0.3.8
 * feat: ase tool support set_cell and set_pbc commands
 

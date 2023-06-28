@@ -1,13 +1,12 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import merge_dict, dict_nested_get, dict_nested_set, split_list
+from ai2_kit.core.util import merge_dict, dict_nested_get, split_list
 from ai2_kit.core.log import get_logger
 
 from typing import List, Union, Tuple
 from pydantic import BaseModel
 from dataclasses import dataclass
-from cp2k_input_tools.parser import CP2KInputParserSimplified
 
 import copy
 import os
@@ -15,6 +14,7 @@ import io
 
 from .data_helper import LammpsOutputHelper, XyzHelper, Cp2kOutputHelper, ase_atoms_to_cp2k_input_data
 from .cll import ICllLabelOutput, BaseCllContext
+from .util import loads_cp2k_input, load_cp2k_input, dump_cp2k_input
 
 logger = get_logger(__name__)
 
@@ -71,7 +71,7 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
 
     # prepare input template
     if isinstance(input.config.input_template, str):
-        input_template = parse_cp2k_input(input.config.input_template)
+        input_template = loads_cp2k_input(input.config.input_template)
     else:
         input_template = copy.deepcopy(input.config.input_template)
 
@@ -139,7 +139,8 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
     return GenericCp2kOutput(cp2k_outputs=cp2k_outputs)
 
 
-def __make_cp2k_task_dirs():
+def __export_remote_functions():
+
     def make_cp2k_task_dirs(lammps_dump_files: List[ArtifactDict],
                             xyz_files: List[ArtifactDict],
                             type_map: List[str],
@@ -149,13 +150,9 @@ def __make_cp2k_task_dirs():
                             input_file_name: str = 'input.inp',
                             ) -> List[ArtifactDict]:
         """Generate CP2K input files from LAMMPS dump files or XYZ files."""
-        from cp2k_input_tools import DEFAULT_CP2K_INPUT_XML
-        from cp2k_input_tools.generator import CP2KInputGenerator
-
         import ase.io
         from ase import Atoms
 
-        cp2k_generator = CP2KInputGenerator(DEFAULT_CP2K_INPUT_XML)
         task_dirs = []
         atoms_list: List[Tuple[ArtifactDict, Atoms]] = []
 
@@ -184,7 +181,7 @@ def __make_cp2k_task_dirs():
             input_data_file = dict_nested_get(file, ['attrs', 'cp2k', 'input_template_file'],  None)  # type: ignore
             if isinstance(input_data_file, str):
                 with open(input_data_file, 'r') as f:
-                    input_data = parse_cp2k_input(f.read())
+                    input_data = load_cp2k_input(f)
             else:
                 input_data = copy.deepcopy(input_template)
 
@@ -192,23 +189,19 @@ def __make_cp2k_task_dirs():
             merge_dict(input_data, {
                 'FORCE_EVAL': {
                     'SUBSYS': {
-                        'COORD': {
-                            '*': coords
-                        },
+                        # FIXME: this is a dirty hack, we should make dump_cp2k_input support COORD
+                        'COORD': dict.fromkeys(coords, ''),
                         'CELL': {
-                            'A': cell[0],
-                            'B': cell[1],
-                            'C': cell[2],
+                            'A': ' '.join(map(str, cell[0])),
+                            'B': ' '.join(map(str, cell[1])),
+                            'C': ' '.join(map(str, cell[2])),
                         }
                     }
                 }
             })
-            input_text = '\n'.join(cp2k_generator.line_iter(input_data))
             with open(os.path.join(task_dir, input_file_name), 'w') as f:
-                f.write(input_text)
+                dump_cp2k_input(input_data, f)
 
-            # inherit attrs from input file
-            # TODO: inherit only ancestor key should be enough
             task_dirs.append({
                 'url': task_dir,
                 'attrs': file['attrs'],
@@ -217,13 +210,5 @@ def __make_cp2k_task_dirs():
         return task_dirs
 
     return make_cp2k_task_dirs
-make_cp2k_task_dirs = __make_cp2k_task_dirs()
 
-def __export_remote_functions():
-    def parse_cp2k_input(text: str):
-        parser = CP2KInputParserSimplified(key_trafo=str.upper)
-        return parser.parse(io.StringIO(text))
-
-    return parse_cp2k_input
-
-parse_cp2k_input = __export_remote_functions()
+make_cp2k_task_dirs = __export_remote_functions()

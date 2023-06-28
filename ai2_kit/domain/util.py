@@ -1,4 +1,3 @@
-import json
 import io
 import re
 
@@ -113,6 +112,7 @@ def __export_remote_functions():
             current_section[value_name] = value
         return output
 
+    # TODO: handle coords
     def load_cp2k_input(fp):
         variables, processed_text = process_cp2k_macro(fp)
         substituted_text = substitute_vars(processed_text, variables)
@@ -121,6 +121,7 @@ def __export_remote_functions():
     def loads_cp2k_input(text):
         return load_cp2k_input(io.StringIO(text))
 
+    # TODO: handle coords
     def dumps_cp2k_input(input_dict):
         # Initialize an empty list for output lines
         output_lines = []

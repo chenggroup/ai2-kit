@@ -21,7 +21,6 @@ class ThresholdSelectorInputConfig(BaseModel):
 class ThresholdSelectorContext(BaseCllContext):
     ...
 
-
 @dataclass
 class ThresholdSelectorOutput(ICllSelectorOutput):
     model_devi_data: List[Artifact]

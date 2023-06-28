@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.3.7
+* feat: support VASP in cll training workflow
+* feat: support `compress_model` option in deepmd step
+
 ## v0.3.6
 * feat: implement read tag for yaml parser
 

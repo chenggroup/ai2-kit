@@ -4,7 +4,7 @@ from ai2_kit.core.log import get_logger
 from ai2_kit.core.job import gather_jobs
 from ai2_kit.core.util import split_list, dict_nested_get
 
-from typing import List, Literal, Optional, Union, Mapping, Sequence, Any
+from typing import List, Literal, Optional, Mapping, Sequence, Any
 from pydantic import BaseModel
 from dataclasses import dataclass
 from string import Template
@@ -30,10 +30,8 @@ logger = get_logger(__name__)
 class ExploreVariants(BaseModel):
     temp: List[float]
     """Temperatures variants."""
-
     pres: List[float]
     """Pressures variants."""
-
     others: Mapping[str, Sequence[Any]] = dict()
     """
     Other variants to be combined with.
@@ -45,7 +43,6 @@ class ExploreVariants(BaseModel):
 
 
 class GenericLammpsInputConfig(BaseModel):
-
     explore_vars: ExploreVariants
     """Variants to be explored."""
 
@@ -56,20 +53,24 @@ class GenericLammpsInputConfig(BaseModel):
     the full combination will be used.
     It is strongly recommended to use n_wise when the full combination is too large.
     """
-
     system_files: List[str]
     """Artifacts of initial system data."""
-
     plumed_config: Optional[str]
     """Plumed config file content."""
+    plumed_config_file: Optional[str]
+    """Plumed config file path."""
 
-    no_pbc: bool = False
+    # ensemble specific params
     tau_t: float = 0.1
     tau_p: float = 0.5
+    time_const: float = 0.1
+    ensemble: Literal['nvt', 'nvt-i', 'nvt-a', 'nvt-iso', 'nvt-aniso', 'npt', 'npt-t', 'npt-tri', 'nve', 'csvr']
+
+    no_pbc: bool = False
     timestep: float = 0.0005
     sample_freq: int
     nsteps: int
-    ensemble: Literal['nvt', 'nvt-i', 'nvt-a', 'nvt-iso', 'nvt-aniso', 'npt', 'npt-t', 'npt-tri', 'nve']
+
     """Ensemble to be used.
     nvt means constant volume and temperature.
     nvt-i means constant volume and temperature, with isotropic scaling.
@@ -145,7 +146,6 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
     # TODO: refactor the way of handling different types of input
     # TODO: handle more data format, for example, cp2k output
     poscar_files: List[Artifact] = []
-
     for system_file in systems:
         if PoscarHelper.is_match(system_file):
             poscar_files.append(system_file)
@@ -208,19 +208,20 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
         else:
             raise ValueError('one and only one of md_options or fep_options must be set')
 
-        plumed_file = None
-        # plumed_config could be overrided by the attrs of data_file
+        # Config plumed if either plumed_config_file or plumed_config is set.
+        # The plumed config can be set in both workflow config and input data file.
+        # The config in input data file has higher priority.
+        plumed_config_file = dict_nested_get(data_file, ['attrs', 'lammps', 'plumed_config_file'],
+                                             input.config.plumed_config_file)
         plumed_config = dict_nested_get(data_file, ['attrs', 'lammps', 'plumed_config'],
                                         input.config.plumed_config)
-
-        if plumed_config and isinstance(plumed_config, str):
-            plumed_file = 'plumed.input'
-            plumed_file_path = os.path.join(lammps_task_dir, plumed_file)
+        if plumed_config_file is None and isinstance(plumed_config, str):
+            plumed_config_file = 'plumed.input'
+            plumed_file_path = os.path.join(lammps_task_dir, plumed_config_file)
             logger.info(f'found plumed config, generate {plumed_file_path}')
             executor.dump_text(plumed_config, plumed_file_path)
 
         template = input.config.input_template or  DEFAULT_LAMMPS_INPUT_TEMPLATE
-
         input_text = make_lammps_input(data_file=data_file['url'],
                                        nsteps=input.config.nsteps,
                                        timestep=input.config.timestep,
@@ -229,12 +230,11 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
                                        pres=pres,
                                        tau_t=input.config.tau_t,
                                        tau_p=input.config.tau_p,
+                                       time_const=input.config.time_const,
                                        ensemble=input.config.ensemble,
                                        mass_map=input.mass_map,
                                        others_dict=others_dict,
-
                                        force_field_section=force_field_section,
-
                                        template=template,
                                        post_variables_section=input.config.post_variables_section,
                                        post_init_section=input.config.post_init_section,
@@ -242,10 +242,9 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
                                        post_force_field_section=input.config.post_force_field_section,
                                        post_md_section=input.config.post_md_section,
                                        post_run_section=input.config.post_run_section,
-                                       plumed_file=plumed_file,
+                                       plumed_config_file=plumed_config_file,  # type: ignore
                                        no_pbc=False,
-                                       rand_start=1_000_000,
-                                       )
+                                       rand_start=1_000_000)
         input_file_path = os.path.join(lammps_task_dir, lammps_input_file_name)
         logger.info(f'generate lammps config {input_file_path}')
 
@@ -335,7 +334,8 @@ def make_lammps_input(data_file: str,
                       post_run_section: str,
 
                       force_field_section: List[str],
-                      plumed_file: Optional[str] = None,
+                      plumed_config_file: Optional[str] = None,
+                      time_const = 0.1,
                       no_pbc=False,
                       rand_start=1_000_000,
                       ):
@@ -354,6 +354,7 @@ def make_lammps_input(data_file: str,
         'variable PRES        equal %f' % pres,
         'variable TAU_T       equal %f' % tau_t,
         'variable TAU_P       equal %f' % tau_p,
+        'variable TIME_CONST  equal %f' % time_const,
         '',
         '# custom variables (if any)',
     ]
@@ -386,11 +387,14 @@ def make_lammps_input(data_file: str,
         md_section.append('fix 1 all nvt temp ${TEMP} ${TEMP} ${TAU_T}')
     elif ensemble in ('nve',):
         md_section.append('fix 1 all nve')
+    elif ensemble in ('csvr',):
+        md_section.append('fix 1 all nve')
+        md_section.append('fix 2 all temp/csvr ${TEMP} ${TEMP} ${TIME_CONST} %d' % (random.randrange(rand_start - 1) + 1))
     else:
         raise ValueError('unknown ensemble: ' + ensemble)
 
-    if plumed_file:
-        md_section.append(f'fix dpgen_plm all plumed plumedfile {plumed_file} outfile plumed.out')
+    if plumed_config_file:
+        md_section.append(f'fix dpgen_plm all plumed plumedfile {plumed_config_file} outfile plumed.out')
 
     if no_pbc:
         md_section.extend([

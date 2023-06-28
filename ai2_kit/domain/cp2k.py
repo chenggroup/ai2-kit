@@ -1,15 +1,17 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import merge_dict, parse_cp2k_input, dict_nested_get, dict_nested_set, split_list
+from ai2_kit.core.util import merge_dict, dict_nested_get, dict_nested_set, split_list
 from ai2_kit.core.log import get_logger
 
 from typing import List, Union, Tuple
 from pydantic import BaseModel
 from dataclasses import dataclass
+from cp2k_input_tools.parser import CP2KInputParserSimplified
 
 import copy
 import os
+import io
 
 from .data_helper import LammpsOutputHelper, XyzHelper, Cp2kOutputHelper, ase_atoms_to_cp2k_input_data
 from .cll import ICllLabelOutput, BaseCllContext
@@ -72,24 +74,6 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
         input_template = parse_cp2k_input(input.config.input_template)
     else:
         input_template = copy.deepcopy(input.config.input_template)
-
-    fields_with_artifact = [
-        ['FORCE_EVAL', 'DFT', 'BASIS_SET_FILE_NAME'],
-        ['FORCE_EVAL', 'DFT', 'POTENTIAL_FILE_NAME'],
-        ['FORCE_EVAL', 'DFT', 'XC', 'VDW_POTENTIAL', 'PAIR_POTENTIAL', 'PARAMETER', 'PARAMETER_FILE_NAME' ],
-    ]
-    for field_path in fields_with_artifact:
-        try :
-            field_value = dict_nested_get(input_template, field_path)
-            if isinstance(field_value, str) and field_value.startswith('@'):
-                logger.info(f'resolve artifact {field_value}')
-                dict_nested_set(
-                    input_template,
-                    field_path,
-                    ctx.resource_manager.resolve_artifact(field_value[1:])[0].url
-                )
-        except KeyError:
-            pass
 
     # resolve data files
     lammps_dump_files: List[Artifact] = []
@@ -195,8 +179,15 @@ def __make_cp2k_task_dirs():
             task_dir = os.path.join(base_dir, f'{str(i).zfill(6)}')
             os.makedirs(task_dir, exist_ok=True)
 
-            # create input file
-            input_data = copy.deepcopy(input_template)
+            # TODO: should also support input_template
+            # find input template in data_file attrs, if not found, use input_template as default
+            input_data_file = dict_nested_get(file, ['attrs', 'cp2k', 'input_template_file'],  None)  # type: ignore
+            if isinstance(input_data_file, str):
+                with open(input_data_file, 'r') as f:
+                    input_data = parse_cp2k_input(f.read())
+            else:
+                input_data = copy.deepcopy(input_template)
+
             coords, cell = ase_atoms_to_cp2k_input_data(atoms)
             merge_dict(input_data, {
                 'FORCE_EVAL': {
@@ -227,3 +218,12 @@ def __make_cp2k_task_dirs():
 
     return make_cp2k_task_dirs
 make_cp2k_task_dirs = __make_cp2k_task_dirs()
+
+def __export_remote_functions():
+    def parse_cp2k_input(text: str):
+        parser = CP2KInputParserSimplified(key_trafo=str.upper)
+        return parser.parse(io.StringIO(text))
+
+    return parse_cp2k_input
+
+parse_cp2k_input = __export_remote_functions()

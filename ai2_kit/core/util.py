@@ -2,14 +2,12 @@ from ruamel.yaml import YAML
 from pathlib import Path
 from typing import Tuple, List, TypeVar
 from dataclasses import field
-from cp2k_input_tools.parser import CP2KInputParserSimplified
 
 import shortuuid
 import hashlib
 import base64
 import copy
 import os
-import io
 
 from .log import get_logger
 
@@ -20,33 +18,8 @@ EMPTY = object()
 def default_mutable_field(obj):
     return field(default_factory=lambda: copy.copy(obj))
 
-def __merge_dict():
-    """cloudpickle compatible: https://stackoverflow.com/questions/75292769"""
-    def merge_dict(lo: dict, ro: dict, path=None):
-        """
-        merge two dict, the left dict will be overridden
-
-        this method won't merge list
-        """
-        if path is None:
-            path = []
-
-        for key, value in ro.items():
-            if key in lo:
-                current_path = path + [ str(key) ]
-                if isinstance(lo[key], dict) and isinstance(value, dict):
-                    merge_dict(lo[key], value, current_path)
-                else:
-                    print('.'.join(current_path) + ' has been overridden')
-                    lo[key] = value
-            else:
-                lo[key] = value
-        return lo
-    return merge_dict
-merge_dict = __merge_dict()
 
 
-# TODO: support http(s) url
 def load_yaml_file(path: Path):
     yaml = YAML(typ='safe')
     JoinTag.register(yaml)
@@ -65,28 +38,6 @@ def load_yaml_files(*paths: Tuple[Path]):
 def s_uuid():
     """short uuid"""
     return shortuuid.uuid()
-
-
-# TODO: this should be moved out from core module
-def parse_cp2k_input(text: str):
-    parser = CP2KInputParserSimplified(key_trafo=str.upper)
-    return parser.parse(io.StringIO(text))
-
-
-def dict_nested_get(d: dict, keys: List[str], default=EMPTY):
-    """get value from nested dict"""
-    for key in keys:
-        if key not in d and default is not EMPTY:
-            return default
-        d = d[key]
-    return d
-
-
-def dict_nested_set(d: dict, keys: List[str], value):
-    """set value to nested dict"""
-    for key in keys[:-1]:
-        d = d[key]
-    d[keys[-1]] = value
 
 
 def sort_unique_str_list(l: List[str]) -> List[str]:
@@ -160,3 +111,47 @@ class ReadTag:
     @classmethod
     def register(cls, yaml: YAML):
         yaml.register_class(cls)
+
+
+def __export_remote_functions():
+    """cloudpickle compatible: https://stackoverflow.com/questions/75292769"""
+
+    def merge_dict(lo: dict, ro: dict, path=None):
+        """
+        Merge two dict, the left dict will be overridden.
+        Note: list will be replaced instead of merged.
+        """
+        if path is None:
+            path = []
+        for key, value in ro.items():
+            if key in lo:
+                current_path = path + [ str(key) ]
+                if isinstance(lo[key], dict) and isinstance(value, dict):
+                    merge_dict(lo[key], value, current_path)
+                else:
+                    print('.'.join(current_path) + ' has been overridden')
+                    lo[key] = value
+            else:
+                lo[key] = value
+        return lo
+
+    def dict_nested_get(d: dict, keys: List[str], default=EMPTY):
+        """get value from nested dict"""
+        for key in keys:
+            if key not in d and default is not EMPTY:
+                return default
+            d = d[key]
+        return d
+
+    def dict_nested_set(d: dict, keys: List[str], value):
+        """set value to nested dict"""
+        for key in keys[:-1]:
+            d = d[key]
+        d[keys[-1]] = value
+    return merge_dict, dict_nested_get, dict_nested_set
+
+(
+    merge_dict,
+    dict_nested_get,
+    dict_nested_set,
+) = __export_remote_functions()

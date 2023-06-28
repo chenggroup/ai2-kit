@@ -19,7 +19,6 @@ def default_mutable_field(obj):
     return field(default_factory=lambda: copy.copy(obj))
 
 
-
 def load_yaml_file(path: Path):
     yaml = YAML(typ='safe')
     JoinTag.register(yaml)

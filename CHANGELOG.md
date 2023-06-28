@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.3.10
+* chore: remove cp2k-input-tools
+* feat: implement cpk2 parse module
+
 ## v0.3.9
 * fix: raise error on job failure
 

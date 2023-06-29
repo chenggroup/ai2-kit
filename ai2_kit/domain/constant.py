@@ -11,3 +11,4 @@ MODEL_DEVI_RED_OUT = 'model_devi_red.out'
 
 LAMMPS_TRAJ_DIR = 'traj'
 LAMMPS_TRAJ_SUFFIX = '.lammpstrj'
+LAMMPS_DUMPS_CLASSIFIED = 'dumps_classified'

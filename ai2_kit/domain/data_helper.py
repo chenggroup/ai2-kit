@@ -5,7 +5,7 @@ from ase import Atoms
 import os
 import re
 
-from .constant import MODEL_DEVI_OUT, LAMMPS_TRAJ_DIR, LAMMPS_TRAJ_SUFFIX
+from .constant import LAMMPS_TRAJ_DIR, LAMMPS_TRAJ_SUFFIX, LAMMPS_DUMPS_CLASSIFIED
 
 
 class DataHelper:
@@ -35,12 +35,14 @@ class LammpsOutputHelper(DataHelper):
     def get_model_devi_file(self, filename: str) -> Artifact:
         return self.artifact.join(filename)
 
-    def get_passed_dump_files(self) -> List[Artifact]:
-        return [
-            self.artifact.join(LAMMPS_TRAJ_DIR, f'{i}{LAMMPS_TRAJ_SUFFIX}',
-                               attrs={'ancestor': self.artifact.attrs['ancestor']})
-            for i in self.artifact.attrs['passed']
-        ]
+    def get_selected_dumps(self) -> List[Artifact]:
+        dumps = []
+        for selected_dump_id in self.artifact.attrs[LAMMPS_DUMPS_CLASSIFIED]['selected']:
+            dump = self.artifact.join(LAMMPS_TRAJ_DIR, f'{selected_dump_id}{LAMMPS_TRAJ_SUFFIX}')
+            dump.attrs = { **self.artifact.attrs, LAMMPS_DUMPS_CLASSIFIED: None}
+            dumps.append(dump)
+        return dumps
+
 
 class PoscarHelper(DataHelper):
     format = 'vasp/poscar'

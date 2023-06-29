@@ -85,7 +85,7 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
     for system_file in system_files:
         if LammpsOutputHelper.is_match(system_file):
             lammps_out = LammpsOutputHelper(system_file)
-            lammps_dump_files.extend(lammps_out.get_passed_dump_files())
+            lammps_dump_files.extend(lammps_out.get_selected_dumps())
         elif XyzHelper.is_match(system_file):
             xyz_files.append(system_file)
         else:

@@ -1,7 +1,7 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import merge_dict, dict_nested_get, dict_nested_set, split_list
+from ai2_kit.core.util import dict_nested_get, split_list
 from ai2_kit.core.log import get_logger
 
 from typing import List, Union
@@ -95,7 +95,7 @@ async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> Gene
             }
         else:
             raise ValueError('potcar_source should not be shorter than type_map')
-        
+
     for k, v in potcar_source.items():
         if v.startswith('@'):
             potcar_source[k] = \
@@ -122,7 +122,7 @@ async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> Gene
     for system_file in system_files:
         if LammpsOutputHelper.is_match(system_file):
             lammps_out = LammpsOutputHelper(system_file)
-            lammps_dump_files.extend(lammps_out.get_passed_dump_files())
+            lammps_dump_files.extend(lammps_out.get_selected_dumps())
         elif XyzHelper.is_match(system_file):
             xyz_files.append(system_file)
         else:

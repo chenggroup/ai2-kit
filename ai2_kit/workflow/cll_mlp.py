@@ -84,12 +84,12 @@ class CllWorkflowConfig(BaseModel):
 
 
 def run_workflow(*config_files, executor: Optional[str] = None,
-                 path_prefix: Optional[str] = None, checkpoint_file: Optional[str] = None):
+                 path_prefix: Optional[str] = None, checkpoint: Optional[str] = None):
     """
     Run Closed-Loop Learning (CLL) workflow to train Machine Learning Potential (MLP) models.
     """
-    if checkpoint_file is not None:
-        set_checkpoint_file(checkpoint_file)
+    if checkpoint is not None:
+        set_checkpoint_file(checkpoint)
 
     config_data = load_yaml_files(*config_files)
     config = CllWorkflowConfig.parse_obj(config_data)
@@ -172,6 +172,11 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager:
             label_output = await apply_checkpoint(f'{cp_prefix}/label-vasp')(vasp.generic_vasp)(vasp_input, vasp_context)
         else:
             raise ValueError('No label method is specified')
+
+        # return if no new data is generated
+        if i > 0 and len(label_output.get_labeled_system_dataset()) == 0:
+            logger.info("No new data is generated, stop iteration.")
+            break
 
         # train
         if workflow_config.train.deepmd:

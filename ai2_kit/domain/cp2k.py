@@ -37,12 +37,13 @@ class GenericCp2kContextConfig(BaseModel):
     cp2k_cmd: str = 'cp2k'
     concurrency: int = 5
 
+
 @dataclass
 class GenericCp2kInput:
     config: GenericCp2kInputConfig
     system_files: List[Artifact]
     type_map: List[str]
-    initiated: bool = False
+    initiated: bool = False  # FIXME: this seems to be a bad design idea
 
 
 @dataclass

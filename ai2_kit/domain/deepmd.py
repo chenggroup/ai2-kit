@@ -44,7 +44,7 @@ class GenericDeepmdInput:
     type_map: List[str]
     old_dataset: List[Artifact]  # training data used by previous iteration
     new_dataset: List[Artifact]  # training data used by current iteration
-    initiated: bool = False
+    initiated: bool = False  # FIXME: this seems to be a bad design idea
 
     def update_training_dataset(self, dataset: List[Artifact]):
         self.old_dataset += self.new_dataset

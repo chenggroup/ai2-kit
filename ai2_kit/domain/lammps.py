@@ -22,7 +22,7 @@ from .constant import (
     LAMMPS_TRAJ_DIR,
     LAMMPS_TRAJ_SUFFIX,
 )
-from .data_helper import LammpsOutputHelper, PoscarHelper, convert_to_lammps_input_data
+from .data import LammpsOutputHelper, PoscarHelper, convert_to_lammps_input_data
 
 logger = get_logger(__name__)
 

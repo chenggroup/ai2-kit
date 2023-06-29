@@ -16,7 +16,7 @@ from dataclasses import dataclass
 import copy
 import os
 
-from .data_helper import LammpsOutputHelper, XyzHelper, VaspOutputHelper
+from .data import LammpsOutputHelper, XyzHelper, VaspOutputHelper
 from .cll import ICllLabelOutput, BaseCllContext
 
 logger = get_logger(__name__)

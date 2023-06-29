@@ -12,7 +12,7 @@ import copy
 import os
 import io
 
-from .data_helper import LammpsOutputHelper, XyzHelper, Cp2kOutputHelper, ase_atoms_to_cp2k_input_data
+from .data import LammpsOutputHelper, XyzHelper, Cp2kOutputHelper, ase_atoms_to_cp2k_input_data
 from .cll import ICllLabelOutput, BaseCllContext
 from .util import loads_cp2k_input, load_cp2k_input, dump_cp2k_input
 

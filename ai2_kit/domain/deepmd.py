@@ -14,7 +14,7 @@ import sys
 import json
 
 from .cll import ICllTrainOutput, BaseCllContext
-from .data_helper import Cp2kOutputHelper, DeepmdNpyHelper, convert_to_deepmd_npy
+from .data import Cp2kOutputHelper, DeepmdNpyHelper, convert_to_deepmd_npy
 from .constant import (
     DP_CHECKPOINT_FILE,
     DP_DISP_FILE,

@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from dataclasses import dataclass
 import pandas as pd
 
-from .data_helper import LammpsOutputHelper
+from .data import LammpsOutputHelper
 from .cll import ICllSelectorOutput, BaseCllContext
 from .constant import LAMMPS_DUMPS_CLASSIFIED
 

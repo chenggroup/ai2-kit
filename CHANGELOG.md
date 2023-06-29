@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.11
+* fix: pass down ancestor attributes to child artifacts
+
 ## v0.3.10
 * chore: remove cp2k-input-tools
 * feat: implement cpk2 parse module

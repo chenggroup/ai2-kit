@@ -36,7 +36,11 @@ class LammpsOutputHelper(DataHelper):
         return self.artifact.join(filename)
 
     def get_passed_dump_files(self) -> List[Artifact]:
-        return [self.artifact.join(LAMMPS_TRAJ_DIR, f'{i}{LAMMPS_TRAJ_SUFFIX}') for i in self.artifact.attrs['passed']]
+        return [
+            self.artifact.join(LAMMPS_TRAJ_DIR, f'{i}{LAMMPS_TRAJ_SUFFIX}',
+                               attrs={'ancestor': self.artifact.attrs['ancestor']})
+            for i in self.artifact.attrs['passed']
+        ]
 
 class PoscarHelper(DataHelper):
     format = 'vasp/poscar'

@@ -17,7 +17,7 @@ import copy
 import os
 
 from .data import LammpsOutputHelper, XyzHelper, VaspOutputHelper
-from .cll import ICllLabelOutput, BaseCllContext
+from .iface import ICllLabelOutput, BaseCllContext
 
 logger = get_logger(__name__)
 

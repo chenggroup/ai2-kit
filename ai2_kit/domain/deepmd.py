@@ -13,7 +13,7 @@ import random
 import sys
 import json
 
-from .cll import ICllTrainOutput, BaseCllContext
+from .iface import ICllTrainOutput, BaseCllContext
 from .data import Cp2kOutputHelper, DeepmdNpyHelper, convert_to_deepmd_npy
 from .constant import (
     DP_CHECKPOINT_FILE,

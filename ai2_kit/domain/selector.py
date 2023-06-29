@@ -8,7 +8,7 @@ from dataclasses import dataclass
 import pandas as pd
 
 from .data import LammpsOutputHelper
-from .cll import ICllSelectorOutput, BaseCllContext
+from .iface import ICllSelectorOutput, BaseCllContext
 from .constant import LAMMPS_DUMPS_CLASSIFIED
 
 logger = get_logger(__name__)

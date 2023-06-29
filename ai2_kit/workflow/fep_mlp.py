@@ -5,12 +5,12 @@ from ai2_kit.core.util import load_yaml_files
 from ai2_kit.core.resource_manager import ResourceManager
 from ai2_kit.domain import (
     deepmd,
+    iface,
     lammps,
     selector,
     cp2k,
     constant as const,
     updater,
-    cll,
 )
 from ai2_kit.core.checkpoint import set_checkpoint_file, apply_checkpoint
 
@@ -79,7 +79,7 @@ def run_workflow(*config_files, executor: Optional[str] = None,
     if path_prefix is None:
         raise ValueError('path_prefix should not be empty')
 
-    cll.init_artifacts(config.artifacts)
+    iface.init_artifacts(config.artifacts)
     resource_manager = ResourceManager(
         executor_configs=config.executors,
         artifacts=config.artifacts,
@@ -93,16 +93,16 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
     raw_workflow_config = copy.deepcopy(config.workflow)
 
     # output of each step
-    neu_label_output: Optional[cll.ICllLabelOutput] = None
-    red_label_output: Optional[cll.ICllLabelOutput] = None
+    neu_label_output: Optional[iface.ICllLabelOutput] = None
+    red_label_output: Optional[iface.ICllLabelOutput] = None
 
-    neu_selector_output: Optional[cll.ICllSelectorOutput] = None
-    red_selector_output: Optional[cll.ICllSelectorOutput] = None
+    neu_selector_output: Optional[iface.ICllSelectorOutput] = None
+    red_selector_output: Optional[iface.ICllSelectorOutput] = None
 
-    neu_train_output: Optional[cll.ICllTrainOutput] = None
-    red_train_output: Optional[cll.ICllTrainOutput] = None
+    neu_train_output: Optional[iface.ICllTrainOutput] = None
+    red_train_output: Optional[iface.ICllTrainOutput] = None
 
-    explore_output: Optional[cll.ICllExploreOutput] = None
+    explore_output: Optional[iface.ICllExploreOutput] = None
 
     # cursor of update table
     update_cursor = 0

@@ -14,7 +14,7 @@ import itertools
 import random
 
 
-from .cll import BaseCllContext, ICllExploreOutput
+from .iface import BaseCllContext, ICllExploreOutput
 from .constant import (
     MODEL_DEVI_OUT,
     MODEL_DEVI_NEU_OUT,

@@ -1,3 +1,5 @@
+# This is a class to defined common interface
+
 from abc import abstractmethod, ABC
 from ai2_kit.core.artifact import Artifact, ArtifactMap
 from ai2_kit.core.resource_manager import ResourceManager

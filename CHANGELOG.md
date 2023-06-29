@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.3.12
+* fix: model deviation selection rules
+* improvement: cll: stop workflow if no more data is generated
+* refactor module names
+
 ## v0.3.11
 * fix: pass down ancestor attributes to child artifacts
 

@@ -66,19 +66,14 @@ class VaspOutputHelper(DataHelper):
     format = 'vasp-output-dir'
 
 
-
-def __ase_atoms_to_cp2k_input_data():
+def __export_remote_functions():
     """workaround for cloudpickle issue"""
+
     def ase_atoms_to_cp2k_input_data(atoms: Atoms) -> Tuple[List[str], List[List[float]]]:
         coords = [atom.symbol + ' ' + ' '.join(str(x) for x in atom.position) for atom in atoms] # type: ignore
         cell = [list(row) for row in atoms.cell]  # type: ignore
         return (coords, cell)
-    return ase_atoms_to_cp2k_input_data
-ase_atoms_to_cp2k_input_data = __ase_atoms_to_cp2k_input_data()
 
-
-def __convert_to_deepmd_npy():
-    """workaround for cloudpickle issue"""
     def covert_to_deepmd_npy(cp2k_outputs: List[ArtifactDict], base_dir: str, type_map: List[str]):
         import dpdata
         from itertools import groupby
@@ -102,16 +97,9 @@ def __convert_to_deepmd_npy():
             for atoms in atoms_group[1:]:
                 dp_system += dpdata.LabeledSystem(atoms, fmt='ase/structure')
             dp_system.to_deepmd_npy(output_dir, set_size=len(dp_system))  # type: ignore
-            # TODO: return ArtifactDict
             output_dirs.append(output_dir)
         return output_dirs
 
-    return covert_to_deepmd_npy
-convert_to_deepmd_npy = __convert_to_deepmd_npy()
-
-
-def __convert_to_lammps_input_data():
-    """workaround for cloudpickle issue"""
     def convert_to_lammps_input_data(poscar_files: List[ArtifactDict], base_dir: str, type_map: List[str]):
         import dpdata
         import os
@@ -125,5 +113,10 @@ def __convert_to_lammps_input_data():
             })
         return lammps_data_files
 
-    return convert_to_lammps_input_data
-convert_to_lammps_input_data = __convert_to_lammps_input_data()
+    return ase_atoms_to_cp2k_input_data, covert_to_deepmd_npy, convert_to_lammps_input_data
+
+(
+    ase_atoms_to_cp2k_input_data,
+    convert_to_deepmd_npy,
+    convert_to_lammps_input_data,
+) = __export_remote_functions()

@@ -3,6 +3,7 @@ from ai2_kit.core.script import BashTemplate
 from ai2_kit.core.script import BashScript, BashStep
 from ai2_kit.core.job import JobFuture, gather_jobs
 from ai2_kit.core.log import get_logger
+from ai2_kit.core.util import dict_nested_get
 
 from pydantic import BaseModel
 from typing import List
@@ -103,8 +104,8 @@ async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
         type_map=input.type_map,
     )
     new_deepmd_npy_data += [Artifact.of(
-        url=url, format=DeepmdNpyHelper.format,
-    ) for url in converted_data_dirs]
+        url=a['url'], format=DeepmdNpyHelper.format, attrs=a['attrs']
+    ) for a in converted_data_dirs]
 
     input.new_dataset = new_deepmd_npy_data
 
@@ -144,8 +145,13 @@ async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
         dp_input['training']['seed'] = _random_seed()
 
         # set training data
-        systems = [a.url for a in input.old_dataset + input.new_dataset]
-        training['systems'] = systems
+        VALIDATION_DATA_KEY = 'validation_data'
+        train_systems = [a.url for a in input.old_dataset + input.new_dataset
+                         if not dict_nested_get(a.attrs, ['deepmd', VALIDATION_DATA_KEY], False)]
+        validation_systems = [a.url for a in input.old_dataset + input.new_dataset
+                            if dict_nested_get(a.attrs, ['deepmd', VALIDATION_DATA_KEY], False)]
+
+        training['systems'] = train_systems
         set_prefix: str = training.setdefault(
             'set_prefix', 'set')  # respect user input
         auto_prob_str = "prob_sys_size"
@@ -160,6 +166,13 @@ async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
             'batch_size': training['batch_size'],
         }
         training['training_data'] = training_data
+
+        validation_data = {
+            'systems': validation_systems,
+            'set_prefix': training['set_prefix'],
+            'batch_size': training['batch_size'],
+        }
+        training['validation_data'] = validation_data
 
         # other params
         dp_input['model']['type_map'] = input.type_map

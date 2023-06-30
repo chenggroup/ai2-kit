@@ -74,7 +74,7 @@ def __export_remote_functions():
         cell = [list(row) for row in atoms.cell]  # type: ignore
         return (coords, cell)
 
-    def covert_to_deepmd_npy(cp2k_outputs: List[ArtifactDict], base_dir: str, type_map: List[str]):
+    def convert_to_deepmd_npy(cp2k_outputs: List[ArtifactDict], base_dir: str, type_map: List[str]):
         import dpdata
         from itertools import groupby
 
@@ -90,14 +90,18 @@ def __export_remote_functions():
         # group dataset by ancestor key
         for i, (key, atoms_group) in enumerate(groupby(atoms_list, key=lambda x: x[0]['attrs']['ancestor'])):
             output_dir = os.path.join(base_dir, key.replace('/', '_'))
-            atoms_group = list(item[1] for item in atoms_group)
-            if not atoms_group:
-                continue
-            dp_system = dpdata.LabeledSystem(atoms_group[0], fmt='ase/structure')
-            for atoms in atoms_group[1:]:
-                dp_system += dpdata.LabeledSystem(atoms, fmt='ase/structure')
+            dp_system = None
+            for _, atoms in atoms_group:
+                if dp_system is None:
+                    dp_system = dpdata.LabeledSystem(atoms, fmt='ase/structure')
+                else:
+                    dp_system += dpdata.LabeledSystem(atoms, fmt='ase/structure')
+            if dp_system is None:
+                continue  # skip empty dataset
             dp_system.to_deepmd_npy(output_dir, set_size=len(dp_system))  # type: ignore
-            output_dirs.append(output_dir)
+            # inherit attrs key from input artifact
+            output_dirs.append({'url': output_dir, 'attrs': atoms_group[0][0]['attrs']})  # type: ignore
+
         return output_dirs
 
     def convert_to_lammps_input_data(poscar_files: List[ArtifactDict], base_dir: str, type_map: List[str]):
@@ -113,7 +117,7 @@ def __export_remote_functions():
             })
         return lammps_data_files
 
-    return ase_atoms_to_cp2k_input_data, covert_to_deepmd_npy, convert_to_lammps_input_data
+    return ase_atoms_to_cp2k_input_data, convert_to_deepmd_npy, convert_to_lammps_input_data
 
 (
     ase_atoms_to_cp2k_input_data,

@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.13
+* feat: support specify deepmd validation data
+
 ## v0.3.12
 * fix: model deviation selection rules
 * improvement: cll: stop workflow if no more data is generated

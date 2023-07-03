@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.16
+* fix: use max_devi_f instead of avg_devi_f to select structures
+
 ## v0.3.15
 * fix: label all init data
 

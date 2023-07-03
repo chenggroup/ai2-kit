@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.14
+* feat: label all init data
+
 ## v0.3.13
 * feat: support specify deepmd validation data
 

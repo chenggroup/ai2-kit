@@ -91,6 +91,7 @@ def __export_remote_functions():
         for i, (key, atoms_group) in enumerate(groupby(atoms_list, key=lambda x: x[0]['attrs']['ancestor'])):
             output_dir = os.path.join(base_dir, key.replace('/', '_'))
             dp_system = None
+            atoms_group = list(atoms_group)
             for _, atoms in atoms_group:
                 if dp_system is None:
                     dp_system = dpdata.LabeledSystem(atoms, fmt='ase/structure')

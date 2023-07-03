@@ -63,6 +63,7 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
     executor = ctx.resource_manager.default_executor
 
     # For the first round
+    # FIXME: move out from this function, this should be done in the workflow
     if not input.initiated:
         input.system_files += ctx.resource_manager.get_artifacts(input.config.init_system_files)
 
@@ -101,7 +102,7 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
             type_map=input.type_map,
             base_dir=tasks_dir,
             input_template=input_template,
-            limit=input.config.limit,
+            limit= 0 if input.initiated else input.config.limit,  # initialize all data if not initiated
         )
     else:
         logger.warn('no available candidates, skip')

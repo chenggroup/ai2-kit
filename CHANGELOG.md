@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.15
+* fix: label all init data
+
 ## v0.3.14
 * feat: label all init data
 

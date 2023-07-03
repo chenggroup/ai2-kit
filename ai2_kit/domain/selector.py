@@ -47,7 +47,7 @@ async def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelect
 
     f_trust_lo = input.config.f_trust_lo
     f_trust_hi = input.config.f_trust_hi
-    col_force = 'avg_devi_f'
+    col_force = 'max_devi_f'
     logger.info('criteria: %f <= %s < %f ', f_trust_lo, col_force, f_trust_hi)
 
     total_count = 0

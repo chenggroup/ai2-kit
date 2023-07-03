@@ -102,7 +102,7 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
             type_map=input.type_map,
             base_dir=tasks_dir,
             input_template=input_template,
-            limit= 0 if input.initiated else input.config.limit,  # initialize all data if not initiated
+            limit= 0 if not input.initiated else input.config.limit,  # initialize all data if not initiated
         )
     else:
         logger.warn('no available candidates, skip')

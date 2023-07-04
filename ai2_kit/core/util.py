@@ -147,10 +147,28 @@ def __export_remote_functions():
         for key in keys[:-1]:
             d = d[key]
         d[keys[-1]] = value
-    return merge_dict, dict_nested_get, dict_nested_set
+
+    def even_sample_list(l, size):
+      if size <= 0 or size > len(l):
+        return l
+      # calculate the sample interval
+      interval = len(l) / size
+      # create an empty list to store the samples
+      samples = []
+      # loop through the list and append the samples
+      i = 0
+      while i < len(l):
+        samples.append(l[int(i)])
+        i += interval
+      # return the samples
+      return samples
+
+    # export functions
+    return merge_dict, dict_nested_get, dict_nested_set, even_sample_list
 
 (
     merge_dict,
     dict_nested_get,
     dict_nested_set,
+    even_sample_list,
 ) = __export_remote_functions()

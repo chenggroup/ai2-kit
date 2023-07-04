@@ -1,7 +1,7 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import merge_dict, dict_nested_get, split_list
+from ai2_kit.core.util import merge_dict, dict_nested_get, split_list, even_sample_list
 from ai2_kit.core.log import get_logger
 
 from typing import List, Union, Tuple
@@ -171,7 +171,7 @@ def __export_remote_functions():
             ]  # type: ignore
 
         if limit > 0:
-            atoms_list = atoms_list[:limit]
+            atoms_list = even_sample_list(atoms_list, limit)
 
         for i, (file, atoms) in enumerate(atoms_list):
             # create task dir

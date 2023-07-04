@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.17
+* improvement: sample list evenly instead of truncate when selecting new structures
+
 ## v0.3.16
 * fix: use max_devi_f instead of avg_devi_f to select structures
 

@@ -148,7 +148,7 @@ def __export_remote_functions():
             d = d[key]
         d[keys[-1]] = value
 
-    def even_sample_list(l, size):
+    def list_even_sample(l, size):
       if size <= 0 or size > len(l):
         return l
       # calculate the sample interval
@@ -164,11 +164,11 @@ def __export_remote_functions():
       return samples
 
     # export functions
-    return merge_dict, dict_nested_get, dict_nested_set, even_sample_list
+    return merge_dict, dict_nested_get, dict_nested_set, list_even_sample
 
 (
     merge_dict,
     dict_nested_get,
     dict_nested_set,
-    even_sample_list,
+    list_even_sample,
 ) = __export_remote_functions()

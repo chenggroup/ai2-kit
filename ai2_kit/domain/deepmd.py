@@ -15,7 +15,7 @@ import sys
 import json
 
 from .iface import ICllTrainOutput, BaseCllContext
-from .data import Cp2kOutputHelper, DeepmdNpyHelper, convert_to_deepmd_npy
+from .data import Cp2kOutputHelper, VaspOutputHelper, DeepmdNpyHelper, convert_to_deepmd_npy
 from .constant import (
     DP_CHECKPOINT_FILE,
     DP_DISP_FILE,
@@ -85,6 +85,7 @@ async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
     # convert data type if necessary, only needed for new data as old data is already converted
     new_deepmd_npy_data: List[Artifact] = []
     cp2k_output_data: List[Artifact] = []
+    vasp_output_data: List[Artifact] = []
 
     # TODO: refactor data type conversion
     for artifact in input.new_dataset:
@@ -93,6 +94,8 @@ async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
             new_deepmd_npy_data.append(artifact)
         elif Cp2kOutputHelper.is_match(artifact):
             cp2k_output_data.append(artifact)
+        elif VaspOutputHelper.is_match(artifact):
+            vasp_output_data.append(artifact)
         else:
             raise ValueError(f'unsupported data type: {artifact.format}')
 
@@ -100,6 +103,7 @@ async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
     # TODO: support more data type
     converted_data_dirs = executor.run_python_fn(convert_to_deepmd_npy)(
         cp2k_outputs=[a.to_dict() for a in cp2k_output_data],
+        vasp_outputs=[a.to_dict() for a in vasp_output_data],
         base_dir=converted_data_dir,
         type_map=input.type_map,
     )

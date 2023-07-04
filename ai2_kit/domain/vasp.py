@@ -26,7 +26,7 @@ class GenericVaspInputConfig(BaseModel):
     limit: int = 50
     input_template: Union[dict, str]
     potcar_source: Union[dict, list]
-    kpoints_template: Optional[str] = None
+    kpoints_template: Optional[Union[dict, str]] = None
     """
     Input template for VASP. Could be a dict or content of a VASP input file.
 
@@ -77,9 +77,6 @@ async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> Gene
     # prepare input template
     if isinstance(input.config.input_template, str):
         input_template = input.config.input_template
-        if input_template.startswith('@'):
-            input_template = \
-                ctx.resource_manager.resolve_artifact(input_template[1:])[0].url
         input_template = Incar.from_file(input_template).as_dict()
     else:
         input_template = copy.deepcopy(input.config.input_template)
@@ -87,7 +84,7 @@ async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> Gene
     # prepare potcar
     if isinstance(input.config.potcar_source, dict):
         potcar_source = input.config.potcar_source
-    else:
+    elif isinstance(input.config.potcar_source, list):
         # default: use same sequence as type_map
         if len(input.config.potcar_source) >= len(input.type_map):
             potcar_source = {
@@ -95,20 +92,16 @@ async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> Gene
             }
         else:
             raise ValueError('potcar_source should not be shorter than type_map')
-
-    for k, v in potcar_source.items():
-        if v.startswith('@'):
-            potcar_source[k] = \
-                ctx.resource_manager.resolve_artifact(v[1:])[0].url
+    else:
+        # TODO: support generate POTCAR from given path of potential.
+        raise ValueError('potcar_source should be either dict or list')
 
     # prepare kpoints
     kpoints_template = input.config.kpoints_template
-    if kpoints_template:
-        if kpoints_template.startswith('@'):
-            logger.info(f'resolve artifact {kpoints_template}')
-            kpoints_template = \
-                ctx.resource_manager.resolve_artifact(kpoints_template[1:])[0].url
+    if isinstance(kpoints_template, str):
         kpoints_template = Kpoints.from_file(kpoints_template).as_dict()
+    elif isinstance(kpoints_template, dict):
+        kpoints_template = copy.deepcopy(kpoints_template)
     else:
         kpoints_template = None
 
@@ -154,14 +147,14 @@ async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> Gene
             checkpoint='vasp',
         ))
 
-    # run tasks
+    # submit tasks and wait for completion
     jobs = []
     for i, steps_group in enumerate(split_list(steps, ctx.config.concurrency)):
         if not steps_group:
             continue
         script = BashScript(
             template=ctx.config.script_template,
-            steps=steps,
+            steps=steps_group,
         )
         job = executor.submit(script.render(), cwd=tasks_dir,
                               checkpoint_key=f'submit-job/vasp/{i}:{tasks_dir}')
@@ -178,7 +171,7 @@ async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> Gene
     return GenericVaspOutput(vasp_outputs=vasp_outputs)
 
 
-def __make_vasp_task_dirs():
+def __export_remote_functions():
     def make_vasp_task_dirs(lammps_dump_files: List[ArtifactDict],
                             xyz_files: List[ArtifactDict],
                             type_map: List[str],
@@ -231,7 +224,7 @@ def __make_vasp_task_dirs():
                 item[0] for item in _symbol_count_from_symbols(elements_all)
             ]
             ase.io.write(
-                os.path.join(task_dir, 'POSCAR'), atoms, format='vasp5'
+                os.path.join(task_dir, 'POSCAR'), atoms, format='vasp'
             )
 
             # create POTCAR
@@ -242,7 +235,7 @@ def __make_vasp_task_dirs():
 
             # create KPOINTS
             kpoints_template = dict_nested_get(
-                file, ['attrs', 'vasp', 'kpoints_template'] # type: ignore
+                file, ['attrs', 'vasp', 'kpoints_template'], None # type: ignore
             )
             if kpoints_template:
                 kpoints = Kpoints.from_dict(kpoints_template)
@@ -258,4 +251,4 @@ def __make_vasp_task_dirs():
         return task_dirs
 
     return make_vasp_task_dirs
-make_vasp_task_dirs = __make_vasp_task_dirs()
+make_vasp_task_dirs = __export_remote_functions()

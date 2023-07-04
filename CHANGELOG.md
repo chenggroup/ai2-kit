@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.18
+* fix: convert vasp data for deepmd
+
 ## v0.3.17
 * improvement: sample list evenly instead of truncate when selecting new structures
 

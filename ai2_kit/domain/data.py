@@ -74,17 +74,31 @@ def __export_remote_functions():
         cell = [list(row) for row in atoms.cell]  # type: ignore
         return (coords, cell)
 
-    def convert_to_deepmd_npy(cp2k_outputs: List[ArtifactDict], base_dir: str, type_map: List[str]):
+    def convert_to_deepmd_npy(
+        base_dir: str, 
+        type_map: List[str],
+        *,
+        cp2k_outputs: Optional[List[ArtifactDict]] = None, 
+        vasp_outputs: Optional[List[ArtifactDict]] = None
+    ):
         import dpdata
         from itertools import groupby
 
         atoms_list: List[Tuple[ArtifactDict, Atoms]] = []
-        for cp2k_output in cp2k_outputs:
-            dp_system = dpdata.LabeledSystem(os.path.join(cp2k_output['url'], 'output'), fmt='cp2k/output', type_map=type_map)
-            atoms_list += [
-                (cp2k_output, atoms)
-                for atoms in dp_system.to_ase_structure()  # type: ignore
-            ]
+        if cp2k_outputs:
+            for cp2k_output in cp2k_outputs:
+                dp_system = dpdata.LabeledSystem(os.path.join(cp2k_output['url'], 'output'), fmt='cp2k/output', type_map=type_map)
+                atoms_list += [
+                    (cp2k_output, atoms)
+                    for atoms in dp_system.to_ase_structure()  # type: ignore
+                ]
+        if vasp_outputs:
+            for vasp_output in vasp_outputs:
+                dp_system = dpdata.LabeledSystem(os.path.join(vasp_output['url'], 'vasprun.xml'), fmt='vasp/xml', type_map=type_map)
+                atoms_list += [
+                    (vasp_output, atoms)
+                    for atoms in dp_system.to_ase_structure()  # type: ignore
+                ]
 
         output_dirs = []
         # group dataset by ancestor key

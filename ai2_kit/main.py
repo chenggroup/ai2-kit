@@ -28,6 +28,16 @@ class ProtonTransferGroup:
         from ai2_kit.algorithm import proton_transfer
         return proton_transfer.detect_type_change
 
+    @property
+    def calculate_distances(self):
+        from ai2_kit.algorithm import proton_transfer
+        return proton_transfer.calculate_distances
+
+    @property
+    def show_distance_change(self):
+        from ai2_kit.algorithm import proton_transfer
+        return proton_transfer.show_distance_change
+
 
 class WorkflowGroup:
     @property

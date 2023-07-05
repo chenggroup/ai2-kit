@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.3.20
+* doc: generate online doc
+* chore: github workflow
+* improvement: support random sampling if selected structures hit limitation
+* fix: add type_map when converting data to deepmd/npy
+
 ## v0.3.19
 * feat: distance analysis for proton transfer
 

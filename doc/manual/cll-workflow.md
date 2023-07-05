@@ -1,4 +1,4 @@
-# CLL MLP Training　Workflow
+# CLL MLP Training Workflow
 
 ```bash
 ai2-kit workflow cll-mlp-training

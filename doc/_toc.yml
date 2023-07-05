@@ -1,0 +1,20 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+parts:
+  - caption: Domain Specific Tools
+    chapters:
+      - file: manual/proton-transfer
+      - file: manual/cll-workflow
+      - file: manual/fep-workflow
+  - caption: Build-in Functionalities
+    chapters:
+      - file: manual/ase
+      - file: manual/checkpoint
+      - file: manual/tips
+  - caption: API Reference
+    maxdepth: 1
+    chapters:
+      - file: _api/modules

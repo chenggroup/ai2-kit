@@ -137,3 +137,7 @@ result*
 *.ckpt
 *.checkpoint
 *.pickle
+
+# built docs
+doc/_build
+doc/_api

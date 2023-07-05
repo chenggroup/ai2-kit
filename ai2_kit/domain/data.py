@@ -108,12 +108,12 @@ def __export_remote_functions():
             atoms_group = list(atoms_group)
             for _, atoms in atoms_group:
                 if dp_system is None:
-                    dp_system = dpdata.LabeledSystem(atoms, fmt='ase/structure')
+                    dp_system = dpdata.LabeledSystem(atoms, fmt='ase/structure', type_map=type_map)
                 else:
-                    dp_system += dpdata.LabeledSystem(atoms, fmt='ase/structure')
+                    dp_system += dpdata.LabeledSystem(atoms, fmt='ase/structure', type_map=type_map)
             if dp_system is None:
                 continue  # skip empty dataset
-            dp_system.to_deepmd_npy(output_dir, set_size=len(dp_system))  # type: ignore
+            dp_system.to_deepmd_npy(output_dir, set_size=len(dp_system), type_map=type_map)  # type: ignore
             # inherit attrs key from input artifact
             output_dirs.append({'url': output_dir, 'attrs': atoms_group[0][0]['attrs']})  # type: ignore
 

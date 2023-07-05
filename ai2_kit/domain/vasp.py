@@ -1,10 +1,10 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import dict_nested_get, split_list
+from ai2_kit.core.util import dict_nested_get, split_list, list_even_sample
 from ai2_kit.core.log import get_logger
 
-from typing import List, Union
+from typing import List, Union, Literal
 from pydantic import BaseModel
 from dataclasses import dataclass
 
@@ -15,6 +15,7 @@ from dataclasses import dataclass
 
 import copy
 import os
+import random
 
 from .data import LammpsOutputHelper, XyzHelper, VaspOutputHelper
 from .iface import ICllLabelOutput, BaseCllContext
@@ -27,6 +28,7 @@ class GenericVaspInputConfig(BaseModel):
     input_template: Union[dict, str]
     potcar_source: Union[dict, list]
     kpoints_template: Optional[Union[dict, str]] = None
+    sample_method: Literal["even", "random"] = "even"
     """
     Input template for VASP. Could be a dict or content of a VASP input file.
 
@@ -115,7 +117,8 @@ async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> Gene
     for system_file in system_files:
         if LammpsOutputHelper.is_match(system_file):
             lammps_out = LammpsOutputHelper(system_file)
-            lammps_dump_files.extend(lammps_out.get_selected_dumps())
+            lammps_selected_dumps = lammps_out.get_selected_dumps()
+            lammps_dump_files.extend(lammps_selected_dumps)
         elif XyzHelper.is_match(system_file):
             xyz_files.append(system_file)
         else:
@@ -179,7 +182,8 @@ def __export_remote_functions():
                             potcar_source: dict,
                             base_dir: str,
                             kpoints_template: Optional[dict] = None,
-                            limit: int = 0
+                            limit: int = 0,
+                            sample_method: Literal["even", "random"] = "even"
                             ) -> List[ArtifactDict]:
         """Generate VASP input files from LAMMPS dump files or XYZ files."""
 
@@ -203,7 +207,13 @@ def __export_remote_functions():
             ]  # type: ignore
 
         if limit > 0:
-            atoms_list = atoms_list[:limit]
+            if sample_method == "even":
+                atoms_list = list_even_sample(atoms_list, limit)
+            elif sample_method == "random":
+                random.shuffle(atoms_list)
+                atoms_list = atoms_list[:limit]
+            else:
+                raise ValueError(f"Unknown sample method {sample_method}")
 
         for i, (file, atoms) in enumerate(atoms_list):
             # create task dir

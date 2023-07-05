@@ -86,8 +86,10 @@ async def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelect
 
         total_count += len(df)
         passed_count += len(passed_df)
+        passing_rate = passed_count / total_count
+        logger.info('passing rate: %.2f', passing_rate)
 
     return ThresholdSelectorOutput(
         model_devi_data=input.model_devi_data,
-        passing_rate=passed_count / total_count,
+        passing_rate=passing_rate,
     )

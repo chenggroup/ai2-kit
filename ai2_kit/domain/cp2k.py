@@ -4,13 +4,14 @@ from ai2_kit.core.job import gather_jobs
 from ai2_kit.core.util import merge_dict, dict_nested_get, split_list, list_even_sample
 from ai2_kit.core.log import get_logger
 
-from typing import List, Union, Tuple
+from typing import List, Union, Tuple, Literal
 from pydantic import BaseModel
 from dataclasses import dataclass
 
 import copy
 import os
 import io
+import random
 
 from .data import LammpsOutputHelper, XyzHelper, Cp2kOutputHelper, ase_atoms_to_cp2k_input_data
 from .iface import ICllLabelOutput, BaseCllContext
@@ -22,6 +23,7 @@ class GenericCp2kInputConfig(BaseModel):
     init_system_files: List[str] = []
     limit: int = 50
     input_template: Union[dict, str]
+    sample_method: Literal["even", "random"] = "even"
     """
     Input template for cp2k. Could be a dict or content of a cp2k input file.
 
@@ -87,7 +89,8 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
     for system_file in system_files:
         if LammpsOutputHelper.is_match(system_file):
             lammps_out = LammpsOutputHelper(system_file)
-            lammps_dump_files.extend(lammps_out.get_selected_dumps())
+            lammps_selected_dumps = lammps_out.get_selected_dumps()
+            lammps_dump_files.extend(lammps_selected_dumps)
         elif XyzHelper.is_match(system_file):
             xyz_files.append(system_file)
         else:
@@ -149,6 +152,7 @@ def __export_remote_functions():
                             input_template: dict,
                             base_dir: str,
                             limit: int = 0,
+                            sample_method: Literal["even", "random"] = "even",
                             input_file_name: str = 'input.inp',
                             ) -> List[ArtifactDict]:
         """Generate CP2K input files from LAMMPS dump files or XYZ files."""
@@ -171,7 +175,13 @@ def __export_remote_functions():
             ]  # type: ignore
 
         if limit > 0:
-            atoms_list = list_even_sample(atoms_list, limit)
+            if sample_method == "even":
+                atoms_list = list_even_sample(atoms_list, limit)
+            elif sample_method == "random":
+                random.shuffle(atoms_list)
+                atoms_list = atoms_list[:limit]
+            else:
+                raise ValueError(f"Unknown sample method {sample_method}")
 
         for i, (file, atoms) in enumerate(atoms_list):
             # create task dir

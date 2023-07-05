@@ -41,7 +41,7 @@ This command will analyze the events of proton transfer in a trajectory and dump
 You can use the data in the `doc/res` directory to run the following examples.
 
 ```bash
-ai2_kit algorithm proton-transfer analyze \
+ai2-kit algorithm proton-transfer analyze \
     --input_traj ./doc/res/proton-transfer-test-trajectory.xyz \
     --out_dir ./result \
     --cell "[12.740,13.399,40.985,90,90,90]" \
@@ -97,7 +97,7 @@ https://github.com/chenggroup/ai2-kit/assets/3314130/a973cd0e-044f-405a-8476-ee3
 ai2-kit algorithm proton-transfer show-transfer-paths
 ```
 
-This command will show proton transfer paths in a human readable format.
+This command will show proton transfer paths in a human readable format.(This command will also dump proton infomations as files, which contains the index of proton and the time of proton transfer. The result will be used by the other commands in this toolkit later.)
 
 #### Options
 
@@ -109,7 +109,7 @@ This command will show proton transfer paths in a human readable format.
 #### Examples
 
 ```bash
-ai2_kit algorithm proton-transfer show-transfer-paths \
+ai2-kit algorithm proton-transfer show-transfer-paths \
     --analysis_result ./result \ 
     --initial_donor 255
 ```
@@ -148,7 +148,7 @@ This command will show type changes within proton transfer events.
 #### Examples
 
 ```bash
- ai2_kit algorithm proton-transfer show-type-change \
+ ai2-kit algorithm proton-transfer show-type-change \
     --analysis_result ./result \
     --atom_type '{"Bridge_O":[169,139,229,199,49,19,109,79,40,10,70,100,160,130,220,190],"Water_O":[258,255,252,261,64,240,249,246,279,276,285,282,267,264,273,270]}' \ 
     --donors '[240,255]'
@@ -174,3 +174,76 @@ Water_O<->Water_O
     240 -> 306 -> 240                9034            35042     
     255 -> 477 -> 255                5827            13773 
 ```
+
+### Calculate Distances
+```bash
+ai2-kit algorithm proton-transfer calculate-distances
+```
+This command will calculate the distance from the proton to the nearest interface and dump results as files. 
+
+#### Options
+
+| Option | Description | Type | Default | Example |
+| --- | --- | --- | --- | --- |
+| analysis_result | the directory of analysis result | str | (Required) | `--analysis_result ./result` |
+| input_traj | the trajectory file to analyses, currently only xyz format is supported. | str | (Required) | `--input_traj ./test.xyz` |
+| upper_index | upper interface atomic index | List[int] | (Required) | `--upper_index '[10,102,140]'` |
+| lower_index | lower interface atomic index | List[int] | (Required) | `--lower_index '[17,109,166]'` |
+| initial_donor | the index of a initial donor | int | (Required) | `--initial_donor 240` |
+| interval | each time interval the number of frames | int | 1 | `--interval 1` |
+
+#### Examples
+
+```bash
+ ai2-kit algorithm proton-transfer calculate-distances \ 
+    --analysis_result ./result \
+    --input_traj ./test.xyz \
+    --upper_index '[1,2]' \
+    --lower_index '[3,4]' \
+    --initial_donor 255 \
+    --interval 1
+```
+The content of the output file will be like below:
+```
+4.10318
+4.11708
+4.131689999999999
+4.14673
+4.16193
+4.177009999999999
+4.1916899999999995
+4.20575
+4.218959999999999
+4.231159999999999
+4.24221
+4.252049999999999
+4.260639999999999
+4.26798
+4.274089999999999
+4.279
+...
+```
+
+### Show Distance Change
+```bash
+ai2-kit algorithm proton-transfer show-distance-change
+```
+This command will draw the distance change over time.  
+
+#### Options
+
+| Option | Description | Type | Default | Example |
+| --- | --- | --- | --- | --- |
+| analysis_result | the directory of analysis result | str | (Required) | `--analysis_result ./result` |
+| initial_donor | the index of a initial donor | int | (Required) | `--initial_donor 240` |
+
+#### Examples
+
+```bash
+ ai2-kit algorithm proton-transfer show-distance-change \ 
+    --analysis_result ./result \
+    --initial_donor 255 
+```
+The output of the above command will be like below:  
+
+![distance-to-interface](../res/distance-to-interface.png "distance-to-interface")

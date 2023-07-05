@@ -10,6 +10,8 @@ from typing import List, Tuple, NamedTuple
 
 import fire
 import numpy as np
+from numpy import mean
+import matplotlib.pyplot as plt
 
 import json
 import os
@@ -17,6 +19,7 @@ import io
 
 # TODO: use array instead of list for better performance when possible
 # TODO: use numba to speed up the calculation
+
 
 class AnalysisResult(NamedTuple):
     indicator_position: Tuple[float, float, float]
@@ -196,7 +199,7 @@ def proton_transfer_detection(
         pool.map(partial(system.analysis, out_dir=out_dir), initial_donors)
 
 
-def visualize_transfer(analysis_result: str, input_traj: str,output_traj: str, initial_donor: int, cell: list):
+def visualize_transfer(analysis_result: str, input_traj: str, output_traj: str, initial_donor: int, cell: list):
     stc_list = ai.read(input_traj, index=":")
     donor = initial_donor
     with open(os.path.join(analysis_result, f'{initial_donor}.jsonl'), mode='r') as reader:
@@ -219,7 +222,8 @@ def analysis_transfer_paths(analysis_result: str, initial_donor: int):
     fmt = "{:^40}\t{:^8}"
     content = fmt.format("transfer_path_index", "Snapshot")
     print(f"{content}")
-    with open(os.path.join(analysis_result, f'{initial_donor}.jsonl'), mode='r') as reader:
+    with open(os.path.join(analysis_result, f'{initial_donor}.jsonl'), mode='r') as reader, \
+            open(os.path.join(analysis_result, f'{initial_donor}_proton_infos.jsonl'), mode='wb') as writer:
         for i, line in enumerate(reader):
             line = json.loads(line)
             if line[1]:
@@ -228,9 +232,46 @@ def analysis_transfer_paths(analysis_result: str, initial_donor: int):
                     proton = event[1]
                     content = f"{donor}({proton})->"
                     donor = acceptor
+                writer.write((json.dumps((proton, i)) + '\n').encode('utf-8'))
                 content = content + f"{acceptor}"
                 content = fmt.format(f"{content}", f"{i}")
                 print(content)
+        if proton:
+            writer.write((json.dumps((proton, i+1)) + '\n').encode('utf-8'))
+
+
+
+def calculate_distances(analysis_result: str, input_traj: str, upper_index: List[int], lower_index: List[int], initial_donor: int, interval: int = 1):
+    stc_list = ai.read(input_traj, index=":")
+    upper_pos = [stc_list[0][i].position[2] for i in upper_index]
+    lower_pos = [stc_list[0][i].position[2] for i in lower_index]
+    upper_interface = mean(upper_pos)
+    lower_interface = mean(lower_pos)
+    start = 0
+    with open(os.path.join(analysis_result, f'{initial_donor}_proton_infos.jsonl'), mode='rb') as reader, \
+            open(os.path.join(analysis_result, f'{initial_donor}_proton_distance_to_interface.jsonl'), mode='wb') as writer:
+        for i, line in enumerate(reader):
+            proton_info = json.loads(line)
+            end = proton_info[1]
+            for j in range(start, end, interval):
+                distance = min(abs(stc_list[j][proton_info[0]].position[2] - upper_interface),
+                               abs(stc_list[j][proton_info[0]].position[2] - lower_interface))
+                writer.write((json.dumps(distance) + '\n').encode('utf-8'))
+            start = end
+
+
+def show_distance_change(analysis_result: str, initial_donor: int):
+    y = []
+    with open(os.path.join(analysis_result, f'{initial_donor}_proton_distance_to_interface.jsonl'), mode='rb') as reader:
+        for i, line in enumerate(reader):
+            y.append(json.loads(line))
+    if y:
+        x = np.arange(len(y))
+        plt.plot(x, y)
+        plt.xlabel("Time")
+        plt.ylabel("Distance")
+        plt.title("Proton distance to interface")
+        plt.savefig(os.path.join(analysis_result, f'{initial_donor}_proton_distance_to_interface.png'))
 
 
 def detect_type_change(analysis_result: str, atom_types: dict, donors: list):
@@ -299,5 +340,7 @@ if __name__ == '__main__':
         "analyze": proton_transfer_detection,
         "visualize": visualize_transfer,
         "show-transfer-paths": analysis_transfer_paths,
-        "show-type-change": detect_type_change
+        "show-type-change": detect_type_change,
+        "calculate-distances": calculate_distances,
+        "show-distance-change": show_distance_change
     })

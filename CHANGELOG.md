@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.19
+* feat: distance analysis for proton transfer
+
 ## v0.3.18
 * fix: convert vasp data for deepmd
 

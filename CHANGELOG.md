@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.21
+* fix: dp empty validation data error
+
 ## v0.3.20
 * doc: generate online doc
 * chore: github workflow

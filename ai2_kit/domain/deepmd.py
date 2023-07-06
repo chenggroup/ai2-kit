@@ -171,12 +171,15 @@ async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
         }
         training['training_data'] = training_data
 
-        validation_data = {
-            'systems': validation_systems,
-            'set_prefix': training['set_prefix'],
-            'batch_size': training['batch_size'],
-        }
-        training['validation_data'] = validation_data
+        # ignore validation section if no data is provided, or else dp will throw error
+        # OSError: [Errno cannot find valid a data system] Please check your setting for data systems
+        if len(validation_systems) > 0:
+            validation_data = {
+                'systems': validation_systems,
+                'set_prefix': training['set_prefix'],
+                'batch_size': training['batch_size'],
+            }
+            training['validation_data'] = validation_data
 
         # other params
         dp_input['model']['type_map'] = input.type_map

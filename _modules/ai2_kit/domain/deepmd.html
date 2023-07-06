@@ -531,12 +531,15 @@ document.write(`
         <span class="p">}</span>
         <span class="n">training</span><span class="p">[</span><span class="s1">&#39;training_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">training_data</span>
 
-        <span class="n">validation_data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;systems&#39;</span><span class="p">:</span> <span class="n">validation_systems</span><span class="p">,</span>
-            <span class="s1">&#39;set_prefix&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;set_prefix&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">],</span>
-        <span class="p">}</span>
-        <span class="n">training</span><span class="p">[</span><span class="s1">&#39;validation_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">validation_data</span>
+        <span class="c1"># ignore validation section if no data is provided, or else dp will throw error</span>
+        <span class="c1"># OSError: [Errno cannot find valid a data system] Please check your setting for data systems</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">validation_systems</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">validation_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;systems&#39;</span><span class="p">:</span> <span class="n">validation_systems</span><span class="p">,</span>
+                <span class="s1">&#39;set_prefix&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;set_prefix&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">],</span>
+            <span class="p">}</span>
+            <span class="n">training</span><span class="p">[</span><span class="s1">&#39;validation_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">validation_data</span>
 
         <span class="c1"># other params</span>
         <span class="n">dp_input</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;type_map&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">type_map</span>

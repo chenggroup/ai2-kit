@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.25
+* improvement: pretty table output
+
 ## v0.3.24
 * fix: create missing dir
 

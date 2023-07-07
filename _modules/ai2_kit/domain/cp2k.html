@@ -364,7 +364,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">merge_dict</span><span class="p">,</span> <span class="n">dict_nested_get</span><span class="p">,</span> <span class="n">split_list</span><span class="p">,</span> <span class="n">list_even_sample</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Literal</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 
@@ -397,6 +397,7 @@ document.write(`
 <div class="viewcode-block" id="GenericCp2kContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.GenericCp2kContextConfig">[docs]</a><span class="k">class</span> <span class="nc">GenericCp2kContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
     <span class="n">cp2k_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;cp2k&#39;</span>
+    <span class="n">post_cp2k_cmd</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span></div>
 
 
@@ -474,6 +475,10 @@ document.write(`
     <span class="c1"># build commands</span>
     <span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">cp2k_task_dir</span> <span class="ow">in</span> <span class="n">cp2k_task_dirs</span><span class="p">:</span>
+        <span class="n">cmd</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cp2k_cmd</span><span class="si">}</span><span class="s1"> -i input.inp 1&gt;&gt; output 2&gt;&gt; output&#39;</span>
+        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">post_cp2k_cmd</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; &amp;&amp; </span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">post_cp2k_cmd</span><span class="si">}</span><span class="s1">&#39;</span>
+
         <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BashStep</span><span class="p">(</span>
             <span class="n">cwd</span><span class="o">=</span><span class="n">cp2k_task_dir</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
             <span class="n">cmd</span><span class="o">=</span><span class="p">[</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cp2k_cmd</span><span class="p">,</span> <span class="s1">&#39;-i input.inp 1&gt;&gt; output 2&gt;&gt; output&#39;</span><span class="p">],</span>

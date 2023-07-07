@@ -4,7 +4,7 @@ from ai2_kit.core.job import gather_jobs
 from ai2_kit.core.util import merge_dict, dict_nested_get, split_list, list_even_sample
 from ai2_kit.core.log import get_logger
 
-from typing import List, Union, Tuple, Literal
+from typing import List, Union, Tuple, Literal, Optional
 from pydantic import BaseModel
 from dataclasses import dataclass
 
@@ -37,6 +37,7 @@ class GenericCp2kInputConfig(BaseModel):
 class GenericCp2kContextConfig(BaseModel):
     script_template: BashTemplate
     cp2k_cmd: str = 'cp2k'
+    post_cp2k_cmd: Optional[str] = None
     concurrency: int = 5
 
 
@@ -114,6 +115,10 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
     # build commands
     steps = []
     for cp2k_task_dir in cp2k_task_dirs:
+        cmd=f'{ctx.config.cp2k_cmd} -i input.inp 1>> output 2>> output'
+        if ctx.config.post_cp2k_cmd:
+            cmd += f' && {ctx.config.post_cp2k_cmd}'
+
         steps.append(BashStep(
             cwd=cp2k_task_dir['url'],
             cmd=[ctx.config.cp2k_cmd, '-i input.inp 1>> output 2>> output'],

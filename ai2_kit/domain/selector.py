@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from dataclasses import dataclass
 import pandas as pd
 import os
+from tabulate import tabulate
 
 from .data import LammpsOutputHelper
 from .iface import ICllSelectorOutput, BaseCllContext
@@ -56,7 +57,8 @@ async def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelect
     total_count = 0
     passed_count = 0
 
-    csv_out = ['file, total, pass, candidate, reject, pass%']
+    headers = ['file', 'total', 'pass', 'candidate', 'reject', 'pass%']
+    table = []
 
     # TODO: support output of different software
     for candidate in input.model_devi_data:
@@ -87,15 +89,16 @@ async def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelect
 
         candidate.attrs[LAMMPS_DUMPS_CLASSIFIED] = classified_result
 
-        passing_rate = len(df) / len(passed_df)
+        passing_rate = len(passed_df) / len(df)
         total_count += len(df)
         passed_count += len(passed_df)
 
-        csv_out.append(f'{os.path.relpath(model_devi_out_file, work_dir)}, {len(df)}, {len(passed_df)}, {len(selected_df)}, {len(rejected_df)}, {passing_rate}')
-        logger.info(csv_out[0])  # header
-        logger.info(csv_out[-1])  # data line
+        table.append([os.path.relpath(model_devi_out_file, work_dir), len(df), len(passed_df), len(selected_df), len(rejected_df), passing_rate])
 
-    executor.dump_text('\n'.join(csv_out), os.path.join(work_dir, 'stats.csv'))
+    stats_report = tabulate(table, headers=headers, tablefmt='tsv')
+    logger.info('stats report: \n%s', stats_report)
+
+    executor.dump_text(stats_report, os.path.join(work_dir, 'stats.tsv'))
     return ThresholdSelectorOutput(
         model_devi_data=input.model_devi_data,
         passing_rate=passed_count / total_count,

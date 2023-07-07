@@ -6,6 +6,7 @@ from io import StringIO
 from pydantic import BaseModel
 from dataclasses import dataclass
 import pandas as pd
+import os
 
 from .data import LammpsOutputHelper
 from .iface import ICllSelectorOutput, BaseCllContext
@@ -44,6 +45,7 @@ class ThresholdSelectorInput:
 
 async def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelectorContext):
     executor = ctx.resource_manager.default_executor
+    work_dir = os.path.join(executor.work_dir, ctx.path_prefix)
 
     f_trust_lo = input.config.f_trust_lo
     f_trust_hi = input.config.f_trust_hi
@@ -52,6 +54,8 @@ async def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelect
 
     total_count = 0
     passed_count = 0
+
+    csv_out = ['file, total, pass, candidate, reject, pass%']
 
     # TODO: support output of different software
     for candidate in input.model_devi_data:
@@ -73,8 +77,6 @@ async def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelect
         selected_df = df[(df[col_force] >= f_trust_lo) & (df[col_force] < f_trust_hi)]
         rejected_df = df[df[col_force] >= f_trust_hi]
 
-        logger.info('result: total: %d, passed: %d, selected: %d, rejected: %d', len(df), len(passed_df), len(selected_df), len(rejected_df))
-
         classified_result = {
             'all': df.step.tolist(),
             'passed': passed_df.step.tolist(),
@@ -84,12 +86,16 @@ async def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelect
 
         candidate.attrs[LAMMPS_DUMPS_CLASSIFIED] = classified_result
 
+        passing_rate = len(df) / len(passed_df)
         total_count += len(df)
         passed_count += len(passed_df)
-        passing_rate = passed_count / total_count
-        logger.info('passing rate: %.2f', passing_rate)
 
+        csv_out.append(f'{os.path.relpath(model_devi_out_file, work_dir)}, {len(df)}, {len(passed_df)}, {len(selected_df)}, {len(rejected_df)}, {passing_rate}')
+        logger.info(csv_out[0])  # header
+        logger.info(csv_out[-1])  # data line
+
+    executor.dump_text('\n'.join(csv_out), os.path.join(work_dir, 'stats.csv'))
     return ThresholdSelectorOutput(
         model_devi_data=input.model_devi_data,
-        passing_rate=passing_rate,
+        passing_rate=passed_count / total_count,
     )

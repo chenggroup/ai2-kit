@@ -121,7 +121,7 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
 
         steps.append(BashStep(
             cwd=cp2k_task_dir['url'],
-            cmd=[ctx.config.cp2k_cmd, '-i input.inp 1>> output 2>> output'],
+            cmd=cmd,
             checkpoint='cp2k',
         ))
 

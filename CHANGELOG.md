@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.24
+* fix: create missing dir
+
 ## v0.3.23
 * fix: cpk2 command
 

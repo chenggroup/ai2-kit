@@ -15,7 +15,8 @@ import sys
 import json
 
 from .iface import ICllTrainOutput, BaseCllContext
-from .data import Cp2kOutputHelper, VaspOutputHelper, DeepmdNpyHelper, convert_to_deepmd_npy
+from .data import DataFormat, get_data_format, convert_to_deepmd_npy
+
 from .constant import (
     DP_CHECKPOINT_FILE,
     DP_DISP_FILE,
@@ -83,35 +84,29 @@ async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
             input.config.init_dataset)
 
     # convert data type if necessary, only needed for new data as old data is already converted
-    new_deepmd_npy_data: List[Artifact] = []
-    cp2k_output_data: List[Artifact] = []
-    vasp_output_data: List[Artifact] = []
+    deepmd_npy_data: List[Artifact] = []
+    data_to_be_converted: List[Artifact] = []
 
-    # TODO: refactor data type conversion
     for artifact in input.new_dataset:
-        if not artifact.format or DeepmdNpyHelper.is_match(artifact):
-            # treated as deepmd npy data if format is not specified
-            new_deepmd_npy_data.append(artifact)
-        elif Cp2kOutputHelper.is_match(artifact):
-            cp2k_output_data.append(artifact)
-        elif VaspOutputHelper.is_match(artifact):
-            vasp_output_data.append(artifact)
+        data = artifact.to_dict()
+        format = get_data_format(data)  # type: ignore
+        if format == DataFormat.DEEPMD_NPY or not format:
+            deepmd_npy_data.append(artifact)
         else:
-            raise ValueError(f'unsupported data type: {artifact.format}')
+            data_to_be_converted.append(artifact)
 
     # convert data to deepmd/npy format
-    # TODO: support more data type
     converted_data_dirs = executor.run_python_fn(convert_to_deepmd_npy)(
-        cp2k_outputs=[a.to_dict() for a in cp2k_output_data],
-        vasp_outputs=[a.to_dict() for a in vasp_output_data],
+        dataset=[a.to_dict() for a in data_to_be_converted],
         base_dir=converted_data_dir,
         type_map=input.type_map,
     )
-    new_deepmd_npy_data += [Artifact.of(
-        url=a['url'], format=DeepmdNpyHelper.format, attrs=a['attrs']
+
+    deepmd_npy_data += [Artifact.of(
+        url=a['url'], format=a['format'], attrs=a['attrs']
     ) for a in converted_data_dirs]
 
-    input.new_dataset = new_deepmd_npy_data
+    input.new_dataset = deepmd_npy_data
 
     jobs: List[JobFuture] = []
     output_dirs = []
@@ -223,6 +218,7 @@ async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
         input=input,
         outputs=[Artifact.of(
             url=url,
+            format=DataFormat.DEEPMD_OUTPUT_DIR,
         ) for url in output_dirs]
     )
 

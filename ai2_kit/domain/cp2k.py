@@ -10,10 +10,9 @@ from dataclasses import dataclass
 
 import copy
 import os
-import io
 import random
 
-from .data import LammpsOutputHelper, XyzHelper, Cp2kOutputHelper, ase_atoms_to_cp2k_input_data
+from .data import LammpsOutputHelper, XyzHelper, DataFormat, ase_atoms_to_cp2k_input_data
 from .iface import ICllLabelOutput, BaseCllContext
 from .util import loads_cp2k_input, load_cp2k_input, dump_cp2k_input
 
@@ -23,16 +22,10 @@ class GenericCp2kInputConfig(BaseModel):
     init_system_files: List[str] = []
     limit: int = 50
     input_template: Union[dict, str]
-    sample_method: Literal["even", "random"] = "even"
     """
     Input template for cp2k. Could be a dict or content of a cp2k input file.
-
-    Note:
-    If you are using files in input templates, it is recommended to use artifact name instead of literal path.
-    String starts with '@' will be treated as artifact name.
-    For examples, FORCE_EVAL/DFT/BASIS_SET_FILE_NAME = @cp2k/basic_set.
-    You can still use literal path, but it is not recommended.
     """
+    sample_method: Literal["even", "random"] = "even"
 
 class GenericCp2kContextConfig(BaseModel):
     script_template: BashTemplate
@@ -141,7 +134,7 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
 
     cp2k_outputs = [Artifact.of(
         url=a['url'],
-        format=Cp2kOutputHelper.format,
+        format=DataFormat.CP2K_OUTPUT_DIR,
         executor=executor.name,
         attrs=a['attrs'],
     ) for a in cp2k_task_dirs]

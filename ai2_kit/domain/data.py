@@ -1,5 +1,6 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 
+from enum import Enum
 from typing import List, Tuple, Optional
 from ase import Atoms
 import os
@@ -53,71 +54,92 @@ class XyzHelper(DataHelper):
     format = 'extxyz'
     suffix = '.xyz'
 
-class DeepmdNpyHelper(DataHelper):
-    format = 'deepmd/npy'
-
-class DeepmdModelHelper(DataHelper):
-    format = 'deepmd/model'
-
-class Cp2kOutputHelper(DataHelper):
-    format = 'cp2k-output-dir'
-
-class VaspOutputHelper(DataHelper):
-    format = 'vasp-output-dir'
-
 
 def __export_remote_functions():
     """workaround for cloudpickle issue"""
+
+    class DataFormat:
+        # customize data format
+        CP2K_OUTPUT_DIR = 'cp2k/output_dir'
+        VASP_OUTPUT_DIR = 'vasp/output_dir'
+        LAMMPS_OUTPUT_DIR = 'lammps/output_dir'
+        DEEPMD_OUTPUT_DIR = 'deepmd/output_dir'
+        DEEPMD_NPY = 'deepmd/npy'
+
+        # data format of dpdata
+        CP2K_OUTPUT = 'cp2k/output'
+        VASP_XML = 'vasp/xml'
+
+        # data format of ase
+        EXTXYZ = 'extxyz'
+        VASP_POSCAR = 'vasp/poscar'
+
+
+    def get_data_format(artifact: dict) -> Optional[str]:
+        url = artifact.get('url')
+        assert isinstance(url, str), f'url must be str, got {type(url)}'
+
+        file_name = os.path.basename(url)
+        format = artifact.get('format')
+        if format and isinstance(format, str):
+            return format  # TODO: validate format
+        if file_name.endswith('.xyz'):
+            return DataFormat.EXTXYZ
+        if 'POSCAR' in file_name:
+            return DataFormat.VASP_POSCAR
+        return None
+
 
     def ase_atoms_to_cp2k_input_data(atoms: Atoms) -> Tuple[List[str], List[List[float]]]:
         coords = [atom.symbol + ' ' + ' '.join(str(x) for x in atom.position) for atom in atoms] # type: ignore
         cell = [list(row) for row in atoms.cell]  # type: ignore
         return (coords, cell)
 
+
     def convert_to_deepmd_npy(
-        base_dir: str, 
+        base_dir: str,
         type_map: List[str],
-        *,
-        cp2k_outputs: Optional[List[ArtifactDict]] = None, 
-        vasp_outputs: Optional[List[ArtifactDict]] = None
+        dataset: List[ArtifactDict],
     ):
         import dpdata
         from itertools import groupby
 
-        atoms_list: List[Tuple[ArtifactDict, Atoms]] = []
-        if cp2k_outputs:
-            for cp2k_output in cp2k_outputs:
-                dp_system = dpdata.LabeledSystem(os.path.join(cp2k_output['url'], 'output'), fmt='cp2k/output', type_map=type_map)
-                atoms_list += [
-                    (cp2k_output, atoms)
-                    for atoms in dp_system.to_ase_structure()  # type: ignore
-                ]
-        if vasp_outputs:
-            for vasp_output in vasp_outputs:
-                dp_system = dpdata.LabeledSystem(os.path.join(vasp_output['url'], 'vasprun.xml'), fmt='vasp/xml', type_map=type_map)
-                atoms_list += [
-                    (vasp_output, atoms)
-                    for atoms in dp_system.to_ase_structure()  # type: ignore
-                ]
+        dp_system_list: List[Tuple[ArtifactDict, dpdata.LabeledSystem]]= []
+        for data in dataset:
+            data_format = get_data_format(data)  # type: ignore
+            dp_system = None
+            try:
+                if data_format == DataFormat.CP2K_OUTPUT_DIR:
+                    dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'output'), fmt='cp2k/output', type_map=type_map)
+                elif data_format == DataFormat.VASP_OUTPUT_DIR:
+                    dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'vasprun.xml'), fmt='vasp/xml', type_map=type_map)
+            except Exception as e:
+                print(f'failed to load {data["url"]}: {e}')
+
+            if dp_system is not None:
+                dp_system_list.append((data, dp_system))
 
         output_dirs = []
         # group dataset by ancestor key
-        for i, (key, atoms_group) in enumerate(groupby(atoms_list, key=lambda x: x[0]['attrs']['ancestor'])):
-            output_dir = os.path.join(base_dir, key.replace('/', '_'))
-            dp_system = None
-            atoms_group = list(atoms_group)
-            for _, atoms in atoms_group:
-                if dp_system is None:
-                    dp_system = dpdata.LabeledSystem(atoms, fmt='ase/structure', type_map=type_map)
-                else:
-                    dp_system += dpdata.LabeledSystem(atoms, fmt='ase/structure', type_map=type_map)
-            if dp_system is None:
+        for i, (key, dp_system_group) in enumerate(groupby(dp_system_list, key=lambda x: x[0]['attrs']['ancestor'])):
+            dp_system_group = list(dp_system_group)
+            if 0 == len(dp_system_group):
                 continue  # skip empty dataset
-            dp_system.to_deepmd_npy(output_dir, set_size=len(dp_system), type_map=type_map)  # type: ignore
-            # inherit attrs key from input artifact
-            output_dirs.append({'url': output_dir, 'attrs': atoms_group[0][0]['attrs']})  # type: ignore
 
+            # merge dp_systems with the same ancestor into single data set
+            output_dir = os.path.join(base_dir, key.replace('/', '_'))
+            dp_system = sum([x[1] for x in dp_system_group])
+            try:
+                dp_system.to_deepmd_npy(output_dir, set_size=len(dp_system), type_map=type_map)  # type: ignore
+            except Exception as e:
+                print(f'failed to convert {key}: {e}')
+                continue
+            # inherit attrs key from input artifact
+            output_dirs.append({'url': output_dir,
+                                'format': DataFormat.DEEPMD_NPY,
+                                'attrs': dp_system_group[0][0]['attrs']})  # type: ignore
         return output_dirs
+
 
     def convert_to_lammps_input_data(poscar_files: List[ArtifactDict], base_dir: str, type_map: List[str]):
         import dpdata
@@ -132,10 +154,18 @@ def __export_remote_functions():
             })
         return lammps_data_files
 
-    return ase_atoms_to_cp2k_input_data, convert_to_deepmd_npy, convert_to_lammps_input_data
+    return (
+        ase_atoms_to_cp2k_input_data,
+        convert_to_deepmd_npy,
+        convert_to_lammps_input_data,
+        DataFormat,
+        get_data_format,
+    )
 
 (
     ase_atoms_to_cp2k_input_data,
     convert_to_deepmd_npy,
     convert_to_lammps_input_data,
+    DataFormat,
+    get_data_format,
 ) = __export_remote_functions()

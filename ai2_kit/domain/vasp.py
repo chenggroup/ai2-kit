@@ -17,27 +17,21 @@ import copy
 import os
 import random
 
-from .data import LammpsOutputHelper, XyzHelper, VaspOutputHelper
+from .data import LammpsOutputHelper, XyzHelper, DataFormat
 from .iface import ICllLabelOutput, BaseCllContext
 
 logger = get_logger(__name__)
 
 class GenericVaspInputConfig(BaseModel):
     init_system_files: List[str] = []
-    limit: int = 50
     input_template: Union[dict, str]
     potcar_source: Union[dict, list]
     kpoints_template: Optional[Union[dict, str]] = None
-    sample_method: Literal["even", "random"] = "even"
     """
     Input template for VASP. Could be a dict or content of a VASP input file.
-
-    Note:
-    If you are using files in input templates, it is recommended to use artifact name instead of literal path.
-    String starts with '@' will be treated as artifact name.
-    For examples, input_template = @vasp/INCAR.
-    You can still use literal path, but it is not recommended.
     """
+    limit: int = 50
+    sample_method: Literal["even", "random"] = "even"
 
 class GenericVaspContextConfig(BaseModel):
     script_template: BashTemplate
@@ -166,7 +160,7 @@ async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> Gene
 
     vasp_outputs = [Artifact.of(
         url=a['url'],
-        format=VaspOutputHelper.format,
+        format=DataFormat.VASP_OUTPUT_DIR,
         executor=executor.name,
         attrs=a['attrs'],
     ) for a in vasp_task_dirs]

@@ -108,14 +108,10 @@ def __export_remote_functions():
         for data in dataset:
             data_format = get_data_format(data)  # type: ignore
             dp_system = None
-            try:
-                if data_format == DataFormat.CP2K_OUTPUT_DIR:
-                    dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'output'), fmt='cp2k/output', type_map=type_map)
-                elif data_format == DataFormat.VASP_OUTPUT_DIR:
-                    dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'vasprun.xml'), fmt='vasp/xml', type_map=type_map)
-            except Exception as e:
-                print(f'failed to load {data["url"]}: {e}')
-
+            if data_format == DataFormat.CP2K_OUTPUT_DIR:
+                dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'output'), fmt='cp2k/output', type_map=type_map)
+            elif data_format == DataFormat.VASP_OUTPUT_DIR:
+                dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'vasprun.xml'), fmt='vasp/xml', type_map=type_map)
             if dp_system is not None:
                 dp_system_list.append((data, dp_system))
 
@@ -130,13 +126,14 @@ def __export_remote_functions():
             # merge dp_systems with the same ancestor into single data set
             dp_system = dp_system_group[0][1]
             for item in dp_system_group[1:]:
-                dp_system += item[1]
+                try:
+                    dp_system += item[1]
+                except Exception as e:
+                    # one case of this error is when SCF is not converged
+                    print(f'failed to merge {key}: {e}')
+                    continue
 
-            try:
-                dp_system.to_deepmd_npy(output_dir, set_size=len(dp_system), type_map=type_map)  # type: ignore
-            except Exception as e:
-                print(f'failed to convert {key}: {e}')
-                continue
+            dp_system.to_deepmd_npy(output_dir, set_size=len(dp_system), type_map=type_map)  # type: ignore
             # inherit attrs key from input artifact
             output_dirs.append({'url': output_dir,
                                 'format': DataFormat.DEEPMD_NPY,

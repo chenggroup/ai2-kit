@@ -126,9 +126,12 @@ def __export_remote_functions():
             if 0 == len(dp_system_group):
                 continue  # skip empty dataset
 
-            # merge dp_systems with the same ancestor into single data set
             output_dir = os.path.join(base_dir, key.replace('/', '_'))
-            dp_system = sum([x[1] for x in dp_system_group])
+            # merge dp_systems with the same ancestor into single data set
+            dp_system = dp_system_group[0][1]
+            for item in dp_system_group[1:]:
+                dp_system += item[1]
+
             try:
                 dp_system.to_deepmd_npy(output_dir, set_size=len(dp_system), type_map=type_map)  # type: ignore
             except Exception as e:

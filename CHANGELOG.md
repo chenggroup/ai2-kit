@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.31
+* refactor: simplify data handling
+
 ## v0.3.30
 * fix: slurm job checkpoint key
 

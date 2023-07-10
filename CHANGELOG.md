@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.3.26
+* improvement: checkpoint tool command line
+* fix: slurm job checkpoint key
+
 ## v0.3.25
 * improvement: pretty table output
 

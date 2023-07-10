@@ -375,7 +375,8 @@ document.write(`
 <span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">.iface</span> <span class="kn">import</span> <span class="n">ICllTrainOutput</span><span class="p">,</span> <span class="n">BaseCllContext</span>
-<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">Cp2kOutputHelper</span><span class="p">,</span> <span class="n">VaspOutputHelper</span><span class="p">,</span> <span class="n">DeepmdNpyHelper</span><span class="p">,</span> <span class="n">convert_to_deepmd_npy</span>
+<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">DataFormat</span><span class="p">,</span> <span class="n">get_data_format</span><span class="p">,</span> <span class="n">convert_to_deepmd_npy</span>
+
 <span class="kn">from</span> <span class="nn">.constant</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">DP_CHECKPOINT_FILE</span><span class="p">,</span>
     <span class="n">DP_DISP_FILE</span><span class="p">,</span>
@@ -443,35 +444,29 @@ document.write(`
             <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">init_dataset</span><span class="p">)</span>
 
     <span class="c1"># convert data type if necessary, only needed for new data as old data is already converted</span>
-    <span class="n">new_deepmd_npy_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">cp2k_output_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">vasp_output_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">deepmd_npy_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">data_to_be_converted</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="c1"># TODO: refactor data type conversion</span>
     <span class="k">for</span> <span class="n">artifact</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">new_dataset</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">artifact</span><span class="o">.</span><span class="n">format</span> <span class="ow">or</span> <span class="n">DeepmdNpyHelper</span><span class="o">.</span><span class="n">is_match</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
-            <span class="c1"># treated as deepmd npy data if format is not specified</span>
-            <span class="n">new_deepmd_npy_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">Cp2kOutputHelper</span><span class="o">.</span><span class="n">is_match</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
-            <span class="n">cp2k_output_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">VaspOutputHelper</span><span class="o">.</span><span class="n">is_match</span><span class="p">(</span><span class="n">artifact</span><span class="p">):</span>
-            <span class="n">vasp_output_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">artifact</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="nb">format</span> <span class="o">=</span> <span class="n">get_data_format</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">DEEPMD_NPY</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">format</span><span class="p">:</span>
+            <span class="n">deepmd_npy_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;unsupported data type: </span><span class="si">{</span><span class="n">artifact</span><span class="o">.</span><span class="n">format</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">data_to_be_converted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
 
     <span class="c1"># convert data to deepmd/npy format</span>
-    <span class="c1"># TODO: support more data type</span>
     <span class="n">converted_data_dirs</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">convert_to_deepmd_npy</span><span class="p">)(</span>
-        <span class="n">cp2k_outputs</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">cp2k_output_data</span><span class="p">],</span>
-        <span class="n">vasp_outputs</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">vasp_output_data</span><span class="p">],</span>
+        <span class="n">dataset</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">data_to_be_converted</span><span class="p">],</span>
         <span class="n">base_dir</span><span class="o">=</span><span class="n">converted_data_dir</span><span class="p">,</span>
         <span class="n">type_map</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">new_deepmd_npy_data</span> <span class="o">+=</span> <span class="p">[</span><span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span>
-        <span class="n">url</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="n">DeepmdNpyHelper</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span>
+
+    <span class="n">deepmd_npy_data</span> <span class="o">+=</span> <span class="p">[</span><span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span>
+        <span class="n">url</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;format&#39;</span><span class="p">],</span> <span class="n">attrs</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span>
     <span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">converted_data_dirs</span><span class="p">]</span>
 
-    <span class="nb">input</span><span class="o">.</span><span class="n">new_dataset</span> <span class="o">=</span> <span class="n">new_deepmd_npy_data</span>
+    <span class="nb">input</span><span class="o">.</span><span class="n">new_dataset</span> <span class="o">=</span> <span class="n">deepmd_npy_data</span>
 
     <span class="n">jobs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">JobFuture</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">output_dirs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -583,6 +578,7 @@ document.write(`
         <span class="nb">input</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
         <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+            <span class="nb">format</span><span class="o">=</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">DEEPMD_OUTPUT_DIR</span><span class="p">,</span>
         <span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">output_dirs</span><span class="p">]</span>
     <span class="p">)</span></div>
 

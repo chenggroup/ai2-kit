@@ -377,27 +377,21 @@ document.write(`
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">random</span>
 
-<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">LammpsOutputHelper</span><span class="p">,</span> <span class="n">XyzHelper</span><span class="p">,</span> <span class="n">VaspOutputHelper</span>
+<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">LammpsOutputHelper</span><span class="p">,</span> <span class="n">XyzHelper</span><span class="p">,</span> <span class="n">DataFormat</span>
 <span class="kn">from</span> <span class="nn">.iface</span> <span class="kn">import</span> <span class="n">ICllLabelOutput</span><span class="p">,</span> <span class="n">BaseCllContext</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GenericVaspInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.GenericVaspInputConfig">[docs]</a><span class="k">class</span> <span class="nc">GenericVaspInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">init_system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="n">input_template</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
     <span class="n">potcar_source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span>
     <span class="n">kpoints_template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">sample_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="s2">&quot;random&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;even&quot;</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Input template for VASP. Could be a dict or content of a VASP input file.</span>
-
-<span class="sd">    Note:</span>
-<span class="sd">    If you are using files in input templates, it is recommended to use artifact name instead of literal path.</span>
-<span class="sd">    String starts with &#39;@&#39; will be treated as artifact name.</span>
-<span class="sd">    For examples, input_template = @vasp/INCAR.</span>
-<span class="sd">    You can still use literal path, but it is not recommended.</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">sample_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="s2">&quot;random&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;even&quot;</span></div>
 
 <div class="viewcode-block" id="GenericVaspContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.GenericVaspContextConfig">[docs]</a><span class="k">class</span> <span class="nc">GenericVaspContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
@@ -526,7 +520,7 @@ document.write(`
 
     <span class="n">vasp_outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span>
         <span class="n">url</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
-        <span class="nb">format</span><span class="o">=</span><span class="n">VaspOutputHelper</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
+        <span class="nb">format</span><span class="o">=</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">VASP_OUTPUT_DIR</span><span class="p">,</span>
         <span class="n">executor</span><span class="o">=</span><span class="n">executor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
         <span class="n">attrs</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span>
     <span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">vasp_task_dirs</span><span class="p">]</span>

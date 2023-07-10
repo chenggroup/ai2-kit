@@ -360,6 +360,7 @@ document.write(`
   <h1>Source code for ai2_kit.domain.data</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
 
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -413,71 +414,92 @@ document.write(`
     <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;extxyz&#39;</span>
     <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;.xyz&#39;</span></div>
 
-<div class="viewcode-block" id="DeepmdNpyHelper"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.data.html#ai2_kit.domain.data.DeepmdNpyHelper">[docs]</a><span class="k">class</span> <span class="nc">DeepmdNpyHelper</span><span class="p">(</span><span class="n">DataHelper</span><span class="p">):</span>
-    <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;deepmd/npy&#39;</span></div>
-
-<div class="viewcode-block" id="DeepmdModelHelper"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.data.html#ai2_kit.domain.data.DeepmdModelHelper">[docs]</a><span class="k">class</span> <span class="nc">DeepmdModelHelper</span><span class="p">(</span><span class="n">DataHelper</span><span class="p">):</span>
-    <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;deepmd/model&#39;</span></div>
-
-<div class="viewcode-block" id="Cp2kOutputHelper"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.data.html#ai2_kit.domain.data.Cp2kOutputHelper">[docs]</a><span class="k">class</span> <span class="nc">Cp2kOutputHelper</span><span class="p">(</span><span class="n">DataHelper</span><span class="p">):</span>
-    <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;cp2k-output-dir&#39;</span></div>
-
-<div class="viewcode-block" id="VaspOutputHelper"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.data.html#ai2_kit.domain.data.VaspOutputHelper">[docs]</a><span class="k">class</span> <span class="nc">VaspOutputHelper</span><span class="p">(</span><span class="n">DataHelper</span><span class="p">):</span>
-    <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;vasp-output-dir&#39;</span></div>
-
 
 <span class="k">def</span> <span class="nf">__export_remote_functions</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;workaround for cloudpickle issue&quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">DataFormat</span><span class="p">:</span>
+        <span class="c1"># customize data format</span>
+        <span class="n">CP2K_OUTPUT_DIR</span> <span class="o">=</span> <span class="s1">&#39;cp2k/output_dir&#39;</span>
+        <span class="n">VASP_OUTPUT_DIR</span> <span class="o">=</span> <span class="s1">&#39;vasp/output_dir&#39;</span>
+        <span class="n">LAMMPS_OUTPUT_DIR</span> <span class="o">=</span> <span class="s1">&#39;lammps/output_dir&#39;</span>
+        <span class="n">DEEPMD_OUTPUT_DIR</span> <span class="o">=</span> <span class="s1">&#39;deepmd/output_dir&#39;</span>
+        <span class="n">DEEPMD_NPY</span> <span class="o">=</span> <span class="s1">&#39;deepmd/npy&#39;</span>
+
+        <span class="c1"># data format of dpdata</span>
+        <span class="n">CP2K_OUTPUT</span> <span class="o">=</span> <span class="s1">&#39;cp2k/output&#39;</span>
+        <span class="n">VASP_XML</span> <span class="o">=</span> <span class="s1">&#39;vasp/xml&#39;</span>
+
+        <span class="c1"># data format of ase</span>
+        <span class="n">EXTXYZ</span> <span class="o">=</span> <span class="s1">&#39;extxyz&#39;</span>
+        <span class="n">VASP_POSCAR</span> <span class="o">=</span> <span class="s1">&#39;vasp/poscar&#39;</span>
+
+
+    <span class="k">def</span> <span class="nf">get_data_format</span><span class="p">(</span><span class="n">artifact</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">artifact</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;url must be str, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="nb">format</span> <span class="o">=</span> <span class="n">artifact</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;format&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">format</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">format</span>  <span class="c1"># TODO: validate format</span>
+        <span class="k">if</span> <span class="n">file_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.xyz&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">EXTXYZ</span>
+        <span class="k">if</span> <span class="s1">&#39;POSCAR&#39;</span> <span class="ow">in</span> <span class="n">file_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">VASP_POSCAR</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
 
     <span class="k">def</span> <span class="nf">ase_atoms_to_cp2k_input_data</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
         <span class="n">coords</span> <span class="o">=</span> <span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">symbol</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">atom</span><span class="o">.</span><span class="n">position</span><span class="p">)</span> <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">]</span> <span class="c1"># type: ignore</span>
         <span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
 
+
     <span class="k">def</span> <span class="nf">convert_to_deepmd_npy</span><span class="p">(</span>
-        <span class="n">base_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+        <span class="n">base_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">cp2k_outputs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-        <span class="n">vasp_outputs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
     <span class="p">):</span>
         <span class="kn">import</span> <span class="nn">dpdata</span>
         <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
 
-        <span class="n">atoms_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">Atoms</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">cp2k_outputs</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">cp2k_output</span> <span class="ow">in</span> <span class="n">cp2k_outputs</span><span class="p">:</span>
-                <span class="n">dp_system</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cp2k_output</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="s1">&#39;output&#39;</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;cp2k/output&#39;</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
-                <span class="n">atoms_list</span> <span class="o">+=</span> <span class="p">[</span>
-                    <span class="p">(</span><span class="n">cp2k_output</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="n">dp_system</span><span class="o">.</span><span class="n">to_ase_structure</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
-                <span class="p">]</span>
-        <span class="k">if</span> <span class="n">vasp_outputs</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">vasp_output</span> <span class="ow">in</span> <span class="n">vasp_outputs</span><span class="p">:</span>
-                <span class="n">dp_system</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">vasp_output</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="s1">&#39;vasprun.xml&#39;</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;vasp/xml&#39;</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
-                <span class="n">atoms_list</span> <span class="o">+=</span> <span class="p">[</span>
-                    <span class="p">(</span><span class="n">vasp_output</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="n">dp_system</span><span class="o">.</span><span class="n">to_ase_structure</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
-                <span class="p">]</span>
+        <span class="n">dp_system_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]]</span><span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+            <span class="n">data_format</span> <span class="o">=</span> <span class="n">get_data_format</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="n">dp_system</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">data_format</span> <span class="o">==</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">CP2K_OUTPUT_DIR</span><span class="p">:</span>
+                <span class="n">dp_system</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="s1">&#39;output&#39;</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;cp2k/output&#39;</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">data_format</span> <span class="o">==</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">VASP_OUTPUT_DIR</span><span class="p">:</span>
+                <span class="n">dp_system</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="s1">&#39;vasprun.xml&#39;</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;vasp/xml&#39;</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">dp_system</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">dp_system_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">dp_system</span><span class="p">))</span>
 
         <span class="n">output_dirs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># group dataset by ancestor key</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">atoms_group</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">groupby</span><span class="p">(</span><span class="n">atoms_list</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">])):</span>
-            <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">))</span>
-            <span class="n">dp_system</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">atoms_group</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">atoms_group</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="n">atoms_group</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">dp_system</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">dp_system</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;ase/structure&#39;</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">dp_system</span> <span class="o">+=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;ase/structure&#39;</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">dp_system</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">dp_system_group</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">groupby</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">])):</span>
+            <span class="n">dp_system_group</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dp_system_group</span><span class="p">)</span>
+            <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dp_system_group</span><span class="p">):</span>
                 <span class="k">continue</span>  <span class="c1"># skip empty dataset</span>
+
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">))</span>
+            <span class="c1"># merge dp_systems with the same ancestor into single data set</span>
+            <span class="n">dp_system</span> <span class="o">=</span> <span class="n">dp_system_group</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">dp_system_group</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">dp_system</span> <span class="o">+=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="c1"># one case of this error is when SCF is not converged</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;failed to merge </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
             <span class="n">dp_system</span><span class="o">.</span><span class="n">to_deepmd_npy</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">set_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">dp_system</span><span class="p">),</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
             <span class="c1"># inherit attrs key from input artifact</span>
-            <span class="n">output_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="n">atoms_group</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;attrs&#39;</span><span class="p">]})</span>  <span class="c1"># type: ignore</span>
-
+            <span class="n">output_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">output_dir</span><span class="p">,</span>
+                                <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">DEEPMD_NPY</span><span class="p">,</span>
+                                <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="n">dp_system_group</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;attrs&#39;</span><span class="p">]})</span>  <span class="c1"># type: ignore</span>
         <span class="k">return</span> <span class="n">output_dirs</span>
+
 
     <span class="k">def</span> <span class="nf">convert_to_lammps_input_data</span><span class="p">(</span><span class="n">poscar_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span> <span class="n">base_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
         <span class="kn">import</span> <span class="nn">dpdata</span>
@@ -492,12 +514,20 @@ document.write(`
             <span class="p">})</span>
         <span class="k">return</span> <span class="n">lammps_data_files</span>
 
-    <span class="k">return</span> <span class="n">ase_atoms_to_cp2k_input_data</span><span class="p">,</span> <span class="n">convert_to_deepmd_npy</span><span class="p">,</span> <span class="n">convert_to_lammps_input_data</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">ase_atoms_to_cp2k_input_data</span><span class="p">,</span>
+        <span class="n">convert_to_deepmd_npy</span><span class="p">,</span>
+        <span class="n">convert_to_lammps_input_data</span><span class="p">,</span>
+        <span class="n">DataFormat</span><span class="p">,</span>
+        <span class="n">get_data_format</span><span class="p">,</span>
+    <span class="p">)</span>
 
 <span class="p">(</span>
     <span class="n">ase_atoms_to_cp2k_input_data</span><span class="p">,</span>
     <span class="n">convert_to_deepmd_npy</span><span class="p">,</span>
     <span class="n">convert_to_lammps_input_data</span><span class="p">,</span>
+    <span class="n">DataFormat</span><span class="p">,</span>
+    <span class="n">get_data_format</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">=</span> <span class="n">__export_remote_functions</span><span class="p">()</span>
 </pre></div>
 

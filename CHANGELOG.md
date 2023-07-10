@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.27
+* fix: use override instead of append for cp2k output
+
 ## v0.3.26
 * improvement: checkpoint tool command line
 * fix: slurm job checkpoint key

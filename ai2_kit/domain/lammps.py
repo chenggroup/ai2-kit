@@ -271,7 +271,7 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
             steps=steps_group,
         )
         job = executor.submit(script.render(), cwd=tasks_dir,
-                              checkpoint_key=f'slurm-job/lammps/{i}:{tasks_dir}')
+                              checkpoint_key=f'queue-job/lammps/{i}:{tasks_dir}')
         jobs.append(job)
 
     await gather_jobs(jobs, max_tries=2)

@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.32
+* fix: ignore data merge when SCF is not converged
+
 ## v0.3.31
 * refactor: simplify data handling
 

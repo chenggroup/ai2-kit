@@ -481,7 +481,7 @@ document.write(`
 
         <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BashStep</span><span class="p">(</span>
             <span class="n">cwd</span><span class="o">=</span><span class="n">cp2k_task_dir</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
-            <span class="n">cmd</span><span class="o">=</span><span class="p">[</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cp2k_cmd</span><span class="p">,</span> <span class="s1">&#39;-i input.inp 1&gt;&gt; output 2&gt;&gt; output&#39;</span><span class="p">],</span>
+            <span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
             <span class="n">checkpoint</span><span class="o">=</span><span class="s1">&#39;cp2k&#39;</span><span class="p">,</span>
         <span class="p">))</span>
 

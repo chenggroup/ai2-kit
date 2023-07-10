@@ -1,6 +1,9 @@
 # Change Logs
 
-## v0.3.27
+## v0.3.29
+* fix: cp2k command line
+
+## v0.3.28
 * fix: use override instead of append for cp2k output
 
 ## v0.3.26

@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.3.30
+* fix: slurm job checkpoint key
+
 ## v0.3.29
 * fix: cp2k command line
 

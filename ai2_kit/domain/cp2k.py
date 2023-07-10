@@ -115,7 +115,7 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
     # build commands
     steps = []
     for cp2k_task_dir in cp2k_task_dirs:
-        cmd=f'{ctx.config.cp2k_cmd} -i input.inp 1>> output 2>> output'
+        cmd=f'{ctx.config.cp2k_cmd} -i input.inp 1> output 2> output'
         if ctx.config.post_cp2k_cmd:
             cmd += f' && {ctx.config.post_cp2k_cmd}'
 

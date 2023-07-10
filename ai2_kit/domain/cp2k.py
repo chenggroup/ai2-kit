@@ -135,7 +135,7 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
             steps=steps_group,
         )
         job = executor.submit(script.render(), cwd=tasks_dir,
-                              checkpoint_key=f'submit-job/cp2k/{i}:{tasks_dir}')
+                              checkpoint_key=f'slurm-job:cp2k:{tasks_dir}:{i}')
         jobs.append(job)
     jobs = await gather_jobs(jobs, max_tries=2)
 

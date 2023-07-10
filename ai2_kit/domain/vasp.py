@@ -160,7 +160,7 @@ async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> Gene
             steps=steps_group,
         )
         job = executor.submit(script.render(), cwd=tasks_dir,
-                              checkpoint_key=f'submit-job/vasp/{i}:{tasks_dir}')
+                              checkpoint_key=f'slurm-job:vasp:{tasks_dir}:{i}')
         jobs.append(job)
     jobs = await gather_jobs(jobs, max_tries=2)
 

@@ -1,7 +1,7 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import merge_dict, dict_nested_get, split_list, list_even_sample, shuffle_sample
+from ai2_kit.core.util import merge_dict, dict_nested_get, split_list, list_even_sample, list_random_sample
 from ai2_kit.core.log import get_logger
 
 from typing import List, Union, Tuple, Literal, Optional
@@ -176,7 +176,7 @@ def __export_remote_functions():
             if sample_method == "even":
                 atoms_list = list_even_sample(atoms_list, limit)
             elif sample_method == "random":
-                atoms_list = shuffle_sample(atoms_list, limit)
+                atoms_list = list_random_sample(atoms_list, limit)
             else:
                 raise ValueError(f"Unknown sample method {sample_method}")
 

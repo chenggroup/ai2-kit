@@ -8,6 +8,7 @@ import hashlib
 import base64
 import copy
 import os
+import random
 
 from .log import get_logger
 
@@ -157,25 +158,33 @@ def __export_remote_functions():
             return l
         # calculate the sample interval
         interval = len(l) / size
-        # create an empty list to store the samples
-        samples = []
-        # loop through the list and append the samples
-        i = 0
-        while i < len(l):
-            samples.append(l[int(i)])
-            i += interval
-        # return the samples
-        return samples
+        return [l[int(i * interval)] for i in range(size)]
 
-    def shuffle_sample(l, size):
-        import random
+    def list_random_sample(l, size, seed = None):
+        if seed is None:
+            seed = len(l)
+        random.seed(seed)
+        return random.sample(l, size)
 
-        random.seed(len(l))
-        random.shuffle(l)
-        return l[:size]
+    def list_sample(l, size, method='even', **kwargs):
+        if method == 'even':
+            return list_even_sample(l, size)
+        elif method == 'random':
+            return list_random_sample(l, size, **kwargs)
+        elif method == 'truncate':
+            return l[:size]
+        else:
+            raise ValueError(f'Unknown sample method {method}')
 
     # export functions
-    return merge_dict, dict_nested_get, dict_nested_set, list_even_sample, shuffle_sample
+    return (
+        merge_dict,
+        dict_nested_get,
+        dict_nested_set,
+        list_even_sample,
+        list_random_sample,
+        list_sample,
+    )
 
 
 (
@@ -183,5 +192,6 @@ def __export_remote_functions():
     dict_nested_get,
     dict_nested_set,
     list_even_sample,
-    shuffle_sample,
+    list_random_sample,
+    list_sample,
 ) = __export_remote_functions()

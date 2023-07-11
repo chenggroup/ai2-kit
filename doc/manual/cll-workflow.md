@@ -10,8 +10,6 @@ The CCL-MLP workflow employs the Closed-Loop Learning pattern for automatic trai
 
 ![cll-mlp-diagram](../res/cll-mlp-diagram.svg)
 
-## Usage
-TODO
 
 ## Example
 
@@ -19,11 +17,11 @@ TODO
 executors:
   ikkem:
     ssh:
-      host: user@hpc-cluster
+      host: mu003
     queue_system:
       slurm: {}
-    work_dir: /home/user1/cll-workdir
-    python_cmd: python3
+    work_dir: /public/home/xldu/ai2-kit/water/workdir
+    python_cmd: /public/software/anaconda/anaconda3-2022.5/bin/python
 
     context:
       train:
@@ -33,241 +31,226 @@ executors:
               #SBATCH -N 1
               #SBATCH --ntasks-per-node=8
               #SBATCH --job-name=deepmd
-              #SBATCH --partition=GPU_s_cg
+              #SBATCH --partition=GPU_s
               #SBATCH --gres=gpu:1
             setup: |
               set -e
               module load anaconda/2022.5
-              source activate deepmd-2.1.5-gpu
+              source activate /public/groups/chenggroup/libs/deepmd/2.1.5/gpu
+              export OMP_NUM_THREADS=8
+              export TF_INTER_OP_PARALLELISM_THREADS=2
+              export TF_INTRA_OP_PARALLELISM_THREADS=4
               set +e
-
       explore:
         lammps:
+          concurrency: 5
           script_template:
             header: |
               #SBATCH -N 1
-              #SBATCH --ntasks-per-node=4
-              #SBATCH --job-name=lammps
-              #SBATCH --partition=GPU_s_cg
+              #SBATCH --ntasks-per-node=8
+              #SBATCH --partition=GPU_s
               #SBATCH --gres=gpu:1
+              #SBATCH -t 48:00:00
+              #SBATCH --job-name=lammps
             setup: |
               set -e
               module load anaconda/2022.5
-              source activate deepmd-2.1.5-gpu
+              source activate /public/groups/chenggroup/libs/deepmd/2.1.5/gpu
+              export OMP_NUM_THREADS=8
+              export TF_INTER_OP_PARALLELISM_THREADS=2
+              export TF_INTRA_OP_PARALLELISM_THREADS=4
               set +e
-
       label:
         cp2k:
-          cp2k_cmd: mpirun cp2k.popt
+          concurrency: 5
+          cp2k_cmd: mpirun cp2k.psmp
           script_template:
             header: |
-              #SBATCH -N 5
-              #SBATCH --ntasks-per-node=28
-              #SBATCH -t 12:00:00
+              #SBATCH -N 1
+              #SBATCH --ntasks-per-node=64
               #SBATCH --job-name=cp2k
-              #SBATCH --partition=medium_s_cg
-
+              #SBATCH --partition=small_s
+              #SBATCH -t 48:00:00
+              #SBATCH --job-name=cp2k
             setup: |
               set -e
-              module load mkl/2021.1.1
-              module load mpi/openmpi/4.0.3-gcc
-              module load cp2k/8.2-intel
+              module load intel/oneapi2021.1
+              module load cp2k/7.1
               set +e
 
 artifacts:
-  train/h3o:
-    url: /public/groups/chenggroup/sample-data/wf-water/00.init_data/system-000
+  h2o_64-init-train:
+    url: /public/home/xldu/ai2-kit/water/data/training.xyz
 
-  train/oh:
-    url: /public/groups/chenggroup/sample-data/wf-water/00.init_data/system-001
-
-  train/h2o:
-    url: /public/groups/chenggroup/sample-data/wf-water/00.init_data/system-002
-
-  explore/h2o_64:
-    url: /public/groups/chenggroup/sample-data/wf-water/01.md_init/h2o_64
-    includes: POSCAR*
+  h2o_64-validation:
+    url: /public/home/xldu/ai2-kit/water/data/validation.xyz
     attrs:
-      label-cp2k:
-        input_tempate:
-          charge: 0
-          uks: false
+      deepmd:
+        validation_data: true
 
-  explore/h2o_128:
-    url: /public/groups/chenggroup/sample-data/wf-water/01.md_init/h2o_128
+  h2o_64-explore:
+    url: /public/home/xldu/ai2-kit/water/data/explore
     includes: POSCAR*
-    attrs:
-      explore-lammps:
-        E_a: 100
-
-  explore/h3o_64:
-    url: /public/groups/chenggroup/sample-data/wf-water/01.md_init/h3o_64
-    includes: POSCAR*
-
-  explore/h3o_128:
-    url: /public/groups/chenggroup/sample-data/wf-water/01.md_init/h3o_128
-    includes: POSCAR*
-
-  explore/oh_64:
-    url: /public/groups/chenggroup/sample-data/wf-water/01.md_init/oh_64
-    includes: POSCAR*
-
-  explore/oh_128:
-    url: /public/groups/chenggroup/sample-data/wf-water/01.md_init/oh_128
-    includes: POSCAR*
-
-  cp2k/basic_set:
-    url: /public/groups/chenggroup/sample-data/cp2k/BASIS_MOLOPT
-  cp2k/potential:
-    url: /public/groups/chenggroup/sample-data/cp2k/GTH-SCAN-POTENTIAL
 
 workflow:
-
   general:
-    type_map: [ O, H ]
-    mass_map: [ 15.999, 1.0080 ]
+    type_map: [ H, O ]
+    mass_map: [ 1.008, 15.999 ]
+    max_iters: 15
 
   train:
     deepmd:
       model_num: 4
-      init_dataset : [train/h2o, train/h3o, train/oh]
-
+      init_dataset: []
       input_template:
         model:
           descriptor:
-            type: se_a
-            sel: [50, 100]
+            type: se_a  # modify according to your system
+            sel:
+            - 100
+            - 100
             rcut_smth: 0.5
-            rcut: 6.0
-            neuron: [25, 50, 100]
+            rcut: 5.0
+            neuron:
+            - 25
+            - 50
+            - 100
             resnet_dt: false
             axis_neuron: 16
             seed: 1
           fitting_net:
-            neuron: [240, 240, 240]
+            neuron:
+            - 240
+            - 240
+            - 240
             resnet_dt: true
             seed: 1
         learning_rate:
           type: exp
           start_lr: 0.001
           decay_steps: 2000
-          decay_rate: 0.95
         loss:
           start_pref_e: 0.02
-          limit_pref_e: 1
+          limit_pref_e: 2
           start_pref_f: 1000
           limit_pref_f: 1
           start_pref_v: 0
           limit_pref_v: 0
         training:
-          stop_batch: 200000
+          numb_steps: 400000
           seed: 1
-          disp_freq: 100
-          numb_test: 10
+          disp_file: lcurve.out
+          disp_freq: 1000
           save_freq: 1000
+          save_ckpt: model.ckpt
           disp_training: true
           time_training: true
           profiling: false
+          profiling_file: timeline.json
+
+  label:
+    cp2k:
+      limit: 100
+      init_system_files: [ h2o_64-init-train, h2o_64-validation ]
+      input_template: |
+        &GLOBAL
+        PROJECT DPGEN
+        &END GLOBAL
+        &FORCE_EVAL
+        &DFT
+        BASIS_SET_FILE_NAME /public/home/xldu/BASIS/BASIS_MOLOPT
+        POTENTIAL_FILE_NAME /public/home/xldu/POTENTIAL/GTH_POTENTIALS
+        WFN_RESTART_FILE_NAME /public/home/xldu/ai2-kit/water/data/DPGEN-RESTART.wfn
+        CHARGE 0
+        UKS F
+        &MGRID
+        CUTOFF 600
+        REL_CUTOFF 60
+        NGRIDS 4
+        &END MGRID
+        &QS
+        EPS_DEFAULT 1.0E-12
+        &END QS
+        &SCF
+        SCF_GUESS RESTART
+        EPS_SCF 3.0E-7
+        MAX_SCF 50
+        &OUTER_SCF
+        EPS_SCF 3.0E-7
+        MAX_SCF 10
+        &END
+        &OT
+        MINIMIZER DIIS
+        PRECONDITIONER FULL_SINGLE_INVERSE
+        ENERGY_GAP 0.1
+        &END
+        &END SCF
+        &LOCALIZE
+        METHOD CRAZY
+        MAX_ITER 2000
+        &PRINT
+        &WANNIER_CENTERS
+        IONS+CENTERS
+        FILENAME =64water_wannier.xyz
+        &END
+        &END
+        &END
+        &XC
+        &XC_FUNCTIONAL PBE
+        &END XC_FUNCTIONAL
+        &vdW_POTENTIAL
+        DISPERSION_FUNCTIONAL PAIR_POTENTIAL
+        &PAIR_POTENTIAL
+        TYPE DFTD3
+        PARAMETER_FILE_NAME dftd3.dat
+        REFERENCE_FUNCTIONAL PBE
+        &END PAIR_POTENTIAL
+        &END vdW_POTENTIAL
+        &END XC
+        &END DFT
+        &SUBSYS
+        &KIND O
+        BASIS_SET DZVP-MOLOPT-SR-GTH
+        POTENTIAL GTH-PBE-q6
+        &END KIND
+        &KIND H
+        BASIS_SET DZVP-MOLOPT-SR-GTH
+        POTENTIAL GTH-PBE-q1
+        &END KIND
+        &END SUBSYS
+        &PRINT
+        &FORCES ON
+        &END FORCES
+        &END PRINT
+        &END FORCE_EVAL
 
   explore:
     lammps:
-      tau_t: 0.1
-      tau_p: 0.5
       timestep: 0.0005
       sample_freq: 100
-      nsteps: 12000
+      tau_t: 0.1
+      tau_p: 0.5
+      nsteps: 10000
       ensemble: nvt
 
       post_init_section: |
-        neighbor   1.0 bin
-        box        tilt large
+        neighbor 1.0 bin
+        box      tilt large
 
       post_read_data_section: |
         change_box all triclinic
 
-      system_files: [explore/h2o_64, explore/h3o_64]
+      system_files: [ h2o_64-explore ]
       explore_vars:
         temp: [330, 430, 530]
-        pres: [1, 2]
+        pres: [1]
 
   select:
     by_threshold:
-      f_trust_lo: 0.08
-      f_trust_hi: 0.14
+      f_trust_lo: 0.06
+      f_trust_hi: 0.18
 
   update:
     walkthrough:
-      table:
-        - train:
-            deepmd:
-              model_num: 4
-          explore:
-            lammps:
-              system_files: [explore/h2o_128]
-              explore_vars:
-                temp: [ 330, 430, 530 ]
-
-        - train:
-            deepmd:
-              model_num: 4
-          explore:
-            lammps:
-              system_files: [explore/h2o_128]
-              explore_vars:
-                temp: [ 330, 430, 530 ]
-
-  label:
-    cp2k:
-      limit: 10
-      input_template:
-        GLOBAL:
-          PROJECT_NAME: AI2-KIT
-          PREFERRED_DIAG_LIBRARY: ELPA
-          EXTENDED_FFT_LENGTHS: true
-        FORCE_EVAL:
-          DFT:
-            BASIS_SET_FILE_NAME: '@cp2k/basic_set'
-            POTENTIAL_FILE_NAME: '@cp2k/potential'
-            MGRID:
-              CUTOFF: 900
-              REL_CUTOFF: 90
-              NGRIDS: 4
-            QS:
-              EPS_DEFAULT: 1.0e-13
-              EXTRAPOLATION: ASPC
-              EXTRAPOLATION_ORDER: 2
-            SCF:
-              OUTER_SCF:
-                EPS_SCF: 3.0e-07
-                MAX_SCF: 50
-              OT:
-                MINIMIZER: CG
-                PRECONDITIONER: FULL_SINGLE_INVERSE
-                ENERGY_GAP: 0.1
-              SCF_GUESS: RESTART
-              EPS_SCF: 3.0e-07
-              MAX_SCF: 20
-            XC:
-              XC_FUNCTIONAL:
-                LIBXC:
-                - FUNCTIONAL: MGGA_C_R2SCAN
-                - FUNCTIONAL: MGGA_X_R2SCAN
-            CHARGE: 0
-            UKS: false
-            MULTIPLICITY: 1
-          SUBSYS:
-            KIND:
-              H:
-                BASIS_SET: TZVP-MOLOPT-GTH
-                POTENTIAL: GTH-SCAN-q1
-              O:
-                BASIS_SET: TZVP-MOLOPT-GTH
-                POTENTIAL: GTH-SCAN-q6
-          PRINT:
-            FORCES:
-              _: 'ON'
-            STRESS_TENSOR:
-              _: 'ON'
-          METHOD: QS
-          STRESS_TENSOR: ANALYTICAL
+      table: []
 ```

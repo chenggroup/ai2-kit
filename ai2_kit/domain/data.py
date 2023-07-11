@@ -112,7 +112,7 @@ def __export_remote_functions():
                 if data_format == DataFormat.CP2K_OUTPUT_DIR:
                     dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'output'), fmt='cp2k/output', type_map=type_map)
                 elif data_format == DataFormat.VASP_OUTPUT_DIR:
-                    dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'vasprun.xml'), fmt='vasp/xml', type_map=type_map)
+                    dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'OUTCAR'), fmt='vasp/outcar', type_map=type_map)
             except Exception as e:
                 print(f'failed to load {data["url"]}: {e}')
 

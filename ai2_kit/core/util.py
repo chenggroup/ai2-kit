@@ -15,6 +15,7 @@ logger = get_logger(__name__)
 
 EMPTY = object()
 
+
 def default_mutable_field(obj):
     return field(default_factory=lambda: copy.copy(obj))
 
@@ -45,6 +46,8 @@ def sort_unique_str_list(l: List[str]) -> List[str]:
 
 
 T = TypeVar('T')
+
+
 def flatten(l: List[List[T]]) -> List[T]:
     return [item for sublist in l for item in sublist]
 
@@ -57,7 +60,7 @@ def split_list(l: List[T], n: int) -> List[List[T]]:
     """split list into n chunks"""
     # ref: https://stackoverflow.com/questions/2130016/splitting-a-list-into-n-parts-of-approximately-equal-length
     k, m = divmod(len(l), n)
-    return [l[i*k+min(i, m) : (i+1)*k+min(i+1, m)] for i in range(n)]
+    return [l[i*k+min(i, m): (i+1)*k+min(i+1, m)] for i in range(n)]
 
 
 def short_hash(s: str) -> str:
@@ -65,6 +68,7 @@ def short_hash(s: str) -> str:
     digest = hashlib.sha1(s.encode('utf-8')).digest()
     # use urlsafe encode to avoid '/' in the string, as it will cause problem in file path
     return base64.urlsafe_b64encode(digest).decode('utf-8')[:-2]
+
 
 async def to_awaitable(value: T) -> T:
     return value
@@ -124,7 +128,7 @@ def __export_remote_functions():
             path = []
         for key, value in ro.items():
             if key in lo:
-                current_path = path + [ str(key) ]
+                current_path = path + [str(key)]
                 if isinstance(lo[key], dict) and isinstance(value, dict):
                     merge_dict(lo[key], value, current_path)
                 else:
@@ -149,26 +153,35 @@ def __export_remote_functions():
         d[keys[-1]] = value
 
     def list_even_sample(l, size):
-      if size <= 0 or size > len(l):
-        return l
-      # calculate the sample interval
-      interval = len(l) / size
-      # create an empty list to store the samples
-      samples = []
-      # loop through the list and append the samples
-      i = 0
-      while i < len(l):
-        samples.append(l[int(i)])
-        i += interval
-      # return the samples
-      return samples
+        if size <= 0 or size > len(l):
+            return l
+        # calculate the sample interval
+        interval = len(l) / size
+        # create an empty list to store the samples
+        samples = []
+        # loop through the list and append the samples
+        i = 0
+        while i < len(l):
+            samples.append(l[int(i)])
+            i += interval
+        # return the samples
+        return samples
+
+    def shuffle_sample(l, size):
+        import random
+
+        random.seed(len(l))
+        random.shuffle(l)
+        return l[:size]
 
     # export functions
-    return merge_dict, dict_nested_get, dict_nested_set, list_even_sample
+    return merge_dict, dict_nested_get, dict_nested_set, list_even_sample, shuffle_sample
+
 
 (
     merge_dict,
     dict_nested_get,
     dict_nested_set,
     list_even_sample,
+    shuffle_sample,
 ) = __export_remote_functions()

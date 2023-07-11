@@ -2,7 +2,7 @@ from ai2_kit.core.script import BashTemplate, BashStep, BashScript
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import split_list, dict_nested_get
+from ai2_kit.core.util import list_split, dict_nested_get
 
 from typing import List, Literal, Optional, Mapping, Sequence, Any
 from pydantic import BaseModel
@@ -263,7 +263,7 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
 
     # submit jobs by the number of concurrency
     jobs = []
-    for i, steps_group in enumerate(split_list(steps, ctx.config.concurrency)):
+    for i, steps_group in enumerate(list_split(steps, ctx.config.concurrency)):
         if not steps_group:
             continue
         script = BashScript(

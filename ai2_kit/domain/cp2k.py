@@ -1,7 +1,7 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import merge_dict, dict_nested_get, split_list, list_even_sample, list_random_sample
+from ai2_kit.core.util import merge_dict, dict_nested_get, list_split, list_sample
 from ai2_kit.core.log import get_logger
 
 from typing import List, Union, Tuple, Literal, Optional
@@ -20,12 +20,15 @@ logger = get_logger(__name__)
 
 class GenericCp2kInputConfig(BaseModel):
     init_system_files: List[str] = []
-    limit: int = 50
     input_template: Union[dict, str]
     """
     Input template for cp2k. Could be a dict or content of a cp2k input file.
     """
-    sample_method: Literal["even", "random"] = "even"
+    limit: int = 50
+    """
+    Limit of the number of systems to be labeled.
+    """
+    limit_method: Literal["even", "random", "truncate"] = "even"
 
 class GenericCp2kContextConfig(BaseModel):
     script_template: BashTemplate
@@ -120,7 +123,7 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
 
     # submit tasks and wait for completion
     jobs = []
-    for i, steps_group in enumerate(split_list(steps, ctx.config.concurrency)):
+    for i, steps_group in enumerate(list_split(steps, ctx.config.concurrency)):
         if not steps_group:
             continue
         script = BashScript(
@@ -173,12 +176,7 @@ def __export_remote_functions():
             ]  # type: ignore
 
         if limit > 0:
-            if sample_method == "even":
-                atoms_list = list_even_sample(atoms_list, limit)
-            elif sample_method == "random":
-                atoms_list = list_random_sample(atoms_list, limit)
-            else:
-                raise ValueError(f"Unknown sample method {sample_method}")
+            atoms_list = list_sample(atoms_list, limit, method=sample_method)
 
         for i, (file, atoms) in enumerate(atoms_list):
             # create task dir

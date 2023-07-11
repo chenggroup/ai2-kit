@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.3.33
+* refactor: list_sample method
+* fix: use len(dp_system) > 0 to filter broken data
+
 ## v0.3.32
 * fix: ignore data merge when SCF is not converged
 

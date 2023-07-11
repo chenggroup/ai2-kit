@@ -108,10 +108,14 @@ def __export_remote_functions():
         for data in dataset:
             data_format = get_data_format(data)  # type: ignore
             dp_system = None
-            if data_format == DataFormat.CP2K_OUTPUT_DIR:
-                dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'output'), fmt='cp2k/output', type_map=type_map)
-            elif data_format == DataFormat.VASP_OUTPUT_DIR:
-                dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'vasprun.xml'), fmt='vasp/xml', type_map=type_map)
+            try:
+                if data_format == DataFormat.CP2K_OUTPUT_DIR:
+                    dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'output'), fmt='cp2k/output', type_map=type_map)
+                elif data_format == DataFormat.VASP_OUTPUT_DIR:
+                    dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'OUTCAR'), fmt='vasp/outcar', type_map=type_map)
+            except Exception as e:
+                print(f'failed to load {data["url"]}: {e}')
+
             if dp_system is not None:
                 dp_system_list.append((data, dp_system))
 

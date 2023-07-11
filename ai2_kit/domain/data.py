@@ -116,7 +116,8 @@ def __export_remote_functions():
             except Exception as e:
                 print(f'failed to load {data["url"]}: {e}')
 
-            if dp_system is not None:
+            # one case of len(dp_system) == 0 is when the system is not converged
+            if dp_system is not None and len(dp_system) > 0:
                 dp_system_list.append((data, dp_system))
 
         output_dirs = []
@@ -130,12 +131,7 @@ def __export_remote_functions():
             # merge dp_systems with the same ancestor into single data set
             dp_system = dp_system_group[0][1]
             for item in dp_system_group[1:]:
-                try:
-                    dp_system += item[1]
-                except Exception as e:
-                    # one case of this error is when SCF is not converged
-                    print(f'failed to merge {key}: {e}')
-                    continue
+                dp_system += item[1]
 
             dp_system.to_deepmd_npy(output_dir, set_size=len(dp_system), type_map=type_map)  # type: ignore
             # inherit attrs key from input artifact

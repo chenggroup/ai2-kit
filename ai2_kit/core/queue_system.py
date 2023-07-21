@@ -269,8 +269,10 @@ class QueueJobFuture(JobFuture):
 
         # delete checkpoint on resubmit
         if self._checkpoint_key is not None:
+            logger.info(f'Delete checkpoint due to resubmit {self._checkpoint_key}')
             del_checkpoint(self._checkpoint_key)
 
+        logger.info(f'Resubmit job: {self._job_id}')
         return self._queue_system.submit(
             script=self._script,
             cwd=self._cwd,

@@ -29,9 +29,9 @@ logger = get_logger(__name__)
 class FepExecutorConfig(BaseExecutorConfig):
     class Context(BaseModel):
 
-        deepmd: deepmd.GenericDeepmdContextConfig
-        lammps: lammps.GenericLammpsContextConfig
-        cp2k: cp2k.GenericCp2kContextConfig
+        deepmd: deepmd.CllDeepmdContextConfig
+        lammps: lammps.CllLammpsContextConfig
+        cp2k: cp2k.CllCp2kContextConfig
 
     context: Context
 
@@ -43,17 +43,17 @@ class WorkflowConfig(BaseModel):
         max_iters: int = 10
 
     class Branch(BaseModel):
-        deepmd: deepmd.GenericDeepmdInputConfig
-        cp2k: cp2k.GenericCp2kInputConfig
-        threshold: selector.ThresholdSelectorInputConfig
+        deepmd: deepmd.CllDeepmdInputConfig
+        cp2k: cp2k.CllCp2kInputConfig
+        threshold: selector.CllModelDeviSelectorInputConfig
 
     class Update(BaseModel):
-        walkthrough: updater.WalkthroughUpdaterInputConfig
+        walkthrough: updater.CllWalkthroughUpdaterInputConfig
 
     general: General
     neu: Branch
     red: Branch
-    lammps: lammps.GenericLammpsInputConfig
+    lammps: lammps.CllLammpsInputConfig
     update: Update
 
 
@@ -125,108 +125,108 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
         cp_prefix = f'iters-{i:03d}'
 
         # label: cp2k
-        red_cp2k_input = cp2k.GenericCp2kInput(
+        red_cp2k_input = cp2k.CllCp2kInput(
             config=workflow_config.red.cp2k,
             type_map=type_map,
             system_files=[] if red_selector_output is None else red_selector_output.get_model_devi_dataset(),
             initiated=i > 0,
         )
-        red_cpk2_context = cp2k.GenericCp2kContext(
+        red_cpk2_context = cp2k.CllCp2kContext(
             config=context_config.cp2k,
             path_prefix=os.path.join(iter_path_prefix, 'red-label-cp2k'),
             resource_manager=resource_manager,
         )
 
-        neu_cp2k_input = cp2k.GenericCp2kInput(
+        neu_cp2k_input = cp2k.CllCp2kInput(
             config=workflow_config.neu.cp2k,
             type_map=type_map,
             system_files=[] if neu_selector_output is None else neu_selector_output.get_model_devi_dataset(),
             initiated=i > 0,
         )
-        neu_cp2k_context = cp2k.GenericCp2kContext(
+        neu_cp2k_context = cp2k.CllCp2kContext(
             config=context_config.cp2k,
             path_prefix=os.path.join(iter_path_prefix, 'neu-label-cp2k'),
             resource_manager=resource_manager,
         )
 
         red_label_output, neu_label_output = await asyncio.gather(
-            apply_checkpoint(f'{cp_prefix}/cp2k/red')(cp2k.generic_cp2k)(red_cp2k_input, red_cpk2_context),
-            apply_checkpoint(f'{cp_prefix}/cp2k/neu')(cp2k.generic_cp2k)(neu_cp2k_input, neu_cp2k_context),
+            apply_checkpoint(f'{cp_prefix}/cp2k/red')(cp2k.cll_cp2k)(red_cp2k_input, red_cpk2_context),
+            apply_checkpoint(f'{cp_prefix}/cp2k/neu')(cp2k.cll_cp2k)(neu_cp2k_input, neu_cp2k_context),
         )
 
         # Train
-        red_deepmd_input = deepmd.GenericDeepmdInput(
+        red_deepmd_input = deepmd.CllDeepmdInput(
             config=workflow_config.red.deepmd,
             type_map=type_map,
             old_dataset=[] if red_train_output is None else red_train_output.get_training_dataset(),
             new_dataset=red_label_output.get_labeled_system_dataset(),
             initiated=i > 0,
         )
-        red_deepmd_context = deepmd.GenericDeepmdContext(
+        red_deepmd_context = deepmd.CllDeepmdContext(
             path_prefix=os.path.join(iter_path_prefix, 'red-train-deepmd'),
             config=context_config.deepmd,
             resource_manager=resource_manager,
         )
-        neu_deepmd_input = deepmd.GenericDeepmdInput(
+        neu_deepmd_input = deepmd.CllDeepmdInput(
             config=workflow_config.neu.deepmd,
             type_map=type_map,
             old_dataset=[] if neu_train_output is None else neu_train_output.get_training_dataset(),
             new_dataset=neu_label_output.get_labeled_system_dataset(),
             initiated=i > 0,
         )
-        neu_deepmd_context = deepmd.GenericDeepmdContext(
+        neu_deepmd_context = deepmd.CllDeepmdContext(
             path_prefix=os.path.join(iter_path_prefix, 'neu-train-deepmd'),
             config=context_config.deepmd,
             resource_manager=resource_manager,
         )
 
         red_train_output, neu_train_output = await asyncio.gather(
-            apply_checkpoint(f'{cp_prefix}/deepmd/red')(deepmd.generic_deepmd)(red_deepmd_input, red_deepmd_context),
-            apply_checkpoint(f'{cp_prefix}/deepmd/neu')(deepmd.generic_deepmd)(neu_deepmd_input, neu_deepmd_context),
+            apply_checkpoint(f'{cp_prefix}/deepmd/red')(deepmd.cll_deepmd)(red_deepmd_input, red_deepmd_context),
+            apply_checkpoint(f'{cp_prefix}/deepmd/neu')(deepmd.cll_deepmd)(neu_deepmd_input, neu_deepmd_context),
         )
 
         # explore
-        lammps_input = lammps.GenericLammpsInput(
+        lammps_input = lammps.CllLammpsInput(
             config=workflow_config.lammps,
             type_map=type_map,
             mass_map=mass_map,
-            fep_options=lammps.GenericLammpsInput.FepOptions(
+            fep_options=lammps.CllLammpsInput.FepOptions(
                 neu_models=neu_train_output.get_mlp_models(),
                 red_models=red_train_output.get_mlp_models(),
             ),
         )
-        lammps_context = lammps.GenericLammpsContext(
+        lammps_context = lammps.CllLammpsContext(
             path_prefix=os.path.join(iter_path_prefix, 'explore-lammps'),
             config=context_config.lammps,
             resource_manager=resource_manager,
         )
-        explore_output = await apply_checkpoint(f'{cp_prefix}/lammps')(lammps.generic_lammps)(lammps_input, lammps_context)
+        explore_output = await apply_checkpoint(f'{cp_prefix}/lammps')(lammps.cll_lammps)(lammps_input, lammps_context)
 
         # select
-        red_selector_input = selector.ThresholdSelectorInput(
+        red_selector_input = selector.CllModelDeviSelectorInput(
             config=workflow_config.red.threshold,
             model_devi_data=explore_output.get_model_devi_dataset(),
             model_devi_out_filename=const.MODEL_DEVI_RED_OUT,
         )
-        red_selector_context = selector.ThresholdSelectorContext(
+        red_selector_context = selector.CllModelDevSelectorContext(
             path_prefix=os.path.join(
                 iter_path_prefix, 'red-selector-threshold'),
             resource_manager=resource_manager,
         )
 
-        neu_selector_input = selector.ThresholdSelectorInput(
+        neu_selector_input = selector.CllModelDeviSelectorInput(
             config=workflow_config.neu.threshold,
             model_devi_data=explore_output.get_model_devi_dataset(),
             model_devi_out_filename=const.MODEL_DEVI_NEU_OUT,
         )
-        neu_selector_context = selector.ThresholdSelectorContext(
+        neu_selector_context = selector.CllModelDevSelectorContext(
             path_prefix=os.path.join(iter_path_prefix, 'neu-selector-threshold'),
             resource_manager=resource_manager,
         )
 
         red_selector_output, neu_selector_output = await asyncio.gather(
-            apply_checkpoint(f'{cp_prefix}/selector/red')(selector.threshold_selector)(red_selector_input, red_selector_context),
-            apply_checkpoint(f'{cp_prefix}/selector/neu')(selector.threshold_selector)(neu_selector_input, neu_selector_context),
+            apply_checkpoint(f'{cp_prefix}/selector/red')(selector.cll_model_devi_selector)(red_selector_input, red_selector_context),
+            apply_checkpoint(f'{cp_prefix}/selector/neu')(selector.cll_model_devi_selector)(neu_selector_input, neu_selector_context),
         )
 
         # Update

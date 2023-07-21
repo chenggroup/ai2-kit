@@ -22,7 +22,7 @@ from .constant import (
     LAMMPS_TRAJ_DIR,
     LAMMPS_TRAJ_SUFFIX,
 )
-from .data import LammpsOutputHelper, PoscarHelper, convert_to_lammps_input_data
+from .data import convert_to_lammps_input_data, DataFormat
 
 logger = get_logger(__name__)
 
@@ -42,7 +42,7 @@ class ExploreVariants(BaseModel):
     """
 
 
-class GenericLammpsInputConfig(BaseModel):
+class CllLammpsInputConfig(BaseModel):
     explore_vars: ExploreVariants
     """Variants to be explored."""
 
@@ -93,14 +93,14 @@ class GenericLammpsInputConfig(BaseModel):
     post_run_section: str = ''
 
 
-class GenericLammpsContextConfig(BaseModel):
+class CllLammpsContextConfig(BaseModel):
     script_template: BashTemplate
     lammps_cmd: str = 'lmp'
     concurrency: int = 5
 
 
 @dataclass
-class GenericLammpsInput:
+class CllLammpsInput:
 
     @dataclass
     class MdOptions:
@@ -111,7 +111,7 @@ class GenericLammpsInput:
         red_models: List[Artifact]
         neu_models: List[Artifact]
 
-    config: GenericLammpsInputConfig
+    config: CllLammpsInputConfig
     type_map: List[str]
     mass_map: List[float]
 
@@ -121,8 +121,8 @@ class GenericLammpsInput:
 
 
 @dataclass
-class GenericLammpsContext(BaseCllContext):
-    config: GenericLammpsContextConfig
+class CllLammpsContext(BaseCllContext):
+    config: CllLammpsContextConfig
 
 
 @dataclass
@@ -133,27 +133,18 @@ class GenericLammpsOutput(ICllExploreOutput):
         return self.model_devi_outputs
 
 
-async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
+async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
     executor = ctx.resource_manager.default_executor
 
     # setup workspace
     work_dir = os.path.join(executor.work_dir, ctx.path_prefix)
     input_data_dir, tasks_dir = executor.setup_workspace(work_dir, ['input_data', 'tasks'])
-
     systems = ctx.resource_manager.resolve_artifacts(input.config.system_files)
 
-    # prepare lammps input data
-    # TODO: refactor the way of handling different types of input
-    # TODO: handle more data format, for example, cp2k output
-    poscar_files: List[Artifact] = []
-    for system_file in systems:
-        if PoscarHelper.is_match(system_file):
-            poscar_files.append(system_file)
-        else:
-            raise ValueError(f'unsupported system file type: {system_file}')
-
+    # TODO: the whole process to generate task dirs should be run remotely
+    # Reference: lasp.py
     input_data_files: List[ArtifactDict] = executor.run_python_fn(convert_to_lammps_input_data)(
-        poscar_files=[a.to_dict() for a in poscar_files],
+        systems=[a.to_dict() for a in systems],
         base_dir=input_data_dir,
         type_map=input.type_map,
     )
@@ -280,7 +271,7 @@ async def generic_lammps(input: GenericLammpsInput, ctx: GenericLammpsContext):
         Artifact.of(
             url=task_dir['url'],
             executor=executor.name,
-            format=LammpsOutputHelper.format,
+            format=DataFormat.LAMMPS_OUTPUT_DIR,
             attrs=task_dir['attrs'],
         ) for task_dir in lammps_task_dirs]  # type: ignore
 

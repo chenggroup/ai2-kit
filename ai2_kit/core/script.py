@@ -45,7 +45,7 @@ class BashStep(BaseModel):
 
         if self.checkpoint:
             checkpoint = shlex.quote(self.checkpoint + '.checkpoint')
-            msg = shlex.quote(f"pass {checkpoint}")
+            msg = shlex.quote(f"hit {checkpoint}, skip")
 
             rendered_step = '\n'.join([
                 f'if [ -f {checkpoint} ]; then echo {msg}; else',

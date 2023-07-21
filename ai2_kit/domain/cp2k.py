@@ -10,15 +10,14 @@ from dataclasses import dataclass
 
 import copy
 import os
-import random
 
-from .data import LammpsOutputHelper, XyzHelper, DataFormat, ase_atoms_to_cp2k_input_data
+from .data import DataFormat, ase_atoms_to_cp2k_input_data, artifacts_to_ase_atoms
 from .iface import ICllLabelOutput, BaseCllContext
 from .util import loads_cp2k_input, load_cp2k_input, dump_cp2k_input
 
 logger = get_logger(__name__)
 
-class GenericCp2kInputConfig(BaseModel):
+class CllCp2kInputConfig(BaseModel):
     init_system_files: List[str] = []
     input_template: Union[dict, str]
     """
@@ -30,7 +29,7 @@ class GenericCp2kInputConfig(BaseModel):
     """
     limit_method: Literal["even", "random", "truncate"] = "even"
 
-class GenericCp2kContextConfig(BaseModel):
+class CllCp2kContextConfig(BaseModel):
     script_template: BashTemplate
     cp2k_cmd: str = 'cp2k'
     post_cp2k_cmd: Optional[str] = None
@@ -38,16 +37,16 @@ class GenericCp2kContextConfig(BaseModel):
 
 
 @dataclass
-class GenericCp2kInput:
-    config: GenericCp2kInputConfig
+class CllCp2kInput:
+    config: CllCp2kInputConfig
     system_files: List[Artifact]
     type_map: List[str]
     initiated: bool = False  # FIXME: this seems to be a bad design idea
 
 
 @dataclass
-class GenericCp2kContext(BaseCllContext):
-    config: GenericCp2kContextConfig
+class CllCp2kContext(BaseCllContext):
+    config: CllCp2kContextConfig
 
 
 @dataclass
@@ -58,13 +57,16 @@ class GenericCp2kOutput(ICllLabelOutput):
         return self.cp2k_outputs
 
 
-async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> GenericCp2kOutput:
+async def cll_cp2k(input: CllCp2kInput, ctx: CllCp2kContext) -> GenericCp2kOutput:
     executor = ctx.resource_manager.default_executor
 
     # For the first round
     # FIXME: move out from this function, this should be done in the workflow
     if not input.initiated:
         input.system_files += ctx.resource_manager.get_artifacts(input.config.init_system_files)
+
+    if len(input.system_files) == 0:
+        return GenericCp2kOutput(cp2k_outputs=[])
 
     # setup workspace
     work_dir = os.path.join(executor.work_dir, ctx.path_prefix)
@@ -76,37 +78,14 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
     else:
         input_template = copy.deepcopy(input.config.input_template)
 
-    # resolve data files
-    lammps_dump_files: List[Artifact] = []
-    xyz_files: List[Artifact] = []
-
-    # TODO: support POSCAR in the future
-    # TODO: refactor the way of handling different file formats
-    system_files = ctx.resource_manager.resolve_artifacts(input.system_files)
-    for system_file in system_files:
-        if LammpsOutputHelper.is_match(system_file):
-            lammps_out = LammpsOutputHelper(system_file)
-            lammps_selected_dumps = lammps_out.get_selected_dumps()
-            lammps_dump_files.extend(lammps_selected_dumps)
-        elif XyzHelper.is_match(system_file):
-            xyz_files.append(system_file)
-        else:
-            raise ValueError(f'unsupported format {system_file.url}: {system_file.format}')
-
     # create task dirs and prepare input files
-    cp2k_task_dirs = []
-    if lammps_dump_files or xyz_files:
-        cp2k_task_dirs = executor.run_python_fn(make_cp2k_task_dirs)(
-            lammps_dump_files=[a.to_dict() for a in lammps_dump_files],
-            xyz_files=[a.to_dict() for a in xyz_files],
+    cp2k_task_dirs = executor.run_python_fn(make_cp2k_task_dirs)(
+            system_files=[ a.to_dict() for a in input.system_files],
             type_map=input.type_map,
             base_dir=tasks_dir,
             input_template=input_template,
             limit= 0 if not input.initiated else input.config.limit,  # initialize all data if not initiated
         )
-    else:
-        logger.warn('no available candidates, skip')
-        return GenericCp2kOutput(cp2k_outputs=[])
 
     # build commands
     steps = []
@@ -147,13 +126,12 @@ async def generic_cp2k(input: GenericCp2kInput, ctx: GenericCp2kContext) -> Gene
 
 def __export_remote_functions():
 
-    def make_cp2k_task_dirs(lammps_dump_files: List[ArtifactDict],
-                            xyz_files: List[ArtifactDict],
+    def make_cp2k_task_dirs(system_files: List[ArtifactDict],
                             type_map: List[str],
                             input_template: dict,
                             base_dir: str,
                             limit: int = 0,
-                            sample_method: Literal["even", "random"] = "even",
+                            sample_method: Literal["even", "random", "truncate"] = "even",
                             input_file_name: str = 'input.inp',
                             ) -> List[ArtifactDict]:
         """Generate CP2K input files from LAMMPS dump files or XYZ files."""
@@ -161,19 +139,7 @@ def __export_remote_functions():
         from ase import Atoms
 
         task_dirs = []
-        atoms_list: List[Tuple[ArtifactDict, Atoms]] = []
-
-        # read atoms
-        for dump_file in lammps_dump_files:
-            atoms_list += [
-                (dump_file, atoms)
-                for atoms in ase.io.read(dump_file['url'], ':', format='lammps-dump-text', order=False, specorder=type_map)
-            ]  # type: ignore
-        for xyz_file in xyz_files:
-            atoms_list += [
-                (xyz_file, atoms)
-                for atoms in ase.io.read(xyz_file['url'], ':', format='extxyz')
-            ]  # type: ignore
+        atoms_list: List[Tuple[ArtifactDict, Atoms]] = artifacts_to_ase_atoms(system_files, type_map=type_map)
 
         if limit > 0:
             atoms_list = list_sample(atoms_list, limit, method=sample_method)
@@ -216,6 +182,11 @@ def __export_remote_functions():
 
         return task_dirs
 
-    return make_cp2k_task_dirs
+    return (
+        make_cp2k_task_dirs,
+    )
 
-make_cp2k_task_dirs = __export_remote_functions()
+
+(
+    make_cp2k_task_dirs,
+) = __export_remote_functions()

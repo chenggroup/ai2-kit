@@ -1,58 +1,14 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
+from ai2_kit.core.util import dict_nested_get
 
-from enum import Enum
 from typing import List, Tuple, Optional
 from ase import Atoms
+
+from operator import itemgetter
+import ase.io
 import os
-import re
 
 from .constant import LAMMPS_TRAJ_DIR, LAMMPS_TRAJ_SUFFIX, LAMMPS_DUMPS_CLASSIFIED
-
-
-class DataHelper:
-
-    format: Optional[str] = None
-    suffix: Optional[str] = None
-    pattern: Optional[re.Pattern] = None
-
-    @classmethod
-    def is_match(cls, artifact: Artifact) -> bool:
-        if cls.format and artifact.format == cls.format:
-            return True
-        if cls.suffix and artifact.url.endswith(cls.suffix):
-            return True
-        file_name = os.path.basename(artifact.url)
-        if cls.pattern and cls.pattern.match(file_name):
-            return True
-        return False
-
-    def __init__(self, artifact: Artifact) -> None:
-        self.artifact = artifact
-
-
-class LammpsOutputHelper(DataHelper):
-    format = 'lammps/output-dir'
-
-    def get_model_devi_file(self, filename: str) -> Artifact:
-        return self.artifact.join(filename)
-
-    def get_selected_dumps(self) -> List[Artifact]:
-        dumps = []
-        for selected_dump_id in self.artifact.attrs[LAMMPS_DUMPS_CLASSIFIED]['selected']:
-            dump = self.artifact.join(LAMMPS_TRAJ_DIR, f'{selected_dump_id}{LAMMPS_TRAJ_SUFFIX}')
-            dump.attrs = { **self.artifact.attrs, LAMMPS_DUMPS_CLASSIFIED: None}
-            dumps.append(dump)
-        return dumps
-
-
-class PoscarHelper(DataHelper):
-    format = 'vasp/poscar'
-    pattern = re.compile(r'POSCAR')
-
-
-class XyzHelper(DataHelper):
-    format = 'extxyz'
-    suffix = '.xyz'
 
 
 def __export_remote_functions():
@@ -65,6 +21,7 @@ def __export_remote_functions():
         LAMMPS_OUTPUT_DIR = 'lammps/output_dir'
         DEEPMD_OUTPUT_DIR = 'deepmd/output_dir'
         DEEPMD_NPY = 'deepmd/npy'
+        LASP_LAMMPS_OUT_DIR ='lasp+lammps/output_dir'
 
         # data format of dpdata
         CP2K_OUTPUT = 'cp2k/output'
@@ -76,6 +33,10 @@ def __export_remote_functions():
 
 
     def get_data_format(artifact: dict) -> Optional[str]:
+        """
+        Get (or guess) data type from artifact dict
+        Note: The reason of using dict instead of Artifact is Artifact is not pickleable
+        """
         url = artifact.get('url')
         assert isinstance(url, str), f'url must be str, got {type(url)}'
 
@@ -88,6 +49,37 @@ def __export_remote_functions():
         if 'POSCAR' in file_name:
             return DataFormat.VASP_POSCAR
         return None
+
+
+    def _get_selected_ids(artifact: dict) -> Optional[List[int]]:
+        return dict_nested_get(artifact, ['attrs', LAMMPS_DUMPS_CLASSIFIED, 'selected'], None)  # type: ignore
+
+
+    def artifacts_to_ase_atoms(artifacts: List[ArtifactDict], type_map: List[str]) -> List[Tuple[ArtifactDict, Atoms]]:
+        results = []
+        for a in artifacts:
+            data_format = get_data_format(a)  # type: ignore
+            url = a['url']
+            selected_ids = _get_selected_ids(a)  # type: ignore
+            if data_format == DataFormat.VASP_POSCAR:
+                atoms_list = ase.io.read(url, ':', format='vasp')
+            elif data_format == DataFormat.EXTXYZ:
+                atoms_list = ase.io.read(url, ':', format='extxyz')
+            elif data_format == DataFormat.LAMMPS_OUTPUT_DIR:
+                assert selected_ids is not None, f'artifact {a} is not classified'
+                atoms_list = []
+                for dump_id in selected_ids:
+                    dump_file = os.path.join(url, LAMMPS_TRAJ_DIR, f'{dump_id}{LAMMPS_TRAJ_SUFFIX}')
+                    dump = ase.io.read(dump_file, ':', format='lammps-dump-text', order=False, specorder=type_map)
+                    atoms_list.extend(dump)
+            elif data_format == DataFormat.LASP_LAMMPS_OUT_DIR:
+                assert selected_ids is not None, f'artifact {a} is not classified'
+                traj_file = os.path.join(url, 'traj.xyz')
+                atoms_list = list(itemgetter(*selected_ids)(ase.io.read(traj_file, ':', format='extxyz')))  # type: ignore
+            else:
+                raise ValueError(f'unsupported data format: {data_format}')
+            results.extend((a, atoms) for atoms in atoms_list)
+        return results
 
 
     def ase_atoms_to_cp2k_input_data(atoms: Atoms) -> Tuple[List[str], List[List[float]]]:
@@ -141,20 +133,20 @@ def __export_remote_functions():
         return output_dirs
 
 
-    def convert_to_lammps_input_data(poscar_files: List[ArtifactDict], base_dir: str, type_map: List[str]):
-        import dpdata
-        import os
-        lammps_data_files = []
-        for i, poscar_file in enumerate(poscar_files):
-            output_file = os.path.join(base_dir, f'{i:06d}.lammps.data')
-            dpdata.System(poscar_file['url'], fmt='vasp/poscar', type_map=type_map).to_lammps_lmp(output_file)  # type: ignore
-            lammps_data_files.append({
-                'url': output_file,
-                'attrs': poscar_file['attrs'],
+    def convert_to_lammps_input_data(systems: List[ArtifactDict], base_dir: str, type_map: List[str]):
+        data_files = []
+        atoms_list = artifacts_to_ase_atoms(systems, type_map=type_map)
+        for i, (artifact, atoms) in enumerate(atoms_list):
+            data_file = os.path.join(base_dir, f'{i:06d}.lammps.data')
+            ase.io.write(data_file, atoms, format='lammps-data', specorder=type_map)  # type: ignore
+            data_files.append({
+                'url': data_file,
+                'attrs': artifact['attrs'],
             })
-        return lammps_data_files
+        return data_files
 
     return (
+        artifacts_to_ase_atoms,
         ase_atoms_to_cp2k_input_data,
         convert_to_deepmd_npy,
         convert_to_lammps_input_data,
@@ -163,6 +155,7 @@ def __export_remote_functions():
     )
 
 (
+    artifacts_to_ase_atoms,
     ase_atoms_to_cp2k_input_data,
     convert_to_deepmd_npy,
     convert_to_lammps_input_data,

@@ -9,23 +9,22 @@ import pandas as pd
 import os
 from tabulate import tabulate
 
-from .data import LammpsOutputHelper
+from .data import get_data_format, DataFormat
 from .iface import ICllSelectorOutput, BaseCllContext
 from .constant import LAMMPS_DUMPS_CLASSIFIED
 
 logger = get_logger(__name__)
 
-class ThresholdSelectorInputConfig(BaseModel):
+class CllModelDeviSelectorInputConfig(BaseModel):
     f_trust_lo: float
     f_trust_hi: float
 
-
 @dataclass
-class ThresholdSelectorContext(BaseCllContext):
+class CllModelDevSelectorContext(BaseCllContext):
     ...
 
 @dataclass
-class ThresholdSelectorOutput(ICllSelectorOutput):
+class CllModelDeviSelectorOutput(ICllSelectorOutput):
     model_devi_data: List[Artifact]
     passing_rate: float
 
@@ -36,15 +35,15 @@ class ThresholdSelectorOutput(ICllSelectorOutput):
         return self.passing_rate
 
 @dataclass
-class ThresholdSelectorInput:
-    config: ThresholdSelectorInputConfig
+class CllModelDeviSelectorInput:
+    config: CllModelDeviSelectorInputConfig
     model_devi_data: List[Artifact]
     model_devi_out_filename: str
 
     def set_model_devi_dataset(self, data: List[Artifact]):
         self.model_devi_data = data
 
-async def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelectorContext):
+async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllModelDevSelectorContext):
     executor = ctx.resource_manager.default_executor
     work_dir = os.path.join(executor.work_dir, ctx.path_prefix)
     executor.mkdir(work_dir)
@@ -57,13 +56,14 @@ async def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelect
     total_count = 0
     passed_count = 0
 
-    headers = ['file', 'total', 'pass', 'candidate', 'reject', 'pass%']
     table = []
 
-    # TODO: support output of different software
     for candidate in input.model_devi_data:
-        if LammpsOutputHelper.is_match(candidate):
-            model_devi_out_file = LammpsOutputHelper(candidate).get_model_devi_file(input.model_devi_out_filename).url
+        data_format = get_data_format(candidate.to_dict())  # type: ignore
+        if data_format == DataFormat.LAMMPS_OUTPUT_DIR:
+            model_devi_out_file = candidate.join(input.model_devi_out_filename).url
+        elif data_format == DataFormat.LASP_LAMMPS_OUT_DIR:
+            model_devi_out_file = candidate.join(input.model_devi_out_filename).url
         else:
             raise ValueError('unknown model_devi_data types')
 
@@ -95,11 +95,12 @@ async def threshold_selector(input: ThresholdSelectorInput, ctx: ThresholdSelect
 
         table.append([os.path.relpath(model_devi_out_file, work_dir), len(df), len(passed_df), len(selected_df), len(rejected_df), passing_rate])
 
+    headers = ['file', 'total', 'pass', 'candidate', 'reject', 'pass%']
     stats_report = tabulate(table, headers=headers, tablefmt='tsv')
     logger.info('stats report: \n%s', stats_report)
 
     executor.dump_text(stats_report, os.path.join(work_dir, 'stats.tsv'))
-    return ThresholdSelectorOutput(
+    return CllModelDeviSelectorOutput(
         model_devi_data=input.model_devi_data,
         passing_rate=passed_count / total_count,
     )

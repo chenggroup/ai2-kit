@@ -16,12 +16,12 @@ from dataclasses import dataclass
 import copy
 import os
 
-from .data import LammpsOutputHelper, XyzHelper, DataFormat
+from .data import DataFormat, artifacts_to_ase_atoms
 from .iface import ICllLabelOutput, BaseCllContext
 
 logger = get_logger(__name__)
 
-class GenericVaspInputConfig(BaseModel):
+class CllVaspInputConfig(BaseModel):
     init_system_files: List[str] = []
     input_template: Union[dict, str]
     potcar_source: Union[dict, list]
@@ -32,22 +32,22 @@ class GenericVaspInputConfig(BaseModel):
     limit: int = 50
     limit_method: Literal["even", "random", "truncate"] = "even"
 
-class GenericVaspContextConfig(BaseModel):
+class CllVaspContextConfig(BaseModel):
     script_template: BashTemplate
     vasp_cmd: str = 'vasp_std'
     concurrency: int = 5
 
 @dataclass
-class GenericVaspInput:
-    config: GenericVaspInputConfig
+class CllVaspInput:
+    config: CllVaspInputConfig
     system_files: List[Artifact]
     type_map: List[str]
     initiated: bool = False
 
 
 @dataclass
-class GenericVaspContext(BaseCllContext):
-    config: GenericVaspContextConfig
+class CllVaspContext(BaseCllContext):
+    config: CllVaspContextConfig
 
 
 @dataclass
@@ -58,12 +58,15 @@ class GenericVaspOutput(ICllLabelOutput):
         return self.vasp_outputs
 
 
-async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> GenericVaspOutput:
+async def cll_vasp(input: CllVaspInput, ctx: CllVaspContext) -> GenericVaspOutput:
     executor = ctx.resource_manager.default_executor
 
     # For the first round
     if not input.initiated:
         input.system_files += ctx.resource_manager.get_artifacts(input.config.init_system_files)
+
+    if len(input.system_files) == 0:
+        return GenericVaspOutput(vasp_outputs=[])
 
     # setup workspace
     work_dir = os.path.join(executor.work_dir, ctx.path_prefix)
@@ -100,39 +103,18 @@ async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> Gene
     else:
         kpoints_template = None
 
-    # resolve data files
-    lammps_dump_files: List[Artifact] = []
-    xyz_files: List[Artifact] = []
-
-    # TODO: support POSCAR in the future
-    # TODO: refactor the way of handling different file formats
     system_files = ctx.resource_manager.resolve_artifacts(input.system_files)
-    for system_file in system_files:
-        if LammpsOutputHelper.is_match(system_file):
-            lammps_out = LammpsOutputHelper(system_file)
-            lammps_selected_dumps = lammps_out.get_selected_dumps()
-            lammps_dump_files.extend(lammps_selected_dumps)
-        elif XyzHelper.is_match(system_file):
-            xyz_files.append(system_file)
-        else:
-            raise ValueError(f'unsupported format {system_file.url}: {system_file.format}')
 
     # create task dirs and prepare input files
-    vasp_task_dirs = []
-    if lammps_dump_files or xyz_files:
-        vasp_task_dirs = executor.run_python_fn(make_vasp_task_dirs)(
-            lammps_dump_files=[a.to_dict() for a in lammps_dump_files],
-            xyz_files=[a.to_dict() for a in xyz_files],
-            type_map=input.type_map,
-            base_dir=tasks_dir,
-            input_template=input_template,
-            potcar_source=potcar_source,
-            kpoints_template=kpoints_template,
-            limit=input.config.limit,
-        )
-    else:
-        logger.warn('no available candidates, skip')
-        return GenericVaspOutput(vasp_outputs=[])
+    vasp_task_dirs = executor.run_python_fn(make_vasp_task_dirs)(
+        system_files=[a.to_dict() for a in system_files],
+        type_map=input.type_map,
+        base_dir=tasks_dir,
+        input_template=input_template,
+        potcar_source=potcar_source,
+        kpoints_template=kpoints_template,
+        limit=input.config.limit,
+    )
 
     # build commands
     steps = []
@@ -168,8 +150,7 @@ async def generic_vasp(input: GenericVaspInput, ctx: GenericVaspContext) -> Gene
 
 
 def __export_remote_functions():
-    def make_vasp_task_dirs(lammps_dump_files: List[ArtifactDict],
-                            xyz_files: List[ArtifactDict],
+    def make_vasp_task_dirs(system_files: List[ArtifactDict],
                             type_map: List[str],
                             input_template: dict,
                             potcar_source: dict,
@@ -185,19 +166,7 @@ def __export_remote_functions():
         from ase.io.vasp import _symbol_count_from_symbols
 
         task_dirs = []
-        atoms_list: List[Tuple[ArtifactDict, Atoms]] = []
-
-        # read atoms
-        for dump_file in lammps_dump_files:
-            atoms_list += [
-                (dump_file, atoms)
-                for atoms in ase.io.read(dump_file['url'], ':', format='lammps-dump-text', order=False, specorder=type_map)
-            ]  # type: ignore
-        for xyz_file in xyz_files:
-            atoms_list += [
-                (xyz_file, atoms)
-                for atoms in ase.io.read(xyz_file['url'], ':', format='extxyz')
-            ]  # type: ignore
+        atoms_list: List[Tuple[ArtifactDict, Atoms]] = artifacts_to_ase_atoms(system_files, type_map)
 
         if limit > 0:
             atoms_list = list_sample(atoms_list, limit, method=sample_method)

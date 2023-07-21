@@ -29,20 +29,20 @@ from .constant import (
 logger = get_logger(__name__)
 
 
-class GenericDeepmdInputConfig(BaseModel):
+class CllDeepmdInputConfig(BaseModel):
     model_num: int = 4
     init_dataset: List[str]
     input_template: dict
     compress_model: bool = False
 
-class GenericDeepmdContextConfig(BaseModel):
+class CllDeepmdContextConfig(BaseModel):
     script_template: BashTemplate
     dp_cmd: str = 'dp'
 
 
 @dataclass
-class GenericDeepmdInput:
-    config: GenericDeepmdInputConfig
+class CllDeepmdInput:
+    config: CllDeepmdInputConfig
     type_map: List[str]
     old_dataset: List[Artifact]  # training data used by previous iteration
     new_dataset: List[Artifact]  # training data used by current iteration
@@ -54,14 +54,14 @@ class GenericDeepmdInput:
 
 
 @dataclass
-class GenericDeepmdContext(BaseCllContext):
-    config: GenericDeepmdContextConfig
+class CllDeepmdContext(BaseCllContext):
+    config: CllDeepmdContextConfig
 
 
 @dataclass
 class GenericDeepmdOutput(ICllTrainOutput):
     outputs: List[Artifact]
-    input: GenericDeepmdInput
+    input: CllDeepmdInput
 
     def get_mlp_models(self) -> List[Artifact]:
         return [a.join(DP_FROZEN_MODEL) for a in self.outputs]
@@ -70,7 +70,7 @@ class GenericDeepmdOutput(ICllTrainOutput):
         return self.input.new_dataset + self.input.old_dataset
 
 
-async def generic_deepmd(input: GenericDeepmdInput, ctx: GenericDeepmdContext):
+async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
     executor = ctx.resource_manager.default_executor
 
     # setup workspace

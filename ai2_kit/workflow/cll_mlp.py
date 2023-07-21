@@ -8,6 +8,7 @@ from ai2_kit.domain import (
     deepmd,
     iface,
     lammps,
+    lasp,
     selector,
     cp2k,
     vasp,
@@ -30,14 +31,15 @@ logger = get_logger(__name__)
 class CllWorkflowExecutorConfig(BaseExecutorConfig):
     class Context(BaseModel):
         class Train(BaseModel):
-            deepmd: deepmd.GenericDeepmdContextConfig
+            deepmd: deepmd.CllDeepmdContextConfig
 
         class Explore(BaseModel):
-            lammps: lammps.GenericLammpsContextConfig
+            lammps: Optional[lammps.CllLammpsContextConfig]
+            lasp: Optional[lasp.CllLaspContextConfig]
 
         class Label(BaseModel):
-            cp2k: Optional[cp2k.GenericCp2kContextConfig]
-            vasp: Optional[vasp.GenericVaspContextConfig]
+            cp2k: Optional[cp2k.CllCp2kContextConfig]
+            vasp: Optional[vasp.CllVaspContextConfig]
 
         train: Train
         explore: Explore
@@ -53,20 +55,21 @@ class WorkflowConfig(BaseModel):
         max_iters: int = 10
 
     class Label(BaseModel):
-        cp2k: Optional[cp2k.GenericCp2kInputConfig]
-        vasp: Optional[vasp.GenericVaspInputConfig]
+        cp2k: Optional[cp2k.CllCp2kInputConfig]
+        vasp: Optional[vasp.CllVaspInputConfig]
 
     class Train(BaseModel):
-        deepmd: deepmd.GenericDeepmdInputConfig
+        deepmd: deepmd.CllDeepmdInputConfig
 
     class Explore(BaseModel):
-        lammps: lammps.GenericLammpsInputConfig
+        lammps: Optional[lammps.CllLammpsInputConfig]
+        lasp: Optional[lasp.CllLaspInputConfig]
 
     class Select(BaseModel):
-        by_threshold: selector.ThresholdSelectorInputConfig
+        model_devi: selector.CllModelDeviSelectorInputConfig
 
     class Update(BaseModel):
-        walkthrough: updater.WalkthroughUpdaterInputConfig
+        walkthrough: updater.CllWalkthroughUpdaterInputConfig
 
     general: General
     train: Train
@@ -140,36 +143,34 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager:
         cp_prefix = f'iters-{i:03d}'
 
         # label
-        if workflow_config.label.cp2k:
-            cp2k_input = cp2k.GenericCp2kInput(
+        if workflow_config.label.cp2k and context_config.label.cp2k:
+            cp2k_input = cp2k.CllCp2kInput(
                 config=workflow_config.label.cp2k,
                 type_map=type_map,
                 system_files=[] if selector_output is None else selector_output.get_model_devi_dataset(),
                 initiated=i > 0,
             )
-            if context_config.label.cp2k is None:
-                raise ValueError('label > cp2k should not be empty')
-            cp2k_context = cp2k.GenericCp2kContext(
+            cp2k_context = cp2k.CllCp2kContext(
                 config=context_config.label.cp2k,
                 path_prefix=os.path.join(iter_path_prefix, 'label-cp2k'),
                 resource_manager=resource_manager,
             )
-            label_output = await apply_checkpoint(f'{cp_prefix}/label-cp2k')(cp2k.generic_cp2k)(cp2k_input, cp2k_context)
-        elif workflow_config.label.vasp:
-            vasp_input = vasp.GenericVaspInput(
+            label_output = await apply_checkpoint(f'{cp_prefix}/label-cp2k')(cp2k.cll_cp2k)(cp2k_input, cp2k_context)
+
+        elif workflow_config.label.vasp and context_config.label.vasp:
+            vasp_input = vasp.CllVaspInput(
                 config=workflow_config.label.vasp,
                 type_map=type_map,
                 system_files=[] if selector_output is None else selector_output.get_model_devi_dataset(),
                 initiated=i > 0,
             )
-            if context_config.label.vasp is None:
-                raise ValueError('label > vasp should not be empty')
-            vasp_context = vasp.GenericVaspContext(
+            vasp_context = vasp.CllVaspContext(
                 config=context_config.label.vasp,
                 path_prefix=os.path.join(iter_path_prefix, 'label-vasp'),
                 resource_manager=resource_manager,
             )
-            label_output = await apply_checkpoint(f'{cp_prefix}/label-vasp')(vasp.generic_vasp)(vasp_input, vasp_context)
+            label_output = await apply_checkpoint(f'{cp_prefix}/label-vasp')(vasp.cll_vasp)(vasp_input, vasp_context)
+
         else:
             raise ValueError('No label method is specified')
 
@@ -180,54 +181,71 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager:
 
         # train
         if workflow_config.train.deepmd:
-            deepmd_input = deepmd.GenericDeepmdInput(
+            deepmd_input = deepmd.CllDeepmdInput(
                 config=workflow_config.train.deepmd,
                 type_map=type_map,
                 old_dataset=[] if train_output is None else train_output.get_training_dataset(),
                 new_dataset=label_output.get_labeled_system_dataset(),
                 initiated=i > 0,
             )
-            deepmd_context = deepmd.GenericDeepmdContext(
+            deepmd_context = deepmd.CllDeepmdContext(
                 path_prefix=os.path.join(iter_path_prefix, 'train-deepmd'),
                 config=context_config.train.deepmd,
                 resource_manager=resource_manager,
             )
-            train_output = await apply_checkpoint(f'{cp_prefix}/train-deepmd')(deepmd.generic_deepmd)(deepmd_input, deepmd_context)
+            train_output = await apply_checkpoint(f'{cp_prefix}/train-deepmd')(deepmd.cll_deepmd)(deepmd_input, deepmd_context)
+
         else:
             raise ValueError('No train method is specified')
 
         # explore
-        if workflow_config.explore.lammps:
-            md_options = lammps.GenericLammpsInput.MdOptions(
+        if workflow_config.explore.lammps and context_config.explore.lammps:
+            md_options = lammps.CllLammpsInput.MdOptions(
                 models=train_output.get_mlp_models(),
             )
-            lammps_input = lammps.GenericLammpsInput(
+            lammps_input = lammps.CllLammpsInput(
                 config=workflow_config.explore.lammps,
                 type_map=type_map,
                 mass_map=mass_map,
                 md_options=md_options,
             )
-            lammps_context = lammps.GenericLammpsContext(
+            lammps_context = lammps.CllLammpsContext(
                 path_prefix=os.path.join(iter_path_prefix, 'explore-lammps'),
                 config=context_config.explore.lammps,
                 resource_manager=resource_manager,
             )
-            explore_output = await apply_checkpoint(f'{cp_prefix}/explore-lammps')(lammps.generic_lammps)(lammps_input, lammps_context)
+            explore_output = await apply_checkpoint(f'{cp_prefix}/explore-lammps')(lammps.cll_lammps)(lammps_input, lammps_context)
+
+        elif workflow_config.explore.lasp and context_config.explore.lasp:
+            lasp_input = lasp.CllLaspInput(
+                config=workflow_config.explore.lasp,
+                type_map=type_map,
+                mass_map=mass_map,
+                models=train_output.get_mlp_models(),
+            )
+            lasp_context = lasp.CllLaspContext(
+                config=context_config.explore.lasp,
+                path_prefix=os.path.join(iter_path_prefix, 'explore-lasp'),
+                resource_manager=resource_manager,
+            )
+            explore_output = await apply_checkpoint(f'{cp_prefix}/explore-lasp')(lasp.cll_lasp)(lasp_input, lasp_context)
+
         else:
             raise ValueError('No explore method is specified')
 
         # select
-        if workflow_config.select.by_threshold:
-            selector_input = selector.ThresholdSelectorInput(
-                config=workflow_config.select.by_threshold,
+        if workflow_config.select.model_devi:
+            selector_input = selector.CllModelDeviSelectorInput(
+                config=workflow_config.select.model_devi,
                 model_devi_data=explore_output.get_model_devi_dataset(),
                 model_devi_out_filename=const.MODEL_DEVI_OUT,
             )
-            selector_context = selector.ThresholdSelectorContext(
+            selector_context = selector.CllModelDevSelectorContext(
                 path_prefix=os.path.join(iter_path_prefix, 'selector-threshold'),
                 resource_manager=resource_manager,
             )
-            selector_output = await apply_checkpoint(f'{cp_prefix}/selector-threshold')(selector.threshold_selector)(selector_input, selector_context)
+            selector_output = await apply_checkpoint(f'{cp_prefix}/selector-threshold')(selector.cll_model_devi_selector)(selector_input, selector_context)
+
         else:
             raise ValueError('No select method is specified')
 

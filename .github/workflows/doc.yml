@@ -30,16 +30,16 @@ jobs:
     
     - name: Sphinx APIDoc
       run: |
-        poetry run sphinx-apidoc -f -o doc/_api/ ai2_kit/ --separate
+        poetry run sphinx-apidoc -f -o jupyter-book/_api/ ai2_kit/ --separate
 
     # Build the book
     - name: Build the book
       run: |
-        poetry run jupyter-book build doc/
+        poetry run jupyter-book build jupyter-book/
 
     # Push the book's HTML to github-pages
     - name: GitHub Pages action
       uses: peaceiris/actions-gh-pages@v3.6.1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: doc/_build/html
+        publish_dir: jupyter-book/_build/html

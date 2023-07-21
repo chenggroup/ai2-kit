@@ -184,12 +184,14 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.selector.html">ai2_kit.domain.selector module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.updater.html">ai2_kit.domain.updater module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
@@ -376,12 +378,12 @@ document.write(`
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">LammpsOutputHelper</span><span class="p">,</span> <span class="n">XyzHelper</span><span class="p">,</span> <span class="n">DataFormat</span>
+<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">DataFormat</span><span class="p">,</span> <span class="n">artifacts_to_ase_atoms</span>
 <span class="kn">from</span> <span class="nn">.iface</span> <span class="kn">import</span> <span class="n">ICllLabelOutput</span><span class="p">,</span> <span class="n">BaseCllContext</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GenericVaspInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.GenericVaspInputConfig">[docs]</a><span class="k">class</span> <span class="nc">GenericVaspInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllVaspInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspInputConfig">[docs]</a><span class="k">class</span> <span class="nc">CllVaspInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">init_system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">input_template</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
     <span class="n">potcar_source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span>
@@ -392,22 +394,22 @@ document.write(`
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="n">limit_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="s2">&quot;truncate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;even&quot;</span></div>
 
-<div class="viewcode-block" id="GenericVaspContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.GenericVaspContextConfig">[docs]</a><span class="k">class</span> <span class="nc">GenericVaspContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllVaspContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspContextConfig">[docs]</a><span class="k">class</span> <span class="nc">CllVaspContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
     <span class="n">vasp_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;vasp_std&#39;</span>
     <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span></div>
 
-<div class="viewcode-block" id="GenericVaspInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.GenericVaspInput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">GenericVaspInput</span><span class="p">:</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n">GenericVaspInputConfig</span>
+<div class="viewcode-block" id="CllVaspInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspInput">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">CllVaspInput</span><span class="p">:</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">CllVaspInputConfig</span>
     <span class="n">system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">initiated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="GenericVaspContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.GenericVaspContext">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">GenericVaspContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n">GenericVaspContextConfig</span></div>
+<div class="viewcode-block" id="CllVaspContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspContext">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">CllVaspContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">CllVaspContextConfig</span></div>
 
 
 <div class="viewcode-block" id="GenericVaspOutput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.GenericVaspOutput">[docs]</a><span class="nd">@dataclass</span>
@@ -418,12 +420,15 @@ document.write(`
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vasp_outputs</span></div></div>
 
 
-<div class="viewcode-block" id="generic_vasp"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.generic_vasp">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">generic_vasp</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">GenericVaspInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">GenericVaspContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericVaspOutput</span><span class="p">:</span>
+<div class="viewcode-block" id="cll_vasp"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.cll_vasp">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">cll_vasp</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllVaspInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllVaspContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericVaspOutput</span><span class="p">:</span>
     <span class="n">executor</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">default_executor</span>
 
     <span class="c1"># For the first round</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">input</span><span class="o">.</span><span class="n">initiated</span><span class="p">:</span>
         <span class="nb">input</span><span class="o">.</span><span class="n">system_files</span> <span class="o">+=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">get_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">init_system_files</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">system_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">GenericVaspOutput</span><span class="p">(</span><span class="n">vasp_outputs</span><span class="o">=</span><span class="p">[])</span>
 
     <span class="c1"># setup workspace</span>
     <span class="n">work_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">path_prefix</span><span class="p">)</span>
@@ -460,39 +465,18 @@ document.write(`
     <span class="k">else</span><span class="p">:</span>
         <span class="n">kpoints_template</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="c1"># resolve data files</span>
-    <span class="n">lammps_dump_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">xyz_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="c1"># TODO: support POSCAR in the future</span>
-    <span class="c1"># TODO: refactor the way of handling different file formats</span>
     <span class="n">system_files</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">system_files</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">system_file</span> <span class="ow">in</span> <span class="n">system_files</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">LammpsOutputHelper</span><span class="o">.</span><span class="n">is_match</span><span class="p">(</span><span class="n">system_file</span><span class="p">):</span>
-            <span class="n">lammps_out</span> <span class="o">=</span> <span class="n">LammpsOutputHelper</span><span class="p">(</span><span class="n">system_file</span><span class="p">)</span>
-            <span class="n">lammps_selected_dumps</span> <span class="o">=</span> <span class="n">lammps_out</span><span class="o">.</span><span class="n">get_selected_dumps</span><span class="p">()</span>
-            <span class="n">lammps_dump_files</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lammps_selected_dumps</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">XyzHelper</span><span class="o">.</span><span class="n">is_match</span><span class="p">(</span><span class="n">system_file</span><span class="p">):</span>
-            <span class="n">xyz_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">system_file</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;unsupported format </span><span class="si">{</span><span class="n">system_file</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">system_file</span><span class="o">.</span><span class="n">format</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="c1"># create task dirs and prepare input files</span>
-    <span class="n">vasp_task_dirs</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="n">lammps_dump_files</span> <span class="ow">or</span> <span class="n">xyz_files</span><span class="p">:</span>
-        <span class="n">vasp_task_dirs</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">make_vasp_task_dirs</span><span class="p">)(</span>
-            <span class="n">lammps_dump_files</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">lammps_dump_files</span><span class="p">],</span>
-            <span class="n">xyz_files</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">xyz_files</span><span class="p">],</span>
-            <span class="n">type_map</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span>
-            <span class="n">base_dir</span><span class="o">=</span><span class="n">tasks_dir</span><span class="p">,</span>
-            <span class="n">input_template</span><span class="o">=</span><span class="n">input_template</span><span class="p">,</span>
-            <span class="n">potcar_source</span><span class="o">=</span><span class="n">potcar_source</span><span class="p">,</span>
-            <span class="n">kpoints_template</span><span class="o">=</span><span class="n">kpoints_template</span><span class="p">,</span>
-            <span class="n">limit</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">limit</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;no available candidates, skip&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">GenericVaspOutput</span><span class="p">(</span><span class="n">vasp_outputs</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">vasp_task_dirs</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">make_vasp_task_dirs</span><span class="p">)(</span>
+        <span class="n">system_files</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">system_files</span><span class="p">],</span>
+        <span class="n">type_map</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span>
+        <span class="n">base_dir</span><span class="o">=</span><span class="n">tasks_dir</span><span class="p">,</span>
+        <span class="n">input_template</span><span class="o">=</span><span class="n">input_template</span><span class="p">,</span>
+        <span class="n">potcar_source</span><span class="o">=</span><span class="n">potcar_source</span><span class="p">,</span>
+        <span class="n">kpoints_template</span><span class="o">=</span><span class="n">kpoints_template</span><span class="p">,</span>
+        <span class="n">limit</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">limit</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="c1"># build commands</span>
     <span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
@@ -528,8 +512,7 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">__export_remote_functions</span><span class="p">():</span>
-    <span class="k">def</span> <span class="nf">make_vasp_task_dirs</span><span class="p">(</span><span class="n">lammps_dump_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
-                            <span class="n">xyz_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
+    <span class="k">def</span> <span class="nf">make_vasp_task_dirs</span><span class="p">(</span><span class="n">system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
                             <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                             <span class="n">input_template</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
                             <span class="n">potcar_source</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
@@ -545,19 +528,7 @@ document.write(`
         <span class="kn">from</span> <span class="nn">ase.io.vasp</span> <span class="kn">import</span> <span class="n">_symbol_count_from_symbols</span>
 
         <span class="n">task_dirs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">atoms_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">Atoms</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="c1"># read atoms</span>
-        <span class="k">for</span> <span class="n">dump_file</span> <span class="ow">in</span> <span class="n">lammps_dump_files</span><span class="p">:</span>
-            <span class="n">atoms_list</span> <span class="o">+=</span> <span class="p">[</span>
-                <span class="p">(</span><span class="n">dump_file</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dump_file</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;lammps-dump-text&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">specorder</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
-            <span class="p">]</span>  <span class="c1"># type: ignore</span>
-        <span class="k">for</span> <span class="n">xyz_file</span> <span class="ow">in</span> <span class="n">xyz_files</span><span class="p">:</span>
-            <span class="n">atoms_list</span> <span class="o">+=</span> <span class="p">[</span>
-                <span class="p">(</span><span class="n">xyz_file</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">xyz_file</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)</span>
-            <span class="p">]</span>  <span class="c1"># type: ignore</span>
+        <span class="n">atoms_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">Atoms</span><span class="p">]]</span> <span class="o">=</span> <span class="n">artifacts_to_ase_atoms</span><span class="p">(</span><span class="n">system_files</span><span class="p">,</span> <span class="n">type_map</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">limit</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">atoms_list</span> <span class="o">=</span> <span class="n">list_sample</span><span class="p">(</span><span class="n">atoms_list</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">sample_method</span><span class="p">)</span>

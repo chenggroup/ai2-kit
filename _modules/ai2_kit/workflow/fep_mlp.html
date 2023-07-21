@@ -184,12 +184,14 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.selector.html">ai2_kit.domain.selector module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.updater.html">ai2_kit.domain.updater module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
@@ -389,9 +391,9 @@ document.write(`
 <div class="viewcode-block" id="FepExecutorConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.FepExecutorConfig">[docs]</a><span class="k">class</span> <span class="nc">FepExecutorConfig</span><span class="p">(</span><span class="n">BaseExecutorConfig</span><span class="p">):</span>
 <div class="viewcode-block" id="FepExecutorConfig.Context"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context">[docs]</a>    <span class="k">class</span> <span class="nc">Context</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 
-        <span class="n">deepmd</span><span class="p">:</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">GenericDeepmdContextConfig</span>
-        <span class="n">lammps</span><span class="p">:</span> <span class="n">lammps</span><span class="o">.</span><span class="n">GenericLammpsContextConfig</span>
-        <span class="n">cp2k</span><span class="p">:</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">GenericCp2kContextConfig</span></div>
+        <span class="n">deepmd</span><span class="p">:</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdContextConfig</span>
+        <span class="n">lammps</span><span class="p">:</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsContextConfig</span>
+        <span class="n">cp2k</span><span class="p">:</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kContextConfig</span></div>
 
     <span class="n">context</span><span class="p">:</span> <span class="n">Context</span></div>
 
@@ -403,17 +405,17 @@ document.write(`
         <span class="n">max_iters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span></div>
 
 <div class="viewcode-block" id="WorkflowConfig.Branch"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch">[docs]</a>    <span class="k">class</span> <span class="nc">Branch</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-        <span class="n">deepmd</span><span class="p">:</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">GenericDeepmdInputConfig</span>
-        <span class="n">cp2k</span><span class="p">:</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">GenericCp2kInputConfig</span>
-        <span class="n">threshold</span><span class="p">:</span> <span class="n">selector</span><span class="o">.</span><span class="n">ThresholdSelectorInputConfig</span></div>
+        <span class="n">deepmd</span><span class="p">:</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdInputConfig</span>
+        <span class="n">cp2k</span><span class="p">:</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kInputConfig</span>
+        <span class="n">threshold</span><span class="p">:</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDeviSelectorInputConfig</span></div>
 
 <div class="viewcode-block" id="WorkflowConfig.Update"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.Update">[docs]</a>    <span class="k">class</span> <span class="nc">Update</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-        <span class="n">walkthrough</span><span class="p">:</span> <span class="n">updater</span><span class="o">.</span><span class="n">WalkthroughUpdaterInputConfig</span></div>
+        <span class="n">walkthrough</span><span class="p">:</span> <span class="n">updater</span><span class="o">.</span><span class="n">CllWalkthroughUpdaterInputConfig</span></div>
 
     <span class="n">general</span><span class="p">:</span> <span class="n">General</span>
     <span class="n">neu</span><span class="p">:</span> <span class="n">Branch</span>
     <span class="n">red</span><span class="p">:</span> <span class="n">Branch</span>
-    <span class="n">lammps</span><span class="p">:</span> <span class="n">lammps</span><span class="o">.</span><span class="n">GenericLammpsInputConfig</span>
+    <span class="n">lammps</span><span class="p">:</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsInputConfig</span>
     <span class="n">update</span><span class="p">:</span> <span class="n">Update</span></div>
 
 
@@ -485,108 +487,108 @@ document.write(`
         <span class="n">cp_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;iters-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="c1"># label: cp2k</span>
-        <span class="n">red_cp2k_input</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">GenericCp2kInput</span><span class="p">(</span>
+        <span class="n">red_cp2k_input</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kInput</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">red</span><span class="o">.</span><span class="n">cp2k</span><span class="p">,</span>
             <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
             <span class="n">system_files</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="n">red_selector_output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">red_selector_output</span><span class="o">.</span><span class="n">get_model_devi_dataset</span><span class="p">(),</span>
             <span class="n">initiated</span><span class="o">=</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">red_cpk2_context</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">GenericCp2kContext</span><span class="p">(</span>
+        <span class="n">red_cpk2_context</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kContext</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">cp2k</span><span class="p">,</span>
             <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;red-label-cp2k&#39;</span><span class="p">),</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">neu_cp2k_input</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">GenericCp2kInput</span><span class="p">(</span>
+        <span class="n">neu_cp2k_input</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kInput</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">neu</span><span class="o">.</span><span class="n">cp2k</span><span class="p">,</span>
             <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
             <span class="n">system_files</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="n">neu_selector_output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">neu_selector_output</span><span class="o">.</span><span class="n">get_model_devi_dataset</span><span class="p">(),</span>
             <span class="n">initiated</span><span class="o">=</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">neu_cp2k_context</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">GenericCp2kContext</span><span class="p">(</span>
+        <span class="n">neu_cp2k_context</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kContext</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">cp2k</span><span class="p">,</span>
             <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;neu-label-cp2k&#39;</span><span class="p">),</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">red_label_output</span><span class="p">,</span> <span class="n">neu_label_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/cp2k/red&#39;</span><span class="p">)(</span><span class="n">cp2k</span><span class="o">.</span><span class="n">generic_cp2k</span><span class="p">)(</span><span class="n">red_cp2k_input</span><span class="p">,</span> <span class="n">red_cpk2_context</span><span class="p">),</span>
-            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/cp2k/neu&#39;</span><span class="p">)(</span><span class="n">cp2k</span><span class="o">.</span><span class="n">generic_cp2k</span><span class="p">)(</span><span class="n">neu_cp2k_input</span><span class="p">,</span> <span class="n">neu_cp2k_context</span><span class="p">),</span>
+            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/cp2k/red&#39;</span><span class="p">)(</span><span class="n">cp2k</span><span class="o">.</span><span class="n">cll_cp2k</span><span class="p">)(</span><span class="n">red_cp2k_input</span><span class="p">,</span> <span class="n">red_cpk2_context</span><span class="p">),</span>
+            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/cp2k/neu&#39;</span><span class="p">)(</span><span class="n">cp2k</span><span class="o">.</span><span class="n">cll_cp2k</span><span class="p">)(</span><span class="n">neu_cp2k_input</span><span class="p">,</span> <span class="n">neu_cp2k_context</span><span class="p">),</span>
         <span class="p">)</span>
 
         <span class="c1"># Train</span>
-        <span class="n">red_deepmd_input</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">GenericDeepmdInput</span><span class="p">(</span>
+        <span class="n">red_deepmd_input</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdInput</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">red</span><span class="o">.</span><span class="n">deepmd</span><span class="p">,</span>
             <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
             <span class="n">old_dataset</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="n">red_train_output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">red_train_output</span><span class="o">.</span><span class="n">get_training_dataset</span><span class="p">(),</span>
             <span class="n">new_dataset</span><span class="o">=</span><span class="n">red_label_output</span><span class="o">.</span><span class="n">get_labeled_system_dataset</span><span class="p">(),</span>
             <span class="n">initiated</span><span class="o">=</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">red_deepmd_context</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">GenericDeepmdContext</span><span class="p">(</span>
+        <span class="n">red_deepmd_context</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdContext</span><span class="p">(</span>
             <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;red-train-deepmd&#39;</span><span class="p">),</span>
             <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">deepmd</span><span class="p">,</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">neu_deepmd_input</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">GenericDeepmdInput</span><span class="p">(</span>
+        <span class="n">neu_deepmd_input</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdInput</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">neu</span><span class="o">.</span><span class="n">deepmd</span><span class="p">,</span>
             <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
             <span class="n">old_dataset</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="n">neu_train_output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">neu_train_output</span><span class="o">.</span><span class="n">get_training_dataset</span><span class="p">(),</span>
             <span class="n">new_dataset</span><span class="o">=</span><span class="n">neu_label_output</span><span class="o">.</span><span class="n">get_labeled_system_dataset</span><span class="p">(),</span>
             <span class="n">initiated</span><span class="o">=</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">neu_deepmd_context</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">GenericDeepmdContext</span><span class="p">(</span>
+        <span class="n">neu_deepmd_context</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdContext</span><span class="p">(</span>
             <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;neu-train-deepmd&#39;</span><span class="p">),</span>
             <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">deepmd</span><span class="p">,</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">red_train_output</span><span class="p">,</span> <span class="n">neu_train_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/deepmd/red&#39;</span><span class="p">)(</span><span class="n">deepmd</span><span class="o">.</span><span class="n">generic_deepmd</span><span class="p">)(</span><span class="n">red_deepmd_input</span><span class="p">,</span> <span class="n">red_deepmd_context</span><span class="p">),</span>
-            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/deepmd/neu&#39;</span><span class="p">)(</span><span class="n">deepmd</span><span class="o">.</span><span class="n">generic_deepmd</span><span class="p">)(</span><span class="n">neu_deepmd_input</span><span class="p">,</span> <span class="n">neu_deepmd_context</span><span class="p">),</span>
+            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/deepmd/red&#39;</span><span class="p">)(</span><span class="n">deepmd</span><span class="o">.</span><span class="n">cll_deepmd</span><span class="p">)(</span><span class="n">red_deepmd_input</span><span class="p">,</span> <span class="n">red_deepmd_context</span><span class="p">),</span>
+            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/deepmd/neu&#39;</span><span class="p">)(</span><span class="n">deepmd</span><span class="o">.</span><span class="n">cll_deepmd</span><span class="p">)(</span><span class="n">neu_deepmd_input</span><span class="p">,</span> <span class="n">neu_deepmd_context</span><span class="p">),</span>
         <span class="p">)</span>
 
         <span class="c1"># explore</span>
-        <span class="n">lammps_input</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">GenericLammpsInput</span><span class="p">(</span>
+        <span class="n">lammps_input</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsInput</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">lammps</span><span class="p">,</span>
             <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
             <span class="n">mass_map</span><span class="o">=</span><span class="n">mass_map</span><span class="p">,</span>
-            <span class="n">fep_options</span><span class="o">=</span><span class="n">lammps</span><span class="o">.</span><span class="n">GenericLammpsInput</span><span class="o">.</span><span class="n">FepOptions</span><span class="p">(</span>
+            <span class="n">fep_options</span><span class="o">=</span><span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsInput</span><span class="o">.</span><span class="n">FepOptions</span><span class="p">(</span>
                 <span class="n">neu_models</span><span class="o">=</span><span class="n">neu_train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">(),</span>
                 <span class="n">red_models</span><span class="o">=</span><span class="n">red_train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">(),</span>
             <span class="p">),</span>
         <span class="p">)</span>
-        <span class="n">lammps_context</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">GenericLammpsContext</span><span class="p">(</span>
+        <span class="n">lammps_context</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsContext</span><span class="p">(</span>
             <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;explore-lammps&#39;</span><span class="p">),</span>
             <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">lammps</span><span class="p">,</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">explore_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/lammps&#39;</span><span class="p">)(</span><span class="n">lammps</span><span class="o">.</span><span class="n">generic_lammps</span><span class="p">)(</span><span class="n">lammps_input</span><span class="p">,</span> <span class="n">lammps_context</span><span class="p">)</span>
+        <span class="n">explore_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/lammps&#39;</span><span class="p">)(</span><span class="n">lammps</span><span class="o">.</span><span class="n">cll_lammps</span><span class="p">)(</span><span class="n">lammps_input</span><span class="p">,</span> <span class="n">lammps_context</span><span class="p">)</span>
 
         <span class="c1"># select</span>
-        <span class="n">red_selector_input</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">ThresholdSelectorInput</span><span class="p">(</span>
+        <span class="n">red_selector_input</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDeviSelectorInput</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">red</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
             <span class="n">model_devi_data</span><span class="o">=</span><span class="n">explore_output</span><span class="o">.</span><span class="n">get_model_devi_dataset</span><span class="p">(),</span>
             <span class="n">model_devi_out_filename</span><span class="o">=</span><span class="n">const</span><span class="o">.</span><span class="n">MODEL_DEVI_RED_OUT</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">red_selector_context</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">ThresholdSelectorContext</span><span class="p">(</span>
+        <span class="n">red_selector_context</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDevSelectorContext</span><span class="p">(</span>
             <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;red-selector-threshold&#39;</span><span class="p">),</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">neu_selector_input</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">ThresholdSelectorInput</span><span class="p">(</span>
+        <span class="n">neu_selector_input</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDeviSelectorInput</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">neu</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
             <span class="n">model_devi_data</span><span class="o">=</span><span class="n">explore_output</span><span class="o">.</span><span class="n">get_model_devi_dataset</span><span class="p">(),</span>
             <span class="n">model_devi_out_filename</span><span class="o">=</span><span class="n">const</span><span class="o">.</span><span class="n">MODEL_DEVI_NEU_OUT</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">neu_selector_context</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">ThresholdSelectorContext</span><span class="p">(</span>
+        <span class="n">neu_selector_context</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDevSelectorContext</span><span class="p">(</span>
             <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;neu-selector-threshold&#39;</span><span class="p">),</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">red_selector_output</span><span class="p">,</span> <span class="n">neu_selector_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/selector/red&#39;</span><span class="p">)(</span><span class="n">selector</span><span class="o">.</span><span class="n">threshold_selector</span><span class="p">)(</span><span class="n">red_selector_input</span><span class="p">,</span> <span class="n">red_selector_context</span><span class="p">),</span>
-            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/selector/neu&#39;</span><span class="p">)(</span><span class="n">selector</span><span class="o">.</span><span class="n">threshold_selector</span><span class="p">)(</span><span class="n">neu_selector_input</span><span class="p">,</span> <span class="n">neu_selector_context</span><span class="p">),</span>
+            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/selector/red&#39;</span><span class="p">)(</span><span class="n">selector</span><span class="o">.</span><span class="n">cll_model_devi_selector</span><span class="p">)(</span><span class="n">red_selector_input</span><span class="p">,</span> <span class="n">red_selector_context</span><span class="p">),</span>
+            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/selector/neu&#39;</span><span class="p">)(</span><span class="n">selector</span><span class="o">.</span><span class="n">cll_model_devi_selector</span><span class="p">)(</span><span class="n">neu_selector_input</span><span class="p">,</span> <span class="n">neu_selector_context</span><span class="p">),</span>
         <span class="p">)</span>
 
         <span class="c1"># Update</span>

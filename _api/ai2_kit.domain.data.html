@@ -187,12 +187,14 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="ai2_kit.domain.html">ai2_kit.domain package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4 current active"><a class="current reference internal" href="#">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.selector.html">ai2_kit.domain.selector module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.updater.html">ai2_kit.domain.updater module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
@@ -445,6 +447,11 @@ document.write(`
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.domain.data.DataFormat.LASP_LAMMPS_OUT_DIR">
+<span class="sig-name descname"><span class="pre">LASP_LAMMPS_OUT_DIR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'lasp+lammps/output_dir'</span></em><a class="headerlink" href="#ai2_kit.domain.data.DataFormat.LASP_LAMMPS_OUT_DIR" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="ai2_kit.domain.data.DataFormat.VASP_OUTPUT_DIR">
 <span class="sig-name descname"><span class="pre">VASP_OUTPUT_DIR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vasp/output_dir'</span></em><a class="headerlink" href="#ai2_kit.domain.data.DataFormat.VASP_OUTPUT_DIR" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
@@ -461,84 +468,10 @@ document.write(`
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.DataHelper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.data.</span></span><span class="sig-name descname"><span class="pre">DataHelper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">artifact</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/data.html#DataHelper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.data.DataHelper" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.DataHelper.format">
-<span class="sig-name descname"><span class="pre">format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ai2_kit.domain.data.DataHelper.format" title="Permalink to this definition">#</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.domain.data.artifacts_to_ase_atoms">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.data.</span></span><span class="sig-name descname"><span class="pre">artifacts_to_ase_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">artifacts:</span> <span class="pre">~typing.List[~ai2_kit.core.artifact.__ArtifactDict.&lt;locals&gt;.ArtifactDict],</span> <span class="pre">type_map:</span> <span class="pre">~typing.List[str]</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Atoms]]</span></span></span><a class="headerlink" href="#ai2_kit.domain.data.artifacts_to_ase_atoms" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.DataHelper.is_match">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">artifact</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/ai2_kit/domain/data.html#DataHelper.is_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.data.DataHelper.is_match" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.DataHelper.pattern">
-<span class="sig-name descname"><span class="pre">pattern</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Pattern</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ai2_kit.domain.data.DataHelper.pattern" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.DataHelper.suffix">
-<span class="sig-name descname"><span class="pre">suffix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ai2_kit.domain.data.DataHelper.suffix" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.LammpsOutputHelper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.data.</span></span><span class="sig-name descname"><span class="pre">LammpsOutputHelper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">artifact</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/data.html#LammpsOutputHelper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.data.LammpsOutputHelper" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ai2_kit.domain.data.DataHelper" title="ai2_kit.domain.data.DataHelper"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataHelper</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.LammpsOutputHelper.format">
-<span class="sig-name descname"><span class="pre">format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'lammps/output-dir'</span></em><a class="headerlink" href="#ai2_kit.domain.data.LammpsOutputHelper.format" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.LammpsOutputHelper.get_model_devi_file">
-<span class="sig-name descname"><span class="pre">get_model_devi_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a></span></span><a class="reference internal" href="../_modules/ai2_kit/domain/data.html#LammpsOutputHelper.get_model_devi_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.data.LammpsOutputHelper.get_model_devi_file" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.LammpsOutputHelper.get_selected_dumps">
-<span class="sig-name descname"><span class="pre">get_selected_dumps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/ai2_kit/domain/data.html#LammpsOutputHelper.get_selected_dumps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.data.LammpsOutputHelper.get_selected_dumps" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.PoscarHelper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.data.</span></span><span class="sig-name descname"><span class="pre">PoscarHelper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">artifact</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/data.html#PoscarHelper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.data.PoscarHelper" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ai2_kit.domain.data.DataHelper" title="ai2_kit.domain.data.DataHelper"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataHelper</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.PoscarHelper.format">
-<span class="sig-name descname"><span class="pre">format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vasp/poscar'</span></em><a class="headerlink" href="#ai2_kit.domain.data.PoscarHelper.format" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.PoscarHelper.pattern">
-<span class="sig-name descname"><span class="pre">pattern</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Pattern</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('POSCAR')</span></em><a class="headerlink" href="#ai2_kit.domain.data.PoscarHelper.pattern" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.XyzHelper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.data.</span></span><span class="sig-name descname"><span class="pre">XyzHelper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">artifact</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/data.html#XyzHelper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.data.XyzHelper" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ai2_kit.domain.data.DataHelper" title="ai2_kit.domain.data.DataHelper"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataHelper</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.XyzHelper.format">
-<span class="sig-name descname"><span class="pre">format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'extxyz'</span></em><a class="headerlink" href="#ai2_kit.domain.data.XyzHelper.format" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.data.XyzHelper.suffix">
-<span class="sig-name descname"><span class="pre">suffix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.xyz'</span></em><a class="headerlink" href="#ai2_kit.domain.data.XyzHelper.suffix" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ai2_kit.domain.data.ase_atoms_to_cp2k_input_data">
@@ -552,13 +485,15 @@ document.write(`
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ai2_kit.domain.data.convert_to_lammps_input_data">
-<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.data.</span></span><span class="sig-name descname"><span class="pre">convert_to_lammps_input_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">poscar_files:</span> <span class="pre">~typing.List[~ai2_kit.core.artifact.__ArtifactDict.&lt;locals&gt;.ArtifactDict],</span> <span class="pre">base_dir:</span> <span class="pre">str,</span> <span class="pre">type_map:</span> <span class="pre">~typing.List[str]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.data.convert_to_lammps_input_data" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.data.</span></span><span class="sig-name descname"><span class="pre">convert_to_lammps_input_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">systems:</span> <span class="pre">~typing.List[~ai2_kit.core.artifact.__ArtifactDict.&lt;locals&gt;.ArtifactDict],</span> <span class="pre">base_dir:</span> <span class="pre">str,</span> <span class="pre">type_map:</span> <span class="pre">~typing.List[str]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.data.convert_to_lammps_input_data" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ai2_kit.domain.data.get_data_format">
 <span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.data.</span></span><span class="sig-name descname"><span class="pre">get_data_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">artifact</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ai2_kit.domain.data.get_data_format" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Get (or guess) data type from artifact dict
+Note: The reason of using dict instead of Artifact is Artifact is not pickleable</p>
+</dd></dl>
 
 </section>
 

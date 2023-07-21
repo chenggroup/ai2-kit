@@ -184,12 +184,14 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.selector.html">ai2_kit.domain.selector module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.updater.html">ai2_kit.domain.updater module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
@@ -389,39 +391,39 @@ document.write(`
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="GenericDeepmdInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdInputConfig">[docs]</a><span class="k">class</span> <span class="nc">GenericDeepmdInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllDeepmdInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig">[docs]</a><span class="k">class</span> <span class="nc">CllDeepmdInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">model_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
     <span class="n">init_dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">input_template</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="n">compress_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="GenericDeepmdContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdContextConfig">[docs]</a><span class="k">class</span> <span class="nc">GenericDeepmdContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllDeepmdContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdContextConfig">[docs]</a><span class="k">class</span> <span class="nc">CllDeepmdContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
     <span class="n">dp_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;dp&#39;</span></div>
 
 
-<div class="viewcode-block" id="GenericDeepmdInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdInput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">GenericDeepmdInput</span><span class="p">:</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n">GenericDeepmdInputConfig</span>
+<div class="viewcode-block" id="CllDeepmdInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInput">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">CllDeepmdInput</span><span class="p">:</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">CllDeepmdInputConfig</span>
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">old_dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>  <span class="c1"># training data used by previous iteration</span>
     <span class="n">new_dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>  <span class="c1"># training data used by current iteration</span>
     <span class="n">initiated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># FIXME: this seems to be a bad design idea</span>
 
-<div class="viewcode-block" id="GenericDeepmdInput.update_training_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdInput.update_training_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">update_training_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]):</span>
+<div class="viewcode-block" id="CllDeepmdInput.update_training_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInput.update_training_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">update_training_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">old_dataset</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_dataset</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">new_dataset</span> <span class="o">=</span> <span class="n">dataset</span></div></div>
 
 
-<div class="viewcode-block" id="GenericDeepmdContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdContext">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">GenericDeepmdContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n">GenericDeepmdContextConfig</span></div>
+<div class="viewcode-block" id="CllDeepmdContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdContext">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">CllDeepmdContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">CllDeepmdContextConfig</span></div>
 
 
 <div class="viewcode-block" id="GenericDeepmdOutput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">GenericDeepmdOutput</span><span class="p">(</span><span class="n">ICllTrainOutput</span><span class="p">):</span>
     <span class="n">outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
-    <span class="nb">input</span><span class="p">:</span> <span class="n">GenericDeepmdInput</span>
+    <span class="nb">input</span><span class="p">:</span> <span class="n">CllDeepmdInput</span>
 
 <div class="viewcode-block" id="GenericDeepmdOutput.get_mlp_models"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.get_mlp_models">[docs]</a>    <span class="k">def</span> <span class="nf">get_mlp_models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DP_FROZEN_MODEL</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">]</span></div>
@@ -430,7 +432,7 @@ document.write(`
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">new_dataset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">old_dataset</span></div></div>
 
 
-<div class="viewcode-block" id="generic_deepmd"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.generic_deepmd">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">generic_deepmd</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">GenericDeepmdInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">GenericDeepmdContext</span><span class="p">):</span>
+<div class="viewcode-block" id="cll_deepmd"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.cll_deepmd">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">cll_deepmd</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllDeepmdInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllDeepmdContext</span><span class="p">):</span>
     <span class="n">executor</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">default_executor</span>
 
     <span class="c1"># setup workspace</span>

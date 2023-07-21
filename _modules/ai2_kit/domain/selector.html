@@ -184,12 +184,14 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.selector.html">ai2_kit.domain.selector module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.updater.html">ai2_kit.domain.updater module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
@@ -369,42 +371,41 @@ document.write(`
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
 
-<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">LammpsOutputHelper</span>
+<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">get_data_format</span><span class="p">,</span> <span class="n">DataFormat</span>
 <span class="kn">from</span> <span class="nn">.iface</span> <span class="kn">import</span> <span class="n">ICllSelectorOutput</span><span class="p">,</span> <span class="n">BaseCllContext</span>
 <span class="kn">from</span> <span class="nn">.constant</span> <span class="kn">import</span> <span class="n">LAMMPS_DUMPS_CLASSIFIED</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ThresholdSelectorInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.ThresholdSelectorInputConfig">[docs]</a><span class="k">class</span> <span class="nc">ThresholdSelectorInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllModelDeviSelectorInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig">[docs]</a><span class="k">class</span> <span class="nc">CllModelDeviSelectorInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">f_trust_lo</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">f_trust_hi</span><span class="p">:</span> <span class="nb">float</span></div>
 
-
-<div class="viewcode-block" id="ThresholdSelectorContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.ThresholdSelectorContext">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">ThresholdSelectorContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
+<div class="viewcode-block" id="CllModelDevSelectorContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDevSelectorContext">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">CllModelDevSelectorContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
     <span class="o">...</span></div>
 
-<div class="viewcode-block" id="ThresholdSelectorOutput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.ThresholdSelectorOutput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">ThresholdSelectorOutput</span><span class="p">(</span><span class="n">ICllSelectorOutput</span><span class="p">):</span>
+<div class="viewcode-block" id="CllModelDeviSelectorOutput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorOutput">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">CllModelDeviSelectorOutput</span><span class="p">(</span><span class="n">ICllSelectorOutput</span><span class="p">):</span>
     <span class="n">model_devi_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
     <span class="n">passing_rate</span><span class="p">:</span> <span class="nb">float</span>
 
-<div class="viewcode-block" id="ThresholdSelectorOutput.get_model_devi_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.ThresholdSelectorOutput.get_model_devi_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_model_devi_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CllModelDeviSelectorOutput.get_model_devi_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorOutput.get_model_devi_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_model_devi_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_devi_data</span></div>
 
-<div class="viewcode-block" id="ThresholdSelectorOutput.get_passing_rate"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.ThresholdSelectorOutput.get_passing_rate">[docs]</a>    <span class="k">def</span> <span class="nf">get_passing_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="CllModelDeviSelectorOutput.get_passing_rate"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorOutput.get_passing_rate">[docs]</a>    <span class="k">def</span> <span class="nf">get_passing_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">passing_rate</span></div></div>
 
-<div class="viewcode-block" id="ThresholdSelectorInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.ThresholdSelectorInput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">ThresholdSelectorInput</span><span class="p">:</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n">ThresholdSelectorInputConfig</span>
+<div class="viewcode-block" id="CllModelDeviSelectorInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorInput">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">CllModelDeviSelectorInput</span><span class="p">:</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">CllModelDeviSelectorInputConfig</span>
     <span class="n">model_devi_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
     <span class="n">model_devi_out_filename</span><span class="p">:</span> <span class="nb">str</span>
 
-<div class="viewcode-block" id="ThresholdSelectorInput.set_model_devi_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.ThresholdSelectorInput.set_model_devi_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">set_model_devi_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]):</span>
+<div class="viewcode-block" id="CllModelDeviSelectorInput.set_model_devi_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorInput.set_model_devi_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">set_model_devi_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_devi_data</span> <span class="o">=</span> <span class="n">data</span></div></div>
 
-<div class="viewcode-block" id="threshold_selector"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.threshold_selector">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">threshold_selector</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">ThresholdSelectorInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">ThresholdSelectorContext</span><span class="p">):</span>
+<div class="viewcode-block" id="cll_model_devi_selector"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.cll_model_devi_selector">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">cll_model_devi_selector</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllModelDeviSelectorInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllModelDevSelectorContext</span><span class="p">):</span>
     <span class="n">executor</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">default_executor</span>
     <span class="n">work_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">path_prefix</span><span class="p">)</span>
     <span class="n">executor</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span>
@@ -417,13 +418,14 @@ document.write(`
     <span class="n">total_count</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">passed_count</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;total&#39;</span><span class="p">,</span> <span class="s1">&#39;pass&#39;</span><span class="p">,</span> <span class="s1">&#39;candidate&#39;</span><span class="p">,</span> <span class="s1">&#39;reject&#39;</span><span class="p">,</span> <span class="s1">&#39;pass%&#39;</span><span class="p">]</span>
     <span class="n">table</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="c1"># TODO: support output of different software</span>
     <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">model_devi_data</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">LammpsOutputHelper</span><span class="o">.</span><span class="n">is_match</span><span class="p">(</span><span class="n">candidate</span><span class="p">):</span>
-            <span class="n">model_devi_out_file</span> <span class="o">=</span> <span class="n">LammpsOutputHelper</span><span class="p">(</span><span class="n">candidate</span><span class="p">)</span><span class="o">.</span><span class="n">get_model_devi_file</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">model_devi_out_filename</span><span class="p">)</span><span class="o">.</span><span class="n">url</span>
+        <span class="n">data_format</span> <span class="o">=</span> <span class="n">get_data_format</span><span class="p">(</span><span class="n">candidate</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
+        <span class="k">if</span> <span class="n">data_format</span> <span class="o">==</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">LAMMPS_OUTPUT_DIR</span><span class="p">:</span>
+            <span class="n">model_devi_out_file</span> <span class="o">=</span> <span class="n">candidate</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">model_devi_out_filename</span><span class="p">)</span><span class="o">.</span><span class="n">url</span>
+        <span class="k">elif</span> <span class="n">data_format</span> <span class="o">==</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">LASP_LAMMPS_OUT_DIR</span><span class="p">:</span>
+            <span class="n">model_devi_out_file</span> <span class="o">=</span> <span class="n">candidate</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">model_devi_out_filename</span><span class="p">)</span><span class="o">.</span><span class="n">url</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;unknown model_devi_data types&#39;</span><span class="p">)</span>
 
@@ -455,11 +457,12 @@ document.write(`
 
         <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">model_devi_out_file</span><span class="p">,</span> <span class="n">work_dir</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">passed_df</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_df</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">rejected_df</span><span class="p">),</span> <span class="n">passing_rate</span><span class="p">])</span>
 
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;total&#39;</span><span class="p">,</span> <span class="s1">&#39;pass&#39;</span><span class="p">,</span> <span class="s1">&#39;candidate&#39;</span><span class="p">,</span> <span class="s1">&#39;reject&#39;</span><span class="p">,</span> <span class="s1">&#39;pass%&#39;</span><span class="p">]</span>
     <span class="n">stats_report</span> <span class="o">=</span> <span class="n">tabulate</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;tsv&#39;</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;stats report: </span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">stats_report</span><span class="p">)</span>
 
     <span class="n">executor</span><span class="o">.</span><span class="n">dump_text</span><span class="p">(</span><span class="n">stats_report</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;stats.tsv&#39;</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">ThresholdSelectorOutput</span><span class="p">(</span>
+    <span class="k">return</span> <span class="n">CllModelDeviSelectorOutput</span><span class="p">(</span>
         <span class="n">model_devi_data</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">model_devi_data</span><span class="p">,</span>
         <span class="n">passing_rate</span><span class="o">=</span><span class="n">passed_count</span> <span class="o">/</span> <span class="n">total_count</span><span class="p">,</span>
     <span class="p">)</span></div>

@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>ai2_kit.domain.util module &#8212; ai2-kit Reference</title>
+    <title>ai2_kit.domain.asap module &#8212; ai2-kit Reference</title>
   
   
   
@@ -61,11 +61,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_api/ai2_kit.domain.util';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_api/ai2_kit.domain.asap';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ai2_kit.domain.vasp module" href="ai2_kit.domain.vasp.html" />
-    <link rel="prev" title="ai2_kit.domain.updater module" href="ai2_kit.domain.updater.html" />
+    <link rel="next" title="ai2_kit.domain.constant module" href="ai2_kit.domain.constant.html" />
+    <link rel="prev" title="ai2_kit.domain package" href="ai2_kit.domain.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -187,7 +187,7 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="ai2_kit.domain.html">ai2_kit.domain package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">ai2_kit.domain.asap module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
@@ -197,7 +197,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.selector.html">ai2_kit.domain.selector module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.updater.html">ai2_kit.domain.updater module</a></li>
-<li class="toctree-l4 current active"><a class="current reference internal" href="#">ai2_kit.domain.util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.vasp.html">ai2_kit.domain.vasp module</a></li>
 </ul>
 </li>
@@ -286,7 +286,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2F_api/ai2_kit.domain.util.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2F_api/ai2_kit.domain.asap.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -316,7 +316,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../_sources/_api/ai2_kit.domain.util.rst" target="_blank"
+      <li><a href="../_sources/_api/ai2_kit.domain.asap.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -396,7 +396,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>ai2_kit.domain.util module</h1>
+    <h1>ai2_kit.domain.asap module</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -410,26 +410,51 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="module-ai2_kit.domain.util">
-<span id="ai2-kit-domain-util-module"></span><h1>ai2_kit.domain.util module<a class="headerlink" href="#module-ai2_kit.domain.util" title="Permalink to this heading">#</a></h1>
+  <section id="module-ai2_kit.domain.asap">
+<span id="ai2-kit-domain-asap-module"></span><h1>ai2_kit.domain.asap module<a class="headerlink" href="#module-ai2_kit.domain.asap" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="ai2_kit.domain.util.dump_cp2k_input">
-<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.util.</span></span><span class="sig-name descname"><span class="pre">dump_cp2k_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.dump_cp2k_input" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ai2_kit.domain.asap.get_acsf_atomic_descriptor_spec">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.asap.</span></span><span class="sig-name descname"><span class="pre">get_acsf_atomic_descriptor_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">asapxyz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ASAPXYZ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setting</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/asap.html#get_acsf_atomic_descriptor_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.asap.get_acsf_atomic_descriptor_spec" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="ai2_kit.domain.util.dumps_cp2k_input">
-<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.util.</span></span><span class="sig-name descname"><span class="pre">dumps_cp2k_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.dumps_cp2k_input" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ai2_kit.domain.asap.get_cluster">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.asap.</span></span><span class="sig-name descname"><span class="pre">get_cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">asapxyz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ASAPXYZ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./asap-cluster'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/asap.html#get_cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.asap.get_cluster" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="ai2_kit.domain.util.load_cp2k_input">
-<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.util.</span></span><span class="sig-name descname"><span class="pre">load_cp2k_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.load_cp2k_input" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ai2_kit.domain.asap.get_dbscan_trainer">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.asap.</span></span><span class="sig-name descname"><span class="pre">get_dbscan_trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">descriptor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'euclidean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/asap.html#get_dbscan_trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.asap.get_dbscan_trainer" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="ai2_kit.domain.util.loads_cp2k_input">
-<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.util.</span></span><span class="sig-name descname"><span class="pre">loads_cp2k_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.loads_cp2k_input" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ai2_kit.domain.asap.get_descriptor">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.asap.</span></span><span class="sig-name descname"><span class="pre">get_descriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">asapxyz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ASAPXYZ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setting</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_atomic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_process</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./asap-descriptor'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/asap.html#get_descriptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.asap.get_descriptor" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.domain.asap.get_descriptor_spec">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.asap.</span></span><span class="sig-name descname"><span class="pre">get_descriptor_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">asapxyz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ASAPXYZ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setting</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/asap.html#get_descriptor_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.asap.get_descriptor_spec" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.domain.asap.get_fdb_trainer">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.asap.</span></span><span class="sig-name descname"><span class="pre">get_fdb_trainer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/asap.html#get_fdb_trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.asap.get_fdb_trainer" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.domain.asap.get_soap_atomic_descriptor_spec">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.asap.</span></span><span class="sig-name descname"><span class="pre">get_soap_atomic_descriptor_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">asapxyz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ASAPXYZ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setting</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/asap.html#get_soap_atomic_descriptor_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.asap.get_soap_atomic_descriptor_spec" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.domain.asap.reduce_dimension">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.asap.</span></span><span class="sig-name descname"><span class="pre">reduce_dimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">descriptors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setting</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/asap.html#reduce_dimension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.asap.reduce_dimension" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.domain.asap.test">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.asap.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/asap.html#test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.asap.test" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -466,20 +491,20 @@ document.write(`
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="ai2_kit.domain.updater.html"
+       href="ai2_kit.domain.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">ai2_kit.domain.updater module</p>
+        <p class="prev-next-title">ai2_kit.domain package</p>
       </div>
     </a>
     <a class="right-next"
-       href="ai2_kit.domain.vasp.html"
+       href="ai2_kit.domain.constant.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ai2_kit.domain.vasp module</p>
+        <p class="prev-next-title">ai2_kit.domain.constant module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

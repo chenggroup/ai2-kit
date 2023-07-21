@@ -184,12 +184,14 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.selector.html">ai2_kit.domain.selector module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.updater.html">ai2_kit.domain.updater module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
@@ -382,7 +384,7 @@ document.write(`
     <span class="n">LAMMPS_TRAJ_DIR</span><span class="p">,</span>
     <span class="n">LAMMPS_TRAJ_SUFFIX</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">LammpsOutputHelper</span><span class="p">,</span> <span class="n">PoscarHelper</span><span class="p">,</span> <span class="n">convert_to_lammps_input_data</span>
+<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">convert_to_lammps_input_data</span><span class="p">,</span> <span class="n">DataFormat</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -402,7 +404,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="GenericLammpsInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.GenericLammpsInputConfig">[docs]</a><span class="k">class</span> <span class="nc">GenericLammpsInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllLammpsInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig">[docs]</a><span class="k">class</span> <span class="nc">CllLammpsInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">explore_vars</span><span class="p">:</span> <span class="n">ExploreVariants</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Variants to be explored.&quot;&quot;&quot;</span>
 
@@ -453,25 +455,25 @@ document.write(`
     <span class="n">post_run_section</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
 
 
-<div class="viewcode-block" id="GenericLammpsContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.GenericLammpsContextConfig">[docs]</a><span class="k">class</span> <span class="nc">GenericLammpsContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllLammpsContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsContextConfig">[docs]</a><span class="k">class</span> <span class="nc">CllLammpsContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
     <span class="n">lammps_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;lmp&#39;</span>
     <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span></div>
 
 
-<div class="viewcode-block" id="GenericLammpsInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.GenericLammpsInput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">GenericLammpsInput</span><span class="p">:</span>
+<div class="viewcode-block" id="CllLammpsInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInput">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">CllLammpsInput</span><span class="p">:</span>
 
-<div class="viewcode-block" id="GenericLammpsInput.MdOptions"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.GenericLammpsInput.MdOptions">[docs]</a>    <span class="nd">@dataclass</span>
+<div class="viewcode-block" id="CllLammpsInput.MdOptions"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInput.MdOptions">[docs]</a>    <span class="nd">@dataclass</span>
     <span class="k">class</span> <span class="nc">MdOptions</span><span class="p">:</span>
         <span class="n">models</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="GenericLammpsInput.FepOptions"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.GenericLammpsInput.FepOptions">[docs]</a>    <span class="nd">@dataclass</span>
+<div class="viewcode-block" id="CllLammpsInput.FepOptions"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInput.FepOptions">[docs]</a>    <span class="nd">@dataclass</span>
     <span class="k">class</span> <span class="nc">FepOptions</span><span class="p">:</span>
         <span class="n">red_models</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
         <span class="n">neu_models</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span></div>
 
-    <span class="n">config</span><span class="p">:</span> <span class="n">GenericLammpsInputConfig</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">CllLammpsInputConfig</span>
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">mass_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 
@@ -480,9 +482,9 @@ document.write(`
     <span class="n">fep_options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FepOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="GenericLammpsContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.GenericLammpsContext">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">GenericLammpsContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n">GenericLammpsContextConfig</span></div>
+<div class="viewcode-block" id="CllLammpsContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsContext">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">CllLammpsContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">CllLammpsContextConfig</span></div>
 
 
 <div class="viewcode-block" id="GenericLammpsOutput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.GenericLammpsOutput">[docs]</a><span class="nd">@dataclass</span>
@@ -493,27 +495,18 @@ document.write(`
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_devi_outputs</span></div></div>
 
 
-<div class="viewcode-block" id="generic_lammps"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.generic_lammps">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">generic_lammps</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">GenericLammpsInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">GenericLammpsContext</span><span class="p">):</span>
+<div class="viewcode-block" id="cll_lammps"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.cll_lammps">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">cll_lammps</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllLammpsInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllLammpsContext</span><span class="p">):</span>
     <span class="n">executor</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">default_executor</span>
 
     <span class="c1"># setup workspace</span>
     <span class="n">work_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">path_prefix</span><span class="p">)</span>
     <span class="n">input_data_dir</span><span class="p">,</span> <span class="n">tasks_dir</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">setup_workspace</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;input_data&#39;</span><span class="p">,</span> <span class="s1">&#39;tasks&#39;</span><span class="p">])</span>
-
     <span class="n">systems</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">system_files</span><span class="p">)</span>
 
-    <span class="c1"># prepare lammps input data</span>
-    <span class="c1"># TODO: refactor the way of handling different types of input</span>
-    <span class="c1"># TODO: handle more data format, for example, cp2k output</span>
-    <span class="n">poscar_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">system_file</span> <span class="ow">in</span> <span class="n">systems</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">PoscarHelper</span><span class="o">.</span><span class="n">is_match</span><span class="p">(</span><span class="n">system_file</span><span class="p">):</span>
-            <span class="n">poscar_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">system_file</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;unsupported system file type: </span><span class="si">{</span><span class="n">system_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
+    <span class="c1"># TODO: the whole process to generate task dirs should be run remotely</span>
+    <span class="c1"># Reference: lasp.py</span>
     <span class="n">input_data_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">]</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">convert_to_lammps_input_data</span><span class="p">)(</span>
-        <span class="n">poscar_files</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">poscar_files</span><span class="p">],</span>
+        <span class="n">systems</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">systems</span><span class="p">],</span>
         <span class="n">base_dir</span><span class="o">=</span><span class="n">input_data_dir</span><span class="p">,</span>
         <span class="n">type_map</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span>
     <span class="p">)</span>
@@ -640,7 +633,7 @@ document.write(`
         <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
             <span class="n">executor</span><span class="o">=</span><span class="n">executor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="nb">format</span><span class="o">=</span><span class="n">LammpsOutputHelper</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
+            <span class="nb">format</span><span class="o">=</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">LAMMPS_OUTPUT_DIR</span><span class="p">,</span>
             <span class="n">attrs</span><span class="o">=</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span>
         <span class="p">)</span> <span class="k">for</span> <span class="n">task_dir</span> <span class="ow">in</span> <span class="n">lammps_task_dirs</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
 

@@ -1,0 +1,888 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>CLL 势函数训练工作流 &#8212; ai2-kit Reference</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'manual/cll-workflow.zh';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">ai2-kit Reference</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    ai<sup>2</sup>-kit
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cll-workflow.html">CLL MLP Training Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fep-workflow.html">FEP MLP Training Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Build-in Functionalities</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ase.html">ASE Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="checkpoint.html">Checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../_api/modules.html">ai2_kit</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../_api/ai2_kit.html">ai2_kit package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.core.html">ai2_kit.core package</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.artifact.html">ai2_kit.core.artifact module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.checkpoint.html">ai2_kit.core.checkpoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.cmd.html">ai2_kit.core.cmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.connector.html">ai2_kit.core.connector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.executor.html">ai2_kit.core.executor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.future.html">ai2_kit.core.future module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.job.html">ai2_kit.core.job module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.log.html">ai2_kit.core.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.queue_system.html">ai2_kit.core.queue_system module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.resource_manager.html">ai2_kit.core.resource_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.domain.html">ai2_kit.domain package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.selector.html">ai2_kit.domain.selector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.updater.html">ai2_kit.domain.updater module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.vasp.html">ai2_kit.domain.vasp module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.tool.html">ai2_kit.tool package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.workflow.html">ai2_kit.workflow package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.workflow.cll_mlp.html">ai2_kit.workflow.cll_mlp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.workflow.fep_mlp.html">ai2_kit.workflow.fep_mlp module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../_api/ai2_kit.main.html">ai2_kit.main module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/chenggroup/ai2-kit" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fmanual/cll-workflow.zh.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/manual/cll-workflow.zh.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>CLL 势函数训练工作流</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">简介</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">环境要求</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">使用说明</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">数据准备</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">配置文件准备</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">执行工作流</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="cll">
+<h1>CLL 势函数训练工作流<a class="headerlink" href="#cll" title="Permalink to this heading">#</a></h1>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>workflow<span class="w"> </span>cll-mlp-training
+</pre></div>
+</div>
+<section id="id1">
+<h2>简介<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p>CLL 工作流通过对 DPGEN 的流程和实现进行改进，以满足更复杂的势函数训练需求以及可持续的代码集成。CLL 工作流采用闭环学习的模式，通过迭代的方式自动训练 MLP 势函数。在每一次迭代中，工作流使用由第一性原理方法生成的标记结构来训练多个 MLP 模型。然后，这些模型被用来探索新的结构作为下一次迭代的训练数据。迭代会一直持续，直到 MLP 模型的质量满足预定的标准。每次迭代的配置可根据训练需要进行更新，以进一步提高训练效率。</p>
+<p>CLL 工作流的主要改进包括:</p>
+<ul class="simple">
+<li><p>更语义化的配置系统，以支持不同软件的选择，以及根据不同体系设定不同的软件配置。</p></li>
+<li><p>更健壮的 checkpoint 机制，以减少执行中断产生的影响。</p></li>
+<li><p>支持远程Python方法执行以避免不必要的数据搬运， 提高在HPC集群上执行的效率和稳定性。</p></li>
+</ul>
+<p>目前 CLL 工作流支持使用以下工具进行势函数训练:</p>
+<ul class="simple">
+<li><p>Label：CP2K, VASP</p></li>
+<li><p>Train：DeepMD</p></li>
+<li><p>Explore：LAMMPS, LASP</p></li>
+<li><p>Select: Model deviation, ASAP (TODO)</p></li>
+</ul>
+<p>当前 CLL 工作流通过 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 自带的HPC执行器进行作业提交，支持在单一HPC集群完成计算，未来根据需要考虑支持多集群调度，以及支持包括 <code class="docutils literal notranslate"><span class="pre">dflow</span></code> 在内的不同工作流引擎。</p>
+<p><img alt="cll-mlp-diagram" src="../_images/cll-mlp-diagram.svg" /></p>
+</section>
+<section id="id2">
+<h2>环境要求<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Workflow 运行环境与 HPC 运行环境的 Python 主版本需要保持一致，否则远程执行会出现问题。</p></li>
+<li><p>HPC 的运行环境需要安装 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code>, 通常来讲 HPC 上的 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 与本地的 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 版本不需要保持一致， 但如果差异过大仍有出现问题的可能，所以建议使用相同版本的 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code>。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>使用说明<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>以下通过通一个案例来说明 CLL 工作流的使用方法。</p>
+<section id="id4">
+<h3>数据准备<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<p>工作流执行所需要的数据需要提前放置在 HPC 集群节点上。开始工作流的执行前你需要准备以下数据：</p>
+<ul class="simple">
+<li><p>用于势函数训练的初始结构或初始数据集</p></li>
+<li><p>用于结构搜索的初结构</p></li>
+</ul>
+<p>假设你已经有一段使用 AIMD 生成的轨迹 <code class="docutils literal notranslate"><span class="pre">h2o_64.aimd.xyz</span></code>, 那么你可以通过使用 <a class="reference internal" href="ase.html"><span class="doc std std-doc"><code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">tool</span> <span class="pre">ase</span></code></span></a> 命令行工具来准备这些数据。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>data/explore
+
+<span class="c1"># 从0-900帧中抽取训练集, 间隔 5 帧抽取</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>h2o_64.aimd.xyz<span class="w"> </span>--index<span class="w"> </span><span class="s1">&#39;:900:5&#39;</span><span class="w"> </span>-<span class="w"> </span>set_cell<span class="w"> </span><span class="s2">&quot;[12.42,12.42,12.42,90,90,90]&quot;</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>data/training.xyz
+
+<span class="c1"># 从900-帧后抽取验证集，间隔 5 帧抽取</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>h2o_64.aimd.xyz<span class="w"> </span>--index<span class="w"> </span><span class="s1">&#39;900::5&#39;</span><span class="w"> </span>-<span class="w"> </span>set_cell<span class="w"> </span><span class="s2">&quot;[12.42,12.42,12.42,90,90,90]&quot;</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>data/validation.xyz
+
+<span class="c1"># 抽取用于初始结构搜索的数据，间隔 100 帧抽取</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>h2o_64.aimd.xyz<span class="w"> </span>--index<span class="w"> </span><span class="s1">&#39;::100&#39;</span><span class="w"> </span>-<span class="w"> </span>set_cell<span class="w"> </span><span class="s2">&quot;[12.42,12.42,12.42,90,90,90]&quot;</span><span class="w"> </span>-<span class="w"> </span>write_each_frame<span class="w"> </span><span class="s2">&quot;./data/explore/POSCAR-{i:04d}&quot;</span><span class="w"> </span>--format<span class="w"> </span>vasp
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h3>配置文件准备<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<p>CLL 工作流的配置文件采用 YAML 格式，并且支持以任意维度进行分拆，<code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 会在执行时自动将其合并。适度的分拆有利于配置文件的维护和重用。通常情况下，我们可以将配置文件拆分为以下几个部分：</p>
+<ul class="simple">
+<li><p>artifact.yml: 用于配置工作流所需的数据</p></li>
+<li><p>executor.yml: 用于配置 HPC 执行器的参数</p></li>
+<li><p>workflow.yml: 用于配置工作流软件的参数</p></li>
+</ul>
+<p>我们首先从 <code class="docutils literal notranslate"><span class="pre">artifact.yml</span></code> 开始，这个配置文件用于配置工作流所需的数据。在这个例子中，我们需要配置三个数据集，分别是用于训练的数据集，用于验证的数据集，以及用于结构搜索的数据集。这三个数据集的配置如下：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">.base_dir</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;base_dir</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/data</span>
+
+<span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">h2o_64-train</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="kt">!join</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">*base_dir</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">training.xyz</span><span class="p p-Indicator">]</span>
+<span class="w">    </span>
+<span class="w">  </span><span class="nt">h2o_64-validation</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="kt">!join</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">*base_dir</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">validation.xyz</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">attrs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">deepmd</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">validation_data</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">  </span><span class="c1"># 指定该数据集为验证集</span>
+
+<span class="w">  </span><span class="nt">h2o_64-explore</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="kt">!join</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">*base_dir</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">explore</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">includes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POSCAR*</span>
+<span class="w">    </span><span class="nt">attrs</span><span class="p">:</span><span class="w">  </span><span class="c1"># 如有需要可在这里针对特定体系指定特定的软件配置, 此例无需此配置，因此放空</span>
+<span class="w">      </span><span class="nt">lammps</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">plumed_config_file</span><span class="p">:</span><span class="w">   </span>
+<span class="w">      </span><span class="nt">cp2k</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">input_template_file</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>这里我们使用 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 提供的自定义 tag <code class="docutils literal notranslate"><span class="pre">!join</span></code> 来简化数据配置, 相关功能可查看 <a class="reference internal" href="tips.html"><span class="doc std std-doc">TIPS</span></a> 文档。</p>
+<p>接下来我们配置 <code class="docutils literal notranslate"><span class="pre">executor.yml</span></code> 文件，这个文件用于配置与 HPC 链接相关的参数，以及软件的使用模板</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">executors</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">hpc-cluster01</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">ssh</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user01@login-01</span><span class="w">  </span><span class="c1"># 登录节点</span>
+<span class="w">      </span><span class="nt">gateway</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user01@jump-host</span><span class="w">  </span><span class="c1"># 跳板机（可选）</span>
+<span class="w">    </span><span class="nt">queue_system</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">slurm</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">  </span><span class="c1"># 使用 slurm 作为作业调度系统</span>
+
+<span class="w">    </span><span class="nt">work_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/user01/ai2-kit/workdir</span><span class="w">  </span><span class="c1"># 工作目录</span>
+<span class="w">    </span><span class="nt">python_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/user01/libs/conda/env/py39/bin/python</span><span class="w">  </span><span class="c1"># 远程 Python 解释器</span>
+
+<span class="w">    </span><span class="nt">context</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">train</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">deepmd</span><span class="p">:</span><span class="w">  </span><span class="c1"># 配置 deepmd 作业提交模板</span>
+<span class="w">          </span><span class="nt">script_template</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">header</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">#SBATCH -N 1</span>
+<span class="w">              </span><span class="no">#SBATCH --ntasks-per-node=4</span>
+<span class="w">              </span><span class="no">#SBATCH --job-name=deepmd</span>
+<span class="w">              </span><span class="no">#SBATCH --partition=gpu3</span>
+<span class="w">              </span><span class="no">#SBATCH --gres=gpu:1</span>
+<span class="w">              </span><span class="no">#SBATCH --mem=8G</span>
+<span class="w">            </span><span class="nt">setup</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">set -e</span>
+<span class="w">              </span><span class="no">module load deepmd/2.2</span>
+<span class="w">              </span><span class="no">set +e</span>
+
+<span class="w">      </span><span class="nt">explore</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">lammps</span><span class="p">:</span><span class="w">  </span><span class="c1"># 配置 lammps 作业提交模板</span>
+<span class="w">          </span><span class="nt">lammps_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lmp_mpi</span>
+<span class="w">          </span><span class="nt">concurrency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">          </span><span class="nt">script_template</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">header</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">#SBATCH -N 1</span>
+<span class="w">              </span><span class="no">#SBATCH --ntasks-per-node=4</span>
+<span class="w">              </span><span class="no">#SBATCH --job-name=lammps</span>
+<span class="w">              </span><span class="no">#SBATCH --partition=gpu3</span>
+<span class="w">              </span><span class="no">#SBATCH --gres=gpu:1</span>
+<span class="w">              </span><span class="no">#SBATCH --mem=24G</span>
+<span class="w">            </span><span class="nt">setup</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">set -e</span>
+<span class="w">              </span><span class="no">module load deepmd/2.2</span>
+<span class="w">              </span><span class="no">export OMP_NUM_THREADS=1</span>
+<span class="w">              </span><span class="no">set +e</span>
+
+<span class="w">      </span><span class="nt">label</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">cp2k</span><span class="p">:</span><span class="w">  </span><span class="c1"># 配置 cp2k 作业提交模板</span>
+<span class="w">          </span><span class="nt">cp2k_cmd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mpiexec.hydra cp2k.popt</span>
+<span class="w">          </span><span class="nt">concurrency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">          </span><span class="nt">script_template</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">header</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">#SBATCH -N 1</span>
+<span class="w">              </span><span class="no">#SBATCH --ntasks-per-node=16</span>
+<span class="w">              </span><span class="no">#SBATCH -t 12:00:00</span>
+<span class="w">              </span><span class="no">#SBATCH --job-name=cp2k</span>
+<span class="w">              </span><span class="no">#SBATCH --partition=c52-medium</span>
+<span class="w">            </span><span class="nt">setup</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">              </span><span class="no">set -e</span>
+<span class="w">              </span><span class="no">module load intel/17.5.239 mpi/intel/2017.5.239</span>
+<span class="w">              </span><span class="no">module load gcc/5.5.0</span>
+<span class="w">              </span><span class="no">module load cp2k/7.1</span>
+<span class="w">              </span><span class="no">set +e</span>
+</pre></div>
+</div>
+<p>最后则是对 <code class="docutils literal notranslate"><span class="pre">workflow.yml</span></code> 文件的配置，这个文件用于配置工作流的参数。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">workflow</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">general</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type_map</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">H</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">O</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">mass_map</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">1.008</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">15.999</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">max_iters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">  </span><span class="c1"># 指定最大迭代次数</span>
+
+<span class="w">  </span><span class="nt">train</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">deepmd</span><span class="p">:</span><span class="w">  </span><span class="c1"># deepmd 参数配置</span>
+<span class="w">      </span><span class="nt">model_num</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">      </span><span class="c1"># 此例中使用的数据尚未标注，需要在 label 配置，此处为空，如有现成的已标注 deepmd/npy 数据集可在此处指定</span>
+<span class="w">      </span><span class="nt">init_dataset</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w">  </span>
+<span class="w">      </span><span class="nt">input_template</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">model</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">descriptor</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">se_a</span><span class="w">  </span>
+<span class="w">            </span><span class="nt">sel</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">            </span><span class="nt">rcut_smth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">            </span><span class="nt">rcut</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0</span>
+<span class="w">            </span><span class="nt">neuron</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">            </span><span class="nt">resnet_dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">            </span><span class="nt">axis_neuron</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+<span class="w">            </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">          </span><span class="nt">fitting_net</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">neuron</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">240</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">240</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">240</span>
+<span class="w">            </span><span class="nt">resnet_dt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">            </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">learning_rate</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">exp</span>
+<span class="w">          </span><span class="nt">start_lr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.001</span>
+<span class="w">          </span><span class="nt">decay_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2000</span>
+<span class="w">        </span><span class="nt">loss</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">start_pref_e</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.02</span>
+<span class="w">          </span><span class="nt">limit_pref_e</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">          </span><span class="nt">start_pref_f</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="w">          </span><span class="nt">limit_pref_f</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">          </span><span class="nt">start_pref_v</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">          </span><span class="nt">limit_pref_v</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">        </span><span class="nt">training</span><span class="p">:</span>
+<span class="w">          </span><span class="c1">#numb_steps: 400000</span>
+<span class="w">          </span><span class="nt">numb_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+<span class="w">          </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">          </span><span class="nt">disp_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lcurve.out</span>
+<span class="w">          </span><span class="nt">disp_freq</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="w">          </span><span class="nt">save_freq</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="w">          </span><span class="nt">save_ckpt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">model.ckpt</span>
+<span class="w">          </span><span class="nt">disp_training</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">time_training</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">profiling</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">          </span><span class="nt">profiling_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">timeline.json</span>
+
+<span class="w">  </span><span class="nt">label</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cp2k</span><span class="p">:</span><span class="w">  </span><span class="c1"># 指定 cp2k 参数配置</span>
+<span class="w">      </span><span class="nt">limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">      </span><span class="c1"># 此例中使用的数据尚未标注，因此需要在此配置，如有现成的已标注数据集则此处应为空</span>
+<span class="w">      </span><span class="c1"># 当此配置为空时，工作流会自动跳过第1次的label阶段从train开始执行</span>
+<span class="w">      </span><span class="nt">init_system_files</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">h2o_64-train</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">h2o_64-validation</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w">  </span>
+<span class="w">      </span><span class="nt">input_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&amp;GLOBAL</span>
+<span class="w">           </span><span class="no">PROJECT  DPGEN</span>
+<span class="w">        </span><span class="no">&amp;END</span>
+<span class="w">        </span><span class="no">&amp;FORCE_EVAL</span>
+<span class="w">           </span><span class="no">&amp;DFT</span>
+<span class="w">              </span><span class="no">BASIS_SET_FILE_NAME  /home/user01/data/cp2k/BASIS/BASIS_MOLOPT</span>
+<span class="w">              </span><span class="no">POTENTIAL_FILE_NAME  /home/user01/data/cp2k/POTENTIAL/GTH_POTENTIALS</span>
+<span class="w">              </span><span class="no">CHARGE  0</span>
+<span class="w">              </span><span class="no">UKS  F</span>
+<span class="w">              </span><span class="no">&amp;MGRID</span>
+<span class="w">                 </span><span class="no">CUTOFF  600</span>
+<span class="w">                 </span><span class="no">REL_CUTOFF  60</span>
+<span class="w">                 </span><span class="no">NGRIDS  4</span>
+<span class="w">              </span><span class="no">&amp;END</span>
+<span class="w">              </span><span class="no">&amp;QS</span>
+<span class="w">                 </span><span class="no">EPS_DEFAULT  1.0E-12</span>
+<span class="w">              </span><span class="no">&amp;END</span>
+<span class="w">              </span><span class="no">&amp;SCF</span>
+<span class="w">                 </span><span class="no">SCF_GUESS  RESTART</span>
+<span class="w">                 </span><span class="no">EPS_SCF  3.0E-7</span>
+<span class="w">                 </span><span class="no">MAX_SCF  50</span>
+<span class="w">                 </span><span class="no">&amp;OUTER_SCF</span>
+<span class="w">                    </span><span class="no">EPS_SCF  3.0E-7</span>
+<span class="w">                    </span><span class="no">MAX_SCF  10</span>
+<span class="w">                 </span><span class="no">&amp;END</span>
+<span class="w">                 </span><span class="no">&amp;OT</span>
+<span class="w">                    </span><span class="no">MINIMIZER  DIIS</span>
+<span class="w">                    </span><span class="no">PRECONDITIONER  FULL_SINGLE_INVERSE</span>
+<span class="w">                    </span><span class="no">ENERGY_GAP  0.1</span>
+<span class="w">                 </span><span class="no">&amp;END</span>
+<span class="w">              </span><span class="no">&amp;END</span>
+<span class="w">              </span><span class="no">&amp;LOCALIZE</span>
+<span class="w">                 </span><span class="no">METHOD  CRAZY</span>
+<span class="w">                 </span><span class="no">MAX_ITER  2000</span>
+<span class="w">                 </span><span class="no">&amp;PRINT</span>
+<span class="w">                    </span><span class="no">&amp;WANNIER_CENTERS</span>
+<span class="w">                       </span><span class="no">IONS+CENTERS</span>
+<span class="w">                       </span><span class="no">FILENAME  =64water_wannier.xyz</span>
+<span class="w">                    </span><span class="no">&amp;END</span>
+<span class="w">                 </span><span class="no">&amp;END</span>
+<span class="w">              </span><span class="no">&amp;END</span>
+<span class="w">              </span><span class="no">&amp;XC</span>
+<span class="w">                 </span><span class="no">&amp;XC_FUNCTIONAL PBE</span>
+<span class="w">                 </span><span class="no">&amp;END</span>
+<span class="w">                 </span><span class="no">&amp;vdW_POTENTIAL</span>
+<span class="w">                    </span><span class="no">DISPERSION_FUNCTIONAL  PAIR_POTENTIAL</span>
+<span class="w">                    </span><span class="no">&amp;PAIR_POTENTIAL</span>
+<span class="w">                       </span><span class="no">TYPE  DFTD3</span>
+<span class="w">                       </span><span class="no">PARAMETER_FILE_NAME  dftd3.dat</span>
+<span class="w">                       </span><span class="no">REFERENCE_FUNCTIONAL  PBE</span>
+<span class="w">                    </span><span class="no">&amp;END</span>
+<span class="w">                 </span><span class="no">&amp;END</span>
+<span class="w">              </span><span class="no">&amp;END</span>
+<span class="w">           </span><span class="no">&amp;END</span>
+<span class="w">           </span><span class="no">&amp;SUBSYS</span>
+<span class="w">              </span><span class="no">&amp;KIND O</span>
+<span class="w">                 </span><span class="no">BASIS_SET  DZVP-MOLOPT-SR-GTH</span>
+<span class="w">                 </span><span class="no">POTENTIAL  GTH-PBE-q6</span>
+<span class="w">              </span><span class="no">&amp;END</span>
+<span class="w">              </span><span class="no">&amp;KIND H</span>
+<span class="w">                 </span><span class="no">BASIS_SET  DZVP-MOLOPT-SR-GTH</span>
+<span class="w">                 </span><span class="no">POTENTIAL  GTH-PBE-q1</span>
+<span class="w">              </span><span class="no">&amp;END</span>
+<span class="w">           </span><span class="no">&amp;END</span>
+<span class="w">           </span><span class="no">&amp;PRINT</span>
+<span class="w">              </span><span class="no">&amp;FORCES ON</span>
+<span class="w">              </span><span class="no">&amp;END</span>
+<span class="w">           </span><span class="no">&amp;END</span>
+<span class="w">        </span><span class="no">&amp;END</span>
+
+<span class="w">  </span><span class="nt">explore</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">lammps</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">timestep</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0005</span>
+<span class="w">      </span><span class="nt">sample_freq</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">      </span><span class="nt">tau_t</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">      </span><span class="nt">tau_p</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="nt">nsteps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2000</span>
+<span class="w">      </span><span class="nt">ensemble</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nvt</span>
+
+<span class="w">      </span><span class="nt">post_init_section</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">neighbor 1.0 bin</span>
+<span class="w">          </span><span class="no">box      tilt large</span>
+
+<span class="w">      </span><span class="nt">post_read_data_section</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">change_box all triclinic</span>
+
+<span class="w">      </span><span class="nt">system_files</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">h2o-64-explore</span><span class="w"> </span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">explore_vars</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">temp</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">330</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">440</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">pres</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="nt">select</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_devi</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">f_trust_lo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.4</span>
+<span class="w">        </span><span class="nt">f_trust_hi</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
+
+<span class="w">  </span><span class="nt">update</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">walkthrough</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># 可在此处指定从第2次迭代及其后要使用的参数配置</span>
+<span class="w">      </span><span class="c1"># 此处配置的参数会覆盖 workflow 一节的任意配置, 可根据训练策略进行调整</span>
+<span class="w">      </span><span class="nt">table</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">train</span><span class="p">:</span><span class="w">  </span><span class="c1"># 第二次迭代时训练步数为 10000</span>
+<span class="w">            </span><span class="nt">deepmd</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">input_template</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">training</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">numb_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">train</span><span class="p">:</span><span class="w">  </span><span class="c1"># 第三次迭代时训练步数为 20000</span>
+<span class="w">            </span><span class="nt">deepmd</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">input_template</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">training</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">numb_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20000</span>
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h3>执行工作流<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
+<p>完成配置工作后即可开始工作流的执行</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>workflow<span class="w"> </span>cll-mlp-training<span class="w"> </span>*.yml<span class="w"> </span>--executor<span class="w"> </span>hpc-cluster01<span class="w"> </span>--path-prefix<span class="w"> </span>h2o_64-run-01<span class="w"> </span>--checkpoint<span class="w"> </span>run-01.ckpt
+</pre></div>
+</div>
+<p>上述参数中，</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">*.yml</span></code> 用于指定配置文件，可以指定多个配置文件，<code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 会自动将其合并, 此处使用 <code class="docutils literal notranslate"><span class="pre">*</span></code> 通配符指定;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--executor</span> <span class="pre">hpc-cluster01</span></code> 用于指定要使用的 HPC 执行器，此处使用了上一节中配置的 <code class="docutils literal notranslate"><span class="pre">hpc-cluster01</span></code> 执行器;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--path-prefix</span> <span class="pre">h2o_64-run-01</span></code> 指定远程工作目录，它会在 <code class="docutils literal notranslate"><span class="pre">work_dir</span></code> 下创建一个 <code class="docutils literal notranslate"><span class="pre">h2o_64-run-01</span></code> 的目录用于存放工作流的执行结果;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--checkpoint</span> <span class="pre">run-01.cpkt</span></code> 会在本地生成一个checkpoint文件，用于保存工作流的执行状态，以便在执行中断后恢复执行。</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./manual"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">简介</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">环境要求</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">使用说明</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">数据准备</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">配置文件准备</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">执行工作流</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By weihong.xu
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

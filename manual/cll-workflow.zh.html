@@ -433,6 +433,7 @@ document.write(`
 <section id="id1">
 <h2>简介<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
 <p>CLL 工作流通过对 DPGEN 的流程和实现进行改进，以满足更复杂的势函数训练需求以及可持续的代码集成。CLL 工作流采用闭环学习的模式，通过迭代的方式自动训练 MLP 势函数。在每一次迭代中，工作流使用由第一性原理方法生成的标记结构来训练多个 MLP 模型。然后，这些模型被用来探索新的结构作为下一次迭代的训练数据。迭代会一直持续，直到 MLP 模型的质量满足预定的标准。每次迭代的配置可根据训练需要进行更新，以进一步提高训练效率。</p>
+<p><img alt="cll-mlp-diagram" src="../_images/cll-mlp-diagram.svg" /></p>
 <p>CLL 工作流的主要改进包括:</p>
 <ul class="simple">
 <li><p>更语义化的配置系统，以支持不同软件的选择，以及根据不同体系设定不同的软件配置。</p></li>
@@ -447,13 +448,12 @@ document.write(`
 <li><p>Select: Model deviation, ASAP (TODO)</p></li>
 </ul>
 <p>当前 CLL 工作流通过 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 自带的HPC执行器进行作业提交，支持在单一HPC集群完成计算，未来根据需要考虑支持多集群调度，以及支持包括 <code class="docutils literal notranslate"><span class="pre">dflow</span></code> 在内的不同工作流引擎。</p>
-<p><img alt="cll-mlp-diagram" src="../_images/cll-mlp-diagram.svg" /></p>
 </section>
 <section id="id2">
 <h2>环境要求<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Workflow 运行环境与 HPC 运行环境的 Python 主版本需要保持一致，否则远程执行会出现问题。</p></li>
-<li><p>HPC 的运行环境需要安装 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code>, 通常来讲 HPC 上的 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 与本地的 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 版本不需要保持一致， 但如果差异过大仍有出现问题的可能，所以建议使用相同版本的 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code>。</p></li>
+<li><p>HPC 的运行环境需要安装 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code>, 通常来讲 HPC 上的 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 与本地的 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 版本不需要严格相同， 但如果差异过大仍有出现问题的可能，所以建议在条件允许时使用相同版本的 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code>。</p></li>
 </ul>
 </section>
 <section id="id3">
@@ -489,7 +489,7 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 <li><p>workflow.yml: 用于配置工作流软件的参数</p></li>
 </ul>
 <p>我们首先从 <code class="docutils literal notranslate"><span class="pre">artifact.yml</span></code> 开始，这个配置文件用于配置工作流所需的数据。在这个例子中，我们需要配置三个数据集，分别是用于训练的数据集，用于验证的数据集，以及用于结构搜索的数据集。这三个数据集的配置如下：</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">.base_dir</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;base_dir</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/data</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">.base_dir</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;base_dir</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/user01/data/</span>
 
 <span class="nt">artifacts</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">h2o_64-train</span><span class="p">:</span>

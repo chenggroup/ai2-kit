@@ -6,14 +6,15 @@ root: intro
 parts:
   - caption: Domain Specific Tools
     chapters:
-      - file: manual/proton-transfer
-      - file: manual/cll-workflow
-      - file: manual/fep-workflow
+      - file: doc/manual/proton-transfer
+      - file: doc/manual/cll-workflow
+      - file: doc/manual/cll-workflow.zh
+      - file: doc/manual/fep-workflow
   - caption: Build-in Functionalities
     chapters:
-      - file: manual/ase
-      - file: manual/checkpoint
-      - file: manual/tips
+      - file: doc/manual/ase
+      - file: doc/manual/checkpoint
+      - file: doc/manual/tips
   - caption: API Reference
     maxdepth: 1
     chapters:

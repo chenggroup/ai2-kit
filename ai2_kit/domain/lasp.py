@@ -101,7 +101,7 @@ async def cll_lasp(input: CllLaspInput, ctx: CllLaspContext):
     )
 
     # generate steps
-    lasp_cmd = f'{ctx.config.lasp_cmd} 1 >> lasp.out >> lasp.err'
+    lasp_cmd = f'{ctx.config.lasp_cmd} 1 > lasp.out > lasp.err'
     steps = []
     for task_dir in task_dirs :
         steps.append(BashStep(cwd=task_dir['url'], cmd=lasp_cmd, checkpoint='lasp'))
@@ -128,7 +128,7 @@ async def cll_lasp(input: CllLaspInput, ctx: CllLaspContext):
             url=task_dir['url'],
             executor=executor.name,
             format=DataFormat.LASP_LAMMPS_OUT_DIR,
-            attrs={ **task_dir['attrs'],  'traj_file': 'traj.xyz'},
+            attrs={ **task_dir['attrs'],  'structures_file': 'structures.xyz'},
         ) for task_dir in task_dirs]  # type: ignore
     return CllLaspOutput(output_dirs=output_dirs)
 
@@ -188,7 +188,7 @@ def __export_remote_functions():
         return task_dirs
 
 
-    def process_lasp_output(task_dir: str, file_name='traj.xyz'):
+    def process_lasp_output(task_dir: str, file_name='structures.xyz'):
         """
         Align lasp output with model_devi records.
 
@@ -223,7 +223,7 @@ def __export_remote_functions():
         with open(model_devi_file, "r") as f:
             for i, line in enumerate(f):
                 if i > 0:
-                    # replace step 0 with step i so that it can be aligned with traj.xyz
+                    # replace step 0 with step i so that it can be aligned with structures
                     line = re.sub(r'^\s+\d+', f'{i-1:>12} ', line)   #
                 lines.append(line)
         with open(model_devi_file, "w") as f:

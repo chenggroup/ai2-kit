@@ -1,14 +1,10 @@
-from ai2_kit.core.artifact import Artifact, ArtifactDict
-from ai2_kit.core.util import dict_nested_get
+from ai2_kit.core.artifact import ArtifactDict
 
 from typing import List, Tuple, Optional
 from ase import Atoms
 
-from operator import itemgetter
 import ase.io
 import os
-
-from .constant import LAMMPS_TRAJ_DIR, LAMMPS_TRAJ_SUFFIX, LAMMPS_DUMPS_CLASSIFIED
 
 
 def __export_remote_functions():
@@ -51,31 +47,15 @@ def __export_remote_functions():
         return None
 
 
-    def _get_selected_ids(artifact: dict) -> Optional[List[int]]:
-        return dict_nested_get(artifact, ['attrs', LAMMPS_DUMPS_CLASSIFIED, 'selected'], None)  # type: ignore
-
-
     def artifacts_to_ase_atoms(artifacts: List[ArtifactDict], type_map: List[str]) -> List[Tuple[ArtifactDict, Atoms]]:
         results = []
         for a in artifacts:
             data_format = get_data_format(a)  # type: ignore
             url = a['url']
-            selected_ids = _get_selected_ids(a)  # type: ignore
             if data_format == DataFormat.VASP_POSCAR:
                 atoms_list = ase.io.read(url, ':', format='vasp')
             elif data_format == DataFormat.EXTXYZ:
                 atoms_list = ase.io.read(url, ':', format='extxyz')
-            elif data_format == DataFormat.LAMMPS_OUTPUT_DIR:
-                assert selected_ids is not None, f'artifact {a} is not classified'
-                atoms_list = []
-                for dump_id in selected_ids:
-                    dump_file = os.path.join(url, LAMMPS_TRAJ_DIR, f'{dump_id}{LAMMPS_TRAJ_SUFFIX}')
-                    dump = ase.io.read(dump_file, ':', format='lammps-dump-text', order=False, specorder=type_map)
-                    atoms_list.extend(dump)
-            elif data_format == DataFormat.LASP_LAMMPS_OUT_DIR:
-                assert selected_ids is not None, f'artifact {a} is not classified'
-                traj_file = os.path.join(url, 'traj.xyz')
-                atoms_list = list(itemgetter(*selected_ids)(ase.io.read(traj_file, ':', format='extxyz')))  # type: ignore
             else:
                 raise ValueError(f'unsupported data format: {data_format}')
             results.extend((a, atoms) for atoms in atoms_list)

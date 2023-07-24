@@ -2,6 +2,7 @@ from ruamel.yaml import YAML
 from pathlib import Path
 from typing import Tuple, List, TypeVar
 from dataclasses import field
+from itertools import zip_longest
 
 import shortuuid
 import hashlib
@@ -9,6 +10,7 @@ import base64
 import copy
 import os
 import random
+import json
 
 from .log import get_logger
 
@@ -176,6 +178,26 @@ def __export_remote_functions():
         else:
             raise ValueError(f'Unknown sample method {method}')
 
+    def flat_evenly(list_of_lists):
+        """
+        flat a list of lists and ensure the output result distributed evenly
+        >>> flat_evenly([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        [1, 4, 7, 2, 5, 8, 3, 6, 9]
+        Ref: https://stackoverflow.com/questions/76751171/how-to-flat-a-list-of-lists-and-ensure-the-output-result-distributed-evenly-in-p
+        """
+        return [e for tup in zip_longest(*list_of_lists) for e in tup if e is not None]
+
+
+    def dump_json(obj: dict, path: str):
+        with open(path, 'w', encoding='utf-8') as f:
+            json.dump(obj, f, indent=2)
+
+    def flush_stdio():
+        import sys
+        sys.stdout.flush()
+        sys.stderr.flush()
+
+
     # export functions
     return (
         merge_dict,
@@ -184,6 +206,9 @@ def __export_remote_functions():
         list_even_sample,
         list_random_sample,
         list_sample,
+        flat_evenly,
+        dump_json,
+        flush_stdio,
     )
 
 
@@ -194,4 +219,7 @@ def __export_remote_functions():
     list_even_sample,
     list_random_sample,
     list_sample,
+    flat_evenly,
+    dump_json,
+    flush_stdio,
 ) = __export_remote_functions()

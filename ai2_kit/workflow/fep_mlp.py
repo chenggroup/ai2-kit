@@ -207,6 +207,7 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
             config=workflow_config.red.threshold,
             model_devi_data=explore_output.get_model_devi_dataset(),
             model_devi_out_filename=const.MODEL_DEVI_RED_OUT,
+            type_map=type_map,
         )
         red_selector_context = selector.CllModelDevSelectorContext(
             path_prefix=os.path.join(
@@ -218,6 +219,7 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
             config=workflow_config.neu.threshold,
             model_devi_data=explore_output.get_model_devi_dataset(),
             model_devi_out_filename=const.MODEL_DEVI_NEU_OUT,
+            type_map=type_map,
         )
         neu_selector_context = selector.CllModelDevSelectorContext(
             path_prefix=os.path.join(iter_path_prefix, 'neu-selector-threshold'),

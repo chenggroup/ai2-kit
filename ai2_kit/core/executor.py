@@ -226,6 +226,7 @@ def fn_to_script(fn: Callable, delimiter='@'):
     script = [
         f'''import base64,bz2,sys,cloudpickle as cp''',
         f'''r=cp.loads(bz2.decompress(base64.b64decode({repr(dumped_fn)})))()''',
+        f'''sys.stdout.flush()''',  # ensure all output is printed
         f'''print({repr(delimiter)}+base64.b64encode(bz2.compress(cp.dumps(r, protocol=cp.DEFAULT_PROTOCOL),5)).decode('ascii'))''',
         f'''sys.stdout.flush()''',  # ensure all output is printed
     ]

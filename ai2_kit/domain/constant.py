@@ -11,7 +11,8 @@ MODEL_DEVI_RED_OUT = 'model_devi_red.out'
 
 LAMMPS_TRAJ_DIR = 'traj'
 LAMMPS_TRAJ_SUFFIX = '.lammpstrj'
-LAMMPS_DUMPS_CLASSIFIED = 'dumps_classified'
+
+SELECTOR_OUTPUT = 'selector_output'
 
 
 DEFAULT_LASP_IN = {
@@ -76,3 +77,10 @@ DEFAULT_ASAP_SOAP_DESC = {
     'zeta': 1,
 }
 
+DEFAULT_ASAP_PCA_REDUCER = {
+    'type': 'PCA',
+            'parameter': {
+                'n_components': 3,
+                'scalecenter': True,
+            }
+}

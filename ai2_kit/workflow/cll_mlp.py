@@ -239,12 +239,13 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager:
                 config=workflow_config.select.model_devi,
                 model_devi_data=explore_output.get_model_devi_dataset(),
                 model_devi_out_filename=const.MODEL_DEVI_OUT,
+                type_map=type_map,
             )
             selector_context = selector.CllModelDevSelectorContext(
-                path_prefix=os.path.join(iter_path_prefix, 'selector-threshold'),
+                path_prefix=os.path.join(iter_path_prefix, 'selector-model-devi'),
                 resource_manager=resource_manager,
             )
-            selector_output = await apply_checkpoint(f'{cp_prefix}/selector-threshold')(selector.cll_model_devi_selector)(selector_input, selector_context)
+            selector_output = await apply_checkpoint(f'{cp_prefix}/selector-model-devi')(selector.cll_model_devi_selector)(selector_input, selector_context)
 
         else:
             raise ValueError('No select method is specified')

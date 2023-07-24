@@ -149,15 +149,16 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../manual/cll-workflow.html">CLL MLP Training Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../manual/fep-workflow.html">FEP MLP Training Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/cll-workflow.html">CLL MLP Training Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/cll-workflow.zh.html">CLL 势函数训练工作流</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/fep-workflow.html">FEP MLP Training Workflow</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Build-in Functionalities</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../manual/ase.html">ASE Toolkit</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../manual/checkpoint.html">Checkpoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../manual/tips.html">Tips</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/ase.html">ASE Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/checkpoint.html">Checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/tips.html">Tips</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="nav bd-sidenav">
@@ -588,6 +589,7 @@ document.write(`
     <span class="n">script</span> <span class="o">=</span> <span class="p">[</span>
         <span class="sa">f</span><span class="s1">&#39;&#39;&#39;import base64,bz2,sys,cloudpickle as cp&#39;&#39;&#39;</span><span class="p">,</span>
         <span class="sa">f</span><span class="s1">&#39;&#39;&#39;r=cp.loads(bz2.decompress(base64.b64decode(</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">dumped_fn</span><span class="p">)</span><span class="si">}</span><span class="s1">)))()&#39;&#39;&#39;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s1">&#39;&#39;&#39;sys.stdout.flush()&#39;&#39;&#39;</span><span class="p">,</span>  <span class="c1"># ensure all output is printed</span>
         <span class="sa">f</span><span class="s1">&#39;&#39;&#39;print(</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">delimiter</span><span class="p">)</span><span class="si">}</span><span class="s1">+base64.b64encode(bz2.compress(cp.dumps(r, protocol=cp.DEFAULT_PROTOCOL),5)).decode(&#39;ascii&#39;))&#39;&#39;&#39;</span><span class="p">,</span>
         <span class="sa">f</span><span class="s1">&#39;&#39;&#39;sys.stdout.flush()&#39;&#39;&#39;</span><span class="p">,</span>  <span class="c1"># ensure all output is printed</span>
     <span class="p">]</span>

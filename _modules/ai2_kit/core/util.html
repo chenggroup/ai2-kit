@@ -149,15 +149,16 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../manual/cll-workflow.html">CLL MLP Training Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../manual/fep-workflow.html">FEP MLP Training Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/cll-workflow.html">CLL MLP Training Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/cll-workflow.zh.html">CLL 势函数训练工作流</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/fep-workflow.html">FEP MLP Training Workflow</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Build-in Functionalities</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../manual/ase.html">ASE Toolkit</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../manual/checkpoint.html">Checkpoint</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../manual/tips.html">Tips</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/ase.html">ASE Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/checkpoint.html">Checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/tips.html">Tips</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="nav bd-sidenav">
@@ -364,6 +365,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">zip_longest</span>
 
 <span class="kn">import</span> <span class="nn">shortuuid</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
@@ -371,6 +373,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
@@ -538,6 +541,26 @@ document.write(`
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown sample method </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">flat_evenly</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        flat a list of lists and ensure the output result distributed evenly</span>
+<span class="sd">        &gt;&gt;&gt; flat_evenly([[1, 2, 3], [4, 5, 6], [7, 8, 9]])</span>
+<span class="sd">        [1, 4, 7, 2, 5, 8, 3, 6, 9]</span>
+<span class="sd">        Ref: https://stackoverflow.com/questions/76751171/how-to-flat-a-list-of-lists-and-ensure-the-output-result-distributed-evenly-in-p</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">zip_longest</span><span class="p">(</span><span class="o">*</span><span class="n">list_of_lists</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">tup</span> <span class="k">if</span> <span class="n">e</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+
+
+    <span class="k">def</span> <span class="nf">dump_json</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">flush_stdio</span><span class="p">():</span>
+        <span class="kn">import</span> <span class="nn">sys</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+
     <span class="c1"># export functions</span>
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">merge_dict</span><span class="p">,</span>
@@ -546,6 +569,9 @@ document.write(`
         <span class="n">list_even_sample</span><span class="p">,</span>
         <span class="n">list_random_sample</span><span class="p">,</span>
         <span class="n">list_sample</span><span class="p">,</span>
+        <span class="n">flat_evenly</span><span class="p">,</span>
+        <span class="n">dump_json</span><span class="p">,</span>
+        <span class="n">flush_stdio</span><span class="p">,</span>
     <span class="p">)</span>
 
 
@@ -556,6 +582,9 @@ document.write(`
     <span class="n">list_even_sample</span><span class="p">,</span>
     <span class="n">list_random_sample</span><span class="p">,</span>
     <span class="n">list_sample</span><span class="p">,</span>
+    <span class="n">flat_evenly</span><span class="p">,</span>
+    <span class="n">dump_json</span><span class="p">,</span>
+    <span class="n">flush_stdio</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">=</span> <span class="n">__export_remote_functions</span><span class="p">()</span>
 </pre></div>
 

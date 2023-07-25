@@ -9,7 +9,7 @@ logger = get_logger(__name__)
 
 
 from pydantic import BaseModel
-from typing import Optional, Dict, List, TypeVar, Callable, Mapping
+from typing import Optional, Dict, List, TypeVar, Callable, Mapping, Union
 from abc import ABC, abstractmethod
 from invoke import Result
 import os
@@ -93,7 +93,10 @@ class Executor(ABC):
 class HpcExecutor(Executor):
 
     @classmethod
-    def from_config(cls, config: BaseExecutorConfig, name: str):
+    def from_config(cls, config: Union[dict, BaseExecutorConfig], name: str = ''):
+        if isinstance(config, dict):
+            config = BaseExecutorConfig.parse_obj(config)
+
         if config.ssh:
             connector = SshConnector.from_config(config.ssh)
         else:

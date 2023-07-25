@@ -185,12 +185,13 @@ def __export_remote_functions():
             incar.write_file(os.path.join(task_dir, 'INCAR'))
 
             # create POSCAR
-            elements_all = atoms.get_chemical_symbols()
+            atoms = atoms[atoms.numbers.argsort()]
+            elements_all = atoms.get_chemical_symbols() # type: ignore
             elements = [
                 item[0] for item in _symbol_count_from_symbols(elements_all)
             ]
             ase.io.write(
-                os.path.join(task_dir, 'POSCAR'), atoms, format='vasp'
+                os.path.join(task_dir, 'POSCAR'), atoms, format='vasp' # type: ignore
             )
 
             # create POTCAR

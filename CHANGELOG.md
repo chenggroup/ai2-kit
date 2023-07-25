@@ -1,4 +1,7 @@
 # Change Logs
+## v0.5.3
+* fix: atoms from lammps-dump-text not ordered by id
+
 ## v0.5.2
 * fix: sort atoms before exporting as POSCAR
 

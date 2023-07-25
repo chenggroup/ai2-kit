@@ -1,3 +1,9 @@
+# Suppress numba warning of umap.
+# Ref: https://github.com/lmcinnes/umap/issues/252
+from numba.core.errors import NumbaDeprecationWarning
+import warnings
+warnings.filterwarnings("ignore", category=NumbaDeprecationWarning)
+
 from asaplib.data.xyz import ASAPXYZ
 from asaplib.cli.func_asap import cluster_process, set_reducer
 from asaplib.hypers.hyper_soap import universal_soap_hyper

@@ -198,7 +198,7 @@ def __export_remote_functions():
             if data_format == DataFormat.LAMMPS_OUTPUT_DIR:
                 for frame_id in decent_df.step:
                     dump_file = os.path.join(model_devi_out_url, LAMMPS_TRAJ_DIR, f'{frame_id}{LAMMPS_TRAJ_SUFFIX}')
-                    atoms_list.extend(ase.io.read(dump_file, ':', format='lammps-dump-text', order=False, specorder=type_map))
+                    atoms_list.extend(ase.io.read(dump_file, ':', format='lammps-dump-text', specorder=type_map))
             elif data_format == DataFormat.LASP_LAMMPS_OUT_DIR:
                 structures_file = os.path.join(model_devi_out_url, 'structures.xyz')
                 atoms_list.extend(itemgetter(*decent_df.step)(ase.io.read(structures_file, ':', format='extxyz')))  # type: ignore

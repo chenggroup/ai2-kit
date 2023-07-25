@@ -1,4 +1,7 @@
 # Change Logs
+## v0.5.2
+* fix: sort atoms before exporting as POSCAR
+
 ## v0.5.1
 * improvement: suppress numba warning
 * improvement: checkpoint rm support exclude pattern

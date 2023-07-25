@@ -1,4 +1,9 @@
 # Change Logs
+## v0.5.1
+* improvement: suppress numba warning
+* improvement: checkpoint rm support exclude pattern
+** e.g: `ai2-kit tool checkpoint load run-01.ckpt - rm '\*' --exclude 'queue-job\*'`
+
 ## v0.5.0
 * **BREAKING CHANGE**: [cll-workflow] checkpoint file may not compatible with < v0.5.0
 * feat: select distinct structures by global descriptor grouping

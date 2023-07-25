@@ -180,16 +180,19 @@ class CheckpointCmd:
             else:
                 print(key)
 
-    def rm(self, glob_pattern: str, yes=False):
+    def rm(self, glob_pattern: str, yes=False, exclude: Optional[str]=None):
         """remove checkpoint entries with the given pattern"""
         assert _checkpoint_data is not None
 
-        for key in list(_checkpoint_data.keys()):
-            if fnmatch.fnmatch(key, glob_pattern):
-                if yes:
-                    del _checkpoint_data[key]
-                else:
-                    print(f"Delete checkpoint {key}? [y/n]")
-                    if input().lower() == 'y':
-                        del _checkpoint_data[key]
+        keys = [ key for key in _checkpoint_data.keys() if fnmatch.fnmatch(key, glob_pattern) ]
+        if exclude is not None:
+            keys = [ key for key in keys if not fnmatch.fnmatch(key, exclude) ]
+
+        for key in keys:
+            if not yes:
+                print(f"Delete checkpoint {key}? [y/n]")
+                if input().lower() != 'y':
+                    continue
+            del _checkpoint_data[key]
+            print(f"Delete checkpoint {key}")
         _dump_checkpoint()

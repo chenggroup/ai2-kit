@@ -1,4 +1,7 @@
 # Change Logs
+## v0.5.4
+* fix: model_devi_decent.xyz not created when no dumps are selected
+
 ## v0.5.3
 * fix: atoms from lammps-dump-text not ordered by id
 

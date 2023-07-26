@@ -17,9 +17,10 @@
 * 连接不稳定
 * 需要频繁将数据复制到本地进行处理后再提交回集群运行
 
-需要指出的是，`ai2-kit HPC executor` 无意实现其它工作流引擎，如 [DFlow](https://github.com/dptech-corp/dflow), [covalent](https://github.com/AgnostiqHQ/covalent.git), [parsl](https://github.com/Parsl/parsl) 的功能。它在未来仍将保持轻量化，用于快速实现一些简单的解决方案。
-
 当前, `ai2-kit HPC executor` 只支持 Slurm 作业系统，对其它作业系统的支持视实际需求而定，欢迎提交 Issue 或 PR。
+
+如果需要功能更强大的工作流引擎，推荐尝试 [DFlow](https://github.com/dptech-corp/dflow), [covalent](https://github.com/AgnostiqHQ/covalent.git), [parsl](https://github.com/Parsl/parsl)。
+
 
 ## 使用方法
 

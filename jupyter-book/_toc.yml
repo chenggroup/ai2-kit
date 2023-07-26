@@ -8,13 +8,16 @@ parts:
     chapters:
       - file: doc/manual/proton-transfer
       - file: doc/manual/cll-workflow
-      - file: doc/manual/cll-workflow.zh
       - file: doc/manual/fep-workflow
   - caption: Build-in Functionalities
     chapters:
       - file: doc/manual/ase
       - file: doc/manual/checkpoint
       - file: doc/manual/tips
+  - caption: 中文文档
+    chapters:
+      - file: doc/manual/cll-workflow.zh
+      - file: doc/manual/hpc-executor.zh
   - caption: API Reference
     maxdepth: 1
     chapters:

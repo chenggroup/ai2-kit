@@ -179,22 +179,21 @@ class Slurm(BaseQueueSystem):
 
     def _get_all_states(self) -> Dict[str, JobState]:
         current_ts = time.time()
+        # cache the states for 10 seconds to reduce the number of squeue calls
         if self._last_states is not None and current_ts - self._last_update_at < self.config.polling_interval:
             return self._last_states
-
-        cmd = "{} --noheader --format='%i %t' -u $(whoami)".format(
+        # call squeue to get all states
+        cmd = "{} --noheader --format='%i %t' -u $USER".format(
             self.config.squeue_bin)
         r = self.connector.run(cmd, hide=True)
-
         states: Dict[str, JobState] = dict()
-
         for line in r.stdout.split('\n'):
             if not line:  # skip empty line
                 continue
             job_id, slurm_state = line.split()
-
             state = self._translate_state(slurm_state)
             states[job_id] = state
+        # update cache
         self._last_update_at = current_ts
         self._last_states = states
         return states

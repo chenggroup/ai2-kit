@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Sequence
 import shlex
 
 
@@ -23,8 +23,8 @@ class BashTemplate(BaseModel):
 
 class BashStep(BaseModel):
     cmd: Union[str, List[str]]
-    cwd: Optional[str]
-    checkpoint: Optional[str]
+    cwd: Optional[str] = None
+    checkpoint: Optional[str] = None
     exit_on_error: bool = True
 
     def render(self):
@@ -64,7 +64,7 @@ class BashStep(BaseModel):
         return rendered_step
 
 
-BashSteps = List[Union[str, BashStep]]
+BashSteps = Sequence[Union[str, BashStep]]
 
 
 class BashScript(BaseModel):

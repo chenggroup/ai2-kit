@@ -19,14 +19,20 @@ CLL 工作流的主要改进包括:
 * Label：CP2K, VASP
 * Train：DeepMD
 * Explore：LAMMPS, LASP
-* Select: Model deviation, ASAP (TODO)
+* Select: Model deviation, Distinctive structure selection
 
-当前 CLL 工作流通过 `ai2-kit` 自带的HPC执行器进行作业提交，支持在单一HPC集群完成计算，未来根据需要考虑支持多集群调度，以及支持包括 `dflow` 在内的不同工作流引擎。
+当前 CLL 工作流通过 `ai2-kit` 自带的HPC执行器进行作业提交，支持在单一HPC集群完成计算，未来根据需要考虑支持多集群调度，以及支持包括 `DFlow` 在内的不同工作流引擎。
 
 
 ## 环境要求
 * Workflow 运行环境与 HPC 运行环境的 Python 主版本需要保持一致，否则远程执行会出现问题。
 * HPC 的运行环境需要安装 `ai2-kit`, 通常来讲 HPC 上的 `ai2-kit` 与本地的 `ai2-kit` 版本不需要严格相同， 但如果差异过大仍有出现问题的可能，所以建议在条件允许时使用相同版本的 `ai2-kit`。
+
+## 安装
+
+```bash
+pip install -U ai2-kit
+```
 
 ## 使用说明
 

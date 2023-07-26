@@ -188,7 +188,7 @@ def __export_remote_functions():
         return [e for tup in zip_longest(*list_of_lists) for e in tup if e is not None]
 
 
-    def dump_json(obj: dict, path: str):
+    def dump_json(obj, path: str):
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(obj, f, indent=2)
 

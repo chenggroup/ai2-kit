@@ -3,7 +3,7 @@ from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import flat_evenly, dump_json, flush_stdio
 
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from io import StringIO
 from pydantic import BaseModel
 from dataclasses import dataclass
@@ -76,39 +76,39 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
     f_trust_lo = input.config.f_trust_lo
     f_trust_hi = input.config.f_trust_hi
 
-    candidates = executor.run_python_fn(bulk_select_structures_by_model_devi)(
+    results = executor.run_python_fn(bulk_select_structures_by_model_devi)(
         model_devi_outputs=[a.to_dict() for a in input.model_devi_data],
         model_devi_filename=input.model_devi_out_filename,
         f_trust_lo=f_trust_lo, f_trust_hi=f_trust_hi,
         type_map=input.type_map, work_dir=work_dir,
     )
 
+    candidates = [candidate for candidate, _ in results if candidate is not None]  # filter out None
+    stats = [stats for _, stats in results]
+
     # write model_deviation stats report
-    def _get_row(candidate: ArtifactDict):
-        attrs = candidate['attrs']
-        url = attrs['model_devi_file']
+    def _get_row(stat: dict):
+        url = stat['src']
         url = f'...{url[-30:]}' if len(url) > 30 else url  # wrap url if it is too long
-        result = attrs['model_devi_result']
-        total, good, decent, poor = result['total'], result['good'], result['decent'], result['poor']
+        total, good, decent, poor = stat['total'], stat['good'], stat['decent'], stat['poor']
         return [
             url, total, good, decent, poor,
             f'{good / total * 100:.2f}%', f'{decent / total * 100:.2f}%', f'{poor / total * 100:.2f}%',
         ]
-
     headers = ['file', 'total', 'good', 'decent', 'poor', 'good%', 'decent%', 'poor%']
-    table = [ _get_row(candidate) for candidate in candidates]
+    table = [ _get_row(stat) for stat in stats]
     total = sum(row[1] for row in table)
     total_good = sum(row[2] for row in table)
 
     stats_report = tabulate(table, headers=headers, tablefmt='tsv')
-    logger.info('stats report: \n%s', stats_report)
+    logger.info('stats report: \n%s\n', stats_report)
     executor.dump_text(stats_report, os.path.join(work_dir, 'stats.tsv'))
 
     # further select candidates by ASAP
     if input.config.asap_options and not input.config.asap_options.disable:
         asap_options = input.config.asap_options
         candidates = executor.run_python_fn(bulk_select_distinct_structures)(
-            candidates=[c for c in candidates if c['attrs']['size'] > 0],  # filter empty structures
+            candidates=candidates,
             descriptor_opt=asap_options.descriptor,
             dim_reducer_opt=asap_options.dim_reducer,
             cluster_opt=asap_options.cluster,
@@ -132,7 +132,7 @@ def __export_remote_functions():
                                              type_map: List[str],
                                              work_dir: str,
                                              workers: int = 4,
-                                             ) -> List[ArtifactDict]:
+                                             ) -> List[Tuple[Optional[ArtifactDict], dict]]:
         import joblib
         return joblib.Parallel(n_jobs=workers)(
             joblib.delayed(select_structures_by_model_devi)(
@@ -152,7 +152,7 @@ def __export_remote_functions():
                                         f_trust_hi: float,
                                         type_map: List[str],
                                         work_dir: str,
-                                        ) -> ArtifactDict:
+                                        ) -> Tuple[Optional[ArtifactDict], dict]:
         """
         analysis the model_devi output of explore stage and select candidates
         """
@@ -184,7 +184,8 @@ def __export_remote_functions():
         decent_df = df[(df[force_col] >= f_trust_lo) & (df[force_col] < f_trust_hi)]
         poor_df   = df[df[force_col] >= f_trust_hi]
 
-        model_devi_result = {
+        stats = {
+            'src': model_devi_out_file,
             'total': len(df),
             'good': len(good_df),
             'decent': len(decent_df),
@@ -192,32 +193,30 @@ def __export_remote_functions():
         }
 
         # write decent structures into ase atoms and write to file
-        model_devi_decent_file = os.path.join(work_dir, 'model_devi_decent.xyz')
-        atoms_list = []
+        decent_structures_artifact = None
         if len(decent_df) > 0:
+            model_devi_decent_file = os.path.join(work_dir, 'model_devi_decent.xyz')
             if data_format == DataFormat.LAMMPS_OUTPUT_DIR:
+                atoms_list = []
                 for frame_id in decent_df.step:
                     dump_file = os.path.join(model_devi_out_url, LAMMPS_TRAJ_DIR, f'{frame_id}{LAMMPS_TRAJ_SUFFIX}')
                     atoms_list.extend(ase.io.read(dump_file, ':', format='lammps-dump-text', specorder=type_map))
             elif data_format == DataFormat.LASP_LAMMPS_OUT_DIR:
                 structures_file = os.path.join(model_devi_out_url, 'structures.xyz')
-                atoms_list.extend(itemgetter(*decent_df.step)(ase.io.read(structures_file, ':', format='extxyz')))  # type: ignore
+                atoms_list = list(itemgetter(*decent_df.step)(ase.io.read(structures_file, ':', format='extxyz')))  # type: ignore
             else:
                 raise ValueError('unknown model_devi_data types')
             ase.io.write(model_devi_decent_file, atoms_list, format='extxyz')
-
-        output = {
-            'url': model_devi_decent_file,
-            'format': DataFormat.EXTXYZ,
-            'attrs': {
-                **model_devi_output['attrs'],
-                'model_devi_file': model_devi_out_file,
-                'model_devi_result': model_devi_result,
-                'size': len(atoms_list)
+            decent_structures_artifact = {
+                'url': model_devi_decent_file,
+                'format': DataFormat.EXTXYZ,
+                'attrs': {
+                    **model_devi_output['attrs'],
+                    'size': len(atoms_list)
+                }
             }
-        }
-        dump_json(output, os.path.join(work_dir, 'output.debug.json'))
-        return output  # type: ignore
+        dump_json([decent_structures_artifact, stats], os.path.join(work_dir, 'output.debug.json'))
+        return decent_structures_artifact, stats  # type: ignore
 
     def bulk_select_distinct_structures(candidates: List[ArtifactDict],
                                         descriptor_opt: dict,
@@ -230,7 +229,7 @@ def __export_remote_functions():
                                         ) -> List[ArtifactDict]:
 
         inputs = []
-        for i, (ancestor, candidate_group) in enumerate(groupby(candidates, key=lambda c: c['attrs']['ancestor'])):
+        for i, (ancestor_key, candidate_group) in enumerate(groupby(candidates, key=lambda c: c['attrs']['ancestor'])):
             candidate_group = list(candidate_group)
             inputs.append((candidate_group, candidate_group[0]['attrs']))
 
@@ -238,7 +237,7 @@ def __export_remote_functions():
         return joblib.Parallel(n_jobs=workers)(
             joblib.delayed(select_distinct_structures)(
                 candidates=group,
-                ancestor_attrs=attrs,
+                attrs=attrs,
                 descriptor_opt=descriptor_opt,
                 dim_reducer_opt=dim_reducer_opt,
                 cluster_opt=cluster_opt,
@@ -250,7 +249,7 @@ def __export_remote_functions():
 
 
     def select_distinct_structures(candidates: List[ArtifactDict],
-                                   ancestor_attrs: dict,
+                                   attrs: dict,
                                    descriptor_opt: dict,
                                    dim_reducer_opt: dict,
                                    cluster_opt: dict,
@@ -260,7 +259,7 @@ def __export_remote_functions():
                                    ):
         os.makedirs(work_dir, exist_ok=True)
 
-        dump_json(ancestor_attrs, os.path.join(work_dir, 'attrs.debug.json'))
+        dump_json(attrs, os.path.join(work_dir, 'attrs.debug.json'))
         # load structures and save it to a tmp file for ASAP to load
         atoms_list = [atoms for _, atoms in artifacts_to_ase_atoms(candidates, type_map=type_map)]
 
@@ -280,19 +279,16 @@ def __export_remote_functions():
         trainer = get_trainer(reduced_descriptors, cluster_opt)
         cluster_labels = get_cluster(asapxyz, reduced_descriptors, trainer, path_prefix=path_prefix)
 
-        # remove noise group from result
-        if -1 in cluster_labels:
-            del cluster_labels[-1]
-
         # if max_structures_per_system is not set
         # selected at least 1 structure from each group
         if max_structures_per_system <= 0:
             max_structures_per_system = len(cluster_labels)
 
-        # break up the clusters into a list and
+        # unpack clusters into a list and
         # ensure frames of the same group won't be next to each other
         # so that we can pick up distinct structures by simply choose the first N frames
-        selected_frames = flat_evenly(cluster_labels.values())[:max_structures_per_system]
+        order_frames = flat_evenly(cluster_labels.values())
+        selected_frames = order_frames[:max_structures_per_system]
         selected_atoms_list = [atoms_list[i] for i in selected_frames]
 
         # write selected structures to file
@@ -302,10 +298,7 @@ def __export_remote_functions():
         output = {
             'url': distinct_structures_file,
             'format': DataFormat.EXTXYZ,
-            'attrs': {
-                **ancestor_attrs,
-                'distinct_structures_file': distinct_structures_file,
-            }
+            'attrs': attrs,
         }
         dump_json(output, os.path.join(work_dir, 'output.debug.json'))
         flush_stdio()  # flush joblib stdio buffer

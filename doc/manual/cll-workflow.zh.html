@@ -411,10 +411,11 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">简介</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">环境要求</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">使用说明</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">数据准备</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">配置文件准备</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">执行工作流</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">安装</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">使用说明</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">数据准备</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">配置文件准备</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">执行工作流</a></li>
 </ul>
 </li>
 </ul>
@@ -448,9 +449,9 @@ document.write(`
 <li><p>Label：CP2K, VASP</p></li>
 <li><p>Train：DeepMD</p></li>
 <li><p>Explore：LAMMPS, LASP</p></li>
-<li><p>Select: Model deviation, ASAP (TODO)</p></li>
+<li><p>Select: Model deviation, Distinctive structure selection</p></li>
 </ul>
-<p>当前 CLL 工作流通过 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 自带的HPC执行器进行作业提交，支持在单一HPC集群完成计算，未来根据需要考虑支持多集群调度，以及支持包括 <code class="docutils literal notranslate"><span class="pre">dflow</span></code> 在内的不同工作流引擎。</p>
+<p>当前 CLL 工作流通过 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 自带的HPC执行器进行作业提交，支持在单一HPC集群完成计算，未来根据需要考虑支持多集群调度，以及支持包括 <code class="docutils literal notranslate"><span class="pre">DFlow</span></code> 在内的不同工作流引擎。</p>
 </section>
 <section id="id2">
 <h2>环境要求<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
@@ -460,10 +461,16 @@ document.write(`
 </ul>
 </section>
 <section id="id3">
-<h2>使用说明<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
-<p>以下通过通一个案例来说明 CLL 工作流的使用方法。</p>
+<h2>安装<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>ai2-kit
+</pre></div>
+</div>
+</section>
 <section id="id4">
-<h3>数据准备<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<h2>使用说明<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>以下通过通一个案例来说明 CLL 工作流的使用方法。</p>
+<section id="id5">
+<h3>数据准备<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
 <p>工作流执行所需要的数据需要提前放置在 HPC 集群节点上。开始工作流的执行前你需要准备以下数据：</p>
 <ul class="simple">
 <li><p>用于势函数训练的初始结构或初始数据集</p></li>
@@ -483,8 +490,8 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 </pre></div>
 </div>
 </section>
-<section id="id5">
-<h3>配置文件准备<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<section id="id6">
+<h3>配置文件准备<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
 <p>CLL 工作流的配置文件采用 YAML 格式，并且支持以任意维度进行分拆，<code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 会在执行时自动将其合并。适度的分拆有利于配置文件的维护和重用。通常情况下，我们可以将配置文件拆分为以下几个部分：</p>
 <ul class="simple">
 <li><p>artifact.yml: 用于配置工作流所需的数据</p></li>
@@ -761,8 +768,8 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 </pre></div>
 </div>
 </section>
-<section id="id6">
-<h3>执行工作流<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
+<section id="id7">
+<h3>执行工作流<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h3>
 <p>完成配置工作后即可开始工作流的执行</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>workflow<span class="w"> </span>cll-mlp-training<span class="w"> </span>*.yml<span class="w"> </span>--executor<span class="w"> </span>hpc-cluster01<span class="w"> </span>--path-prefix<span class="w"> </span>h2o_64-run-01<span class="w"> </span>--checkpoint<span class="w"> </span>run-01.ckpt
 </pre></div>
@@ -847,10 +854,11 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">简介</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">环境要求</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">使用说明</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">数据准备</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">配置文件准备</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">执行工作流</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">安装</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">使用说明</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">数据准备</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">配置文件准备</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">执行工作流</a></li>
 </ul>
 </li>
 </ul>

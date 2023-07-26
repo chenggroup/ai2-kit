@@ -542,22 +542,21 @@ document.write(`
 
     <span class="k">def</span> <span class="nf">_get_all_states</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JobState</span><span class="p">]:</span>
         <span class="n">current_ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="c1"># cache the states for 10 seconds to reduce the number of squeue calls</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">current_ts</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_update_at</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">polling_interval</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span>
-
-        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> --noheader --format=&#39;</span><span class="si">%i</span><span class="s2"> %t&#39; -u $(whoami)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="c1"># call squeue to get all states</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> --noheader --format=&#39;</span><span class="si">%i</span><span class="s2"> %t&#39; -u $USER&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">squeue_bin</span><span class="p">)</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">hide</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
         <span class="n">states</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JobState</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>  <span class="c1"># skip empty line</span>
                 <span class="k">continue</span>
             <span class="n">job_id</span><span class="p">,</span> <span class="n">slurm_state</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-
             <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_translate_state</span><span class="p">(</span><span class="n">slurm_state</span><span class="p">)</span>
             <span class="n">states</span><span class="p">[</span><span class="n">job_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="c1"># update cache</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_update_at</span> <span class="o">=</span> <span class="n">current_ts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span> <span class="o">=</span> <span class="n">states</span>
         <span class="k">return</span> <span class="n">states</span></div>

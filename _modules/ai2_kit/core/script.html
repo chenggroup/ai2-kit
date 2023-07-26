@@ -362,7 +362,7 @@ document.write(`
                   
   <h1>Source code for ai2_kit.core.script</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">import</span> <span class="nn">shlex</span>
 
 
@@ -386,8 +386,8 @@ document.write(`
 
 <div class="viewcode-block" id="BashStep"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashStep">[docs]</a><span class="k">class</span> <span class="nc">BashStep</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">cmd</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
-    <span class="n">cwd</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">checkpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">cwd</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">checkpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">exit_on_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="BashStep.render"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashStep.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -427,7 +427,7 @@ document.write(`
         <span class="k">return</span> <span class="n">rendered_step</span></div></div>
 
 
-<span class="n">BashSteps</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">]]</span>
+<span class="n">BashSteps</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">]]</span>
 
 
 <div class="viewcode-block" id="BashScript"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashScript">[docs]</a><span class="k">class</span> <span class="nc">BashScript</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>

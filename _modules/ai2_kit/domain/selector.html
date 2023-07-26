@@ -366,7 +366,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">flat_evenly</span><span class="p">,</span> <span class="n">dump_json</span><span class="p">,</span> <span class="n">flush_stdio</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
@@ -439,39 +439,39 @@ document.write(`
     <span class="n">f_trust_lo</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">f_trust_lo</span>
     <span class="n">f_trust_hi</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">f_trust_hi</span>
 
-    <span class="n">candidates</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">bulk_select_structures_by_model_devi</span><span class="p">)(</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">bulk_select_structures_by_model_devi</span><span class="p">)(</span>
         <span class="n">model_devi_outputs</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">model_devi_data</span><span class="p">],</span>
         <span class="n">model_devi_filename</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">model_devi_out_filename</span><span class="p">,</span>
         <span class="n">f_trust_lo</span><span class="o">=</span><span class="n">f_trust_lo</span><span class="p">,</span> <span class="n">f_trust_hi</span><span class="o">=</span><span class="n">f_trust_hi</span><span class="p">,</span>
         <span class="n">type_map</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="n">work_dir</span><span class="p">,</span>
     <span class="p">)</span>
 
+    <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">candidate</span> <span class="k">for</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">candidate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># filter out None</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="p">[</span><span class="n">stats</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">stats</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+
     <span class="c1"># write model_deviation stats report</span>
-    <span class="k">def</span> <span class="nf">_get_row</span><span class="p">(</span><span class="n">candidate</span><span class="p">:</span> <span class="n">ArtifactDict</span><span class="p">):</span>
-        <span class="n">attrs</span> <span class="o">=</span> <span class="n">candidate</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;model_devi_file&#39;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">_get_row</span><span class="p">(</span><span class="n">stat</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">stat</span><span class="p">[</span><span class="s1">&#39;src&#39;</span><span class="p">]</span>
         <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;...</span><span class="si">{</span><span class="n">url</span><span class="p">[</span><span class="o">-</span><span class="mi">30</span><span class="p">:]</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">30</span> <span class="k">else</span> <span class="n">url</span>  <span class="c1"># wrap url if it is too long</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;model_devi_result&#39;</span><span class="p">]</span>
-        <span class="n">total</span><span class="p">,</span> <span class="n">good</span><span class="p">,</span> <span class="n">decent</span><span class="p">,</span> <span class="n">poor</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;good&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;decent&#39;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;poor&#39;</span><span class="p">]</span>
+        <span class="n">total</span><span class="p">,</span> <span class="n">good</span><span class="p">,</span> <span class="n">decent</span><span class="p">,</span> <span class="n">poor</span> <span class="o">=</span> <span class="n">stat</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">],</span> <span class="n">stat</span><span class="p">[</span><span class="s1">&#39;good&#39;</span><span class="p">],</span> <span class="n">stat</span><span class="p">[</span><span class="s1">&#39;decent&#39;</span><span class="p">],</span> <span class="n">stat</span><span class="p">[</span><span class="s1">&#39;poor&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="n">url</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">good</span><span class="p">,</span> <span class="n">decent</span><span class="p">,</span> <span class="n">poor</span><span class="p">,</span>
             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">good</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">decent</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">poor</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">,</span>
         <span class="p">]</span>
-
     <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;total&#39;</span><span class="p">,</span> <span class="s1">&#39;good&#39;</span><span class="p">,</span> <span class="s1">&#39;decent&#39;</span><span class="p">,</span> <span class="s1">&#39;poor&#39;</span><span class="p">,</span> <span class="s1">&#39;good%&#39;</span><span class="p">,</span> <span class="s1">&#39;decent%&#39;</span><span class="p">,</span> <span class="s1">&#39;poor%&#39;</span><span class="p">]</span>
-    <span class="n">table</span> <span class="o">=</span> <span class="p">[</span> <span class="n">_get_row</span><span class="p">(</span><span class="n">candidate</span><span class="p">)</span> <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">]</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="p">[</span> <span class="n">_get_row</span><span class="p">(</span><span class="n">stat</span><span class="p">)</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">]</span>
     <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="p">)</span>
     <span class="n">total_good</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="p">)</span>
 
     <span class="n">stats_report</span> <span class="o">=</span> <span class="n">tabulate</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;tsv&#39;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;stats report: </span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">stats_report</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;stats report: </span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">stats_report</span><span class="p">)</span>
     <span class="n">executor</span><span class="o">.</span><span class="n">dump_text</span><span class="p">(</span><span class="n">stats_report</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;stats.tsv&#39;</span><span class="p">))</span>
 
     <span class="c1"># further select candidates by ASAP</span>
     <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">asap_options</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">asap_options</span><span class="o">.</span><span class="n">disable</span><span class="p">:</span>
         <span class="n">asap_options</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">asap_options</span>
         <span class="n">candidates</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">bulk_select_distinct_structures</span><span class="p">)(</span>
-            <span class="n">candidates</span><span class="o">=</span><span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># filter empty structures</span>
+            <span class="n">candidates</span><span class="o">=</span><span class="n">candidates</span><span class="p">,</span>
             <span class="n">descriptor_opt</span><span class="o">=</span><span class="n">asap_options</span><span class="o">.</span><span class="n">descriptor</span><span class="p">,</span>
             <span class="n">dim_reducer_opt</span><span class="o">=</span><span class="n">asap_options</span><span class="o">.</span><span class="n">dim_reducer</span><span class="p">,</span>
             <span class="n">cluster_opt</span><span class="o">=</span><span class="n">asap_options</span><span class="o">.</span><span class="n">cluster</span><span class="p">,</span>
@@ -495,7 +495,7 @@ document.write(`
                                              <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                              <span class="n">work_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                              <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
-                                             <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">]:</span>
+                                             <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]]:</span>
         <span class="kn">import</span> <span class="nn">joblib</span>
         <span class="k">return</span> <span class="n">joblib</span><span class="o">.</span><span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">workers</span><span class="p">)(</span>
             <span class="n">joblib</span><span class="o">.</span><span class="n">delayed</span><span class="p">(</span><span class="n">select_structures_by_model_devi</span><span class="p">)(</span>
@@ -515,7 +515,7 @@ document.write(`
                                         <span class="n">f_trust_hi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                                         <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                         <span class="n">work_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                                        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactDict</span><span class="p">:</span>
+                                        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        analysis the model_devi output of explore stage and select candidates</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -547,7 +547,8 @@ document.write(`
         <span class="n">decent_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="n">force_col</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">f_trust_lo</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">force_col</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">f_trust_hi</span><span class="p">)]</span>
         <span class="n">poor_df</span>   <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">force_col</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">f_trust_hi</span><span class="p">]</span>
 
-        <span class="n">model_devi_result</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;src&#39;</span><span class="p">:</span> <span class="n">model_devi_out_file</span><span class="p">,</span>
             <span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
             <span class="s1">&#39;good&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_df</span><span class="p">),</span>
             <span class="s1">&#39;decent&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">decent_df</span><span class="p">),</span>
@@ -555,32 +556,30 @@ document.write(`
         <span class="p">}</span>
 
         <span class="c1"># write decent structures into ase atoms and write to file</span>
-        <span class="n">model_devi_decent_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;model_devi_decent.xyz&#39;</span><span class="p">)</span>
-        <span class="n">atoms_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">decent_structures_artifact</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">decent_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">model_devi_decent_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;model_devi_decent.xyz&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">data_format</span> <span class="o">==</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">LAMMPS_OUTPUT_DIR</span><span class="p">:</span>
+                <span class="n">atoms_list</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">frame_id</span> <span class="ow">in</span> <span class="n">decent_df</span><span class="o">.</span><span class="n">step</span><span class="p">:</span>
                     <span class="n">dump_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_devi_out_url</span><span class="p">,</span> <span class="n">LAMMPS_TRAJ_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">frame_id</span><span class="si">}{</span><span class="n">LAMMPS_TRAJ_SUFFIX</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
                     <span class="n">atoms_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dump_file</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;lammps-dump-text&#39;</span><span class="p">,</span> <span class="n">specorder</span><span class="o">=</span><span class="n">type_map</span><span class="p">))</span>
             <span class="k">elif</span> <span class="n">data_format</span> <span class="o">==</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">LASP_LAMMPS_OUT_DIR</span><span class="p">:</span>
                 <span class="n">structures_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_devi_out_url</span><span class="p">,</span> <span class="s1">&#39;structures.xyz&#39;</span><span class="p">)</span>
-                <span class="n">atoms_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">itemgetter</span><span class="p">(</span><span class="o">*</span><span class="n">decent_df</span><span class="o">.</span><span class="n">step</span><span class="p">)(</span><span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">structures_file</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)))</span>  <span class="c1"># type: ignore</span>
+                <span class="n">atoms_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itemgetter</span><span class="p">(</span><span class="o">*</span><span class="n">decent_df</span><span class="o">.</span><span class="n">step</span><span class="p">)(</span><span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">structures_file</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)))</span>  <span class="c1"># type: ignore</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;unknown model_devi_data types&#39;</span><span class="p">)</span>
             <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">model_devi_decent_file</span><span class="p">,</span> <span class="n">atoms_list</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)</span>
-
-        <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">model_devi_decent_file</span><span class="p">,</span>
-            <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">EXTXYZ</span><span class="p">,</span>
-            <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="o">**</span><span class="n">model_devi_output</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;model_devi_file&#39;</span><span class="p">:</span> <span class="n">model_devi_out_file</span><span class="p">,</span>
-                <span class="s1">&#39;model_devi_result&#39;</span><span class="p">:</span> <span class="n">model_devi_result</span><span class="p">,</span>
-                <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_list</span><span class="p">)</span>
+            <span class="n">decent_structures_artifact</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">model_devi_decent_file</span><span class="p">,</span>
+                <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">EXTXYZ</span><span class="p">,</span>
+                <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="o">**</span><span class="n">model_devi_output</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_list</span><span class="p">)</span>
+                <span class="p">}</span>
             <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="n">dump_json</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;output.debug.json&#39;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">output</span>  <span class="c1"># type: ignore</span>
+        <span class="n">dump_json</span><span class="p">([</span><span class="n">decent_structures_artifact</span><span class="p">,</span> <span class="n">stats</span><span class="p">],</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;output.debug.json&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">decent_structures_artifact</span><span class="p">,</span> <span class="n">stats</span>  <span class="c1"># type: ignore</span>
 
     <span class="k">def</span> <span class="nf">bulk_select_distinct_structures</span><span class="p">(</span><span class="n">candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
                                         <span class="n">descriptor_opt</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
@@ -593,7 +592,7 @@ document.write(`
                                         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">]:</span>
 
         <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ancestor</span><span class="p">,</span> <span class="n">candidate_group</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">groupby</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">])):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ancestor_key</span><span class="p">,</span> <span class="n">candidate_group</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">groupby</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">])):</span>
             <span class="n">candidate_group</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">candidate_group</span><span class="p">)</span>
             <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">candidate_group</span><span class="p">,</span> <span class="n">candidate_group</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;attrs&#39;</span><span class="p">]))</span>
 
@@ -601,7 +600,7 @@ document.write(`
         <span class="k">return</span> <span class="n">joblib</span><span class="o">.</span><span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">workers</span><span class="p">)(</span>
             <span class="n">joblib</span><span class="o">.</span><span class="n">delayed</span><span class="p">(</span><span class="n">select_distinct_structures</span><span class="p">)(</span>
                 <span class="n">candidates</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
-                <span class="n">ancestor_attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span>
+                <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span>
                 <span class="n">descriptor_opt</span><span class="o">=</span><span class="n">descriptor_opt</span><span class="p">,</span>
                 <span class="n">dim_reducer_opt</span><span class="o">=</span><span class="n">dim_reducer_opt</span><span class="p">,</span>
                 <span class="n">cluster_opt</span><span class="o">=</span><span class="n">cluster_opt</span><span class="p">,</span>
@@ -613,7 +612,7 @@ document.write(`
 
 
     <span class="k">def</span> <span class="nf">select_distinct_structures</span><span class="p">(</span><span class="n">candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
-                                   <span class="n">ancestor_attrs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                                   <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
                                    <span class="n">descriptor_opt</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
                                    <span class="n">dim_reducer_opt</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
                                    <span class="n">cluster_opt</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
@@ -623,7 +622,7 @@ document.write(`
                                    <span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">dump_json</span><span class="p">(</span><span class="n">ancestor_attrs</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;attrs.debug.json&#39;</span><span class="p">))</span>
+        <span class="n">dump_json</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;attrs.debug.json&#39;</span><span class="p">))</span>
         <span class="c1"># load structures and save it to a tmp file for ASAP to load</span>
         <span class="n">atoms_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">atoms</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="n">artifacts_to_ase_atoms</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)]</span>
 
@@ -643,19 +642,16 @@ document.write(`
         <span class="n">trainer</span> <span class="o">=</span> <span class="n">get_trainer</span><span class="p">(</span><span class="n">reduced_descriptors</span><span class="p">,</span> <span class="n">cluster_opt</span><span class="p">)</span>
         <span class="n">cluster_labels</span> <span class="o">=</span> <span class="n">get_cluster</span><span class="p">(</span><span class="n">asapxyz</span><span class="p">,</span> <span class="n">reduced_descriptors</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">path_prefix</span><span class="o">=</span><span class="n">path_prefix</span><span class="p">)</span>
 
-        <span class="c1"># remove noise group from result</span>
-        <span class="k">if</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">in</span> <span class="n">cluster_labels</span><span class="p">:</span>
-            <span class="k">del</span> <span class="n">cluster_labels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
         <span class="c1"># if max_structures_per_system is not set</span>
         <span class="c1"># selected at least 1 structure from each group</span>
         <span class="k">if</span> <span class="n">max_structures_per_system</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">max_structures_per_system</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster_labels</span><span class="p">)</span>
 
-        <span class="c1"># break up the clusters into a list and</span>
+        <span class="c1"># unpack clusters into a list and</span>
         <span class="c1"># ensure frames of the same group won&#39;t be next to each other</span>
         <span class="c1"># so that we can pick up distinct structures by simply choose the first N frames</span>
-        <span class="n">selected_frames</span> <span class="o">=</span> <span class="n">flat_evenly</span><span class="p">(</span><span class="n">cluster_labels</span><span class="o">.</span><span class="n">values</span><span class="p">())[:</span><span class="n">max_structures_per_system</span><span class="p">]</span>
+        <span class="n">order_frames</span> <span class="o">=</span> <span class="n">flat_evenly</span><span class="p">(</span><span class="n">cluster_labels</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">selected_frames</span> <span class="o">=</span> <span class="n">order_frames</span><span class="p">[:</span><span class="n">max_structures_per_system</span><span class="p">]</span>
         <span class="n">selected_atoms_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">atoms_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">selected_frames</span><span class="p">]</span>
 
         <span class="c1"># write selected structures to file</span>
@@ -665,10 +661,7 @@ document.write(`
         <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">distinct_structures_file</span><span class="p">,</span>
             <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">EXTXYZ</span><span class="p">,</span>
-            <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="o">**</span><span class="n">ancestor_attrs</span><span class="p">,</span>
-                <span class="s1">&#39;distinct_structures_file&#39;</span><span class="p">:</span> <span class="n">distinct_structures_file</span><span class="p">,</span>
-            <span class="p">}</span>
+            <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="n">attrs</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">dump_json</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;output.debug.json&#39;</span><span class="p">))</span>
         <span class="n">flush_stdio</span><span class="p">()</span>  <span class="c1"># flush joblib stdio buffer</span>

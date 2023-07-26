@@ -575,7 +575,7 @@ document.write(`
 </section>
 <section id="id6">
 <h3>实现简单工作流<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
-<p>虽然 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 并为提供工作流调度引擎，但对于简单的任务来说，借助 Python 的异步支持和 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 提供的工具类，可以很容易实现一个简单的工作流。接下来通过实现以下一个简单的任务做为演示：</p>
+<p>虽然 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 并未提供工作流调度引擎，但对于简单的任务来说，借助 Python 的异步支持和 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 提供的工具类，可以很容易实现一个简单的工作流。接下来通过实现以下一个简单的任务做为演示：</p>
 <ul class="simple">
 <li><p>前处理：实现一个 Python 函数创建 n 个工作目录及一个包含一个随机数的 input 文件</p></li>
 <li><p>提交 n 个作业脚本，每个作业脚本读取 input 中的数字计算其平方写入 output 文件中</p></li>

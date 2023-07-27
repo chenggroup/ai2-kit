@@ -1,6 +1,6 @@
-from ruamel.yaml import YAML
+from ruamel.yaml import YAML, ScalarNode, SequenceNode
 from pathlib import Path
-from typing import Tuple, List, TypeVar
+from typing import Tuple, List, TypeVar, Union
 from dataclasses import field
 from itertools import zip_longest
 
@@ -23,10 +23,18 @@ def default_mutable_field(obj):
     return field(default_factory=lambda: copy.copy(obj))
 
 
-def load_yaml_file(path: Path):
+def get_yaml():
     yaml = YAML(typ='safe')
     JoinTag.register(yaml)
-    ReadTag.register(yaml)
+    LoadTextTag.register(yaml)
+    LoadYamlTag.register(yaml)
+    return yaml
+
+
+def load_yaml_file(path: Union[Path, str]):
+    if isinstance(path, str):
+        path = Path(path)
+    yaml = get_yaml()
     return yaml.load(path)
 
 
@@ -89,34 +97,61 @@ class JoinTag:
 
     @classmethod
     def to_yaml(cls, dumper, data):
-        # do nothing
-        return dumper.represent_sequence(cls.yaml_tag, data)
+        ...
 
     @classmethod
     def register(cls, yaml: YAML):
         yaml.register_class(cls)
 
-
-class ReadTag:
+class LoadTextTag:
     """a tag to read string from file"""
 
-    yaml_tag = u'!read'
+    yaml_tag = u'!load_text'
 
     @classmethod
     def from_yaml(cls, constructor, node):
-        seq = constructor.construct_sequence(node)
-        path = os.path.join(*seq)
+        path = _yaml_get_path_node(node, constructor)
         with open(path, 'r') as f:
             return f.read()
 
     @classmethod
     def to_yaml(cls, dumper, data):
-        # do nothing
-        return dumper.represent_sequence(cls.yaml_tag, data)
+        ...
 
     @classmethod
     def register(cls, yaml: YAML):
         yaml.register_class(cls)
+
+
+class LoadYamlTag:
+    """a tag to read string from file"""
+
+    yaml_tag = u'!load_yaml'
+
+    @classmethod
+    def from_yaml(cls, constructor, node):
+        path = _yaml_get_path_node(node, constructor)
+        yaml = get_yaml()
+        with open(path, 'r') as f:
+            return yaml.load(f)
+
+    @classmethod
+    def to_yaml(cls, dumper, data):
+        ...
+
+    @classmethod
+    def register(cls, yaml: YAML):
+        yaml.register_class(cls)
+
+
+def _yaml_get_path_node(node, constructor):
+    if isinstance(node, ScalarNode):
+        return constructor.construct_scalar(node)
+    elif isinstance(node, SequenceNode):
+        seq = constructor.construct_sequence(node)
+        return os.path.join(*seq)
+    else:
+        raise ValueError(f'Unknown node type {type(node)}')
 
 
 def __export_remote_functions():

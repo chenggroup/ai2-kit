@@ -410,7 +410,8 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-custom-tags-to-simplify-yaml-configuration">Use custom tags to simplify YAML configuration</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#read"><code class="docutils literal notranslate"><span class="pre">!read</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-text"><code class="docutils literal notranslate"><span class="pre">!load_text</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-yaml"><code class="docutils literal notranslate"><span class="pre">!load_yaml</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#join"><code class="docutils literal notranslate"><span class="pre">!join</span></code></a></li>
 </ul>
 </li>
@@ -431,16 +432,35 @@ document.write(`
 <section id="use-custom-tags-to-simplify-yaml-configuration">
 <h2>Use custom tags to simplify YAML configuration<a class="headerlink" href="#use-custom-tags-to-simplify-yaml-configuration" title="Permalink to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> implement some customized tags for YAML parser to simplify the configuration.</p>
-<section id="read">
-<h3><code class="docutils literal notranslate"><span class="pre">!read</span></code><a class="headerlink" href="#read" title="Permalink to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">!read</span></code> can be used to read a file and use its content as the value of the tag. It accepts a list of strings as the argument. The strings will be joined together to form the path of the file to be read. For example,</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="kt">!read</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">/path/to/data/folder</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">data.csv</span><span class="p p-Indicator">]</span>
+<section id="load-text">
+<h3><code class="docutils literal notranslate"><span class="pre">!load_text</span></code><a class="headerlink" href="#load-text" title="Permalink to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">!load_text</span></code> can be used to read a file and use its content as the value of the tag. It accepts a string value or a list of strings as the argument. The strings will be joined together to form the path of the file to be read. For example,</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="kt">!load_text</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/data/data.csv</span>
+<span class="c1"># or</span>
+<span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="kt">!load_text</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">/path/to/data</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">data.csv</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
+</section>
+<section id="load-yaml">
+<h3><code class="docutils literal notranslate"><span class="pre">!load_yaml</span></code><a class="headerlink" href="#load-yaml" title="Permalink to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">!load_yaml</span></code> is same as <code class="docutils literal notranslate"><span class="pre">!load_text</span></code> except that it will parse content of the file as a YAML document. For example,</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="kt">!load_yaml</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/data/data.yml</span>
+<span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="kt">!load_yaml</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/data/data.json</span>
+<span class="c1"># or</span>
+<span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="kt">!load_yaml</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">/path/to/data</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">data.yml</span><span class="p p-Indicator">]</span>
+<span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="kt">!load_yaml</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">/path/to/data</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">data.json</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Note: it also support JSON format as it is a subset of YAML.</p>
+</div></blockquote>
 </section>
 <section id="join">
 <h3><code class="docutils literal notranslate"><span class="pre">!join</span></code><a class="headerlink" href="#join" title="Permalink to this heading">#</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">!join</span></code> can be used to join elements in a list into a single string. This is useful when you have to use a lot of absolution paths that shares the same based directory in your configuration. For example,</p>
+<blockquote>
+<div><p>Note: this is string join not path join, so you need to add <code class="docutils literal notranslate"><span class="pre">/</span></code> manually when you want to join paths.</p>
+</div></blockquote>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">.data_dir</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;data_dir</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/in/a/very/long/path/</span>
 <span class="nt">data1</span><span class="p">:</span><span class="w"> </span><span class="kt">!join</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">*data_dir</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">data1.csv</span><span class="p p-Indicator">]</span>
 <span class="nt">data2</span><span class="p">:</span><span class="w"> </span><span class="kt">!join</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">*data_dir</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">data2.csv</span><span class="p p-Indicator">]</span>
@@ -534,7 +554,8 @@ jupyter<span class="w"> </span>nbextension<span class="w"> </span><span class="n
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-custom-tags-to-simplify-yaml-configuration">Use custom tags to simplify YAML configuration</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#read"><code class="docutils literal notranslate"><span class="pre">!read</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-text"><code class="docutils literal notranslate"><span class="pre">!load_text</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-yaml"><code class="docutils literal notranslate"><span class="pre">!load_yaml</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#join"><code class="docutils literal notranslate"><span class="pre">!join</span></code></a></li>
 </ul>
 </li>

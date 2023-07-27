@@ -1120,7 +1120,9 @@ document.write(`
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag.from_yaml">from_yaml() (ai2_kit.core.util.JoinTag class method)</a>
 
       <ul>
-        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.ReadTag.from_yaml">(ai2_kit.core.util.ReadTag class method)</a>
+        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag.from_yaml">(ai2_kit.core.util.LoadTextTag class method)</a>
+</li>
+        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag.from_yaml">(ai2_kit.core.util.LoadYamlTag class method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1197,10 +1199,10 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.GenericVaspOutput.get_labeled_system_dataset">(ai2_kit.domain.vasp.GenericVaspOutput method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.get_ln_cmd">get_ln_cmd() (in module ai2_kit.core.connector)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.log.html#ai2_kit.core.log.get_logger">get_logger() (in module ai2_kit.core.log)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.get_mlp_models">get_mlp_models() (ai2_kit.domain.deepmd.GenericDeepmdOutput method)</a>
@@ -1261,6 +1263,8 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.iface.html#ai2_kit.domain.iface.ICllTrainOutput.get_training_dataset">(ai2_kit.domain.iface.ICllTrainOutput method)</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.get_yaml">get_yaml() (in module ai2_kit.core.util)</a>
+</li>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.BaseConnector.glob">glob() (ai2_kit.core.connector.BaseConnector method)</a>
 
       <ul>
@@ -1447,14 +1451,14 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspInputConfig.limit">(ai2_kit.domain.vasp.CllVaspInputConfig attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kInputConfig.limit_method">limit_method (ai2_kit.domain.cp2k.CllCp2kInputConfig attribute)</a>
 
       <ul>
         <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspInputConfig.limit_method">(ai2_kit.domain.vasp.CllVaspInputConfig attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.list_even_sample">list_even_sample() (in module ai2_kit.core.util)</a>
 </li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.list_random_sample">list_random_sample() (in module ai2_kit.core.util)</a>
@@ -1478,6 +1482,10 @@ document.write(`
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.load_yaml_files">load_yaml_files() (in module ai2_kit.core.util)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.util.html#ai2_kit.domain.util.loads_cp2k_input">loads_cp2k_input() (in module ai2_kit.domain.util)</a>
+</li>
+      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag">LoadTextTag (class in ai2_kit.core.util)</a>
+</li>
+      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag">LoadYamlTag (class in ai2_kit.core.util)</a>
 </li>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.LocalConnector">LocalConnector (class in ai2_kit.core.connector)</a>
 </li>
@@ -1776,8 +1784,6 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.tool.ase.html#ai2_kit.tool.ase.AseHelper.read">read() (ai2_kit.tool.ase.AseHelper method)</a>
 </li>
-      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.ReadTag">ReadTag (class in ai2_kit.core.util)</a>
-</li>
       <li><a href="_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.red">red (ai2_kit.workflow.fep_mlp.WorkflowConfig attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInput.FepOptions.red_models">red_models (ai2_kit.domain.lammps.CllLammpsInput.FepOptions attribute)</a>
@@ -1787,7 +1793,9 @@ document.write(`
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag.register">register() (ai2_kit.core.util.JoinTag class method)</a>
 
       <ul>
-        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.ReadTag.register">(ai2_kit.core.util.ReadTag class method)</a>
+        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag.register">(ai2_kit.core.util.LoadTextTag class method)</a>
+</li>
+        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag.register">(ai2_kit.core.util.LoadYamlTag class method)</a>
 </li>
       </ul></li>
       <li><a href="_api/ai2_kit.core.script.html#ai2_kit.core.script.BashScript.render">render() (ai2_kit.core.script.BashScript method)</a>
@@ -2016,14 +2024,16 @@ document.write(`
       </ul></li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.to_awaitable">to_awaitable() (in module ai2_kit.core.util)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact.to_dict">to_dict() (ai2_kit.core.artifact.Artifact method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag.to_yaml">to_yaml() (ai2_kit.core.util.JoinTag class method)</a>
 
       <ul>
-        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.ReadTag.to_yaml">(ai2_kit.core.util.ReadTag class method)</a>
+        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag.to_yaml">(ai2_kit.core.util.LoadTextTag class method)</a>
+</li>
+        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag.to_yaml">(ai2_kit.core.util.LoadYamlTag class method)</a>
 </li>
       </ul></li>
       <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ToolGroup">ToolGroup (class in ai2_kit.main)</a>
@@ -2195,7 +2205,9 @@ document.write(`
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag.yaml_tag">yaml_tag (ai2_kit.core.util.JoinTag attribute)</a>
 
       <ul>
-        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.ReadTag.yaml_tag">(ai2_kit.core.util.ReadTag attribute)</a>
+        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag.yaml_tag">(ai2_kit.core.util.LoadTextTag attribute)</a>
+</li>
+        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag.yaml_tag">(ai2_kit.core.util.LoadYamlTag attribute)</a>
 </li>
       </ul></li>
   </ul></td>

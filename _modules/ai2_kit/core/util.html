@@ -361,9 +361,9 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for ai2_kit.core.util</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ruamel.yaml</span> <span class="kn">import</span> <span class="n">YAML</span>
+<span></span><span class="kn">from</span> <span class="nn">ruamel.yaml</span> <span class="kn">import</span> <span class="n">YAML</span><span class="p">,</span> <span class="n">ScalarNode</span><span class="p">,</span> <span class="n">SequenceNode</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">field</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">zip_longest</span>
 
@@ -386,10 +386,18 @@ document.write(`
     <span class="k">return</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="load_yaml_file"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.load_yaml_file">[docs]</a><span class="k">def</span> <span class="nf">load_yaml_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<div class="viewcode-block" id="get_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.get_yaml">[docs]</a><span class="k">def</span> <span class="nf">get_yaml</span><span class="p">():</span>
     <span class="n">yaml</span> <span class="o">=</span> <span class="n">YAML</span><span class="p">(</span><span class="n">typ</span><span class="o">=</span><span class="s1">&#39;safe&#39;</span><span class="p">)</span>
     <span class="n">JoinTag</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">yaml</span><span class="p">)</span>
-    <span class="n">ReadTag</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">yaml</span><span class="p">)</span>
+    <span class="n">LoadTextTag</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">yaml</span><span class="p">)</span>
+    <span class="n">LoadYamlTag</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">yaml</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">yaml</span></div>
+
+
+<div class="viewcode-block" id="load_yaml_file"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.load_yaml_file">[docs]</a><span class="k">def</span> <span class="nf">load_yaml_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">yaml</span> <span class="o">=</span> <span class="n">get_yaml</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
 
@@ -452,34 +460,61 @@ document.write(`
 
 <div class="viewcode-block" id="JoinTag.to_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag.to_yaml">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">to_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="c1"># do nothing</span>
-        <span class="k">return</span> <span class="n">dumper</span><span class="o">.</span><span class="n">represent_sequence</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">yaml_tag</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+        <span class="o">...</span></div>
 
 <div class="viewcode-block" id="JoinTag.register"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag.register">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml</span><span class="p">:</span> <span class="n">YAML</span><span class="p">):</span>
         <span class="n">yaml</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div></div>
 
-
-<div class="viewcode-block" id="ReadTag"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.ReadTag">[docs]</a><span class="k">class</span> <span class="nc">ReadTag</span><span class="p">:</span>
+<div class="viewcode-block" id="LoadTextTag"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag">[docs]</a><span class="k">class</span> <span class="nc">LoadTextTag</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;a tag to read string from file&quot;&quot;&quot;</span>
 
-    <span class="n">yaml_tag</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;!read&#39;</span>
+    <span class="n">yaml_tag</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;!load_text&#39;</span>
 
-<div class="viewcode-block" id="ReadTag.from_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.ReadTag.from_yaml">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="LoadTextTag.from_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag.from_yaml">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">constructor</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="n">seq</span> <span class="o">=</span> <span class="n">constructor</span><span class="o">.</span><span class="n">construct_sequence</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">*</span><span class="n">seq</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">_yaml_get_path_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">constructor</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ReadTag.to_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.ReadTag.to_yaml">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="LoadTextTag.to_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag.to_yaml">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">to_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="c1"># do nothing</span>
-        <span class="k">return</span> <span class="n">dumper</span><span class="o">.</span><span class="n">represent_sequence</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">yaml_tag</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+        <span class="o">...</span></div>
 
-<div class="viewcode-block" id="ReadTag.register"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.ReadTag.register">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="LoadTextTag.register"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag.register">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml</span><span class="p">:</span> <span class="n">YAML</span><span class="p">):</span>
         <span class="n">yaml</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="LoadYamlTag"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag">[docs]</a><span class="k">class</span> <span class="nc">LoadYamlTag</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;a tag to read string from file&quot;&quot;&quot;</span>
+
+    <span class="n">yaml_tag</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;!load_yaml&#39;</span>
+
+<div class="viewcode-block" id="LoadYamlTag.from_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag.from_yaml">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">constructor</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">_yaml_get_path_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">constructor</span><span class="p">)</span>
+        <span class="n">yaml</span> <span class="o">=</span> <span class="n">get_yaml</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LoadYamlTag.to_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag.to_yaml">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">to_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="o">...</span></div>
+
+<div class="viewcode-block" id="LoadYamlTag.register"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag.register">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml</span><span class="p">:</span> <span class="n">YAML</span><span class="p">):</span>
+        <span class="n">yaml</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_yaml_get_path_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">constructor</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ScalarNode</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">constructor</span><span class="o">.</span><span class="n">construct_scalar</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">SequenceNode</span><span class="p">):</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="n">constructor</span><span class="o">.</span><span class="n">construct_sequence</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">*</span><span class="n">seq</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown node type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">__export_remote_functions</span><span class="p">():</span>

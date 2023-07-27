@@ -1,0 +1,55 @@
+# This is the configuration file for explore stage with LASP.
+# The configuration contains 2 parts: executor context and workflow params.
+
+executors:
+  # This should correspond to the executor name in executor.yml
+  hpc-cluster01:
+    context:
+      explore:
+        lasp:
+          # The template used to generate submit script.
+          script_template:
+            # Specify the header of the submit script,
+            # Should be configured according to your system.
+            header: |
+              #SBATCH -N 1
+              #SBATCH --ntasks-per-node=4
+              #SBATCH --job-name=lasp
+              #SBATCH --partition=gpu
+
+            # Specify the setup commands of the submit script,
+            # Should be configured according to your system.
+            setup: |
+              set -e
+              module load lasphub/3.4.5
+              module load deepmd/2.1
+              export OMP_NUM_THREADS=1
+              set +e
+
+          # Optional, specify the command to run deepmd-kit, default: lasp.
+          lasp_cmd:
+
+          # Optional, specify the number of concurrent tasks, default: 0 (no limit)
+          concurrency:
+
+workflow:
+  explore:
+    lasp:
+      # Specific input template for LASP.
+      # For more information about the input template, please refer to LASP documentation.
+      input_template:
+        SSW.SSWsteps: 50
+        SSW.output: T
+        SSW.ds_atom: 0.6
+
+      # The system files to explore.
+      # The value should correspond to the artifact name in artifact.yml
+      system_files: [ h2o-64-explore ]
+
+      # The potential to use.
+      # Currently only support lammps.
+      potential:
+
+        # Specify the lammps potential and its parameters.
+        # Use {} if no parameters to specify.
+        lammps: {}

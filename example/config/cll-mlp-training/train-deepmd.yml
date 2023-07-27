@@ -1,4 +1,4 @@
-# This is the configuration file for train stage with DeepMD.
+# This is the configuration file for train stage with DeepMD-kit.
 # The configuration contains 2 parts: executor context and workflow params.
 
 executors:
@@ -16,6 +16,7 @@ executors:
               #SBATCH --ntasks-per-node=4
               #SBATCH --job-name=deepmd
               #SBATCH --partition=gpu
+
             # Specify the setup commands of the submit script,
             # Should be configured according to your system.
             setup: |
@@ -24,7 +25,7 @@ executors:
               export OMP_NUM_THREADS=1
               set +e
 
-          # Optional, specify the command to run deepmd-kit, default: `dp`.
+          # Optional, specify the command to run deepmd-kit, default: dp.
           dp_cmd:
 
 workflow:
@@ -43,7 +44,7 @@ workflow:
       # or you can put the input template in a file, for example, deepmd-input.json,
       # and then you can load the input template from the file by
       #
-      # input_template: !load_json deepmd-input.json
+      # input_template: !load_yaml deepmd-input.json
       #
       # Here we put the input template directly in the configuration file.
       # For more information about the input template, please refer to DeepMD-kit documentation.

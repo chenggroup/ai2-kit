@@ -44,7 +44,7 @@ workflow:
       # or you can put the input template in a file, for example, deepmd-input.json,
       # and then you can load the input template from the file by
       #
-      # input_template: !load_yaml deepmd-input.json
+      # input_template: !load_yaml deepmd-input.yaml
       #
       # Here we put the input template directly in the configuration file.
       # For more information about the input template, please refer to DeepMD-kit documentation.
@@ -52,23 +52,15 @@ workflow:
         model:
           descriptor:
             type: se_a
-            sel:
-            - 100
-            - 100
+            sel: [ 100, 100 ]
             rcut_smth: 0.5
             rcut: 5.0
-            neuron:
-            - 25
-            - 50
-            - 100
+            neuron: [ 25, 50, 100 ]
             resnet_dt: false
             axis_neuron: 16
             seed: 1
           fitting_net:
-            neuron:
-            - 240
-            - 240
-            - 240
+            neuron: [ 240, 240, 240]
             resnet_dt: true
             seed: 1
         learning_rate:

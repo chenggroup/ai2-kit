@@ -1,5 +1,5 @@
 # This is the configuration file for train stage with DeepMD.
-# The configuration contains 2 parts: executor context and workflow params
+# The configuration contains 2 parts: executor context and workflow params.
 
 executors:
   # This should correspond to the executor name in executor.yml
@@ -7,20 +7,24 @@ executors:
     context:
       train:
         deepmd:
-          # The template used to generate submit script
+          # The template used to generate submit script.
           script_template:
+            # Specify the header of the submit script,
+            # Should be configured according to your system.
             header: |
               #SBATCH -N 1
               #SBATCH --ntasks-per-node=4
               #SBATCH --job-name=deepmd
               #SBATCH --partition=gpu
+            # Specify the setup commands of the submit script,
+            # Should be configured according to your system.
             setup: |
               set -e
               module load deepmd/2.2
               export OMP_NUM_THREADS=1
               set +e
 
-          # Optional, specify the command to run deepmd-kit, default: `dp`
+          # Optional, specify the command to run deepmd-kit, default: `dp`.
           dp_cmd:
 
 workflow:

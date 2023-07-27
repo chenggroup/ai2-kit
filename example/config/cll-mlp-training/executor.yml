@@ -1,0 +1,21 @@
+# This is the configuration file for the executors.`
+# You can config multiple executors with different names.
+# The executor name is used to specify the executor in the workflow.
+
+executors:
+  hpc-cluster01:  # name of the executor
+    ssh:  # optional, connect to login node with ssh, omit if you are already on the login node
+      host: user01@login-node
+      password: # optional, if you need to input password to login node，omit if you use ssh key
+      gateway:  # optional, if you need to connect to login node through a gateway, omit if you don't need it
+        host: user01@jump-node
+
+    queue_system:  # specify the queue system
+      slurm: {}  # use Slurm with default settings
+
+    work_dir: /home/user01/work_dir  # specify the working directory on the login node
+    python_cmd: /home/user01/conda/env/py39/bin/python  # specify the python command
+
+  # You may config multiple executors with different names.
+  # For example
+  # hpc-cluster02: ...

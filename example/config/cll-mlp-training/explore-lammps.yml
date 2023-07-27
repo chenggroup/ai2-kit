@@ -1,0 +1,66 @@
+# This is the configuration file for explore stage with LAMMPS.
+# The configuration contains 2 parts: executor context and workflow params.
+
+executors:
+  # This should correspond to the executor name in executor.yml
+  hpc-cluster01:
+    context:
+        lammps:
+          # The template used to generate submit script.
+          script_template:
+            # Specify the header of the submit script,
+            # Should be configured according to your system.
+            header: |
+              #SBATCH -N 1
+              #SBATCH --ntasks-per-node=4
+              #SBATCH --job-name=lammps
+              #SBATCH --partition=gpu
+
+            # Specify the setup commands of the submit script,
+            # Should be configured according to your system.
+            setup: |
+              set -e
+              module load deepmd/2.2
+              export OMP_NUM_THREADS=1
+              set +e
+
+          # Optional, specify the command to run LAMMPS, default: lmp.
+          lammps_cmd:
+
+          # Optional, specify the number of concurrent tasks, default: 0 (no limit)
+          concurrency:
+
+workflow:
+  explore:
+    lammps:
+      # Specific timestep of the simulation.
+      timestep: 0.0005
+
+      # Specific sample frequency.
+      sample_freq: 100
+
+      # Specific ensemble argument tau_t and tau_p.
+      tau_t: 0.1
+      tau_p: 0.5
+
+      # Specific the number of steps to run.
+      nsteps: 2000
+
+      # Specific ensemble.
+      ensemble: nvt
+
+      # The system files to explore.
+      # The value should correspond to the artifact name in artifact.yml
+      system_files: [ h2o-64-explore ]
+
+      post_init_section: |
+        neighbor 1.0 bin
+        box      tilt large
+
+      post_read_data_section: |
+        change_box all triclinic
+
+      # Specify the variants to explore.
+      explore_vars:
+        temp: [ 330, ]
+        pres: [1]

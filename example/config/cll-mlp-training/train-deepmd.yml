@@ -44,7 +44,7 @@ workflow:
       # or you can put the input template in a file, for example, deepmd-input.json,
       # and then you can load the input template from the file by
       #
-      # input_template: !load_yaml deepmd-input.yaml
+      # input_template: !load_yaml deepmd-input.json
       #
       # Here we put the input template directly in the configuration file.
       # For more information about the input template, please refer to DeepMD-kit documentation.

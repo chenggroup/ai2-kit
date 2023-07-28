@@ -79,8 +79,8 @@ DEFAULT_ASAP_SOAP_DESC = {
 
 DEFAULT_ASAP_PCA_REDUCER = {
     'type': 'PCA',
-            'parameter': {
-                'n_components': 3,
-                'scalecenter': True,
-            }
+    'parameter': {
+        'n_components': 3,
+        'scalecenter': True,
+    }
 }

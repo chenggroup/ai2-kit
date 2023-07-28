@@ -1,0 +1,103 @@
+# This is the configuration file for select stage with model deviation based selector.
+
+
+workflow:
+  select:
+    model_devi:
+        # The structure
+        # whose max_devi_f is less than f_trust_lo will be considered as good.
+        # whose max_devi_f is larger than f_trust_hi will be considered as poor.
+        # whose max_devi_f is between f_trust_lo and f_trust_hi will be considered as decent.
+        # Only the decent structures will be used selected as new training set.
+        f_trust_lo: 0.4
+        f_trust_hi: 0.6
+
+        # Optional, select most dissimilar structures by clustering.
+        # If it is None, this stage will be skipped.
+        #
+        # The process of this stage is as follow:
+        #
+        # 1. Get global descriptors of structures, use methods like SOAP, ACSF, etc.
+        # 2. Reduce the dimension of global descriptors, use methods like PCA, t-SNE, etc.
+        # 3. Cluster the reduced global descriptors, use methods like DBSCAN, etc.
+        # 4. Select the most dissimilar structures from each cluster.
+        #
+        # You can set it to {}  if you want to use default options.
+        # or you can specify the params directly as the follow
+        asap_options:
+
+          # Optional, specify the method to get global descriptors.
+          # Only one of soap, acsf and cm need to be set.
+          # Default: soap
+          # Remember to remove the unused ones for the configuration file.
+          descriptor:
+            # Optional, use SOAP descriptor.
+            soap:
+              # Optional, the preset configuration provided by asaplib,
+              # includes: smart, minimal, longrangeb
+              # You can skip the other params if preset is not None
+              preset:
+
+              # Use can also specify the params directly.
+              # The following params will take effect only when preset is None.
+              # those params following the convention of dscribe
+              # https://singroup.github.io/dscribe/latest/tutorials/descriptors/soap.html
+              r_cut: 3.5
+              n_max: 6
+              l_max: 6
+              sigma: 0.5
+
+              crossover: false
+              rbf: gto
+
+              reducer_type: average
+              element_wise: false
+              zeta: 1
+
+            # Optional, use ACSF descriptor.
+            acsf:
+              # Optional, the preset configuration provided by asaplib,
+              # includes: smart, minimal, longrangeb
+              # You can skip the other params if preset is not None
+
+              preset:
+              # those params following the convention of dscribe
+              # https://singroup.github.io/dscribe/latest/tutorials/descriptors/acsf.html
+              r_cut: 3.5
+
+              reducer_type: average
+              element_wise: false
+              zeta: 1
+
+            # Optional, use CM descriptor.
+            # No params need to be specified, just set it to {} if you want to use it.
+            cm: {}
+
+          # Optional, specify the method to reduce the dimension of global descriptors.
+          # Only one of pca, tsne, umap and autoencoder need to be set.
+          # Default: pca
+          # The params are used by the asaplib
+          # Remember to remove the unused ones for the configuration file.
+          dim_reducer:
+            # Optional, use PCA and specify the params.
+            pca:
+              type: PCA
+              parameter:
+                n_components: 3
+                scalecenter: true
+
+          # Optional, specify the method to cluster the reduced global descriptors.
+          # Only one of dbscan and laio_db need to be set.
+          # Default: dbscan
+          # Remember to remove the unused ones for the configuration file.
+          cluster:
+
+            # Optional, use DBSCAN and specify the params.
+            # Set it to {} if you want to use default params.
+            # Or you can specify the params directly as the follow
+            db_scan:
+              eps:
+              min_samples:
+
+            # Optional, use LaioDB, no params need to be specified.
+            laio_db: {}

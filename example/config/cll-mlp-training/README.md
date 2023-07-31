@@ -13,7 +13,8 @@ For example, to train a DeepMD model with LAMMPS and CP2K, you can get started w
 * [explore-lammps.yml](./explore-lammps.yml)
 * [label-cp2k.yml](./label-cp2k.yml)
 
-After you update the configuration files according to your needs, you can run the workflow with the following command:
+
+You should copy the above files to your workspace and update them to your needs, then you can run the workflow with the following command:
 ```bash
 ai2-kit workflow cll-mlp-training *.yml --executor hpc-cluster01 --path-prefix water/run-01 --checkpoint run-01.ckpt
 ```

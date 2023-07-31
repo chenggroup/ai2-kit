@@ -1,0 +1,29 @@
+# This file is used to define the artifacts that gonna to be used in the workflow.
+
+# If your data is under a common directory, you can define the base_dir here.
+# And then you can reference it in the latter artifact definitions.
+.base_dir: &base_dir /path/to/data/folder/
+
+artifacts:
+
+  # This is the most common way to define an artifact.
+  # It only requires the path of the artifact.
+  init-train-dataset:
+    url: !join [ *base_dir, train-dataset]
+
+  # This artifact includes the attrs section.
+  # The `attrs` section contain data that will be used by the workflow.
+  validation-dataset:
+    url: !join [ *base_dir, validation-dataset]
+    attrs:
+      # This configuration will be consumed by deepmd.
+      deepmd:
+        # Use this dataset as a validation dataset.
+        validation_data: true
+
+  # This artifact includes the includes section.
+  # The `includes` section is used to include files from the artifact.
+  init-explore-structure:
+    url: !join [ *base_dir, explore-structure]
+    # Use glob pattern to include files.
+    includes: POSCAR*

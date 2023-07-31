@@ -4,5 +4,5 @@ from typing import Optional, List, Any
 
 class CllWalkthroughUpdaterInputConfig(BaseModel):
     passing_rate_threshold: float = -1.0
-    table: List[Any]
+    table: List[Any] = []
 

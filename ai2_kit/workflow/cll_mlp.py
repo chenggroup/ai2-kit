@@ -52,7 +52,7 @@ class WorkflowConfig(BaseModel):
     class General(BaseModel):
         type_map: List[str]
         mass_map: List[float]
-        max_iters: int = 10
+        max_iters: int = 1
 
     class Label(BaseModel):
         cp2k: Optional[cp2k.CllCp2kInputConfig]

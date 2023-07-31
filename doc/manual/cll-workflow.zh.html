@@ -503,6 +503,7 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 <li><p>executor.yml: 用于配置 HPC 执行器的参数</p></li>
 <li><p>workflow.yml: 用于配置工作流软件的参数</p></li>
 </ul>
+<p>另一种配置构建方法是使用<span class="xref myst">配置示例</span> 中提供的配置文件做为基准创建自己的工作流。具体可参考示例目录中的文档。</p>
 <p>我们首先从 <code class="docutils literal notranslate"><span class="pre">artifact.yml</span></code> 开始，这个配置文件用于配置工作流所需的数据。在这个例子中，我们需要配置三个数据集，分别是用于训练的数据集，用于验证的数据集，以及用于结构搜索的数据集。这三个数据集的配置如下：</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">.base_dir</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;base_dir</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/user01/data/</span>
 

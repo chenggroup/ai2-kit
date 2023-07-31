@@ -1,4 +1,9 @@
 # Change Logs
+## v0.5.5
+* improvement: change the squeue polling command
+* feat: support `load_text` and `load_yaml` tag in yaml parser
+* doc: config samples for cll-mlp-training workflow
+
 ## v0.5.4
 * fix: model_devi_decent.xyz not created when no dumps are selected
 

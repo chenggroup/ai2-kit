@@ -6,7 +6,7 @@ executors:
   hpc-cluster01:
     context:
       label:
-        cp2k:
+        vasp:
           # The template used to generate submit script.
           script_template:
             # Specify the header of the submit script,
@@ -42,8 +42,8 @@ workflow:
       #   SYSTEM: test
       #   ENCUT: 400
       # just as the INCAR file.
-      # or you can put the INCAR file path here. 
-      # And put the POTCAR in the potcar_source, as a dict, 
+      # or you can put the INCAR file path here.
+      # And put the POTCAR in the potcar_source, as a dict,
       # naming the key of the dict as the element name in the POTCAR.
       # Be sure to put all elements in the system you want to sampling in the potcar_source.
       #

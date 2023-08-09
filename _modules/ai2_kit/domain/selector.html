@@ -382,10 +382,11 @@ document.write(`
 
 <span class="kn">import</span> <span class="nn">ase.io</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">get_data_format</span><span class="p">,</span> <span class="n">DataFormat</span><span class="p">,</span> <span class="n">artifacts_to_ase_atoms</span>
 <span class="kn">from</span> <span class="nn">.iface</span> <span class="kn">import</span> <span class="n">ICllSelectorOutput</span><span class="p">,</span> <span class="n">BaseCllContext</span>
-<span class="kn">from</span> <span class="nn">.constant</span> <span class="kn">import</span> <span class="n">LAMMPS_TRAJ_DIR</span><span class="p">,</span> <span class="n">LAMMPS_TRAJ_SUFFIX</span><span class="p">,</span> <span class="n">DEFAULT_ASAP_SOAP_DESC</span><span class="p">,</span> <span class="n">DEFAULT_ASAP_PCA_REDUCER</span>
+<span class="kn">from</span> <span class="nn">.constant</span> <span class="kn">import</span> <span class="n">LAMMPS_DUMP_DIR</span><span class="p">,</span> <span class="n">LAMMPS_DUMP_SUFFIX</span><span class="p">,</span> <span class="n">DEFAULT_ASAP_SOAP_DESC</span><span class="p">,</span> <span class="n">DEFAULT_ASAP_PCA_REDUCER</span>
 <span class="kn">from</span> <span class="nn">.asap</span> <span class="kn">import</span> <span class="n">get_descriptor</span><span class="p">,</span> <span class="n">reduce_dimension</span><span class="p">,</span> <span class="n">get_trainer</span><span class="p">,</span> <span class="n">get_cluster</span>
 
 
@@ -429,7 +430,7 @@ document.write(`
 <span class="k">class</span> <span class="nc">CllModelDeviSelectorInput</span><span class="p">:</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">CllModelDeviSelectorInputConfig</span>
     <span class="n">model_devi_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
-    <span class="n">model_devi_out_filename</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">model_devi_file</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 
 <div class="viewcode-block" id="CllModelDeviSelectorInput.set_model_devi_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorInput.set_model_devi_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">set_model_devi_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]):</span>
@@ -446,7 +447,7 @@ document.write(`
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">bulk_select_structures_by_model_devi</span><span class="p">)(</span>
         <span class="n">model_devi_outputs</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">model_devi_data</span><span class="p">],</span>
-        <span class="n">model_devi_filename</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">model_devi_out_filename</span><span class="p">,</span>
+        <span class="n">model_devi_file</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">model_devi_file</span><span class="p">,</span>
         <span class="n">f_trust_lo</span><span class="o">=</span><span class="n">f_trust_lo</span><span class="p">,</span> <span class="n">f_trust_hi</span><span class="o">=</span><span class="n">f_trust_hi</span><span class="p">,</span>
         <span class="n">type_map</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="n">work_dir</span><span class="p">,</span>
     <span class="p">)</span>
@@ -494,7 +495,7 @@ document.write(`
 <span class="k">def</span> <span class="nf">__export_remote_functions</span><span class="p">():</span>
 
     <span class="k">def</span> <span class="nf">bulk_select_structures_by_model_devi</span><span class="p">(</span><span class="n">model_devi_outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
-                                             <span class="n">model_devi_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                             <span class="n">model_devi_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                              <span class="n">f_trust_lo</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                                              <span class="n">f_trust_hi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                                              <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -505,7 +506,7 @@ document.write(`
         <span class="k">return</span> <span class="n">joblib</span><span class="o">.</span><span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">workers</span><span class="p">)(</span>
             <span class="n">joblib</span><span class="o">.</span><span class="n">delayed</span><span class="p">(</span><span class="n">select_structures_by_model_devi</span><span class="p">)(</span>
                 <span class="n">model_devi_output</span><span class="o">=</span><span class="n">output</span><span class="p">,</span>
-                <span class="n">model_devi_filename</span><span class="o">=</span><span class="n">model_devi_filename</span><span class="p">,</span>
+                <span class="n">model_devi_file</span><span class="o">=</span><span class="n">model_devi_file</span><span class="p">,</span>
                 <span class="n">f_trust_lo</span><span class="o">=</span><span class="n">f_trust_lo</span><span class="p">,</span> <span class="n">f_trust_hi</span><span class="o">=</span><span class="n">f_trust_hi</span><span class="p">,</span>
                 <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
                 <span class="n">work_dir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;model_devi&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">06</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -515,7 +516,7 @@ document.write(`
 
 
     <span class="k">def</span> <span class="nf">select_structures_by_model_devi</span><span class="p">(</span><span class="n">model_devi_output</span><span class="p">:</span> <span class="n">ArtifactDict</span><span class="p">,</span>
-                                        <span class="n">model_devi_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                        <span class="n">model_devi_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                         <span class="n">f_trust_lo</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                                         <span class="n">f_trust_hi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                                         <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -524,24 +525,29 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        analysis the model_devi output of explore stage and select candidates</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">model_devi_out_url</span> <span class="o">=</span> <span class="n">model_devi_output</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
+        <span class="n">dump_json</span><span class="p">(</span><span class="n">model_devi_output</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;model_devi_output.debug.json&#39;</span><span class="p">))</span>
+
+        <span class="n">model_devi_dir</span> <span class="o">=</span> <span class="n">model_devi_output</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
+        <span class="n">model_devi_file</span> <span class="o">=</span> <span class="n">model_devi_output</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;model_devi_file&#39;</span><span class="p">,</span> <span class="n">model_devi_file</span><span class="p">)</span>
+
         <span class="n">force_col</span> <span class="o">=</span> <span class="s1">&#39;max_devi_f&#39;</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;criteria: </span><span class="si">{</span><span class="n">f_trust_lo</span><span class="si">}</span><span class="s1"> &lt;= </span><span class="si">{</span><span class="n">force_col</span><span class="si">}</span><span class="s1"> &lt; </span><span class="si">{</span><span class="n">f_trust_hi</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1"># get path of model_devi file</span>
         <span class="n">data_format</span> <span class="o">=</span> <span class="n">get_data_format</span><span class="p">(</span><span class="n">model_devi_output</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">if</span> <span class="n">data_format</span> <span class="ow">in</span> <span class="p">(</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">LAMMPS_OUTPUT_DIR</span><span class="p">,</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">LASP_LAMMPS_OUT_DIR</span><span class="p">):</span>
-            <span class="n">model_devi_out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_devi_out_url</span><span class="p">,</span> <span class="n">model_devi_filename</span><span class="p">)</span>
+            <span class="n">model_devi_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_devi_dir</span><span class="p">,</span> <span class="n">model_devi_file</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;unknown model_devi_data types&#39;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;start to analysis file: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">model_devi_out_file</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;start to analysis file: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">model_devi_file</span><span class="p">)</span>
 
         <span class="c1"># load model_devi data</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">model_devi_out_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">model_devi_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)),</span> <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
         <span class="c1"># layout:</span>
         <span class="c1">#        step  max_devi_v  min_devi_v  avg_devi_v  max_devi_f  min_devi_f  avg_devi_f</span>
         <span class="c1"># 0        0    0.006793    0.000672    0.003490    0.143317    0.005612    0.026106</span>
@@ -553,7 +559,7 @@ document.write(`
         <span class="n">poor_df</span>   <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">force_col</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">f_trust_hi</span><span class="p">]</span>
 
         <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;src&#39;</span><span class="p">:</span> <span class="n">model_devi_out_file</span><span class="p">,</span>
+            <span class="s1">&#39;src&#39;</span><span class="p">:</span> <span class="n">model_devi_file</span><span class="p">,</span>
             <span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
             <span class="s1">&#39;good&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_df</span><span class="p">),</span>
             <span class="s1">&#39;decent&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">decent_df</span><span class="p">),</span>
@@ -567,10 +573,11 @@ document.write(`
             <span class="k">if</span> <span class="n">data_format</span> <span class="o">==</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">LAMMPS_OUTPUT_DIR</span><span class="p">:</span>
                 <span class="n">atoms_list</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">frame_id</span> <span class="ow">in</span> <span class="n">decent_df</span><span class="o">.</span><span class="n">step</span><span class="p">:</span>
-                    <span class="n">dump_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_devi_out_url</span><span class="p">,</span> <span class="n">LAMMPS_TRAJ_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">frame_id</span><span class="si">}{</span><span class="n">LAMMPS_TRAJ_SUFFIX</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">lammps_dump_dir</span> <span class="o">=</span> <span class="n">model_devi_output</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lammps_dump_dir&#39;</span><span class="p">,</span> <span class="n">LAMMPS_DUMP_DIR</span><span class="p">)</span>
+                    <span class="n">dump_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_devi_dir</span><span class="p">,</span> <span class="n">lammps_dump_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">frame_id</span><span class="si">}{</span><span class="n">LAMMPS_DUMP_SUFFIX</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
                     <span class="n">atoms_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dump_file</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;lammps-dump-text&#39;</span><span class="p">,</span> <span class="n">specorder</span><span class="o">=</span><span class="n">type_map</span><span class="p">))</span>
             <span class="k">elif</span> <span class="n">data_format</span> <span class="o">==</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">LASP_LAMMPS_OUT_DIR</span><span class="p">:</span>
-                <span class="n">structures_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_devi_out_url</span><span class="p">,</span> <span class="s1">&#39;structures.xyz&#39;</span><span class="p">)</span>
+                <span class="n">structures_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_devi_dir</span><span class="p">,</span> <span class="s1">&#39;structures.xyz&#39;</span><span class="p">)</span>
                 <span class="n">atoms_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itemgetter</span><span class="p">(</span><span class="o">*</span><span class="n">decent_df</span><span class="o">.</span><span class="n">step</span><span class="p">)(</span><span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">structures_file</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)))</span>  <span class="c1"># type: ignore</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;unknown model_devi_data types&#39;</span><span class="p">)</span>
@@ -580,7 +587,6 @@ document.write(`
                 <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">EXTXYZ</span><span class="p">,</span>
                 <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="o">**</span><span class="n">model_devi_output</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_list</span><span class="p">)</span>
                 <span class="p">}</span>
             <span class="p">}</span>
         <span class="n">dump_json</span><span class="p">([</span><span class="n">decent_structures_artifact</span><span class="p">,</span> <span class="n">stats</span><span class="p">],</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;output.debug.json&#39;</span><span class="p">))</span>
@@ -631,33 +637,36 @@ document.write(`
         <span class="c1"># load structures and save it to a tmp file for ASAP to load</span>
         <span class="n">atoms_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">atoms</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="n">artifacts_to_ase_atoms</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)]</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_list</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">max_structures_per_system</span><span class="p">:</span>
-            <span class="o">...</span>  <span class="c1"># TODO: no need for extra screening</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_list</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_structures_per_system</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+            <span class="c1"># Nothing to do when the total number of atoms is small</span>
+            <span class="c1"># FIXME: there are a lot of potential issue when the number of atoms is small</span>
+            <span class="c1"># the root cause is in asaplib, which I guess is not tested with small dataset</span>
+            <span class="n">selected_atoms_list</span> <span class="o">=</span> <span class="n">atoms_list</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tmp_structures_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;.tmp-structures.xyz&#39;</span><span class="p">)</span>
+            <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tmp_structures_file</span><span class="p">,</span> <span class="n">atoms_list</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)</span>
 
-        <span class="n">tmp_structures_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;.tmp-structures.xyz&#39;</span><span class="p">)</span>
-        <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tmp_structures_file</span><span class="p">,</span> <span class="n">atoms_list</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)</span>
+            <span class="c1"># use asaplib to group structures</span>
+            <span class="n">asapxyz</span> <span class="o">=</span> <span class="n">ASAPXYZ</span><span class="p">(</span><span class="n">tmp_structures_file</span><span class="p">)</span>
 
-        <span class="c1"># use asaplib to group structures</span>
-        <span class="n">asapxyz</span> <span class="o">=</span> <span class="n">ASAPXYZ</span><span class="p">(</span><span class="n">tmp_structures_file</span><span class="p">)</span>
+            <span class="c1"># group structures</span>
+            <span class="n">path_prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;asap&#39;</span><span class="p">)</span>
+            <span class="n">descriptors</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_descriptor</span><span class="p">(</span><span class="n">asapxyz</span><span class="p">,</span> <span class="n">descriptor_opt</span><span class="p">,</span> <span class="n">path_prefix</span><span class="o">=</span><span class="n">path_prefix</span><span class="p">)</span>
+            <span class="n">reduced_descriptors</span> <span class="o">=</span> <span class="n">reduce_dimension</span><span class="p">(</span><span class="n">descriptors</span><span class="p">,</span> <span class="n">dim_reducer_opt</span><span class="p">)</span>
+            <span class="n">trainer</span> <span class="o">=</span> <span class="n">get_trainer</span><span class="p">(</span><span class="n">reduced_descriptors</span><span class="p">,</span> <span class="n">cluster_opt</span><span class="p">)</span>
+            <span class="n">cluster_labels</span> <span class="o">=</span> <span class="n">get_cluster</span><span class="p">(</span><span class="n">asapxyz</span><span class="p">,</span> <span class="n">reduced_descriptors</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">path_prefix</span><span class="o">=</span><span class="n">path_prefix</span><span class="p">)</span>
 
-        <span class="c1"># group structures</span>
-        <span class="n">path_prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;asap&#39;</span><span class="p">)</span>
-        <span class="n">descriptors</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_descriptor</span><span class="p">(</span><span class="n">asapxyz</span><span class="p">,</span> <span class="n">descriptor_opt</span><span class="p">,</span> <span class="n">path_prefix</span><span class="o">=</span><span class="n">path_prefix</span><span class="p">)</span>
-        <span class="n">reduced_descriptors</span> <span class="o">=</span> <span class="n">reduce_dimension</span><span class="p">(</span><span class="n">descriptors</span><span class="p">,</span> <span class="n">dim_reducer_opt</span><span class="p">)</span>
-        <span class="n">trainer</span> <span class="o">=</span> <span class="n">get_trainer</span><span class="p">(</span><span class="n">reduced_descriptors</span><span class="p">,</span> <span class="n">cluster_opt</span><span class="p">)</span>
-        <span class="n">cluster_labels</span> <span class="o">=</span> <span class="n">get_cluster</span><span class="p">(</span><span class="n">asapxyz</span><span class="p">,</span> <span class="n">reduced_descriptors</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">path_prefix</span><span class="o">=</span><span class="n">path_prefix</span><span class="p">)</span>
+            <span class="c1"># if max_structures_per_system is not set</span>
+            <span class="c1"># selected at least 1 structure from each group</span>
+            <span class="k">if</span> <span class="n">max_structures_per_system</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">max_structures_per_system</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster_labels</span><span class="p">)</span>
 
-        <span class="c1"># if max_structures_per_system is not set</span>
-        <span class="c1"># selected at least 1 structure from each group</span>
-        <span class="k">if</span> <span class="n">max_structures_per_system</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">max_structures_per_system</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster_labels</span><span class="p">)</span>
-
-        <span class="c1"># unpack clusters into a list and</span>
-        <span class="c1"># ensure frames of the same group won&#39;t be next to each other</span>
-        <span class="c1"># so that we can pick up distinct structures by simply choose the first N frames</span>
-        <span class="n">order_frames</span> <span class="o">=</span> <span class="n">flat_evenly</span><span class="p">(</span><span class="n">cluster_labels</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-        <span class="n">selected_frames</span> <span class="o">=</span> <span class="n">order_frames</span><span class="p">[:</span><span class="n">max_structures_per_system</span><span class="p">]</span>
-        <span class="n">selected_atoms_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">atoms_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">selected_frames</span><span class="p">]</span>
+            <span class="c1"># unpack clusters into a list and</span>
+            <span class="c1"># ensure frames of the same group won&#39;t be next to each other</span>
+            <span class="c1"># so that we can pick up distinct structures by simply choose the first N frames</span>
+            <span class="n">order_frames</span> <span class="o">=</span> <span class="n">flat_evenly</span><span class="p">(</span><span class="n">cluster_labels</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">selected_frames</span> <span class="o">=</span> <span class="n">order_frames</span><span class="p">[:</span><span class="n">max_structures_per_system</span><span class="p">]</span>
+            <span class="n">selected_atoms_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">atoms_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">selected_frames</span><span class="p">]</span>
 
         <span class="c1"># write selected structures to file</span>
         <span class="n">distinct_structures_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span>  <span class="s1">&#39;distinct_structures.xyz&#39;</span><span class="p">)</span>

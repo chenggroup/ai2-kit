@@ -734,22 +734,24 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 <span class="w">    </span><span class="nt">lammps</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">timestep</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0005</span>
 <span class="w">      </span><span class="nt">sample_freq</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
-<span class="w">      </span><span class="nt">tau_t</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
-<span class="w">      </span><span class="nt">tau_p</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
 <span class="w">      </span><span class="nt">nsteps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2000</span>
 <span class="w">      </span><span class="nt">ensemble</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nvt</span>
 
-<span class="w">      </span><span class="nt">post_init_section</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="nt">template_vars</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">POST_INIT</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">neighbor 1.0 bin</span>
 <span class="w">          </span><span class="no">box      tilt large</span>
 
-<span class="w">      </span><span class="nt">post_read_data_section</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="nt">POST_READ_DATA</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">          </span><span class="no">change_box all triclinic</span>
 
 <span class="w">      </span><span class="nt">system_files</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">h2o-64-explore</span><span class="w"> </span><span class="p p-Indicator">]</span>
+
 <span class="w">      </span><span class="nt">explore_vars</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">temp</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">330</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">440</span><span class="p p-Indicator">]</span>
-<span class="w">          </span><span class="nt">pres</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">TEMP</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">330</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">430</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">530</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">PRES</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">TAU_T</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">  </span><span class="c1"># Optional</span>
+<span class="w">        </span><span class="nt">TAU_P</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w">  </span><span class="c1"># Optional</span>
 
 <span class="w">  </span><span class="nt">select</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">model_devi</span><span class="p">:</span>

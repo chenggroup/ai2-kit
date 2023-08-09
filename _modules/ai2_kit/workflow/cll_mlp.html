@@ -568,14 +568,12 @@ document.write(`
 
         <span class="c1"># explore</span>
         <span class="k">if</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lammps</span> <span class="ow">and</span> <span class="n">context_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lammps</span><span class="p">:</span>
-            <span class="n">md_options</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsInput</span><span class="o">.</span><span class="n">MdOptions</span><span class="p">(</span>
-                <span class="n">models</span><span class="o">=</span><span class="n">train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">(),</span>
-            <span class="p">)</span>
             <span class="n">lammps_input</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsInput</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lammps</span><span class="p">,</span>
                 <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
                 <span class="n">mass_map</span><span class="o">=</span><span class="n">mass_map</span><span class="p">,</span>
-                <span class="n">md_options</span><span class="o">=</span><span class="n">md_options</span><span class="p">,</span>
+                <span class="n">dp_models</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="n">train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">()},</span>
+                <span class="n">preset_template</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">lammps_context</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsContext</span><span class="p">(</span>
                 <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;explore-lammps&#39;</span><span class="p">),</span>
@@ -606,7 +604,7 @@ document.write(`
             <span class="n">selector_input</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDeviSelectorInput</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">select</span><span class="o">.</span><span class="n">model_devi</span><span class="p">,</span>
                 <span class="n">model_devi_data</span><span class="o">=</span><span class="n">explore_output</span><span class="o">.</span><span class="n">get_model_devi_dataset</span><span class="p">(),</span>
-                <span class="n">model_devi_out_filename</span><span class="o">=</span><span class="n">const</span><span class="o">.</span><span class="n">MODEL_DEVI_OUT</span><span class="p">,</span>
+                <span class="n">model_devi_file</span><span class="o">=</span><span class="n">const</span><span class="o">.</span><span class="n">MODEL_DEVI_OUT</span><span class="p">,</span>
                 <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">selector_context</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDevSelectorContext</span><span class="p">(</span>

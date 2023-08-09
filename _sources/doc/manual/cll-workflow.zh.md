@@ -306,22 +306,24 @@ workflow:
     lammps:
       timestep: 0.0005
       sample_freq: 100
-      tau_t: 0.1
-      tau_p: 0.5
       nsteps: 2000
       ensemble: nvt
 
-      post_init_section: |
+      template_vars:
+        POST_INIT: |
           neighbor 1.0 bin
           box      tilt large
 
-      post_read_data_section: |
+        POST_READ_DATA: |
           change_box all triclinic
 
       system_files: [ h2o-64-explore ]
+
       explore_vars:
-          temp: [ 330, 440]
-          pres: [1]
+        TEMP: [ 330, 430, 530]
+        PRES: [1]
+        TAU_T: 0.1  # Optional
+        TAU_P: 0.5  # Optional
 
   select:
     model_devi:

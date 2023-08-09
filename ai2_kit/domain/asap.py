@@ -101,12 +101,13 @@ def __export_remote_functions():
         return reduced_descriptors
 
 
-    def get_dbscan_trainer(descriptor: np.ndarray, metric='euclidean', eps=None, min_samples=2, eval_sample=50):
+    def get_dbscan_trainer(descriptors: np.ndarray, metric='euclidean', eps=None, min_samples=2, eval_sample=50):
         if eps is None:
-            n = len(descriptor)
-            sample = descriptor[np.random.choice(n, min(n, eval_sample), replace=False)]
+            n = len(descriptors)
+            samples = descriptors[np.random.choice(n, min(n, eval_sample), replace=False)]
             # FIXME: the method to estimate eps is strange
-            eps = np.percentile(cdist(sample, descriptor, metric), min(100 * 10. / n, 100))  # type: ignore
+            # FIXME: this will be broken when len of descriptors small
+            eps = np.percentile(cdist(samples, descriptors, metric), min(100 * 10. / n, 99))  # type: ignore
         return sklearn_DB(eps, min_samples, metrictype=metric)
 
 

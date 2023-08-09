@@ -157,7 +157,7 @@ def _yaml_get_path_node(node, constructor):
 def __export_remote_functions():
     """cloudpickle compatible: https://stackoverflow.com/questions/75292769"""
 
-    def merge_dict(lo: dict, ro: dict, path=None):
+    def merge_dict(lo: dict, ro: dict, path=None, ignore_none=True):
         """
         Merge two dict, the left dict will be overridden.
         Note: list will be replaced instead of merged.
@@ -165,10 +165,12 @@ def __export_remote_functions():
         if path is None:
             path = []
         for key, value in ro.items():
+            if ignore_none and value is None:
+                continue
             if key in lo:
                 current_path = path + [str(key)]
                 if isinstance(lo[key], dict) and isinstance(value, dict):
-                    merge_dict(lo[key], value, current_path)
+                    merge_dict(lo[key], value, path=current_path, ignore_none=ignore_none)
                 else:
                     print('.'.join(current_path) + ' has been overridden')
                     lo[key] = value
@@ -224,8 +226,15 @@ def __export_remote_functions():
 
 
     def dump_json(obj, path: str):
+        default = lambda o: f"<<non-serializable: {type(o).__qualname__}>>"
         with open(path, 'w', encoding='utf-8') as f:
-            json.dump(obj, f, indent=2)
+            json.dump(obj, f, indent=2, default=default)
+
+
+    def dump_text(text: str, path: str, **kwargs):
+        with open(path, 'w', **kwargs) as f:
+            f.write(text)
+
 
     def flush_stdio():
         import sys
@@ -243,6 +252,7 @@ def __export_remote_functions():
         list_sample,
         flat_evenly,
         dump_json,
+        dump_text,
         flush_stdio,
     )
 
@@ -256,5 +266,6 @@ def __export_remote_functions():
     list_sample,
     flat_evenly,
     dump_json,
+    dump_text,
     flush_stdio,
 ) = __export_remote_functions()

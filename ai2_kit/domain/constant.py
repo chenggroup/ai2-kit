@@ -9,8 +9,8 @@ MODEL_DEVI_OUT = 'model_devi.out'
 MODEL_DEVI_NEU_OUT = 'model_devi_neu.out'
 MODEL_DEVI_RED_OUT = 'model_devi_red.out'
 
-LAMMPS_TRAJ_DIR = 'traj'
-LAMMPS_TRAJ_SUFFIX = '.lammpstrj'
+LAMMPS_DUMP_DIR = 'traj'
+LAMMPS_DUMP_SUFFIX = '.lammpstrj'
 
 SELECTOR_OUTPUT = 'selector_output'
 
@@ -83,4 +83,105 @@ DEFAULT_ASAP_PCA_REDUCER = {
         'n_components': 3,
         'scalecenter': True,
     }
+}
+
+# LAMMPS
+
+_DEFAULT_LAMMPS_TOP = '''\
+$$VARIABLES
+$$EXTRA_VARIABLES
+
+$$INITIALIZE
+
+$$POST_INIT
+
+$$READ_DATA
+$$POST_READ_DATA
+
+$$MASS_MAP
+
+$$SET_ATOM_TYPE
+'''
+
+_DEFAULT_LAMMPS_BOTTOM = '''\
+$$POST_FORCE_FIELD
+
+$$SIMULATION
+$$POST_SIMULATION
+
+$$RUN
+$$POST_RUN
+'''
+
+_DP_FORCE_FIELD = '''\
+pair_style deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi.out
+pair_coeff * *
+'''
+
+_DP_FEP_DUAL_FORCE_FIELD = '''\
+variable LAMBDA_i equal 1-v_LAMBDA_f
+
+pair_style  hybrid/overlay &
+            deepmd $$DP_NEU_MODELS out_freq ${THERMO_FREQ} out_file model_devi_neu.out &
+            deepmd $$DP_RED_MODELS out_freq ${THERMO_FREQ} out_file model_devi_red.out
+pair_coeff  * * deepmd 1 *
+pair_coeff  * * deepmd 2 *
+
+fix PES-Sampling all adapt 0 &
+    pair deepmd:1 scale * * v_LAMBDA_f &
+    pair deepmd:2 scale * * v_LAMBDA_i
+'''
+
+_DP_FEP_UNI_FORCE_FIELD = '''\
+variable LAMBDA_i equal 1-v_LAMBDA_f
+
+pair_style  hybrid/overlay &
+            $$PAIR_STYLE_EXT
+            deepmd $$DP_MODELS_0 type_order $$DP_FEP_INI_TYPE_ORDER &
+            deepmd $$DP_MODELS_0 type_order $$DP_FEP_FIN_TYPE_ORDER
+$$PAIR_COEFF_EXT
+pair_coeff  * * deepmd 1 *
+pair_coeff  * * deepmd 2 *
+
+fix PES-Sampling all adapt 0 &
+    pair deepmd:1 scale * * v_LAMBDA_f &
+    pair deepmd:2 scale * * v_LAMBDA_i
+'''
+
+def _get_fep_rerun_setting(ns: str, in_data:str, in_traj: str):
+    return f'''\
+clear
+# Rerun model deviation: {ns}
+$$INITIALIZE
+read_data {in_data}
+$$MASS_MAP_BASE
+$$POST_READ_DATA
+
+pair_style deepmd $$DP_MODELS out_freq 1 out_file model_devi_{ns}.out type_order $$DP_DEFAULT_TYPE_ORDER
+pair_coeff * *
+
+thermo 1
+thermo_style custom step temp pe ke etotal
+thermo_modify format float %15.7f
+dump 1 all custom 1 traj-{ns}/*.lammpstrj id type x y z
+rerun {in_traj} first 0 last 1000000000000 every 1 dump x y z box yes
+'''
+
+_FEP_UNI_BOTTOM = '\n'.join(['''\
+# Run post processing script
+shell cat traj/*.lammpstrj > traj.lammpstrj
+shell ai2-kit tool ase read traj.lammpstrj --format lammps-dump-text --specorder "$$SPECORDER" - write ini.lammpstrj
+shell ai2-kit tool ase read traj.lammpstrj --format lammps-dump-text --specorder "$$SPECORDER" - delete_atoms "$$DELETE_ATOMS" - write fin.lammpstrj
+''',
+    _get_fep_rerun_setting('ini', 'ini.data', 'ini.lammpstrj'),
+    _get_fep_rerun_setting('fin', 'fin.data', 'fin.lammpstrj'),
+])
+
+
+PRESET_LAMMPS_INPUT_TEMPLATE = {
+    'default': '\n'.join([ _DEFAULT_LAMMPS_TOP, _DP_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM]),
+    # 2 models fep
+    'fep-2m': '\n'.join([ _DEFAULT_LAMMPS_TOP, _DP_FEP_DUAL_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM]),
+    # 1 model fep
+    'fep': '\n'.join([ _DEFAULT_LAMMPS_TOP, _DP_FEP_UNI_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM, _FEP_UNI_BOTTOM]),
 }

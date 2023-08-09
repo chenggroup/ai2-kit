@@ -1,4 +1,9 @@
 # Change Logs
+## v0.6.0
+* feat: Support training DP model for FEP simulation
+* feat: ase tool support delete_atoms
+* **BREAKING CHANGE**: [cll-workflow] LAMMPS configuration has been change, [see example](./example/config/cll-mlp-training/explore-lammps.yml)
+
 ## v0.5.5
 * improvement: change the squeue polling command
 * feat: support `load_text` and `load_yaml` tag in yaml parser

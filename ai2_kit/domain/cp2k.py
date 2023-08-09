@@ -17,9 +17,10 @@ from .util import loads_cp2k_input, load_cp2k_input, dump_cp2k_input
 
 logger = get_logger(__name__)
 
+
 class CllCp2kInputConfig(BaseModel):
     init_system_files: List[str] = []
-    input_template: Union[dict, str]
+    input_template: Union[dict, str] = dict()
     """
     Input template for cp2k. Could be a dict or content of a cp2k input file.
     """
@@ -28,6 +29,7 @@ class CllCp2kInputConfig(BaseModel):
     Limit of the number of systems to be labeled.
     """
     limit_method: Literal["even", "random", "truncate"] = "even"
+
 
 class CllCp2kContextConfig(BaseModel):
     script_template: BashTemplate
@@ -144,20 +146,19 @@ def __export_remote_functions():
         if limit > 0:
             atoms_list = list_sample(atoms_list, limit, method=sample_method)
 
-        for i, (file, atoms) in enumerate(atoms_list):
+        for i, (data_file, atoms) in enumerate(atoms_list):
             # create task dir
             task_dir = os.path.join(base_dir, f'{str(i).zfill(6)}')
             os.makedirs(task_dir, exist_ok=True)
 
-            # TODO: should also support input_template
-            # find input template in data_file attrs, if not found, use input_template as default
-            input_data_file = dict_nested_get(file, ['attrs', 'cp2k', 'input_template_file'],  None)  # type: ignore
-            if isinstance(input_data_file, str):
-                with open(input_data_file, 'r') as f:
-                    input_data = load_cp2k_input(f)
-            else:
-                input_data = copy.deepcopy(input_template)
+            overridable_params: dict = dict_nested_get(data_file, ['attrs', 'cp2k'], dict())  # type: ignore
+            input_template = overridable_params.get('input_template', input_template)
 
+            if input_template is str:
+                input_template = loads_cp2k_input(input_template)
+            assert input_template is not None, 'input_template is not found'
+
+            input_data = copy.deepcopy(input_template)
             coords, cell = ase_atoms_to_cp2k_input_data(atoms)
             merge_dict(input_data, {
                 'FORCE_EVAL': {
@@ -177,7 +178,7 @@ def __export_remote_functions():
 
             task_dirs.append({
                 'url': task_dir,
-                'attrs': file['attrs'],
+                'attrs': data_file['attrs'],
             })
 
         return task_dirs

@@ -39,10 +39,6 @@ workflow:
       # Specific sample frequency.
       sample_freq: 100
 
-      # Specific ensemble argument tau_t and tau_p.
-      tau_t: 0.1
-      tau_p: 0.5
-
       # Specific the number of steps to run.
       nsteps: 2000
 
@@ -53,14 +49,21 @@ workflow:
       # The value should correspond to the artifact name in artifact.yml
       system_files: [ h2o-64-explore ]
 
-      post_init_section: |
-        neighbor 1.0 bin
-        box      tilt large
+      template_vars:
+        POST_INIT: |
+          neighbor 1.0 bin
+          box      tilt large
 
-      post_read_data_section: |
-        change_box all triclinic
+        POST_READ_DATA: |
+          change_box all triclinic
 
       # Specify the variants to explore.
+      # Those value will be mapped to the variables in the LAMMPS input file.
+      # The key should be upper case.
+      # TEMP, PRES are required, the others are optional.
+      # You can also specify custom variables here.
       explore_vars:
-        temp: [ 330, ]
-        pres: [1]
+        TEMP: [ 330, 430, 530]
+        PRES: [1]
+        TAU_T: 0.1  # Optional
+        TAU_P: 0.5  # Optional

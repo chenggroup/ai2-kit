@@ -200,14 +200,12 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager:
 
         # explore
         if workflow_config.explore.lammps and context_config.explore.lammps:
-            md_options = lammps.CllLammpsInput.MdOptions(
-                models=train_output.get_mlp_models(),
-            )
             lammps_input = lammps.CllLammpsInput(
                 config=workflow_config.explore.lammps,
                 type_map=type_map,
                 mass_map=mass_map,
-                md_options=md_options,
+                dp_models={'': train_output.get_mlp_models()},
+                preset_template='default',
             )
             lammps_context = lammps.CllLammpsContext(
                 path_prefix=os.path.join(iter_path_prefix, 'explore-lammps'),
@@ -238,7 +236,7 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager:
             selector_input = selector.CllModelDeviSelectorInput(
                 config=workflow_config.select.model_devi,
                 model_devi_data=explore_output.get_model_devi_dataset(),
-                model_devi_out_filename=const.MODEL_DEVI_OUT,
+                model_devi_file=const.MODEL_DEVI_OUT,
                 type_map=type_map,
             )
             selector_context = selector.CllModelDevSelectorContext(

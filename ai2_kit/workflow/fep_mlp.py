@@ -190,10 +190,11 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
             config=workflow_config.lammps,
             type_map=type_map,
             mass_map=mass_map,
-            fep_options=lammps.CllLammpsInput.FepOptions(
-                neu_models=neu_train_output.get_mlp_models(),
-                red_models=red_train_output.get_mlp_models(),
-            ),
+            dp_models={
+                'NEU': neu_train_output.get_mlp_models(),
+                'RED': red_train_output.get_mlp_models(),
+            },
+            preset_template='fep-2m'
         )
         lammps_context = lammps.CllLammpsContext(
             path_prefix=os.path.join(iter_path_prefix, 'explore-lammps'),
@@ -206,7 +207,7 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
         red_selector_input = selector.CllModelDeviSelectorInput(
             config=workflow_config.red.threshold,
             model_devi_data=explore_output.get_model_devi_dataset(),
-            model_devi_out_filename=const.MODEL_DEVI_RED_OUT,
+            model_devi_file=const.MODEL_DEVI_RED_OUT,
             type_map=type_map,
         )
         red_selector_context = selector.CllModelDevSelectorContext(
@@ -218,7 +219,7 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
         neu_selector_input = selector.CllModelDeviSelectorInput(
             config=workflow_config.neu.threshold,
             model_devi_data=explore_output.get_model_devi_dataset(),
-            model_devi_out_filename=const.MODEL_DEVI_NEU_OUT,
+            model_devi_file=const.MODEL_DEVI_NEU_OUT,
             type_map=type_map,
         )
         neu_selector_context = selector.CllModelDevSelectorContext(

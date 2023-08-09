@@ -14,10 +14,11 @@ from operator import itemgetter
 
 import ase.io
 import os
+import numpy as np
 
 from .data import get_data_format, DataFormat, artifacts_to_ase_atoms
 from .iface import ICllSelectorOutput, BaseCllContext
-from .constant import LAMMPS_TRAJ_DIR, LAMMPS_TRAJ_SUFFIX, DEFAULT_ASAP_SOAP_DESC, DEFAULT_ASAP_PCA_REDUCER
+from .constant import LAMMPS_DUMP_DIR, LAMMPS_DUMP_SUFFIX, DEFAULT_ASAP_SOAP_DESC, DEFAULT_ASAP_PCA_REDUCER
 from .asap import get_descriptor, reduce_dimension, get_trainer, get_cluster
 
 
@@ -61,7 +62,7 @@ class CllModelDeviSelectorOutput(ICllSelectorOutput):
 class CllModelDeviSelectorInput:
     config: CllModelDeviSelectorInputConfig
     model_devi_data: List[Artifact]
-    model_devi_out_filename: str
+    model_devi_file: str
     type_map: List[str]
 
     def set_model_devi_dataset(self, data: List[Artifact]):
@@ -78,7 +79,7 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
 
     results = executor.run_python_fn(bulk_select_structures_by_model_devi)(
         model_devi_outputs=[a.to_dict() for a in input.model_devi_data],
-        model_devi_filename=input.model_devi_out_filename,
+        model_devi_file=input.model_devi_file,
         f_trust_lo=f_trust_lo, f_trust_hi=f_trust_hi,
         type_map=input.type_map, work_dir=work_dir,
     )
@@ -126,7 +127,7 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
 def __export_remote_functions():
 
     def bulk_select_structures_by_model_devi(model_devi_outputs: List[ArtifactDict],
-                                             model_devi_filename: str,
+                                             model_devi_file: str,
                                              f_trust_lo: float,
                                              f_trust_hi: float,
                                              type_map: List[str],
@@ -137,7 +138,7 @@ def __export_remote_functions():
         return joblib.Parallel(n_jobs=workers)(
             joblib.delayed(select_structures_by_model_devi)(
                 model_devi_output=output,
-                model_devi_filename=model_devi_filename,
+                model_devi_file=model_devi_file,
                 f_trust_lo=f_trust_lo, f_trust_hi=f_trust_hi,
                 type_map=type_map,
                 work_dir=os.path.join(work_dir, 'model_devi', f'{i:06}')
@@ -147,7 +148,7 @@ def __export_remote_functions():
 
 
     def select_structures_by_model_devi(model_devi_output: ArtifactDict,
-                                        model_devi_filename: str,
+                                        model_devi_file: str,
                                         f_trust_lo: float,
                                         f_trust_hi: float,
                                         type_map: List[str],
@@ -156,24 +157,29 @@ def __export_remote_functions():
         """
         analysis the model_devi output of explore stage and select candidates
         """
+
+
         os.makedirs(work_dir, exist_ok=True)
-        model_devi_out_url = model_devi_output['url']
+        dump_json(model_devi_output, os.path.join(work_dir, 'model_devi_output.debug.json'))
+
+        model_devi_dir = model_devi_output['url']
+        model_devi_file = model_devi_output['attrs'].pop('model_devi_file', model_devi_file)
+
         force_col = 'max_devi_f'
         print(f'criteria: {f_trust_lo} <= {force_col} < {f_trust_hi}')
 
         # get path of model_devi file
         data_format = get_data_format(model_devi_output)  # type: ignore
         if data_format in (DataFormat.LAMMPS_OUTPUT_DIR, DataFormat.LASP_LAMMPS_OUT_DIR):
-            model_devi_out_file = os.path.join(model_devi_out_url, model_devi_filename)
+            model_devi_file = os.path.join(model_devi_dir, model_devi_file)
         else:
             raise ValueError('unknown model_devi_data types')
-        logger.info('start to analysis file: %s', model_devi_out_file)
+        logger.info('start to analysis file: %s', model_devi_file)
 
         # load model_devi data
-        with open(model_devi_out_file, 'r') as f:
+        with open(model_devi_file, 'r') as f:
             text = f.read()
         df = pd.read_csv(StringIO(text.lstrip('#')), delim_whitespace=True)
-
         # layout:
         #        step  max_devi_v  min_devi_v  avg_devi_v  max_devi_f  min_devi_f  avg_devi_f
         # 0        0    0.006793    0.000672    0.003490    0.143317    0.005612    0.026106
@@ -185,7 +191,7 @@ def __export_remote_functions():
         poor_df   = df[df[force_col] >= f_trust_hi]
 
         stats = {
-            'src': model_devi_out_file,
+            'src': model_devi_file,
             'total': len(df),
             'good': len(good_df),
             'decent': len(decent_df),
@@ -199,10 +205,11 @@ def __export_remote_functions():
             if data_format == DataFormat.LAMMPS_OUTPUT_DIR:
                 atoms_list = []
                 for frame_id in decent_df.step:
-                    dump_file = os.path.join(model_devi_out_url, LAMMPS_TRAJ_DIR, f'{frame_id}{LAMMPS_TRAJ_SUFFIX}')
+                    lammps_dump_dir = model_devi_output['attrs'].pop('lammps_dump_dir', LAMMPS_DUMP_DIR)
+                    dump_file = os.path.join(model_devi_dir, lammps_dump_dir, f'{frame_id}{LAMMPS_DUMP_SUFFIX}')
                     atoms_list.extend(ase.io.read(dump_file, ':', format='lammps-dump-text', specorder=type_map))
             elif data_format == DataFormat.LASP_LAMMPS_OUT_DIR:
-                structures_file = os.path.join(model_devi_out_url, 'structures.xyz')
+                structures_file = os.path.join(model_devi_dir, 'structures.xyz')
                 atoms_list = list(itemgetter(*decent_df.step)(ase.io.read(structures_file, ':', format='extxyz')))  # type: ignore
             else:
                 raise ValueError('unknown model_devi_data types')
@@ -212,7 +219,6 @@ def __export_remote_functions():
                 'format': DataFormat.EXTXYZ,
                 'attrs': {
                     **model_devi_output['attrs'],
-                    'size': len(atoms_list)
                 }
             }
         dump_json([decent_structures_artifact, stats], os.path.join(work_dir, 'output.debug.json'))
@@ -263,33 +269,36 @@ def __export_remote_functions():
         # load structures and save it to a tmp file for ASAP to load
         atoms_list = [atoms for _, atoms in artifacts_to_ase_atoms(candidates, type_map=type_map)]
 
-        if len(atoms_list) < max_structures_per_system:
-            ...  # TODO: no need for extra screening
+        if len(atoms_list) < max(max_structures_per_system, 10):
+            # Nothing to do when the total number of atoms is small
+            # FIXME: there are a lot of potential issue when the number of atoms is small
+            # the root cause is in asaplib, which I guess is not tested with small dataset
+            selected_atoms_list = atoms_list
+        else:
+            tmp_structures_file = os.path.join(work_dir, '.tmp-structures.xyz')
+            ase.io.write(tmp_structures_file, atoms_list, format='extxyz')
 
-        tmp_structures_file = os.path.join(work_dir, '.tmp-structures.xyz')
-        ase.io.write(tmp_structures_file, atoms_list, format='extxyz')
+            # use asaplib to group structures
+            asapxyz = ASAPXYZ(tmp_structures_file)
 
-        # use asaplib to group structures
-        asapxyz = ASAPXYZ(tmp_structures_file)
+            # group structures
+            path_prefix = os.path.join(work_dir, 'asap')
+            descriptors, _ = get_descriptor(asapxyz, descriptor_opt, path_prefix=path_prefix)
+            reduced_descriptors = reduce_dimension(descriptors, dim_reducer_opt)
+            trainer = get_trainer(reduced_descriptors, cluster_opt)
+            cluster_labels = get_cluster(asapxyz, reduced_descriptors, trainer, path_prefix=path_prefix)
 
-        # group structures
-        path_prefix = os.path.join(work_dir, 'asap')
-        descriptors, _ = get_descriptor(asapxyz, descriptor_opt, path_prefix=path_prefix)
-        reduced_descriptors = reduce_dimension(descriptors, dim_reducer_opt)
-        trainer = get_trainer(reduced_descriptors, cluster_opt)
-        cluster_labels = get_cluster(asapxyz, reduced_descriptors, trainer, path_prefix=path_prefix)
+            # if max_structures_per_system is not set
+            # selected at least 1 structure from each group
+            if max_structures_per_system <= 0:
+                max_structures_per_system = len(cluster_labels)
 
-        # if max_structures_per_system is not set
-        # selected at least 1 structure from each group
-        if max_structures_per_system <= 0:
-            max_structures_per_system = len(cluster_labels)
-
-        # unpack clusters into a list and
-        # ensure frames of the same group won't be next to each other
-        # so that we can pick up distinct structures by simply choose the first N frames
-        order_frames = flat_evenly(cluster_labels.values())
-        selected_frames = order_frames[:max_structures_per_system]
-        selected_atoms_list = [atoms_list[i] for i in selected_frames]
+            # unpack clusters into a list and
+            # ensure frames of the same group won't be next to each other
+            # so that we can pick up distinct structures by simply choose the first N frames
+            order_frames = flat_evenly(cluster_labels.values())
+            selected_frames = order_frames[:max_structures_per_system]
+            selected_atoms_list = [atoms_list[i] for i in selected_frames]
 
         # write selected structures to file
         distinct_structures_file = os.path.join(work_dir,  'distinct_structures.xyz')

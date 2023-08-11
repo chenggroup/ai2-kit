@@ -89,7 +89,7 @@ DEFAULT_ASAP_PCA_REDUCER = {
 
 _DEFAULT_LAMMPS_TOP = '''\
 $$VARIABLES
-$$EXTRA_VARIABLES
+$$EXTRA_VARS
 
 $$INITIALIZE
 
@@ -127,7 +127,7 @@ pair_style  hybrid/overlay &
 pair_coeff  * * deepmd 1 *
 pair_coeff  * * deepmd 2 *
 
-fix PES-Sampling all adapt 0 &
+fix PES_Sampling all adapt 0 &
     pair deepmd:1 scale * * v_LAMBDA_f &
     pair deepmd:2 scale * * v_LAMBDA_i
 '''
@@ -136,14 +136,14 @@ _DP_FEP_UNI_FORCE_FIELD = '''\
 variable LAMBDA_i equal 1-v_LAMBDA_f
 
 pair_style  hybrid/overlay &
-            $$PAIR_STYLE_EXT
+            $$PAIR_STYLE_EXT &
             deepmd $$DP_MODELS_0 type_order $$DP_FEP_INI_TYPE_ORDER &
             deepmd $$DP_MODELS_0 type_order $$DP_FEP_FIN_TYPE_ORDER
 $$PAIR_COEFF_EXT
 pair_coeff  * * deepmd 1 *
 pair_coeff  * * deepmd 2 *
 
-fix PES-Sampling all adapt 0 &
+fix PES_Sampling all adapt 0 &
     pair deepmd:1 scale * * v_LAMBDA_f &
     pair deepmd:2 scale * * v_LAMBDA_i
 '''
@@ -152,6 +152,7 @@ def _get_fep_rerun_setting(ns: str, in_data:str, in_traj: str):
     return f'''\
 clear
 # Rerun model deviation: {ns}
+shell mkdir traj-{ns}
 $$INITIALIZE
 read_data {in_data}
 $$MASS_MAP_BASE
@@ -167,11 +168,20 @@ dump 1 all custom 1 traj-{ns}/*.lammpstrj id type x y z
 rerun {in_traj} first 0 last 1000000000000 every 1 dump x y z box yes
 '''
 
+# Notes
+# 1. LAMMPS shell command use triple quote to pass a string with space and special chars in it.
+# e.g """ "$$SPECORDER" """
+# 2. ase read lammps-data format need to set style to "atomic"
+# ref: https://gitlab.com/ase/ase/-/issues/1126
 _FEP_UNI_BOTTOM = '\n'.join(['''\
 # Run post processing script
+shell env > debug.env.txt
 shell cat traj/*.lammpstrj > traj.lammpstrj
-shell ai2-kit tool ase read traj.lammpstrj --format lammps-dump-text --specorder "$$SPECORDER" - write ini.lammpstrj
-shell ai2-kit tool ase read traj.lammpstrj --format lammps-dump-text --specorder "$$SPECORDER" - delete_atoms "$$DELETE_ATOMS" - write fin.lammpstrj
+shell cp ${DATA_FILE} ini.data
+clear
+shell $$AI2KIT_CMD tool ase read traj.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER" """ - write ini.lammpstrj --format lammps-dump-text  --type_map """ "$$SPECORDER_BASE" """
+shell $$AI2KIT_CMD tool ase read traj.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER" """ - delete_atoms """ "$$DELETE_ATOMS" """ - write fin.lammpstrj --format lammps-dump-text --type_map """ "$$SPECORDER_BASE" """
+shell $$AI2KIT_CMD tool ase read ini.data --format lammps-data --style "atomic" - delete_atoms """ "$$DELETE_ATOMS" """ - write fin.data --format lammps-data
 ''',
     _get_fep_rerun_setting('ini', 'ini.data', 'ini.lammpstrj'),
     _get_fep_rerun_setting('fin', 'fin.data', 'fin.lammpstrj'),

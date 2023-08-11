@@ -292,7 +292,9 @@ def __export_remote_functions():
         # generate tasks input
         task_dirs = []
         for i, combination in enumerate(combinations):
-            template_vars = {}
+            template_vars = {
+                'AI2KIT_CMD': 'ai2-kit',  # TODO: this should be configurable via ctx.config instead of template vars
+            }
             lammps_vars = dict(zip(combination_fields, combination))
 
             # setup task dir
@@ -339,7 +341,9 @@ def __export_remote_functions():
             for loc in ghost_loc:
                 fep_fin_type_order[loc] = DP_GHOST
 
-            template_vars['SPECORDER'] = specorder
+            template_vars['SPECORDER'] = specorder  # type: ignore
+            template_vars['SPECORDER_BASE'] = type_map  # type: ignore
+
             template_vars['DP_DEFAULT_TYPE_ORDER'] = ' '.join(map(str, range(len(type_map))))
             template_vars['DP_FEP_INI_TYPE_ORDER'] = ' '.join(map(str, fep_ini_type_order))
             template_vars['DP_FEP_FIN_TYPE_ORDER'] = ' '.join(map(str, fep_fin_type_order))

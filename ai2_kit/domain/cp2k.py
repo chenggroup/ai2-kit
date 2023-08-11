@@ -1,7 +1,7 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import merge_dict, dict_nested_get, list_split, list_sample
+from ai2_kit.core.util import merge_dict, dict_nested_get, list_split, list_sample, dump_json
 from ai2_kit.core.log import get_logger
 
 from typing import List, Union, Tuple, Literal, Optional
@@ -137,7 +137,6 @@ def __export_remote_functions():
                             input_file_name: str = 'input.inp',
                             ) -> List[ArtifactDict]:
         """Generate CP2K input files from LAMMPS dump files or XYZ files."""
-        import ase.io
         from ase import Atoms
 
         task_dirs = []
@@ -150,15 +149,16 @@ def __export_remote_functions():
             # create task dir
             task_dir = os.path.join(base_dir, f'{str(i).zfill(6)}')
             os.makedirs(task_dir, exist_ok=True)
+            dump_json(data_file, os.path.join(task_dir, 'debug.data-file.json'))
 
-            overridable_params: dict = dict_nested_get(data_file, ['attrs', 'cp2k'], dict())  # type: ignore
-            input_template = overridable_params.get('input_template', input_template)
-
-            if input_template is str:
-                input_template = loads_cp2k_input(input_template)
-            assert input_template is not None, 'input_template is not found'
-
+            overridable_params: dict = copy.deepcopy(dict_nested_get(data_file, ['attrs', 'cp2k'], dict()))  # type: ignore
             input_data = copy.deepcopy(input_template)
+            input_data = overridable_params.get('input_template', input_data)
+
+            if isinstance(input_data, str):
+                input_data = loads_cp2k_input(input_data)
+
+            assert isinstance(input_data, dict) and input_data, 'input_data must be a non-empty dict'
             coords, cell = ase_atoms_to_cp2k_input_data(atoms)
             merge_dict(input_data, {
                 'FORCE_EVAL': {

@@ -47,7 +47,7 @@ class AseHelper:
     def _write_lammps_dump_text(self, filename: str, atoms_list, **kwargs):
         if not isinstance(atoms_list, list):
             atoms_list = [atoms_list]
-        type_map = kwargs.get('type_map', None)
+        type_map = kwargs.get('type_map')
         lines = []
         for i, atoms in enumerate(atoms_list):
             lines += [

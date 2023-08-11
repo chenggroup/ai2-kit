@@ -1,4 +1,7 @@
 # Change Logs
+## v0.6.1
+* fix: data handling bug
+
 ## v0.6.0
 * feat: Support training DP model for FEP simulation
 * feat: ase tool support delete_atoms

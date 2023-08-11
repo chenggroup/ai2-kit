@@ -660,7 +660,9 @@ document.write(`
         <span class="c1"># generate tasks input</span>
         <span class="n">task_dirs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">combination</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">combinations</span><span class="p">):</span>
-            <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;AI2KIT_CMD&#39;</span><span class="p">:</span> <span class="s1">&#39;ai2-kit&#39;</span><span class="p">,</span>  <span class="c1"># TODO: this should be configurable via ctx.config instead of template vars</span>
+            <span class="p">}</span>
             <span class="n">lammps_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">combination_fields</span><span class="p">,</span> <span class="n">combination</span><span class="p">))</span>
 
             <span class="c1"># setup task dir</span>
@@ -707,7 +709,9 @@ document.write(`
             <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">ghost_loc</span><span class="p">:</span>
                 <span class="n">fep_fin_type_order</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">=</span> <span class="n">DP_GHOST</span>
 
-            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SPECORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">specorder</span>
+            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SPECORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">specorder</span>  <span class="c1"># type: ignore</span>
+            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SPECORDER_BASE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">type_map</span>  <span class="c1"># type: ignore</span>
+
             <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;DP_DEFAULT_TYPE_ORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">type_map</span><span class="p">))))</span>
             <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;DP_FEP_INI_TYPE_ORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">fep_ini_type_order</span><span class="p">))</span>
             <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;DP_FEP_FIN_TYPE_ORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">fep_fin_type_order</span><span class="p">))</span>

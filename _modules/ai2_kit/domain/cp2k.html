@@ -369,7 +369,7 @@ document.write(`
 <span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashTemplate</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.job</span> <span class="kn">import</span> <span class="n">gather_jobs</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">merge_dict</span><span class="p">,</span> <span class="n">dict_nested_get</span><span class="p">,</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">list_sample</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">merge_dict</span><span class="p">,</span> <span class="n">dict_nested_get</span><span class="p">,</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">list_sample</span><span class="p">,</span> <span class="n">dump_json</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
@@ -505,7 +505,6 @@ document.write(`
                             <span class="n">input_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;input.inp&#39;</span><span class="p">,</span>
                             <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate CP2K input files from LAMMPS dump files or XYZ files.&quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">ase.io</span>
         <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
 
         <span class="n">task_dirs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -518,15 +517,16 @@ document.write(`
             <span class="c1"># create task dir</span>
             <span class="n">task_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">dump_json</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;debug.data-file.json&#39;</span><span class="p">))</span>
 
-            <span class="n">overridable_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">dict_nested_get</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">,</span> <span class="s1">&#39;cp2k&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
-            <span class="n">input_template</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_template&#39;</span><span class="p">,</span> <span class="n">input_template</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">input_template</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
-                <span class="n">input_template</span> <span class="o">=</span> <span class="n">loads_cp2k_input</span><span class="p">(</span><span class="n">input_template</span><span class="p">)</span>
-            <span class="k">assert</span> <span class="n">input_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;input_template is not found&#39;</span>
-
+            <span class="n">overridable_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">dict_nested_get</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">,</span> <span class="s1">&#39;cp2k&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">()))</span>  <span class="c1"># type: ignore</span>
             <span class="n">input_data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">input_template</span><span class="p">)</span>
+            <span class="n">input_data</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_template&#39;</span><span class="p">,</span> <span class="n">input_data</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">input_data</span> <span class="o">=</span> <span class="n">loads_cp2k_input</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">input_data</span><span class="p">,</span> <span class="s1">&#39;input_data must be a non-empty dict&#39;</span>
             <span class="n">coords</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">ase_atoms_to_cp2k_input_data</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
             <span class="n">merge_dict</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="p">{</span>
                 <span class="s1">&#39;FORCE_EVAL&#39;</span><span class="p">:</span> <span class="p">{</span>

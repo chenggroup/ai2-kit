@@ -521,10 +521,10 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 <span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="kt">!join</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">*base_dir</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">explore</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">includes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POSCAR*</span>
 <span class="w">    </span><span class="nt">attrs</span><span class="p">:</span><span class="w">  </span><span class="c1"># 如有需要可在这里针对特定体系指定特定的软件配置, 此例无需此配置，因此放空</span>
-<span class="w">      </span><span class="nt">lammps</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">plumed_config_file</span><span class="p">:</span><span class="w">   </span>
-<span class="w">      </span><span class="nt">cp2k</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">input_template_file</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># lammps:</span>
+<span class="w">      </span><span class="c1">#   plumed_config: !load_text plumed.in</span>
+<span class="w">      </span><span class="c1"># cp2k:</span>
+<span class="w">      </span><span class="c1">#   input_template: !load_text cp2k.inp</span>
 </pre></div>
 </div>
 <p>这里我们使用 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 提供的自定义 tag <code class="docutils literal notranslate"><span class="pre">!join</span></code> 来简化数据配置, 相关功能可查看 <a class="reference internal" href="tips.html"><span class="doc std std-doc">TIPS</span></a> 文档。</p>

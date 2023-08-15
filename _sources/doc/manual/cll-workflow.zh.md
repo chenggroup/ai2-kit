@@ -88,10 +88,10 @@ artifacts:
     url: !join [*base_dir, explore]
     includes: POSCAR*
     attrs:  # 如有需要可在这里针对特定体系指定特定的软件配置, 此例无需此配置，因此放空
-      lammps:
-        plumed_config_file:   
-      cp2k:
-        input_template_file:
+      # lammps:
+      #   plumed_config: !load_text plumed.in
+      # cp2k:
+      #   input_template: !load_text cp2k.inp
 ```
 
 这里我们使用 `ai2-kit` 提供的自定义 tag `!join` 来简化数据配置, 相关功能可查看 [TIPS](./tips.md) 文档。

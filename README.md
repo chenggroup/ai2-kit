@@ -44,6 +44,7 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 * [Checkpoint Mechanism](doc/manual/checkpoint.md)
 * HPC Executor Introduction: [中文](doc/manual/hpc-executor.zh.md)
 * [ASE Toolkit](doc/manual/ase.md)
+* [DpData Toolkit](doc/manual/dpdata.md)
 * [Tips](doc/manual/tips.md)
 
 

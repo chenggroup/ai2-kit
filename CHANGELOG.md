@@ -1,4 +1,9 @@
 # Change Logs
+
+## v0.6.2
+* improvement: [cll-workflow] save good/decent/poor structures in xyz file.
+* feat: implement dpdata tool, more details [here](./doc/manual/dpdata.md)
+
 ## v0.6.1
 * fix: data handling bug
 

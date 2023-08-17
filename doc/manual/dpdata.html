@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>AI2-Kit HPC Executor &#8212; ai2-kit Reference</title>
+    <title>Dpdata Toolkit &#8212; ai2-kit Reference</title>
   
   
   
@@ -61,11 +61,9 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'doc/manual/hpc-executor.zh';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'doc/manual/dpdata';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="ai2_kit" href="../../_api/modules.html" />
-    <link rel="prev" title="CLL 势函数训练工作流" href="cll-workflow.zh.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -163,9 +161,9 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">中文文档</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="cll-workflow.zh.html">CLL 势函数训练工作流</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">AI<sup>2</sup>-Kit HPC Executor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hpc-executor.zh.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="nav bd-sidenav">
@@ -293,7 +291,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fdoc/manual/hpc-executor.zh.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fdoc/manual/dpdata.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -323,7 +321,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../../_sources/doc/manual/hpc-executor.zh.md" target="_blank"
+      <li><a href="../../_sources/doc/manual/dpdata.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -405,7 +403,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>AI<sup>2</sup>-Kit HPC Executor</h1>
+    <h1>Dpdata Toolkit</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -415,15 +413,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">介绍</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">使用方法</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">基本用法</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python">远程执行 Python 函数</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">提交作业</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">等待作业完成</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">实现简单工作流</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
 </ul>
             </nav>
         </div>
@@ -435,164 +426,49 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="ai-sup-2-sup-kit-hpc-executor">
-<h1>AI<sup>2</sup>-Kit HPC Executor<a class="headerlink" href="#ai-sup-2-sup-kit-hpc-executor" title="Permalink to this heading">#</a></h1>
-<section id="id1">
-<h2>介绍<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 实现了一个轻量级的 HPC 执行器用于提交和管理 HPC 集群上的作业。相比于其它的 HPC 调度器或者支持 HPC 的工作流框架 (如 DpDispatcher, parsl, DFlow, etc), <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> 具有以下特点:</p>
-<ul class="simple">
-<li><p>支持 SSH 远程执行和本地执行两种模式</p></li>
-<li><p>支持通过跳板机连接 HPC 集群</p></li>
-<li><p>支持远程执行 Python 函数</p></li>
-<li><p>支持在登录节点直接执行简单命令或者函数</p></li>
-<li><p>更高效稳定的作业状态轮询机制</p></li>
-<li><p>基于 Checkpoint 的状态恢复机制</p></li>
-<li><p>支持同步或者异步等待作业执行</p></li>
-<li><p>易于定制或与其它框架集成</p></li>
-</ul>
-<p>如果您在使用其它方案时遇到以下问题，不妨试试 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code>：</p>
-<ul class="simple">
-<li><p>过高的上手和学习成本</p></li>
-<li><p>连接不稳定</p></li>
-<li><p>需要频繁将数据复制到本地进行处理后再提交回集群运行</p></li>
-</ul>
-<p>当前, <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> 只支持 Slurm 作业系统，对其它作业系统的支持视实际需求而定，欢迎提交 Issue 或 PR。</p>
-<p>如果需要功能更强大的工作流引擎，推荐尝试 <a class="reference external" href="https://github.com/dptech-corp/dflow">DFlow</a>, <a class="reference external" href="https://github.com/AgnostiqHQ/covalent.git">covalent</a>, <a class="reference external" href="https://github.com/Parsl/parsl">parsl</a>。</p>
-</section>
-<section id="id2">
-<h2>使用方法<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
-<section id="id3">
-<h3>基本用法<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
-<p>初始化 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> 有两种方式，使用字典配置或者 <code class="docutils literal notranslate"><span class="pre">Pydantic</span></code> 对象， 两种方式的配置项完全一致，前者更适合直接使用，后者更适合集成到其它框架。 以下为使用字典进行配置的示例。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.executor</span> <span class="kn">import</span> <span class="n">HpcExecutor</span>
-
-<span class="n">executor</span> <span class="o">=</span> <span class="n">HpcExecutor</span><span class="o">.</span><span class="n">from_config</span><span class="p">({</span>
-    <span class="s1">&#39;ssh&#39;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># 指定 ssh 连接信息，如果缺省则使用本地执行</span>
-        <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;user01@hpc-login01&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;gateway&#39;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># 如果需要通过跳板机连接,可指定此配置 (可选) </span>
-          <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;user01@jump-host&#39;</span><span class="p">,</span>  
-        <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="s1">&#39;queue_system&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;slurm&#39;</span><span class="p">:</span> <span class="p">{}</span>  <span class="c1"># 指定作业系统为 Slurm </span>
-    <span class="p">},</span>
-    <span class="s1">&#39;work_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/user01/ai2-kit/work_dir&#39;</span><span class="p">,</span>  <span class="c1"># 指定工作目录</span>
-    <span class="s1">&#39;python_cmd&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/user01/conda/env/py39/bin/python&#39;</span><span class="p">,</span>  <span class="c1"># 指定 Python 解释器</span>
-<span class="p">},</span> <span class="s1">&#39;cheng-lab&#39;</span><span class="p">)</span>  <span class="c1"># 指定集群名称 （可选）</span>
-
-<span class="n">executor</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>  <span class="c1"># 初始化执行器</span>
-<span class="n">executor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;echo &quot;hello world&quot;&#39;</span><span class="p">)</span>  <span class="c1"># 在登录节点执行命令</span>
+  <section class="tex2jax_ignore mathjax_ignore" id="dpdata-toolkit">
+<h1>Dpdata Toolkit<a class="headerlink" href="#dpdata-toolkit" title="Permalink to this heading">#</a></h1>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata
 </pre></div>
 </div>
-<p>上述示例完成如下工作：</p>
-<ol class="arabic simple">
-<li><p>实例化一个 <code class="docutils literal notranslate"><span class="pre">HpcExecutor</span></code> 对象</p></li>
-<li><p>初始化 <code class="docutils literal notranslate"><span class="pre">HpcExecutor</span></code> 对象</p></li>
-<li><p>在登录节点执行命令 <code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">&quot;hello</span> <span class="pre">world&quot;</span></code></p></li>
-</ol>
+<p>This toolkit is a command line wrapper of <a class="reference external" href="https://github.com/deepmodeling/dpdata">dpdata</a> to allow user to process DeepMD dataset via command line.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
+<p>This toolkit include the following commands:</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Command</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Example</p></th>
+<th class="head"><p>Reference</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>read</p></td>
+<td><p>Read dataset into memory. This command by itself is useless, you should chain other command after reading data into memory.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">tool</span> <span class="pre">dpdata</span> <span class="pre">read</span> <span class="pre">./path/to/dataset</span> <span class="pre">--fmt</span> <span class="pre">deepmd/npy</span></code></p></td>
+<td><p>Support wildcard, can be call multiple time</p></td>
+</tr>
+<tr class="row-odd"><td><p>merge_write</p></td>
+<td><p>Use MultiSystems to merge dataset and write to directory.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">tool</span> <span class="pre">dpdata</span> <span class="pre">read</span> <span class="pre">./path/to/dataset</span> <span class="pre">--fmt</span> <span class="pre">deepmd/npy</span> <span class="pre">-</span> <span class="pre">merge_write</span> <span class="pre">./path/to/merged_dataset</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p>Those commands are chainable and can be used to process trajectory in a pipeline fashion (separated by <code class="docutils literal notranslate"><span class="pre">-</span></code>). For more information, please refer to the following examples.</p>
 </section>
-<section id="python">
-<h3>远程执行 Python 函数<a class="headerlink" href="#python" title="Permalink to this heading">#</a></h3>
-<p>在 HPC 上执行复杂的计算任务的通常模式是：</p>
-<ul class="simple">
-<li><p>在登录节点上通过命令行或者Python准备好计算任务的输入数据</p></li>
-<li><p>提交作业到队列并等待</p></li>
-<li><p>作业完成后在登录节点上使用命令行或者 Python 处理计算任务的输出数据</p></li>
-</ul>
-<p>为了满足上述模式，<code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> 除了提供 <code class="docutils literal notranslate"><span class="pre">run</span></code> 接口用于在登录节点执行命令外，还提供了 <code class="docutils literal notranslate"><span class="pre">run_python_fn</span></code> 用于在登录节点直接运行 Python 函数。</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># read multiple dataset generated by training workflow by wildcard and merge them into a single dataset</span>
+<span class="c1"># you can also call `read` multiple times to read multiple dataset from different directory</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">add</span><span class="p">)(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 在登录节点上运行 add 函数</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./workdir/iters-*/train-deepmd/converted_new_data/*<span class="w"> </span>--fmt<span class="w"> </span>deepmd/npy<span class="w"> </span>-<span class="w"> </span>merge_write<span class="w"> </span>./merged_dataset<span class="w">  </span>--fmt<span class="w"> </span>deepmd/npy
+
+<span class="c1"># You can also save data with hdf5 format</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./workdir/iters-*/train-deepmd/converted_new_data/*<span class="w"> </span>--fmt<span class="w"> </span>deepmd/npy<span class="w"> </span>-<span class="w"> </span>merge_write<span class="w"> </span>./merged.hdf5<span class="w"> </span>--fmt<span class="w"> </span>deepmd/hdf5
 </pre></div>
 </div>
-<p>需要注意的是，为了在远程节点执行本地 Python 函数必须满足以下条件：</p>
-<ul class="simple">
-<li><p>本地 Python 环境与远程 Python 环境的主版本需一致 (如同为 3.8.x)</p>
-<ul>
-<li><p>远程 Python 环境的配置可以通过 <code class="docutils literal notranslate"><span class="pre">python_cmd</span></code> 参数指定</p></li>
-</ul>
-</li>
-<li><p>函数的参数和返回值必须是可序列化的 (不能包含诸如锁、文件句柄等不可序列化的对象)</p></li>
-<li><p>函数依赖的软件包必须存在于登录节点的 Python 环境中</p>
-<ul>
-<li><p>例如，假设远程执行的函数使用了 <code class="docutils literal notranslate"><span class="pre">numpy</span></code> 包，那么登录节点的 Python 环境中必须存在 <code class="docutils literal notranslate"><span class="pre">numpy</span></code> 包</p></li>
-</ul>
-</li>
-<li><p>如果函数依赖于其它<strong>本地实现的方法或者类</strong>，这些方法和类需要通过特殊方式定义, 否则会在远程出现 <code class="docutils literal notranslate"><span class="pre">ModuleNotFoundError</span></code></p>
-<ul>
-<li><p>此为 cloudpickle 的限制，详见： <a class="reference external" href="https://stackoverflow.com/a/75293155/3099733">1</a></p></li>
-</ul>
-</li>
-</ul>
-</section>
-<section id="id4">
-<h3>提交作业<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> 提供了 <code class="docutils literal notranslate"><span class="pre">submit</span></code> 接口用于提交作业到 HPC 集群。 示例如下</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">script</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
-<span class="s1">#! /bin/bash</span>
-<span class="s1">#SBATCH --job-name=demo</span>
-<span class="s1">#SBATCH -N 1</span>
-<span class="s1">#SBATCH --ntasks-per-node=4</span>
-<span class="s1">#SBATCH --partition=cpu-small</span>
-<span class="s1">#SBATCH --mem=1G</span>
-
-<span class="s1">echo &quot;hello world&quot; &gt; output.txt</span>
-<span class="s1">&#39;&#39;&#39;</span>
-
-<span class="n">job</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>  <span class="c1"># 提交作业</span>
-</pre></div>
-</div>
-<p>除了上述直接编写脚本的方式外，也可以通过 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 提供的工具类生成脚本，示例如下：</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashTemplate</span>
-
-<span class="n">header</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
-<span class="s1">#SBATCH --job-name=demo</span>
-<span class="s1">#SBATCH -N 1</span>
-<span class="s1">#SBATCH --ntasks-per-node=4</span>
-<span class="s1">#SBATCH --partition=cpu-small</span>
-<span class="s1">#SBATCH --mem=1G</span>
-<span class="s1">&#39;&#39;&#39;</span>
-
-<span class="n">script</span> <span class="o">=</span> <span class="n">BashScript</span><span class="p">(</span>
-    <span class="n">template</span><span class="o">=</span><span class="n">BashTemplate</span><span class="p">(</span>
-        <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="n">steps</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">BashStep</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="s1">&#39;echo &quot;hello world&quot;&#39;</span><span class="p">),</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-
-<span class="n">job</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">script</span><span class="o">.</span><span class="n">render</span><span class="p">(),</span> <span class="n">cwd</span><span class="o">=</span><span class="s1">&#39;/path/to/cwd&#39;</span><span class="p">)</span>  <span class="c1"># 提交作业</span>
-</pre></div>
-</div>
-<p>同时，提交作业时可以指定额外的参数满足不同的需求，如设定执行目录和用于错误恢复的checkpoint文件。</p>
-</section>
-<section id="id5">
-<h3>等待作业完成<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
-<p>提交任务提交后可以有同步和异步两种方式等待其完成。示例如下：</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
-<span class="n">state</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>  <span class="c1"># 同步等待作业完成</span>
-
-<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="o">...</span>
-    <span class="n">state</span> <span class="o">=</span> <span class="k">await</span> <span class="n">job</span><span class="o">.</span><span class="n">result_async</span><span class="p">()</span>  <span class="c1"># 异步等待作业完成</span>
-</pre></div>
-</div>
-<p>同步等待由于会阻塞后续的代码执行，因此对于需要并行提交多个作业的场景不适用，此时可以使用异步等待。</p>
-</section>
-<section id="id6">
-<h3>实现简单工作流<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
-<p>虽然 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 并未提供工作流调度引擎，但对于简单的任务来说，借助 Python 的异步支持和 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 提供的工具类，可以很容易实现一个简单的工作流。接下来通过实现以下一个简单的任务做为演示：</p>
-<ul class="simple">
-<li><p>前处理：实现一个 Python 函数创建 n 个工作目录及一个包含一个随机数的 input 文件</p></li>
-<li><p>提交 n 个作业脚本，每个作业脚本读取 input 中的数字计算其平方写入 output 文件中</p></li>
-<li><p>后处理：实现一个 Python 函数，在所有作业完成后读出所有文件的 output 值并求和</p></li>
-</ul>
-<p>具体的代码实现可在 <span class="xref download myst">simple-workflow</span> 中查看。</p>
-<p>从代码实现上可以看出，通过 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 实现的工作流本质仍然是普通的 Python 代码，只是当需要在远程执行函数或者提交作业时才会调用到 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> 提供的接口。因此，对于熟悉 Python 编码的同学上手 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 并不困难。</p>
-<p>更复杂的工作流也是采用同样的思路实现，只是在此基础上增加了针对配置文件的建模和解析，以及使用条件分支和循环进行流程控制。如有兴趣可参考 <code class="docutils literal notranslate"><span class="pre">ai2-kit.workflow</span></code> 模块中的代码。</p>
-</section>
 </section>
 </section>
 
@@ -627,24 +503,6 @@ document.write(`
   
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="cll-workflow.zh.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">CLL 势函数训练工作流</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="../../_api/modules.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ai2_kit</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div></div>
   
 </div>
@@ -663,15 +521,8 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">介绍</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">使用方法</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">基本用法</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python">远程执行 Python 函数</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">提交作业</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">等待作业完成</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">实现简单工作流</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
 </ul>
   </nav></div>
 

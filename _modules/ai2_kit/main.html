@@ -205,6 +205,7 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.tool.html">ai2_kit.tool package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 </ul>
 </li>
@@ -426,11 +427,17 @@ document.write(`
         <span class="k">return</span> <span class="n">AseHelper</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dpdata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ai2_kit.tool.dpdata</span> <span class="kn">import</span> <span class="n">DpdataHelper</span>
+        <span class="k">return</span> <span class="n">DpdataHelper</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">ai2_kit.core.checkpoint</span> <span class="kn">import</span> <span class="n">CheckpointCmd</span>
         <span class="k">return</span> <span class="n">CheckpointCmd</span></div>
 
-<span class="n">kit</span> <span class="o">=</span> <span class="n">Group</span><span class="p">({</span>
+
+<span class="n">ai2_kit</span> <span class="o">=</span> <span class="n">Group</span><span class="p">({</span>
     <span class="s1">&#39;workflow&#39;</span><span class="p">:</span> <span class="n">WorkflowGroup</span><span class="p">(),</span>
     <span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="n">Group</span><span class="p">({</span>
         <span class="s1">&#39;proton-transfer&#39;</span><span class="p">:</span> <span class="n">ProtonTransferGroup</span><span class="p">(),</span>
@@ -440,7 +447,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../_api/ai2_kit.main.html#ai2_kit.main.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">Fire</span><span class="p">(</span><span class="n">kit</span><span class="p">)</span></div>
+    <span class="n">Fire</span><span class="p">(</span><span class="n">ai2_kit</span><span class="p">)</span></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>

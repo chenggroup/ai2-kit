@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ai2_kit.core.artifact &#8212; ai2-kit Reference</title>
+    <title>ai2_kit.tool.dpdata &#8212; ai2-kit Reference</title>
   
   
   
@@ -60,7 +60,7 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/ai2_kit/core/artifact';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/ai2_kit/tool/dpdata';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -290,7 +290,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2F_modules/ai2_kit/core/artifact.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2F_modules/ai2_kit/tool/dpdata.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -366,67 +366,53 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <h1>Source code for ai2_kit.core.artifact</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">TypedDict</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+  <h1>Source code for ai2_kit.tool.dpdata</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">ensure_dir</span>
 
+<span class="kn">import</span> <span class="nn">dpdata</span>
+<span class="kn">import</span> <span class="nn">glob</span>
 
-<span class="k">def</span> <span class="nf">__ArtifactDict</span><span class="p">():</span>
-    <span class="k">class</span> <span class="nc">ArtifactDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A dict representation of Artifact.</span>
-<span class="sd">        Use this when you need to run a remote function call as pydantic model is not pickleable.</span>
+<div class="viewcode-block" id="DpdataHelper"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper">[docs]</a><span class="k">class</span> <span class="nc">DpdataHelper</span><span class="p">:</span>
 
-<span class="sd">        referrer is not included in this dict as it is not pickleable.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>
-        <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span>
-        <span class="n">executor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-        <span class="nb">format</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-        <span class="n">includes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-        <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">ArtifactDict</span>
-<span class="n">ArtifactDict</span> <span class="o">=</span> <span class="n">__ArtifactDict</span><span class="p">()</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_label</span> <span class="o">=</span> <span class="n">label</span>
 
+<div class="viewcode-block" id="DpdataHelper.read"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">file_path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;fmt&#39;</span><span class="p">,</span> <span class="s1">&#39;deepmd/npy&#39;</span><span class="p">)</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">file_path_or_glob</span><span class="p">:</span>
+            <span class="n">files</span> <span class="o">+=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="s1">&#39;*&#39;</span> <span class="ow">in</span> <span class="n">file_path</span> <span class="k">else</span> <span class="p">[</span><span class="n">file_path</span><span class="p">]</span>
 
-<div class="viewcode-block" id="Artifact"><a class="viewcode-back" href="../../../_api/ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact">[docs]</a><span class="k">class</span> <span class="nc">Artifact</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No file found for </span><span class="si">{</span><span class="n">file_path_or_glob</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">executor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="nb">format</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">includes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<div class="viewcode-block" id="DpdataHelper.merge_write"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.merge_write">[docs]</a>    <span class="k">def</span> <span class="nf">merge_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;deepmd/npy&#39;</span><span class="p">):</span>
+        <span class="n">ensure_dir</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No data to merge&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Artifact.of"><a class="viewcode-back" href="../../../_api/ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact.of">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">of</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
-           <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-           <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-           <span class="n">executor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-           <span class="n">includes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-           <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-           <span class="nb">format</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an Artifact instance. Use this instead of __init__ to avoid type error of pydantic&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
-                   <span class="n">executor</span><span class="o">=</span><span class="n">executor</span><span class="p">,</span>
-                   <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span>
-                   <span class="n">includes</span><span class="o">=</span><span class="n">includes</span><span class="p">,</span>
-                   <span class="n">attrs</span><span class="o">=</span><span class="nb">dict</span><span class="p">()</span> <span class="k">if</span> <span class="n">attrs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">attrs</span><span class="p">),</span>  <span class="c1"># deepcopy to reduce chance of mistake</span>
-                   <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span></div>
+        <span class="n">multi_systems</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">MultiSystems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">multi_systems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Artifact.to_dict"><a class="viewcode-back" href="../../../_api/ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactDict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert to a dict representation.</span>
-<span class="sd">        Use this when you need to run a remote function call as pydantic model is not pickleable.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span> <span class="c1"># type: ignore</span></div>
+        <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;deepmd/npy&#39;</span><span class="p">:</span>
+            <span class="n">multi_systems</span><span class="o">.</span><span class="n">to_deepmd_npy</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;deepmd/raw&#39;</span><span class="p">:</span>
+            <span class="n">multi_systems</span><span class="o">.</span><span class="n">to_deepmd_raw</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;deepmd/hdf5&#39;</span><span class="p">:</span>
+            <span class="n">multi_systems</span><span class="o">.</span><span class="n">to_deepmd_hdf5</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown fmt </span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Artifact.join"><a class="viewcode-back" href="../../../_api/ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact.join">[docs]</a>    <span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">paths</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="o">*</span><span class="n">paths</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">executor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
-
-
-<span class="n">ArtifactMap</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Artifact</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dpdata</span><span class="o">.</span><span class="n">System</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
 </pre></div>
 
                 </article>

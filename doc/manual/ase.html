@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.tool.html">ai2_kit.tool package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 </ul>
 </li>
@@ -446,9 +447,9 @@ document.write(`
 </thead>
 <tbody>
 <tr class="row-even"><td><p>read</p></td>
-<td><p>Read a trajectory file into memory. This command by itself is useless, you should chain other command after reading data into memory.</p></td>
+<td><p>Read trajectory files into memory. This command by itself is useless, you should chain other command after reading data into memory.</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">tool</span> <span class="pre">ase</span> <span class="pre">read</span> <span class="pre">./path/to/traj.xyz</span></code></p></td>
-<td><p><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/ase/io/io.html#ase.io.read">ase.io.read</a></p></td>
+<td><p><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/ase/io/io.html#ase.io.read">ase.io.read</a>, support wildcard, can be call multiple times</p></td>
 </tr>
 <tr class="row-odd"><td><p>write</p></td>
 <td><p>Write all frame of a trajectory into a single file.</p></td>
@@ -470,6 +471,11 @@ document.write(`
 <td><p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">tool</span> <span class="pre">ase</span> <span class="pre">read</span> <span class="pre">./path/to/traj.xyz</span> <span class="pre">-</span> <span class="pre">set_pbc</span> <span class="pre">&quot;[True,True,True]&quot;</span></code></p></td>
 <td><p><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/ase/atoms.html#ase.Atoms.set_pbc">ase.Atoms.set_pbc</a></p></td>
 </tr>
+<tr class="row-odd"><td><p>delete_atoms</p></td>
+<td><p>Delete atoms from all frames in the trajectory.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">tool</span> <span class="pre">ase</span> <span class="pre">read</span> <span class="pre">./path/to/traj.xyz</span> <span class="pre">-</span> <span class="pre">delete_atoms</span>&#160; <span class="pre">&quot;[1,2,3]&quot;</span></code></p></td>
+<td><p></p></td>
+</tr>
 </tbody>
 </table>
 <p>Those commands are chainable and can be used to process trajectory in a pipeline fashion (separated by <code class="docutils literal notranslate"><span class="pre">-</span></code>). For more information, please refer to the following examples.</p>
@@ -484,7 +490,16 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./path/to/traj.xyz<span class="w"> </span>--index<span class="w"> </span><span class="s1">&#39;::20&#39;</span><span class="w"> </span>-<span class="w"> </span>write_each_frame<span class="w"> </span><span class="s2">&quot;POSCAR-{i:04d}&quot;</span><span class="w"> </span>--format<span class="w"> </span>vasp<span class="w"> </span>
 
 <span class="c1"># Convert lammps dump data to a POSCAR file</span>
-ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./path/to/lammp-dump.data<span class="w"> </span>--format<span class="w"> </span>lammps-dump-text<span class="w"> </span>--noorder<span class="w"> </span>--specorder<span class="w"> </span><span class="s2">&quot;[&#39;O&#39;,&#39;H&#39;]&quot;</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span><span class="s2">&quot;POSCAR&quot;</span><span class="w"> </span>--format<span class="w"> </span>vasp<span class="w"> </span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./path/to/lammp-dump.data<span class="w"> </span>--format<span class="w"> </span>lammps-dump-text<span class="w"> </span>--specorder<span class="w"> </span><span class="s2">&quot;[&#39;O&#39;,&#39;H&#39;]&quot;</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span><span class="s2">&quot;POSCAR&quot;</span><span class="w"> </span>--format<span class="w"> </span>vasp
+
+<span class="c1"># Delete atoms from a trajectory</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>lammps.data<span class="w"> </span>--format<span class="w"> </span>lammps-data<span class="w"> </span>--style<span class="w"> </span>atomic<span class="w"> </span>-<span class="w"> </span>delete_atoms<span class="w"> </span><span class="s2">&quot;[10, 12]&quot;</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>lammps-fin.data<span class="w"> </span>--format<span class="w"> </span>lammps-data
+
+<span class="c1"># Read multiple files and write them into a single file</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./path/to/data1/*.xyz<span class="w"> </span>-<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./path/to/data2/*.xyz<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>all.xyz
+
+<span class="c1"># Read all `good` structures generate by CLL training workflow</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./workdir/iters-*/selector*/model-devi/*/good.xyz<span class="w">  </span>-<span class="w"> </span>write<span class="w"> </span>all-good.syz
 </pre></div>
 </div>
 </section>

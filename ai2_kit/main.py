@@ -58,11 +58,17 @@ class ToolGroup:
         return AseHelper
 
     @property
+    def dpdata(self):
+        from ai2_kit.tool.dpdata import DpdataHelper
+        return DpdataHelper
+
+    @property
     def checkpoint(self):
         from ai2_kit.core.checkpoint import CheckpointCmd
         return CheckpointCmd
 
-kit = Group({
+
+ai2_kit = Group({
     'workflow': WorkflowGroup(),
     'algorithm': Group({
         'proton-transfer': ProtonTransferGroup(),
@@ -72,7 +78,7 @@ kit = Group({
 
 
 def main():
-    Fire(kit)
+    Fire(ai2_kit)
 
 if __name__ == '__main__':
     main()

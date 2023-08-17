@@ -198,31 +198,39 @@ def __export_remote_functions():
             'poor': len(poor_df),
         }
 
-        # write decent structures into ase atoms and write to file
-        decent_structures_artifact = None
+        # load structures
+        atoms_list = []
+        if data_format == DataFormat.LAMMPS_OUTPUT_DIR:
+            lammps_dump_dir = model_devi_output['attrs'].pop('lammps_dump_dir', LAMMPS_DUMP_DIR)
+            for frame_id in df.step:
+                dump_file = os.path.join(model_devi_dir, lammps_dump_dir, f'{frame_id}{LAMMPS_DUMP_SUFFIX}')
+                atoms_list += ase.io.read(dump_file, ':', format='lammps-dump-text', specorder=type_map)
+        elif data_format == DataFormat.LASP_LAMMPS_OUT_DIR:
+            structures_file = os.path.join(model_devi_dir, 'structures.xyz')
+            atoms_list += ase.io.read(structures_file, ':', format='extxyz')
+        else:
+            raise ValueError('unknown model_devi_data types')
+
+        output_artifact = None
+        # dump structures to different files
+        if len(good_df) > 0:
+            good_file = os.path.join(work_dir, 'good.xyz')
+            ase.io.write(good_file, list(itemgetter(*good_df.index)(atoms_list)), format='extxyz')
+        if len(poor_df) > 0:
+            poor_file = os.path.join(work_dir, 'poor.xyz')
+            ase.io.write(poor_file, list(itemgetter(*poor_df.index)(atoms_list)), format='extxyz')
         if len(decent_df) > 0:
-            model_devi_decent_file = os.path.join(work_dir, 'model_devi_decent.xyz')
-            if data_format == DataFormat.LAMMPS_OUTPUT_DIR:
-                lammps_dump_dir = model_devi_output['attrs'].pop('lammps_dump_dir', LAMMPS_DUMP_DIR)
-                atoms_list = []
-                for frame_id in decent_df.step:
-                    dump_file = os.path.join(model_devi_dir, lammps_dump_dir, f'{frame_id}{LAMMPS_DUMP_SUFFIX}')
-                    atoms_list.extend(ase.io.read(dump_file, ':', format='lammps-dump-text', specorder=type_map))
-            elif data_format == DataFormat.LASP_LAMMPS_OUT_DIR:
-                structures_file = os.path.join(model_devi_dir, 'structures.xyz')
-                atoms_list = list(itemgetter(*decent_df.step)(ase.io.read(structures_file, ':', format='extxyz')))  # type: ignore
-            else:
-                raise ValueError('unknown model_devi_data types')
-            ase.io.write(model_devi_decent_file, atoms_list, format='extxyz')
-            decent_structures_artifact = {
-                'url': model_devi_decent_file,
+            decent_file = os.path.join(work_dir, 'decent.xyz')
+            ase.io.write(decent_file, list(itemgetter(*decent_df.index)(atoms_list)), format='extxyz')
+            output_artifact = {
+                'url': decent_file,
                 'format': DataFormat.EXTXYZ,
                 'attrs': {
                     **model_devi_output['attrs'],
                 }
             }
-        dump_json([decent_structures_artifact, stats], os.path.join(work_dir, 'output.debug.json'))
-        return decent_structures_artifact, stats  # type: ignore
+        dump_json([output_artifact, stats], os.path.join(work_dir, 'output.debug.json'))
+        return output_artifact, stats  # type: ignore
 
     def bulk_select_distinct_structures(candidates: List[ArtifactDict],
                                         descriptor_opt: dict,
@@ -233,7 +241,6 @@ def __export_remote_functions():
                                         max_structures_per_system: int = -1,
                                         workers: int = 4,
                                         ) -> List[ArtifactDict]:
-
         inputs = []
         for i, (ancestor_key, candidate_group) in enumerate(groupby(candidates, key=lambda c: c['attrs']['ancestor'])):
             candidate_group = list(candidate_group)
@@ -272,7 +279,7 @@ def __export_remote_functions():
         if len(atoms_list) < max(max_structures_per_system, 10):
             # Nothing to do when the total number of atoms is small
             # FIXME: there are a lot of potential issue when the number of atoms is small
-            # the root cause is in asaplib, which I guess is not tested with small dataset
+            # the root cause is in asaplib, which I guess has not been tested with small dataset
             selected_atoms_list = atoms_list
         else:
             tmp_structures_file = os.path.join(work_dir, '.tmp-structures.xyz')

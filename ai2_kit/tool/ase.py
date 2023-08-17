@@ -1,17 +1,23 @@
 import ase.io
-from ase import Atoms
+import glob
+
+from ai2_kit.core.util import ensure_dir
 from typing import List, Union
+from ase import Atoms
 
 class AseHelper:
     def __init__(self):
         self._atoms_list: List[Atoms] = []
 
-    def read(self, filename: str, **kwargs):
-        kwargs.setdefault('index', ':')
-        data = ase.io.read(filename, **kwargs)
-        if not isinstance(data, list):
-            data = [data]
-        self._atoms_list = data
+    def read(self, file_path_or_glob: str, **kwargs):
+        files = []
+        for file_path in file_path_or_glob:
+            files += glob.glob(file_path, recursive=True) if '*' in file_path else [file_path]
+
+        if len(files) == 0:
+            raise FileNotFoundError(f'No file found for {file_path_or_glob}')
+        for file in files:
+            self._read(file, **kwargs)
         return self
 
     def write(self, filename: str, **kwargs):
@@ -38,7 +44,15 @@ class AseHelper:
         for i, atoms in enumerate(self._atoms_list):
             self._write(filename.format(i=i), atoms, **kwargs)
 
+    def _read(self, filename: str, **kwargs):
+        kwargs.setdefault('index', ':')
+        data = ase.io.read(filename, **kwargs)
+        if not isinstance(data, list):
+            data = [data]
+        self._atoms_list = data
+
     def _write(self, filename: str, atoms_list, **kwargs):
+        ensure_dir(filename)
         fmt = kwargs.get('format', None)
         if fmt == 'lammps-dump-text':
             return self._write_lammps_dump_text(filename, atoms_list, **kwargs)

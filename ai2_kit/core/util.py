@@ -242,6 +242,12 @@ def __export_remote_functions():
         sys.stderr.flush()
 
 
+    def ensure_dir(path: str):
+        dirname = os.path.dirname(path)
+        if dirname:
+            os.makedirs(dirname, exist_ok=True)
+
+
     # export functions
     return (
         merge_dict,
@@ -254,6 +260,7 @@ def __export_remote_functions():
         dump_json,
         dump_text,
         flush_stdio,
+        ensure_dir,
     )
 
 
@@ -268,4 +275,5 @@ def __export_remote_functions():
     dump_json,
     dump_text,
     flush_stdio,
+    ensure_dir,
 ) = __export_remote_functions()

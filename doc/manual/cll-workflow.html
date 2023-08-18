@@ -606,7 +606,8 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 <span class="w">  </span><span class="nt">train</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">deepmd</span><span class="p">:</span><span class="w">  </span><span class="c1"># deepmd parameter configuration</span>
 <span class="w">      </span><span class="nt">model_num</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
-<span class="w">      </span><span class="c1"># The data used in this example has not been labeled, so it needs to be configured here. If there is an existing labeled deepmd/npy dataset, you can specify it here</span>
+<span class="w">      </span><span class="c1"># The data used in this example has not been labeled, so it needs to be configured here. </span>
+<span class="w">      </span><span class="c1"># If there is an existing labeled deepmd/npy dataset, you can specify it here.</span>
 <span class="w">      </span><span class="nt">init_dataset</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="p p-Indicator">]</span><span class="w">  </span>
 <span class="w">      </span><span class="nt">input_template</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">model</span><span class="p">:</span>
@@ -658,8 +659,10 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 <span class="w">  </span><span class="nt">label</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">cp2k</span><span class="p">:</span><span class="w">  </span><span class="c1"># Specify the cp2k parameter configuration</span>
 <span class="w">      </span><span class="nt">limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">      </span><span class="c1"># The data used in this example has not been labeled, so it needs to be configured here. If there is an existing labeled dataset, this should be empty</span>
-<span class="w">      </span><span class="c1"># When this configuration is empty, the workflow will automatically skip the label phase of the first iteration and start execution from the train phase</span>
+<span class="w">      </span><span class="c1"># The data used in this example has not been labeled, so it needs to be configured here. </span>
+<span class="w">      </span><span class="c1"># If there is an existing labeled dataset, this should be empty</span>
+<span class="w">      </span><span class="c1"># When this configuration is empty, the workflow will automatically skip the label phase of the first iteration </span>
+<span class="w">      </span><span class="c1"># and start execution from the train phase.</span>
 <span class="w">      </span><span class="nt">init_system_files</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">h2o_64-train</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">h2o_64-validation</span><span class="w"> </span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">input_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">        </span><span class="no">&amp;GLOBAL</span>

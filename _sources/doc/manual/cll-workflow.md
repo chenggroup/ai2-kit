@@ -177,7 +177,8 @@ workflow:
   train:
     deepmd:  # deepmd parameter configuration
       model_num: 4
-      # The data used in this example has not been labeled, so it needs to be configured here. If there is an existing labeled deepmd/npy dataset, you can specify it here
+      # The data used in this example has not been labeled, so it needs to be configured here. 
+      # If there is an existing labeled deepmd/npy dataset, you can specify it here.
       init_dataset: [ ]  
       input_template:
         model:
@@ -229,8 +230,10 @@ workflow:
   label:
     cp2k:  # Specify the cp2k parameter configuration
       limit: 10
-      # The data used in this example has not been labeled, so it needs to be configured here. If there is an existing labeled dataset, this should be empty
-      # When this configuration is empty, the workflow will automatically skip the label phase of the first iteration and start execution from the train phase
+      # The data used in this example has not been labeled, so it needs to be configured here. 
+      # If there is an existing labeled dataset, this should be empty
+      # When this configuration is empty, the workflow will automatically skip the label phase of the first iteration 
+      # and start execution from the train phase.
       init_system_files: [ h2o_64-train, h2o_64-validation ]
       input_template: |
         &GLOBAL

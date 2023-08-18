@@ -37,14 +37,14 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 
 ### Domain Specific Tools
 * [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
-* CLL MLP Training Workflow: [English](doc/manual/cll-workflow.md), [中文](doc/manual/cll-workflow.zh.md)
+* [CLL MLP Training Workflow](doc/manual/cll-workflow.md) ([zh](doc/manual/cll-workflow.zh.md))
 * [FEP MLP Training Workflow](doc/manual/fep-workflow.md)
 
 ### Build-in Functionalities
 * [Checkpoint Mechanism](doc/manual/checkpoint.md)
-* HPC Executor Introduction: [中文](doc/manual/hpc-executor.zh.md)
+* [HPC Executor Introduction](doc/manual//hpc-executor.md) ([zh](doc/manual/hpc-executor.zh.md))
 * [ASE Toolkit](doc/manual/ase.md)
-* [DpData Toolkit](doc/manual/dpdata.md)
+* [dpdata Toolkit](doc/manual/dpdata.md)
 * [Tips](doc/manual/tips.md)
 
 

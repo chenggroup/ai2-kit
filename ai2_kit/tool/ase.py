@@ -9,7 +9,7 @@ class AseHelper:
     def __init__(self):
         self._atoms_list: List[Atoms] = []
 
-    def read(self, file_path_or_glob: str, **kwargs):
+    def read(self, *file_path_or_glob: str, **kwargs):
         files = []
         for file_path in file_path_or_glob:
             files += glob.glob(file_path, recursive=True) if '*' in file_path else [file_path]

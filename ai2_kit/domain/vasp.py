@@ -63,7 +63,7 @@ async def cll_vasp(input: CllVaspInput, ctx: CllVaspContext) -> GenericVaspOutpu
 
     # For the first round
     if not input.initiated:
-        input.system_files += ctx.resource_manager.get_artifacts(input.config.init_system_files)
+        input.system_files += ctx.resource_manager.resolve_artifacts(input.config.init_system_files)
 
     if len(input.system_files) == 0:
         return GenericVaspOutput(vasp_outputs=[])

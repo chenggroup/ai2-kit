@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.6.5
+* fix: cp2k input file generation bug
+
 ## v0.6.4
 * feat: [cll-workflow] support wave function warmup for cp2k, more detail [here](./example/config/cll-mlp-training/label-cp2k.yml)
 * improvement: [cll-workflow] raise invalid artifact error earlier

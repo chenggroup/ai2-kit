@@ -62,13 +62,16 @@ class ResourceManager:
             artifact = self.get_artifact(artifact)
         paths = self.default_executor.resolve_artifact(artifact)
 
-        return [Artifact.of(
+        result = [Artifact.of(
             url=path,
             format=artifact.format,
             includes=None,  # has been consumed
             attrs=copy.deepcopy(artifact.attrs),
             executor=self.default_executor.name,
         ) for path in paths]
+
+        assert len(result) > 0, f'artifact {artifact} is invalid'
+        return result
 
     def resolve_artifacts(self, artifacts: Sequence[ArtifactOrKey]) -> List[Artifact]:
         # flat map

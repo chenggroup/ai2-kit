@@ -110,3 +110,10 @@ workflow:
               &END
            &END
         &END
+
+
+      # Optional, specify the template for the warmup stage, default: None
+      # The content of the warmup stage template is the same as the main stage template.
+      # The typical usage of warmup stage is to generate the initial wavefunction by applying a low-cost method.
+      # And then the main stage can reference the wavefunction from the warmup stage to speed up the calculation.
+      wfn_warmup_template: !load_text ./config/cp2k-warmup.inp

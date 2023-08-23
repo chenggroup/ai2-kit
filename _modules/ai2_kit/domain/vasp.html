@@ -432,7 +432,7 @@ document.write(`
 
     <span class="c1"># For the first round</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">input</span><span class="o">.</span><span class="n">initiated</span><span class="p">:</span>
-        <span class="nb">input</span><span class="o">.</span><span class="n">system_files</span> <span class="o">+=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">get_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">init_system_files</span><span class="p">)</span>
+        <span class="nb">input</span><span class="o">.</span><span class="n">system_files</span> <span class="o">+=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">init_system_files</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">system_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">GenericVaspOutput</span><span class="p">(</span><span class="n">vasp_outputs</span><span class="o">=</span><span class="p">[])</span>

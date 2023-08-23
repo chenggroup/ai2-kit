@@ -370,12 +370,13 @@ document.write(`
 <span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashTemplate</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.job</span> <span class="kn">import</span> <span class="n">gather_jobs</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">merge_dict</span><span class="p">,</span> <span class="n">dict_nested_get</span><span class="p">,</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">list_sample</span><span class="p">,</span> <span class="n">dump_json</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">merge_dict</span><span class="p">,</span> <span class="n">dict_nested_get</span><span class="p">,</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">list_sample</span><span class="p">,</span> <span class="n">dump_json</span><span class="p">,</span> <span class="n">dump_text</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -389,6 +390,12 @@ document.write(`
 
 <div class="viewcode-block" id="CllCp2kInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kInputConfig">[docs]</a><span class="k">class</span> <span class="nc">CllCp2kInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">init_system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">wfn_warmup_template</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Warmup template for cp2k. Could be a dict or content of a cp2k input file.</span>
+<span class="sd">    This template will be used to generate input files for warmup runs.</span>
+<span class="sd">    The warmup runs can be used to generate wave function files for the main runs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">input_template</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Input template for cp2k. Could be a dict or content of a cp2k input file.</span>
@@ -403,7 +410,7 @@ document.write(`
 <div class="viewcode-block" id="CllCp2kContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kContextConfig">[docs]</a><span class="k">class</span> <span class="nc">CllCp2kContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
     <span class="n">cp2k_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;cp2k&#39;</span>
-    <span class="n">post_cp2k_cmd</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">post_cp2k_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;echo &quot;no post_cp2k_cmd&quot;&#39;</span>
     <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span></div>
 
 
@@ -434,7 +441,7 @@ document.write(`
     <span class="c1"># For the first round</span>
     <span class="c1"># FIXME: move out from this function, this should be done in the workflow</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">input</span><span class="o">.</span><span class="n">initiated</span><span class="p">:</span>
-        <span class="nb">input</span><span class="o">.</span><span class="n">system_files</span> <span class="o">+=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">get_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">init_system_files</span><span class="p">)</span>
+        <span class="nb">input</span><span class="o">.</span><span class="n">system_files</span> <span class="o">+=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">init_system_files</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">system_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">GenericCp2kOutput</span><span class="p">(</span><span class="n">cp2k_outputs</span><span class="o">=</span><span class="p">[])</span>
@@ -451,20 +458,24 @@ document.write(`
 
     <span class="c1"># create task dirs and prepare input files</span>
     <span class="n">cp2k_task_dirs</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">make_cp2k_task_dirs</span><span class="p">)(</span>
-            <span class="n">system_files</span><span class="o">=</span><span class="p">[</span> <span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">system_files</span><span class="p">],</span>
-            <span class="n">type_map</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span>
-            <span class="n">base_dir</span><span class="o">=</span><span class="n">tasks_dir</span><span class="p">,</span>
-            <span class="n">input_template</span><span class="o">=</span><span class="n">input_template</span><span class="p">,</span>
-            <span class="n">limit</span><span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">input</span><span class="o">.</span><span class="n">initiated</span> <span class="k">else</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">limit</span><span class="p">,</span>  <span class="c1"># initialize all data if not initiated</span>
-        <span class="p">)</span>
+        <span class="n">system_files</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">system_files</span><span class="p">],</span>
+        <span class="n">type_map</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span>
+        <span class="n">base_dir</span><span class="o">=</span><span class="n">tasks_dir</span><span class="p">,</span>
+        <span class="n">input_template</span><span class="o">=</span><span class="n">input_template</span><span class="p">,</span>
+        <span class="c1"># initialize all data if not initiated</span>
+        <span class="n">limit</span><span class="o">=</span><span class="mi">0</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">input</span><span class="o">.</span><span class="n">initiated</span> <span class="k">else</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">limit</span><span class="p">,</span>
+        <span class="n">wfn_warmup_template</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wfn_warmup_template</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="c1"># build commands</span>
     <span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">cp2k_task_dir</span> <span class="ow">in</span> <span class="n">cp2k_task_dirs</span><span class="p">:</span>
-        <span class="n">cmd</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cp2k_cmd</span><span class="si">}</span><span class="s1"> -i input.inp &gt; output 2&gt;&amp;1&#39;</span>
-        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">post_cp2k_cmd</span><span class="p">:</span>
-            <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; &amp;&amp; </span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">post_cp2k_cmd</span><span class="si">}</span><span class="s1">&#39;</span>
-
+        <span class="c1"># run warmup if needed</span>
+        <span class="c1"># note: use if-else instead of boolean shortcut to avoid wrong status</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+            <span class="sa">f</span><span class="s1">&#39;if [ -f wfn_warmup.inp ]; then </span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cp2k_cmd</span><span class="si">}</span><span class="s1"> -i wfn_warmup.inp &amp;&gt; wfn_warmup.out; fi &amp;&amp; </span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cp2k_cmd</span><span class="si">}</span><span class="s1"> -i input.inp &amp;&gt; output &amp;&amp; </span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">post_cp2k_cmd</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="p">])</span>
         <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BashStep</span><span class="p">(</span>
             <span class="n">cwd</span><span class="o">=</span><span class="n">cp2k_task_dir</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
             <span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
@@ -504,10 +515,10 @@ document.write(`
                             <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                             <span class="n">sample_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="s2">&quot;truncate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;even&quot;</span><span class="p">,</span>
                             <span class="n">input_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;input.inp&#39;</span><span class="p">,</span>
+                            <span class="n">wfn_warmup_template</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">warmup_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;wfn_warmup.inp&#39;</span>
                             <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate CP2K input files from LAMMPS dump files or XYZ files.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
-
         <span class="n">task_dirs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">atoms_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">Atoms</span><span class="p">]]</span> <span class="o">=</span> <span class="n">artifacts_to_ase_atoms</span><span class="p">(</span><span class="n">system_files</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
 
@@ -520,30 +531,18 @@ document.write(`
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">dump_json</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;debug.data-file.json&#39;</span><span class="p">))</span>
 
+            <span class="c1"># load system-wise config from attrs</span>
             <span class="n">overridable_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">dict_nested_get</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">,</span> <span class="s1">&#39;cp2k&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">()))</span>  <span class="c1"># type: ignore</span>
-            <span class="n">input_data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">input_template</span><span class="p">)</span>
-            <span class="n">input_data</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_template&#39;</span><span class="p">,</span> <span class="n">input_data</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="n">input_data</span> <span class="o">=</span> <span class="n">loads_cp2k_input</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+            <span class="n">wfn_warmup_template</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;wfn_warmup_template&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">wfn_warmup_template</span><span class="p">)</span>
+            <span class="n">input_template</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_template&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">input_template</span><span class="p">)</span>
 
-            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">input_data</span><span class="p">,</span> <span class="s1">&#39;input_data must be a non-empty dict&#39;</span>
-            <span class="n">coords</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">ase_atoms_to_cp2k_input_data</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
-            <span class="n">merge_dict</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="p">{</span>
-                <span class="s1">&#39;FORCE_EVAL&#39;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s1">&#39;SUBSYS&#39;</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="c1"># FIXME: this is a dirty hack, we should make dump_cp2k_input support COORD</span>
-                        <span class="s1">&#39;COORD&#39;</span><span class="p">:</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
-                        <span class="s1">&#39;CELL&#39;</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
-                            <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
-                            <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">])),</span>
-                        <span class="p">}</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-            <span class="p">})</span>
+            <span class="k">if</span> <span class="n">wfn_warmup_template</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="n">warmup_file_name</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">make_cp2k_input</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">wfn_warmup_template</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
+
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="n">input_file_name</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">dump_cp2k_input</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+                <span class="n">make_cp2k_input</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">input_template</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
 
             <span class="n">task_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
                 <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">,</span>
@@ -551,6 +550,27 @@ document.write(`
             <span class="p">})</span>
 
         <span class="k">return</span> <span class="n">task_dirs</span>
+
+
+    <span class="k">def</span> <span class="nf">make_cp2k_input</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">input_template</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_template</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">input_template</span> <span class="o">=</span> <span class="n">loads_cp2k_input</span><span class="p">(</span><span class="n">input_template</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_template</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">input_template</span><span class="p">,</span> <span class="s1">&#39;input_data must be a non-empty dict&#39;</span>
+        <span class="n">coords</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">ase_atoms_to_cp2k_input_data</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="n">merge_dict</span><span class="p">(</span><span class="n">input_template</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;FORCE_EVAL&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;SUBSYS&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="c1"># FIXME: this is a dirty hack, we should make dump_cp2k_input support COORD</span>
+                    <span class="s1">&#39;COORD&#39;</span><span class="p">:</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;CELL&#39;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+                        <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                        <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">])),</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+        <span class="n">dump_cp2k_input</span><span class="p">(</span><span class="n">input_template</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">make_cp2k_task_dirs</span><span class="p">,</span>

@@ -431,13 +431,16 @@ document.write(`
             <span class="n">artifact</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_artifact</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
         <span class="n">paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_executor</span><span class="o">.</span><span class="n">resolve_artifact</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">[</span><span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
             <span class="nb">format</span><span class="o">=</span><span class="n">artifact</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
             <span class="n">includes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># has been consumed</span>
             <span class="n">attrs</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">artifact</span><span class="o">.</span><span class="n">attrs</span><span class="p">),</span>
             <span class="n">executor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_executor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-        <span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">]</span></div>
+        <span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">]</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;artifact </span><span class="si">{</span><span class="n">artifact</span><span class="si">}</span><span class="s1"> is invalid&#39;</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="ResourceManager.resolve_artifacts"><a class="viewcode-back" href="../../../_api/ai2_kit.core.resource_manager.html#ai2_kit.core.resource_manager.ResourceManager.resolve_artifacts">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_artifacts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">artifacts</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ArtifactOrKey</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
         <span class="c1"># flat map</span>

@@ -165,15 +165,15 @@ def __export_remote_functions():
             # load system-wise config from attrs
             overridable_params: dict = copy.deepcopy(dict_nested_get(data_file, ['attrs', 'cp2k'], dict()))  # type: ignore
 
-            wfn_warmup_template = overridable_params.get('wfn_warmup_template') or copy.deepcopy(wfn_warmup_template)
-            input_template = overridable_params.get('input_template') or copy.deepcopy(input_template)
+            warmup_input = copy.deepcopy(overridable_params.get('wfn_warmup_template') or wfn_warmup_template)
+            normal_input = copy.deepcopy(overridable_params.get('input_template') or input_template)
 
-            if wfn_warmup_template:
+            if warmup_input:
                 with open(os.path.join(task_dir, warmup_file_name), 'w') as f:
-                    make_cp2k_input(f, wfn_warmup_template, atoms)
+                    make_cp2k_input(f, warmup_input, atoms)
 
             with open(os.path.join(task_dir, input_file_name), 'w') as f:
-                make_cp2k_input(f, input_template, atoms)
+                make_cp2k_input(f, normal_input, atoms)
 
             task_dirs.append({
                 'url': task_dir,

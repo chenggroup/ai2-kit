@@ -1,12 +1,13 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import merge_dict, dict_nested_get, list_split, list_sample, dump_json
+from ai2_kit.core.util import merge_dict, dict_nested_get, list_split, list_sample, dump_json, dump_text
 from ai2_kit.core.log import get_logger
 
 from typing import List, Union, Tuple, Literal, Optional
 from pydantic import BaseModel
 from dataclasses import dataclass
+from ase import Atoms
 
 import copy
 import os
@@ -20,6 +21,12 @@ logger = get_logger(__name__)
 
 class CllCp2kInputConfig(BaseModel):
     init_system_files: List[str] = []
+    wfn_warmup_template: Union[None, dict, str] = None
+    """
+    Warmup template for cp2k. Could be a dict or content of a cp2k input file.
+    This template will be used to generate input files for warmup runs.
+    The warmup runs can be used to generate wave function files for the main runs.
+    """
     input_template: Union[dict, str] = dict()
     """
     Input template for cp2k. Could be a dict or content of a cp2k input file.
@@ -34,7 +41,7 @@ class CllCp2kInputConfig(BaseModel):
 class CllCp2kContextConfig(BaseModel):
     script_template: BashTemplate
     cp2k_cmd: str = 'cp2k'
-    post_cp2k_cmd: Optional[str] = None
+    post_cp2k_cmd: str = 'echo "no post_cp2k_cmd"'
     concurrency: int = 5
 
 
@@ -65,7 +72,7 @@ async def cll_cp2k(input: CllCp2kInput, ctx: CllCp2kContext) -> GenericCp2kOutpu
     # For the first round
     # FIXME: move out from this function, this should be done in the workflow
     if not input.initiated:
-        input.system_files += ctx.resource_manager.get_artifacts(input.config.init_system_files)
+        input.system_files += ctx.resource_manager.resolve_artifacts(input.config.init_system_files)
 
     if len(input.system_files) == 0:
         return GenericCp2kOutput(cp2k_outputs=[])
@@ -82,20 +89,24 @@ async def cll_cp2k(input: CllCp2kInput, ctx: CllCp2kContext) -> GenericCp2kOutpu
 
     # create task dirs and prepare input files
     cp2k_task_dirs = executor.run_python_fn(make_cp2k_task_dirs)(
-            system_files=[ a.to_dict() for a in input.system_files],
-            type_map=input.type_map,
-            base_dir=tasks_dir,
-            input_template=input_template,
-            limit= 0 if not input.initiated else input.config.limit,  # initialize all data if not initiated
-        )
+        system_files=[a.to_dict() for a in input.system_files],
+        type_map=input.type_map,
+        base_dir=tasks_dir,
+        input_template=input_template,
+        # initialize all data if not initiated
+        limit=0 if not input.initiated else input.config.limit,
+        wfn_warmup_template=input.config.wfn_warmup_template,
+    )
 
     # build commands
     steps = []
     for cp2k_task_dir in cp2k_task_dirs:
-        cmd=f'{ctx.config.cp2k_cmd} -i input.inp > output 2>&1'
-        if ctx.config.post_cp2k_cmd:
-            cmd += f' && {ctx.config.post_cp2k_cmd}'
-
+        # run warmup if needed
+        # note: use if-else instead of boolean shortcut to avoid wrong status
+        cmd = '\n'.join([
+            f'if [ -f wfn_warmup.inp ]; then {ctx.config.cp2k_cmd} -i wfn_warmup.inp &> wfn_warmup.out; fi && \\',
+            f'{ctx.config.cp2k_cmd} -i input.inp &> output && {ctx.config.post_cp2k_cmd}',
+        ])
         steps.append(BashStep(
             cwd=cp2k_task_dir['url'],
             cmd=cmd,
@@ -135,10 +146,10 @@ def __export_remote_functions():
                             limit: int = 0,
                             sample_method: Literal["even", "random", "truncate"] = "even",
                             input_file_name: str = 'input.inp',
+                            wfn_warmup_template: Union[None, dict, str] = None,
+                            warmup_file_name: str = 'wfn_warmup.inp'
                             ) -> List[ArtifactDict]:
         """Generate CP2K input files from LAMMPS dump files or XYZ files."""
-        from ase import Atoms
-
         task_dirs = []
         atoms_list: List[Tuple[ArtifactDict, Atoms]] = artifacts_to_ase_atoms(system_files, type_map=type_map)
 
@@ -151,30 +162,18 @@ def __export_remote_functions():
             os.makedirs(task_dir, exist_ok=True)
             dump_json(data_file, os.path.join(task_dir, 'debug.data-file.json'))
 
+            # load system-wise config from attrs
             overridable_params: dict = copy.deepcopy(dict_nested_get(data_file, ['attrs', 'cp2k'], dict()))  # type: ignore
-            input_data = copy.deepcopy(input_template)
-            input_data = overridable_params.get('input_template', input_data)
 
-            if isinstance(input_data, str):
-                input_data = loads_cp2k_input(input_data)
+            wfn_warmup_template = overridable_params.get('wfn_warmup_template') or copy.deepcopy(wfn_warmup_template)
+            input_template = overridable_params.get('input_template') or copy.deepcopy(input_template)
 
-            assert isinstance(input_data, dict) and input_data, 'input_data must be a non-empty dict'
-            coords, cell = ase_atoms_to_cp2k_input_data(atoms)
-            merge_dict(input_data, {
-                'FORCE_EVAL': {
-                    'SUBSYS': {
-                        # FIXME: this is a dirty hack, we should make dump_cp2k_input support COORD
-                        'COORD': dict.fromkeys(coords, ''),
-                        'CELL': {
-                            'A': ' '.join(map(str, cell[0])),
-                            'B': ' '.join(map(str, cell[1])),
-                            'C': ' '.join(map(str, cell[2])),
-                        }
-                    }
-                }
-            })
+            if wfn_warmup_template:
+                with open(os.path.join(task_dir, warmup_file_name), 'w') as f:
+                    make_cp2k_input(f, wfn_warmup_template, atoms)
+
             with open(os.path.join(task_dir, input_file_name), 'w') as f:
-                dump_cp2k_input(input_data, f)
+                make_cp2k_input(f, input_template, atoms)
 
             task_dirs.append({
                 'url': task_dir,
@@ -182,6 +181,27 @@ def __export_remote_functions():
             })
 
         return task_dirs
+
+
+    def make_cp2k_input(fp, input_template: Union[str, dict], atoms: Atoms):
+        if isinstance(input_template, str):
+            input_template = loads_cp2k_input(input_template)
+        assert isinstance(input_template, dict) and input_template, 'input_data must be a non-empty dict'
+        coords, cell = ase_atoms_to_cp2k_input_data(atoms)
+        merge_dict(input_template, {
+            'FORCE_EVAL': {
+                'SUBSYS': {
+                    # FIXME: this is a dirty hack, we should make dump_cp2k_input support COORD
+                    'COORD': dict.fromkeys(coords, ''),
+                    'CELL': {
+                        'A': ' '.join(map(str, cell[0])),
+                        'B': ' '.join(map(str, cell[1])),
+                        'C': ' '.join(map(str, cell[2])),
+                    }
+                }
+            }
+        })
+        dump_cp2k_input(input_template, fp)
 
     return (
         make_cp2k_task_dirs,

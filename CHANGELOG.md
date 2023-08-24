@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.6.6
+* **BREAKING CHANGE**: cp2k input template no longer support `dict`, system data should be loaded via `@include coord_n_cell.inc` macro. More detail [here](./example/config/cll-mlp-training/label-cp2k.yml)
+
 ## v0.6.5
 * fix: cp2k input file generation bug
 

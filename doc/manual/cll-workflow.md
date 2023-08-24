@@ -291,6 +291,7 @@ workflow:
               &END
            &END
            &SUBSYS
+              @include coord_n_cell.inc
               &KIND O
                  BASIS_SET  DZVP-MOLOPT-SR-GTH
                  POTENTIAL  GTH-PBE-q6

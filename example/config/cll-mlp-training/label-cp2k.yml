@@ -48,7 +48,11 @@ workflow:
       # Here we put the input template directly in the configuration file.
       # For more information about the input template, please refer to CP2K documentation.
       #
-      # Note: COORD and CELL field will inject by the workflow.
+      # The workflow will generate a file named coord_n_cell.inc in the working directory,
+      # You should use the @include directive to include the structure and cell information.
+      #
+      # @include coord_n_cell.inc
+      #
       # Please do not specify them here.
       input_template: |
         &GLOBAL
@@ -96,6 +100,7 @@ workflow:
               &END
            &END
            &SUBSYS
+              @include coord_n_cell.inc
               &KIND O
                  BASIS_SET  DZVP-MOLOPT-SR-GTH
                  POTENTIAL  GTH-PBE-q6

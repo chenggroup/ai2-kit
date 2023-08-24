@@ -4,7 +4,7 @@ from ai2_kit.core.job import gather_jobs
 from ai2_kit.core.util import merge_dict, dict_nested_get, list_split, list_sample, dump_json, dump_text
 from ai2_kit.core.log import get_logger
 
-from typing import List, Union, Tuple, Literal, Optional
+from typing import List, Tuple, Literal, Optional
 from pydantic import BaseModel
 from dataclasses import dataclass
 from ase import Atoms
@@ -14,20 +14,20 @@ import os
 
 from .data import DataFormat, ase_atoms_to_cp2k_input_data, artifacts_to_ase_atoms
 from .iface import ICllLabelOutput, BaseCllContext
-from .util import loads_cp2k_input, load_cp2k_input, dump_cp2k_input
+from .util import dump_cp2k_input
 
 logger = get_logger(__name__)
 
 
 class CllCp2kInputConfig(BaseModel):
     init_system_files: List[str] = []
-    wfn_warmup_template: Union[None, dict, str] = None
+    wfn_warmup_template: Optional[str] = None
     """
     Warmup template for cp2k. Could be a dict or content of a cp2k input file.
     This template will be used to generate input files for warmup runs.
     The warmup runs can be used to generate wave function files for the main runs.
     """
-    input_template: Union[dict, str] = dict()
+    input_template: Optional[str] = None
     """
     Input template for cp2k. Could be a dict or content of a cp2k input file.
     """
@@ -81,20 +81,15 @@ async def cll_cp2k(input: CllCp2kInput, ctx: CllCp2kContext) -> GenericCp2kOutpu
     work_dir = os.path.join(executor.work_dir, ctx.path_prefix)
     [tasks_dir] = executor.setup_workspace(work_dir, ['tasks'])
 
-    # prepare input template
-    if isinstance(input.config.input_template, str):
-        input_template = loads_cp2k_input(input.config.input_template)
-    else:
-        input_template = copy.deepcopy(input.config.input_template)
-
     # create task dirs and prepare input files
     cp2k_task_dirs = executor.run_python_fn(make_cp2k_task_dirs)(
         system_files=[a.to_dict() for a in input.system_files],
         type_map=input.type_map,
         base_dir=tasks_dir,
-        input_template=input_template,
+        input_template=input.config.input_template,
         # initialize all data if not initiated
         limit=0 if not input.initiated else input.config.limit,
+        limit_method=input.config.limit_method,
         wfn_warmup_template=input.config.wfn_warmup_template,
     )
 
@@ -141,12 +136,12 @@ def __export_remote_functions():
 
     def make_cp2k_task_dirs(system_files: List[ArtifactDict],
                             type_map: List[str],
-                            input_template: dict,
+                            input_template: Optional[str],
                             base_dir: str,
                             limit: int = 0,
-                            sample_method: Literal["even", "random", "truncate"] = "even",
+                            wfn_warmup_template: Optional[str] = None,
+                            limit_method: Literal["even", "random", "truncate"] = "even",
                             input_file_name: str = 'input.inp',
-                            wfn_warmup_template: Union[None, dict, str] = None,
                             warmup_file_name: str = 'wfn_warmup.inp'
                             ) -> List[ArtifactDict]:
         """Generate CP2K input files from LAMMPS dump files or XYZ files."""
@@ -154,7 +149,7 @@ def __export_remote_functions():
         atoms_list: List[Tuple[ArtifactDict, Atoms]] = artifacts_to_ase_atoms(system_files, type_map=type_map)
 
         if limit > 0:
-            atoms_list = list_sample(atoms_list, limit, method=sample_method)
+            atoms_list = list_sample(atoms_list, limit, method=limit_method)
 
         for i, (data_file, atoms) in enumerate(atoms_list):
             # create task dir
@@ -165,15 +160,19 @@ def __export_remote_functions():
             # load system-wise config from attrs
             overridable_params: dict = copy.deepcopy(dict_nested_get(data_file, ['attrs', 'cp2k'], dict()))  # type: ignore
 
-            warmup_input = copy.deepcopy(overridable_params.get('wfn_warmup_template') or wfn_warmup_template)
-            normal_input = copy.deepcopy(overridable_params.get('input_template') or input_template)
+            # create input template
+            warmup_input = overridable_params.get('wfn_warmup_template', wfn_warmup_template)
+            normal_input = overridable_params.get('input_template', input_template)
 
             if warmup_input:
-                with open(os.path.join(task_dir, warmup_file_name), 'w') as f:
-                    make_cp2k_input(f, warmup_input, atoms)
+                dump_text(warmup_input, os.path.join(task_dir, warmup_file_name))
 
-            with open(os.path.join(task_dir, input_file_name), 'w') as f:
-                make_cp2k_input(f, normal_input, atoms)
+            assert normal_input, 'normal_input must be provided'
+            dump_text(normal_input, os.path.join(task_dir, input_file_name))
+
+            # create coord_n_cell.inp
+            with open(os.path.join(task_dir, 'coord_n_cell.inc'), 'w') as f:
+                dump_coord_n_cell(f, atoms)
 
             task_dirs.append({
                 'url': task_dir,
@@ -183,25 +182,17 @@ def __export_remote_functions():
         return task_dirs
 
 
-    def make_cp2k_input(fp, input_template: Union[str, dict], atoms: Atoms):
-        if isinstance(input_template, str):
-            input_template = loads_cp2k_input(input_template)
-        assert isinstance(input_template, dict) and input_template, 'input_data must be a non-empty dict'
+    def dump_coord_n_cell(fp, atoms: Atoms):
         coords, cell = ase_atoms_to_cp2k_input_data(atoms)
-        merge_dict(input_template, {
-            'FORCE_EVAL': {
-                'SUBSYS': {
-                    # FIXME: this is a dirty hack, we should make dump_cp2k_input support COORD
-                    'COORD': dict.fromkeys(coords, ''),
-                    'CELL': {
-                        'A': ' '.join(map(str, cell[0])),
-                        'B': ' '.join(map(str, cell[1])),
-                        'C': ' '.join(map(str, cell[2])),
-                    }
-                }
+        dump_cp2k_input({
+            'COORD': dict.fromkeys(coords, ''),  # FIXME: this is a dirty hack, should make dump_cp2k_input support COORD
+            'CELL': {
+                'A': ' '.join(map(str, cell[0])),
+                'B': ' '.join(map(str, cell[1])),
+                'C': ' '.join(map(str, cell[2])),
             }
-        })
-        dump_cp2k_input(input_template, fp)
+        }, fp)
+
 
     return (
         make_cp2k_task_dirs,

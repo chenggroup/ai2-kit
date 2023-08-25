@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.6.7
+* fix: itemgetter bug: https://stackoverflow.com/a/48988896/3099733
+
 ## v0.6.6
 * **BREAKING CHANGE**: cp2k input template no longer support `dict`, system data should be loaded via `@include coord_n_cell.inc` macro. More detail [here](./example/config/cll-mlp-training/label-cp2k.yml)
 

@@ -10,7 +10,6 @@ from dataclasses import dataclass
 import pandas as pd
 from tabulate import tabulate
 from itertools import groupby
-from operator import itemgetter
 
 import ase.io
 import os
@@ -215,13 +214,13 @@ def __export_remote_functions():
         # dump structures to different files
         if len(good_df) > 0:
             good_file = os.path.join(work_dir, 'good.xyz')
-            ase.io.write(good_file, list(itemgetter(*good_df.index)(atoms_list)), format='extxyz')
+            ase.io.write(good_file, [atoms_list[_i] for _i in good_df.index], format='extxyz')
         if len(poor_df) > 0:
             poor_file = os.path.join(work_dir, 'poor.xyz')
-            ase.io.write(poor_file, list(itemgetter(*poor_df.index)(atoms_list)), format='extxyz')
+            ase.io.write(poor_file, [atoms_list[_i] for _i in poor_df.index], format='extxyz')
         if len(decent_df) > 0:
             decent_file = os.path.join(work_dir, 'decent.xyz')
-            ase.io.write(decent_file, list(itemgetter(*decent_df.index)(atoms_list)), format='extxyz')
+            ase.io.write(decent_file, [atoms_list[_i] for _i in decent_df.index], format='extxyz')
             output_artifact = {
                 'url': decent_file,
                 'format': DataFormat.EXTXYZ,

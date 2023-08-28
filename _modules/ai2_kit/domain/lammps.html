@@ -504,7 +504,8 @@ document.write(`
 <div class="viewcode-block" id="CllLammpsContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsContextConfig">[docs]</a><span class="k">class</span> <span class="nc">CllLammpsContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
     <span class="n">lammps_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;lmp&#39;</span>
-    <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span></div>
+    <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">ignore_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="CllLammpsInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInput">[docs]</a><span class="nd">@dataclass</span>
@@ -562,7 +563,8 @@ document.write(`
     <span class="c1"># generate steps</span>
     <span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">task_dir</span> <span class="ow">in</span> <span class="n">task_dirs</span><span class="p">:</span>
-        <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BashStep</span><span class="p">(</span><span class="n">cwd</span><span class="o">=</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="s1">&#39;lammps&#39;</span><span class="p">))</span>
+        <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BashStep</span><span class="p">(</span>
+            <span class="n">cwd</span><span class="o">=</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="s1">&#39;lammps&#39;</span><span class="p">,</span> <span class="n">exit_on_error</span><span class="o">=</span><span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ignore_error</span><span class="p">))</span>
 
     <span class="c1"># submit jobs by the number of concurrency</span>
     <span class="n">jobs</span> <span class="o">=</span> <span class="p">[]</span>

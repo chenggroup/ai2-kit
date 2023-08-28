@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.6.8
+* improvement: allow user to ignore lammps error
+
 ## v0.6.7
 * fix: itemgetter bug: https://stackoverflow.com/a/48988896/3099733
 

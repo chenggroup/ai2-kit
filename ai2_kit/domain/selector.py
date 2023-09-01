@@ -219,8 +219,9 @@ def __export_remote_functions():
 
         # select the last frame from df whose model_devi score is less than the quantile
         # as the initial structure for next round of exploration to replace the original one
+        # NOTE: equal is essential to ensure the existence of next structure
         # NOTE: select the last frame can increase the diversity of structures
-        next_df = df[df[force_col] < df[force_col].quantile(new_explore_system_q)].tail(1)
+        next_df = df[df[force_col] <= df[force_col].quantile(new_explore_system_q)].tail(1)
 
         stats = {
             'src': model_devi_file,

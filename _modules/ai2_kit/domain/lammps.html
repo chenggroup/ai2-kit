@@ -514,7 +514,8 @@ document.write(`
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">mass_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
     <span class="n">dp_models</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]]</span>
-    <span class="n">preset_template</span><span class="p">:</span> <span class="nb">str</span></div>
+    <span class="n">preset_template</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">new_system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="CllLammpsContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsContext">[docs]</a><span class="nd">@dataclass</span>
@@ -533,7 +534,12 @@ document.write(`
 <div class="viewcode-block" id="cll_lammps"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.cll_lammps">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">cll_lammps</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllLammpsInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllLammpsContext</span><span class="p">):</span>
     <span class="n">executor</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">default_executor</span>
     <span class="n">work_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">path_prefix</span><span class="p">)</span>
-    <span class="n">data_files</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">system_files</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">new_system_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">data_files</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">new_system_files</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data_files</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">system_files</span><span class="p">)</span>
+
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;no data files found&#39;</span>
 
     <span class="n">tasks_dir</span><span class="p">,</span> <span class="n">task_dirs</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">make_lammps_task_dirs</span><span class="p">)(</span>
@@ -784,7 +790,9 @@ document.write(`
             <span class="n">lammps_input</span> <span class="o">=</span> <span class="n">LammpsInputTemplate</span><span class="p">(</span><span class="n">input_template</span><span class="p">)</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span><span class="o">**</span><span class="n">template_vars</span><span class="p">)</span>
             <span class="n">dump_text</span><span class="p">(</span><span class="n">lammps_input</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;lammps.input&#39;</span><span class="p">))</span>
 
-            <span class="n">task_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="n">data_file</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]})</span>  <span class="c1"># type: ignore</span>
+            <span class="c1"># the `source` field is required as model_devi will use it to update init structures</span>
+            <span class="n">task_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">,</span>
+                              <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="n">data_file</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span> <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="n">data_file</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]}})</span>  <span class="c1"># type: ignore</span>
         <span class="k">return</span> <span class="n">tasks_dir</span><span class="p">,</span> <span class="n">task_dirs</span>
 
 

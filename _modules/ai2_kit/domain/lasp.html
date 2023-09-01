@@ -421,7 +421,8 @@ document.write(`
     <span class="n">config</span><span class="p">:</span> <span class="n">CllLaspInputConfig</span>
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">mass_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="n">models</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span></div>
+    <span class="n">models</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
+    <span class="n">new_system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="CllLaspContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspContext">[docs]</a><span class="nd">@dataclass</span>
@@ -445,7 +446,10 @@ document.write(`
     <span class="n">tasks_dir</span><span class="p">,</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">setup_workspace</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;tasks&#39;</span><span class="p">])</span>
 
     <span class="c1"># resolve artifacts</span>
-    <span class="n">systems</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">system_files</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">new_system_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">systems</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">new_system_files</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">systems</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">system_files</span><span class="p">)</span>
 
     <span class="c1"># setup configuration</span>
     <span class="n">lasp_in_data</span> <span class="o">=</span> <span class="n">merge_dict</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">DEFAULT_LASP_IN</span><span class="p">),</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">input_template</span><span class="p">)</span>
@@ -519,7 +523,7 @@ document.write(`
                             <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">]:</span>
         <span class="n">input_data</span> <span class="o">=</span> <span class="n">artifacts_to_ase_atoms</span><span class="p">(</span><span class="n">systems</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
 
-        <span class="n">i</span><span class="p">,</span> <span class="n">task_dirs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[]</span>
+        <span class="n">i</span><span class="p">,</span> <span class="n">task_dirs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[]</span>  <span class="c1"># TODO: why i is not generated from the loop?</span>
         <span class="k">for</span> <span class="n">artifact</span><span class="p">,</span>  <span class="n">atoms</span> <span class="ow">in</span> <span class="n">input_data</span><span class="p">:</span>
             <span class="c1"># create task_dir</span>
             <span class="n">task_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;task_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">06</span><span class="si">}</span><span class="s1">&#39;</span> <span class="p">)</span>
@@ -552,8 +556,11 @@ document.write(`
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lammps_input</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least one potential should be specified.&#39;</span><span class="p">)</span>
-            <span class="n">task_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="n">artifact</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]})</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># the `source` field is required as model_devi will use it to update init structures</span>
+            <span class="n">task_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">,</span>
+                              <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="n">artifact</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span> <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="n">artifact</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]}})</span>
+
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># TODO: refactor this</span>
         <span class="k">return</span> <span class="n">task_dirs</span>
 
 

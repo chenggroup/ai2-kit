@@ -53,6 +53,7 @@ class CllLaspInput:
     type_map: List[str]
     mass_map: List[float]
     models: List[Artifact]
+    new_system_files: List[Artifact]
 
 
 @dataclass
@@ -76,7 +77,10 @@ async def cll_lasp(input: CllLaspInput, ctx: CllLaspContext):
     tasks_dir, = executor.setup_workspace(work_dir, ['tasks'])
 
     # resolve artifacts
-    systems = ctx.resource_manager.resolve_artifacts(input.config.system_files)
+    if len(input.new_system_files) > 0:
+        systems = input.new_system_files
+    else:
+        systems = ctx.resource_manager.resolve_artifacts(input.config.system_files)
 
     # setup configuration
     lasp_in_data = merge_dict(copy.deepcopy(DEFAULT_LASP_IN), input.config.input_template)
@@ -150,7 +154,7 @@ def __export_remote_functions():
                             ) -> List[ArtifactDict]:
         input_data = artifacts_to_ase_atoms(systems, type_map=type_map)
 
-        i, task_dirs = 0, []
+        i, task_dirs = 0, []  # TODO: why i is not generated from the loop?
         for artifact,  atoms in input_data:
             # create task_dir
             task_dir = os.path.join(base_dir, f'task_{i:06}' )
@@ -183,8 +187,11 @@ def __export_remote_functions():
                     f.write(lammps_input)
             else:
                 raise ValueError('At least one potential should be specified.')
-            task_dirs.append({'url': task_dir, 'attrs': artifact['attrs']})
-            i += 1
+            # the `source` field is required as model_devi will use it to update init structures
+            task_dirs.append({'url': task_dir,
+                              'attrs': {**artifact['attrs'], 'source': artifact['url']}})
+
+            i += 1  # TODO: refactor this
         return task_dirs
 
 

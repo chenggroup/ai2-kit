@@ -11,6 +11,10 @@ workflow:
     # Default: 1
     max_iters: 10
 
+    # Optional, whether to update the explore systems for each iteration.
+    # Default: false
+    update_explore_systems: false
+
   # The update section defines how to update the parameters of the workflow in each iteration.
   update:
     # The walkthrough updater is a table driven updater.

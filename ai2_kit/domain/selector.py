@@ -3,7 +3,7 @@ from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import flat_evenly, dump_json, flush_stdio
 
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Dict
 from io import StringIO
 from pydantic import BaseModel
 from dataclasses import dataclass
@@ -13,7 +13,6 @@ from itertools import groupby
 
 import ase.io
 import os
-import numpy as np
 
 from .data import get_data_format, DataFormat, artifacts_to_ase_atoms
 from .iface import ICllSelectorOutput, BaseCllContext
@@ -27,17 +26,30 @@ logger = get_logger(__name__)
 class CllModelDeviSelectorInputConfig(BaseModel):
     class AsapOptions(BaseModel):
         disable: bool = False
-        max_structures_per_system: int = 10
+        limit_per_system: int = 10
         """
-        max number of structures to be selected from the same group
+        limit the number of structures to be selected from the same group
         """
         descriptor: dict = {'soap': { **DEFAULT_ASAP_SOAP_DESC, 'preset': 'minimal'}}
         dim_reducer: dict = {'pca': DEFAULT_ASAP_PCA_REDUCER}
         cluster: dict = {'dbscan': {}}
 
     f_trust_lo: float
+    """
+    the lower bound of model_devi score to select the structure for labeling
+    """
     f_trust_hi: float
+    """
+    the upper bound of model_devi score to select the structure for labeling
+    """
+    new_explore_system_q: float = 0.25
+    """
+    the quantile of model_devi score to select the structure for next round of exploration
+    """
     asap_options: Optional[AsapOptions]
+    """
+    options for ASAP to further select candidates
+    """
 
 
 @dataclass
@@ -49,12 +61,16 @@ class CllModelDevSelectorContext(BaseCllContext):
 class CllModelDeviSelectorOutput(ICllSelectorOutput):
     candidates: List[Artifact]
     passing_rate: float
+    new_explore_systems: List[Artifact]
 
     def get_model_devi_dataset(self):
         return self.candidates
 
     def get_passing_rate(self) -> float:
         return self.passing_rate
+
+    def get_new_explore_systems(self) -> List[Artifact]:
+        return self.new_explore_systems
 
 
 @dataclass
@@ -81,12 +97,20 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
         model_devi_file=input.model_devi_file,
         f_trust_lo=f_trust_lo, f_trust_hi=f_trust_hi,
         type_map=input.type_map, work_dir=work_dir,
+        new_explore_system_q=input.config.new_explore_system_q,
     )
 
-    candidates = [candidate for candidate, _ in results if candidate is not None]  # filter out None
-    stats = [stats for _, stats in results]
+    candidates = [ result['decent'] for result, _ in results if 'decent' in result ]
+    new_systems = [ result['next'] for result, _ in results if 'next' in result ]
+    stats = [ stats for _, stats in results ]
+
+    # group next_structures by `attrs.source` and keep the first one
+    # so that the total number of explore structures will be the same as the original one
+    new_systems = [next(group) for _source, group in groupby(
+        new_systems, key=lambda s: s['attrs']['source'])]
 
     # write model_deviation stats report
+    # TODO: refactor into a function
     def _get_row(stat: dict):
         url = stat['src']
         url = f'...{url[-30:]}' if len(url) > 30 else url  # wrap url if it is too long
@@ -114,11 +138,12 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
             cluster_opt=asap_options.cluster,
             type_map=input.type_map,
             work_dir=work_dir,
-            max_structures_per_system=asap_options.max_structures_per_system,
+            limit_per_system=asap_options.limit_per_system,
         )
 
     return CllModelDeviSelectorOutput(
-        candidates=[ Artifact.of(**a) for a in candidates ],
+        candidates=[Artifact.of(**a) for a in candidates],
+        new_explore_systems=[Artifact.of(**a) for a in new_systems],
         passing_rate=total_good / total,
     )
 
@@ -129,10 +154,11 @@ def __export_remote_functions():
                                              model_devi_file: str,
                                              f_trust_lo: float,
                                              f_trust_hi: float,
+                                             new_explore_system_q: float,
                                              type_map: List[str],
                                              work_dir: str,
                                              workers: int = 4,
-                                             ) -> List[Tuple[Optional[ArtifactDict], dict]]:
+                                             ) -> List[Tuple[Dict[str, ArtifactDict], dict]]:
         import joblib
         return joblib.Parallel(n_jobs=workers)(
             joblib.delayed(select_structures_by_model_devi)(
@@ -140,7 +166,8 @@ def __export_remote_functions():
                 model_devi_file=model_devi_file,
                 f_trust_lo=f_trust_lo, f_trust_hi=f_trust_hi,
                 type_map=type_map,
-                work_dir=os.path.join(work_dir, 'model_devi', f'{i:06}')
+                work_dir=os.path.join(work_dir, 'model_devi', f'{i:06}'),
+                new_explore_system_q=new_explore_system_q,
             )
             for i, output in enumerate(model_devi_outputs)
         )  # type: ignore
@@ -152,12 +179,13 @@ def __export_remote_functions():
                                         f_trust_hi: float,
                                         type_map: List[str],
                                         work_dir: str,
-                                        ) -> Tuple[Optional[ArtifactDict], dict]:
+                                        new_explore_system_q: float,
+                                        ) -> Tuple[Dict[str, ArtifactDict], dict]:
         """
         analysis the model_devi output of explore stage and select candidates
+
+        :param next_explore_system_q: the quantile of model_devi score to select the structure for next round of exploration
         """
-
-
         os.makedirs(work_dir, exist_ok=True)
         dump_json(model_devi_output, os.path.join(work_dir, 'model_devi_output.debug.json'))
 
@@ -189,6 +217,11 @@ def __export_remote_functions():
         decent_df = df[(df[force_col] >= f_trust_lo) & (df[force_col] < f_trust_hi)]
         poor_df   = df[df[force_col] >= f_trust_hi]
 
+        # select the last frame from df whose model_devi score is less than the quantile
+        # as the initial structure for next round of exploration to replace the original one
+        # NOTE: select the last frame can increase the diversity of structures
+        next_df = df[df[force_col] < df[force_col].quantile(new_explore_system_q)].tail(1)
+
         stats = {
             'src': model_devi_file,
             'total': len(df),
@@ -210,26 +243,34 @@ def __export_remote_functions():
         else:
             raise ValueError('unknown model_devi_data types')
 
-        output_artifact = None
+        result: Dict[str, ArtifactDict] = {}
+
         # dump structures to different files
+        # TODO: refactor the following repeating code
         if len(good_df) > 0:
             good_file = os.path.join(work_dir, 'good.xyz')
             ase.io.write(good_file, [atoms_list[_i] for _i in good_df.index], format='extxyz')
+            result['good'] = {'url': good_file, 'format': DataFormat.EXTXYZ,  # type: ignore
+                              'attrs': {**model_devi_output['attrs']}}
         if len(poor_df) > 0:
             poor_file = os.path.join(work_dir, 'poor.xyz')
             ase.io.write(poor_file, [atoms_list[_i] for _i in poor_df.index], format='extxyz')
+            result['poor'] = {'url': poor_file, 'format': DataFormat.EXTXYZ,  # type: ignore
+                              'attrs': {**model_devi_output['attrs']}}
         if len(decent_df) > 0:
             decent_file = os.path.join(work_dir, 'decent.xyz')
             ase.io.write(decent_file, [atoms_list[_i] for _i in decent_df.index], format='extxyz')
-            output_artifact = {
-                'url': decent_file,
-                'format': DataFormat.EXTXYZ,
-                'attrs': {
-                    **model_devi_output['attrs'],
-                }
-            }
-        dump_json([output_artifact, stats], os.path.join(work_dir, 'output.debug.json'))
-        return output_artifact, stats  # type: ignore
+            result['decent'] = {'url': decent_file, 'format': DataFormat.EXTXYZ,  # type: ignore
+                                'attrs': {**model_devi_output['attrs']}}
+        if len(next_df) > 0:
+            next_file = os.path.join(work_dir, 'next.xyz')
+            ase.io.write(next_file, [atoms_list[_i] for _i in next_df.index], format='extxyz')
+            result['next'] = {'url': next_file, 'format': DataFormat.EXTXYZ,  # type: ignore
+                              'attrs': {**model_devi_output['attrs']}}
+
+        dump_json([result, stats, list(decent_df.index), list(next_df.index)], os.path.join(work_dir, 'result.debug.json'))
+
+        return result, stats
 
     def bulk_select_distinct_structures(candidates: List[ArtifactDict],
                                         descriptor_opt: dict,
@@ -237,7 +278,7 @@ def __export_remote_functions():
                                         cluster_opt: dict,
                                         type_map: List[str],
                                         work_dir: str,
-                                        max_structures_per_system: int = -1,
+                                        limit_per_system: int = -1,
                                         workers: int = 4,
                                         ) -> List[ArtifactDict]:
         inputs = []
@@ -255,7 +296,7 @@ def __export_remote_functions():
                 cluster_opt=cluster_opt,
                 type_map=type_map,
                 work_dir=os.path.join(work_dir, 'asap', f'{i:06}'),
-                max_structures_per_system=max_structures_per_system,
+                limit_per_system=limit_per_system,
             ) for i, (group, attrs) in enumerate(inputs)
         )  # type: ignore
 
@@ -267,7 +308,7 @@ def __export_remote_functions():
                                    cluster_opt: dict,
                                    type_map: List[str],
                                    work_dir: str,
-                                   max_structures_per_system: int = -1,
+                                   limit_per_system: int = -1,
                                    ):
         os.makedirs(work_dir, exist_ok=True)
 
@@ -275,7 +316,7 @@ def __export_remote_functions():
         # load structures and save it to a tmp file for ASAP to load
         atoms_list = [atoms for _, atoms in artifacts_to_ase_atoms(candidates, type_map=type_map)]
 
-        if len(atoms_list) < max(max_structures_per_system, 10):
+        if len(atoms_list) < max(limit_per_system, 10):
             # Nothing to do when the total number of atoms is small
             # FIXME: there are a lot of potential issue when the number of atoms is small
             # the root cause is in asaplib, which I guess has not been tested with small dataset
@@ -294,16 +335,16 @@ def __export_remote_functions():
             trainer = get_trainer(reduced_descriptors, cluster_opt)
             cluster_labels = get_cluster(asapxyz, reduced_descriptors, trainer, path_prefix=path_prefix)
 
-            # if max_structures_per_system is not set
+            # if limit_per_system is not set
             # selected at least 1 structure from each group
-            if max_structures_per_system <= 0:
-                max_structures_per_system = len(cluster_labels)
+            if limit_per_system <= 0:
+                limit_per_system = len(cluster_labels)
 
             # unpack clusters into a list and
             # ensure frames of the same group won't be next to each other
             # so that we can pick up distinct structures by simply choose the first N frames
             order_frames = flat_evenly(cluster_labels.values())
-            selected_frames = order_frames[:max_structures_per_system]
+            selected_frames = order_frames[:limit_per_system]
             selected_atoms_list = [atoms_list[i] for i in selected_frames]
 
         # write selected structures to file

@@ -146,6 +146,7 @@ class CllLammpsInput:
     mass_map: List[float]
     dp_models: Mapping[str, List[Artifact]]
     preset_template: str
+    new_system_files: List[Artifact]
 
 
 @dataclass
@@ -164,7 +165,12 @@ class GenericLammpsOutput(ICllExploreOutput):
 async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
     executor = ctx.resource_manager.default_executor
     work_dir = os.path.join(executor.work_dir, ctx.path_prefix)
-    data_files = ctx.resource_manager.resolve_artifacts(input.config.system_files)
+
+    if len(input.new_system_files) > 0:
+        data_files = input.new_system_files
+    else:
+        data_files = ctx.resource_manager.resolve_artifacts(input.config.system_files)
+
     assert len(data_files) > 0, 'no data files found'
 
     tasks_dir, task_dirs = executor.run_python_fn(make_lammps_task_dirs)(
@@ -415,7 +421,9 @@ def __export_remote_functions():
             lammps_input = LammpsInputTemplate(input_template).substitute(defaultdict(str),**template_vars)
             dump_text(lammps_input, os.path.join(task_dir, 'lammps.input'))
 
-            task_dirs.append({'url': task_dir, 'attrs': data_file['attrs']})  # type: ignore
+            # the `source` field is required as model_devi will use it to update init structures
+            task_dirs.append({'url': task_dir,
+                              'attrs': {**data_file['attrs'], 'source': data_file['url']}})  # type: ignore
         return tasks_dir, task_dirs
 
 

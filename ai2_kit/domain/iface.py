@@ -38,6 +38,10 @@ class ICllSelectorOutput(ABC):
         ...
 
     @abstractmethod
+    def get_new_explore_systems(self) -> List[Artifact]:
+        ...
+
+    @abstractmethod
     def get_passing_rate(self) -> float:
         ...
 

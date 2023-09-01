@@ -53,6 +53,7 @@ class WorkflowConfig(BaseModel):
         type_map: List[str]
         mass_map: List[float]
         max_iters: int = 1
+        update_explore_systems: bool = False
 
     class Label(BaseModel):
         cp2k: Optional[cp2k.CllCp2kInputConfig]
@@ -199,6 +200,10 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager:
             raise ValueError('No train method is specified')
 
         # explore
+        new_explore_system_files = []
+        if workflow_config.general.update_explore_systems and selector_output is not None:
+            new_explore_system_files = selector_output.get_new_explore_systems()
+
         if workflow_config.explore.lammps and context_config.explore.lammps:
             lammps_input = lammps.CllLammpsInput(
                 config=workflow_config.explore.lammps,
@@ -206,6 +211,7 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager:
                 mass_map=mass_map,
                 dp_models={'': train_output.get_mlp_models()},
                 preset_template='default',
+                new_system_files=new_explore_system_files,
             )
             lammps_context = lammps.CllLammpsContext(
                 path_prefix=os.path.join(iter_path_prefix, 'explore-lammps'),
@@ -220,6 +226,7 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager:
                 type_map=type_map,
                 mass_map=mass_map,
                 models=train_output.get_mlp_models(),
+                new_system_files=new_explore_system_files,
             )
             lasp_context = lasp.CllLaspContext(
                 config=context_config.explore.lasp,

@@ -12,6 +12,10 @@ workflow:
         f_trust_lo: 0.4
         f_trust_hi: 0.6
 
+        # Optional, the quantile of model_devi score to select the structure
+        # for next round of exploration
+        new_explore_system_q: 0.25
+
         # Optional, select most dissimilar structures by clustering.
         # If it is None, this stage will be skipped.
         #

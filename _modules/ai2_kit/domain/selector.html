@@ -588,8 +588,9 @@ document.write(`
 
         <span class="c1"># select the last frame from df whose model_devi score is less than the quantile</span>
         <span class="c1"># as the initial structure for next round of exploration to replace the original one</span>
+        <span class="c1"># NOTE: equal is essential to ensure the existence of next structure</span>
         <span class="c1"># NOTE: select the last frame can increase the diversity of structures</span>
-        <span class="n">next_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">force_col</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">df</span><span class="p">[</span><span class="n">force_col</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">new_explore_system_q</span><span class="p">)]</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">next_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">force_col</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">df</span><span class="p">[</span><span class="n">force_col</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">new_explore_system_q</span><span class="p">)]</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;src&#39;</span><span class="p">:</span> <span class="n">model_devi_file</span><span class="p">,</span>

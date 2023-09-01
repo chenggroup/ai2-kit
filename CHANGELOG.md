@@ -1,5 +1,7 @@
 # Change Logs
 
+## v0.7.0
+* feat: update explore systems for each iteration，for more detail please check [1](./example/config/cll-mlp-training/selector-model-devi.yml), [2](./example/config/cll-mlp-training/workflow-common.yml)
 ## v0.6.8
 * improvement: allow user to ignore lammps error
 

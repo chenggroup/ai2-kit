@@ -1,4 +1,8 @@
 # Change Logs
+## v0.7.2
+* improvement: ignore `squeue` error
+* fix: upgrade `dpdata` to 0.2.16 to support CP2K 2023.1
+
 ## v0.7.1
 * fix: condition of selecting new explore systems
 

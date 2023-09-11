@@ -846,14 +846,14 @@ reference = "ustc"
 
 [[package]]
 name = "dpdata"
-version = "0.2.15"
+version = "0.2.16"
 description = "Manipulating data formats of DeePMD-kit, VASP, QE, PWmat, and LAMMPS, etc."
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "dpdata-0.2.15-py3-none-any.whl", hash = "sha256:277517d3f7e332cced94f73c5b8e72f333555773485b656791783700bcac6f53"},
-    {file = "dpdata-0.2.15.tar.gz", hash = "sha256:8346e8f5b93f36bc6046cac5e013c7daad7d5b2c9ef00dae995abf12547d997f"},
+    {file = "dpdata-0.2.16-py3-none-any.whl", hash = "sha256:fbf75ca89b30c0d193ea2430ed2bf0c2d0d625ec252b1016fe210286e1239ce9"},
+    {file = "dpdata-0.2.16.tar.gz", hash = "sha256:5b45c5349ac43b19717ebcf58a06d7e80931ddcf52abd22ca42ddb4987df26dd"},
 ]
 
 [package.dependencies]
@@ -866,7 +866,7 @@ wcmatch = "*"
 [package.extras]
 amber = ["parmed", "parmed (<4)"]
 ase = ["ase"]
-docs = ["deepmodeling-sphinx (>=0.1.1)", "m2r2", "numpydoc", "recommonmark", "sphinx", "sphinx-argparse", "sphinx-rtd-theme (>=1.0.0rc1)"]
+docs = ["deepmodeling-sphinx (>=0.1.1)", "m2r2", "numpydoc", "rdkit", "recommonmark", "sphinx", "sphinx-argparse", "sphinx-rtd-theme (>=1.0.0rc1)"]
 pymatgen = ["pymatgen"]
 
 [package.source]
@@ -4977,4 +4977,4 @@ reference = "ustc"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "b7d4fea0aee05dc691ab5aa7cf3fc11ae5a7a3814d654615dab273a95d87d67d"
+content-hash = "bc26e84982d0761453a984b4fd6dafeae172427de89f88493bbf852e63197e81"

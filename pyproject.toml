@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ai2-kit"
-version = "0.7.1"
+version = "0.7.2"
 description = ""
 authors = ["weihong.xu <xuweihong.cn@gmail.com>"]
 readme = "README.md"
@@ -15,7 +15,7 @@ invoke = "^1.7.3"
 ruamel-yaml = "^0.17.21"
 cloudpickle = "^2.2.0"
 shortuuid = "^1.0.11"
-dpdata = "^0.2.13"
+dpdata = "^0.2.16"
 pandas = "^1.5.3"
 ase = "^3.22.1"
 pymatgen = "^2023.2.22"

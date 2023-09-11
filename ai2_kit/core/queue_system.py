@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing import Optional, Dict
 from abc import ABC, abstractmethod
+from collections import defaultdict
+import invoke
 import shlex
 import os
 import re
@@ -185,7 +187,12 @@ class Slurm(BaseQueueSystem):
         # call squeue to get all states
         cmd = "{} --noheader --format='%i %t' -u $USER".format(
             self.config.squeue_bin)
-        r = self.connector.run(cmd, hide=True)
+        try:
+            r = self.connector.run(cmd, hide=True)
+        except invoke.exceptions.UnexpectedExit as e:
+            logger.warning(f'Error when calling squeue: {e}')
+            return defaultdict(lambda: JobState.UNKNOWN) if self._last_states is None else self._last_states
+
         states: Dict[str, JobState] = dict()
         for line in r.stdout.split('\n'):
             if not line:  # skip empty line

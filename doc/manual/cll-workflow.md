@@ -100,7 +100,7 @@ Here we use the custom tag `!join` provided by `ai2-kit` to simplify the data co
 Next, we configure the `executor.yml` file, which is used to configure parameters related to the HPC link and the use template of the software.
 
 ```yaml
-executor:
+executors:
   hpc-cluster01:
     ssh:
       host: user01@login-01  # Login node

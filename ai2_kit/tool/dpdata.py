@@ -13,7 +13,7 @@ class DpdataHelper:
         kwargs.setdefault('fmt', 'deepmd/npy')
         files = []
         for file_path in file_path_or_glob:
-            files += glob.glob(file_path, recursive=True) if '*' in file_path else [file_path]
+            files += sorted(glob.glob(file_path, recursive=True)) if '*' in file_path else [file_path]
 
         if len(files) == 0:
             raise FileNotFoundError(f'No file found for {file_path_or_glob}')

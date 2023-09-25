@@ -1,4 +1,7 @@
 # Change Logs
+## v0.7.3
+* fix: ase tool read data
+
 ## v0.7.2
 * improvement: ignore `squeue` error
 * fix: upgrade `dpdata` to 0.2.16 to support CP2K 2023.1

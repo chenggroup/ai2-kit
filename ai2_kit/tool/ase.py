@@ -49,7 +49,7 @@ class AseHelper:
         data = ase.io.read(filename, **kwargs)
         if not isinstance(data, list):
             data = [data]
-        self._atoms_list = data
+        self._atoms_list += data
 
     def _write(self, filename: str, atoms_list, **kwargs):
         ensure_dir(filename)

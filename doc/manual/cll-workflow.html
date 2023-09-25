@@ -531,7 +531,7 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 </div>
 <p>Here we use the custom tag <code class="docutils literal notranslate"><span class="pre">!join</span></code> provided by <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> to simplify the data configuration. For related functions, please refer to the <a class="reference internal" href="tips.html"><span class="doc std std-doc">TIPS</span></a> document.</p>
 <p>Next, we configure the <code class="docutils literal notranslate"><span class="pre">executor.yml</span></code> file, which is used to configure parameters related to the HPC link and the use template of the software.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">executor</span><span class="p">:</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">executors</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">hpc-cluster01</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">ssh</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user01@login-01</span><span class="w">  </span><span class="c1"># Login node</span>

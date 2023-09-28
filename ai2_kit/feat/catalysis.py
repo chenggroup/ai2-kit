@@ -1,0 +1,285 @@
+import ase.io
+import fire
+
+from ai2_kit.core.log import get_logger
+from ai2_kit.res import DIR_PATH
+from ai2_kit.domain.cp2k import dump_coord_n_cell
+from typing import Optional, Literal
+from ase import Atoms
+from string import Template
+import re
+import os
+
+
+logger = get_logger(__name__)
+
+
+CP2K_DEFAULT_TEMPLATE = os.path.join(DIR_PATH, 'cp2k/catalysis_input_template.txt')
+CP2K_SCF_SEMICONDUCTOR = """\
+        # CONFIGURATION FOR SEMICONDUCTOR
+        &SCF
+            SCF_GUESS RESTART
+            EPS_SCF 3e-07
+            MAX_SCF 50
+            &OUTER_SCF
+                EPS_SCF 3e-07
+                MAX_SCF 20
+            &END OUTER_SCF
+            &OT
+                MINIMIZER CG
+                PRECONDITIONER FULL_SINGLE_INVERSE
+                ENERGY_GAP 0.1
+            &END OT
+        &END SCF
+        # END CONFIGURATION FOR SEMICONDUCTOR
+"""
+CP2K_SCF_METAL = """\
+        # CONFIGURATION FOR METAL
+        &SCF
+            SCF_GUESS RESTART
+            EPS_SCF 3e-07
+            MAX_SCF 500
+            ADDED_MOS 500
+            CHOLESKY INVERSE
+            &SMEAR
+                METHOD FERMI_DIRAC
+                ELECTRONIC_TEMPERATURE [K] 300
+            &END SMEAR
+            &DIAGONALIZATION
+                ALGORITHM STANDARD
+            &END DIAGONALIZATION
+            &MIXING
+                METHOD BROYDEN_MIXING
+                ALPHA 0.3
+                BETA 1.5
+                NBROYDEN 14
+            &END MIXING
+        &END SCF
+        # END CONFIGURATION FOR METAL
+"""
+
+CP2K_MOTION_TEMPLATE = """\
+&MOTION
+  &MD
+    ENSEMBLE NVT
+    STEPS       $steps
+    TIMESTEP    $timestep
+    TEMPERATURE $temp
+    &THERMOSTAT
+       TYPE CSVR
+       REGION MASSIVE
+       &CSVR
+          TIMECON [fs] 100.0
+       &END
+    &END
+  &END MD
+  &PRINT
+   &TRAJECTORY
+     &EACH
+       MD 1
+     &END EACH
+   &END TRAJECTORY
+   &VELOCITIES
+     &EACH
+       MD 1
+     &END EACH
+   &END VELOCITIES
+   &FORCES
+     &EACH
+       MD 1
+     &END EACH
+   &END FORCES
+   &RESTART_HISTORY
+     &EACH
+       MD 1000
+     &END EACH
+   &END RESTART_HISTORY
+   &RESTART
+     BACKUP_COPIES 3
+     &EACH
+       MD 1
+     &END EACH
+   &END RESTART
+  &END PRINT
+&END MOTION
+"""
+
+CP2K_SCF_TABLE = {
+    'metal': CP2K_SCF_METAL,
+    'semi': CP2K_SCF_SEMICONDUCTOR,
+}
+
+CP2K_ACCURACY_TABLE = {
+    'high': {'cutoff': 1000, 'rel_cutoff': 90 },
+    'medium': {'cutoff': 800, 'rel_cutoff': 70 },
+    'low': {'cutoff': 600, 'rel_cutoff': 50 },
+}
+
+
+class ConfigBuilder:
+
+    def __init__(self):
+        self._atoms: Optional[Atoms] = None
+
+    def load_system(self, file: str, **kwargs):
+        """
+        Loading system to memory using ASE
+        """
+        assert self._atoms is None, 'atoms is already loaded'
+        self._atoms = ase.io.read(file, **kwargs)  # type: ignore
+        return self
+
+    def show_cp2k_default_template(self):
+        """
+        Print the default template of CP2K input file to stdout
+        """
+        with open(CP2K_DEFAULT_TEMPLATE, 'r') as fp:
+            print(fp.read())
+
+    def gen_cp2k_input(self,
+                       basic_set_file: str = 'BASIS_MOLOPT',
+                       potential_file: str = 'GTH_POTENTIALS',
+                       out_dir: str = 'out',
+                       style: Literal['metal', 'semi'] = 'metal',
+                       accuracy: Literal['high', 'medium', 'low'] = 'medium',
+                       aimd: bool = False,
+                       temp: float = 330.,
+                       steps: int = 1000,
+                       timestep: float = 0.5,
+                       parameter_file: str = 'dftd3.dat',
+                       template_file: str = CP2K_DEFAULT_TEMPLATE,):
+        """
+        Generate CP2K input files
+
+        You should call `load_system` first to load system into memory.
+        And you may also need to ensure the basic set and potential files
+        you want to use are available in CP2K_DATA_DIR,
+        or else you have to specify the full path instead of their file name.
+
+        Args:
+            basic_set_file: basic set file, can be path or file in CP2K_DATA_DIR
+            potential_file: potential file, can be path or file in CP2K_DATA_DIR
+            out_dir: output directory, cp2k.inp and coord_n_cell.inc will be generated in this directory
+            style: 'metal' or 'semi'
+            accuracy: 'high', 'medium' or 'low'
+            aimd: whether to run AIMD
+            temp: temperature for AIMD
+            steps: steps for AIMD
+            timestep: timestep for AIMD
+            parameter_file: parameter file, can be path or file in CP2K_DATA_DIR
+            template_file: template file, no need to change in most cases
+        """
+
+        assert self._atoms is not None, 'atoms must be loaded first'
+        # get available basic set and potential
+        with open(find_cp2k_data_file(basic_set_file), 'r') as fp:
+            basic_set_table = parse_cp2k_basic_set_potential(fp)
+        with open(find_cp2k_data_file(potential_file), 'r') as fp:
+            potential_table = parse_cp2k_basic_set_potential(fp)
+        with open(template_file, 'r') as fp:
+            template = fp.read()
+        # build kinds
+        elements = set(self._atoms.get_chemical_symbols())
+
+        kinds = ''
+        total_ve = 0  # Valence Electron
+
+        for element in elements:
+            basic_set_all = basic_set_table.get(element)
+            basic_set = basic_set_all[-1]
+            logger.info(f'BASIC_SET {basic_set} is selected for {element}')
+
+            potential_all = potential_table.get(element)
+            potential = next(p for p in potential_all if 'PBE' in p)
+            logger.info(f'POTENTIAL {potential} is selected for {element}')
+            kinds += '\n'.join([
+                f'    &KIND {element}',
+                f'        BASIS_SET {basic_set}',
+                f'        # All available BASIS_SET:',
+                f'        # {" ".join(basic_set_all)}',
+                f'        POTENTIAL {potential}',
+                f'        # All available POTENTIAL:',
+                f'        # {" ".join(potential_all)}',
+                f'    &END KIND',
+                '', # This empty line is required
+            ])
+            # get ve from the last number of potential
+            # for example, if the potential is GTH-OLYP-q6
+            # then the ve is 6
+            ve = int(re.match(r'.*?(\d+)$', potential).group(1))
+            total_ve += ve * self._atoms.get_chemical_symbols().count(element)
+        logger.info("total valence Electron of the system: %d" % total_ve)
+
+        motion = ''
+        if aimd:
+            motion = Template(CP2K_MOTION_TEMPLATE).substitute(
+                steps=steps,
+                timestep=timestep,
+                temp=temp,
+            )
+
+        template_vars = {
+            'run_type': 'MD' if aimd else 'ENERGY_FORCE',
+            'basic_set_file': basic_set_file,
+            'potential_file': potential_file,
+            'parameter_file': parameter_file,
+            'uks': 'T' if total_ve % 2 else 'F',
+            'kinds': kinds,
+            'motion': motion,
+            'scf': CP2K_SCF_TABLE[style],
+            **CP2K_ACCURACY_TABLE[accuracy],
+        }
+
+        cp2k_input = Template(template).substitute(**template_vars)
+        os.makedirs(out_dir, exist_ok=True)
+        cp2k_input_path = os.path.join(out_dir, 'cp2k.inp')
+        with open(cp2k_input_path, 'w') as fp:
+            fp.write(cp2k_input)
+        logger.info(f'CP2K input file is generated at {cp2k_input_path}')
+
+        coord_n_cell_path = os.path.join(out_dir, 'coord_n_cell.inc')
+        with open(coord_n_cell_path, 'w') as fp:
+            dump_coord_n_cell(fp, self._atoms)
+        logger.info(f'coord_n_cell.inc is generated at {coord_n_cell_path}')
+
+
+def find_cp2k_data_file(file: str):
+    """
+    find CP2K data file in CP2K_DATA_DIR
+    """
+    if not os.path.exists(file):
+        cp2k_data_dir = os.environ.get('CP2K_DATA_DIR')
+        if cp2k_data_dir is None:
+            raise FileNotFoundError(f'Cannot find {file}')
+        file = os.path.join(cp2k_data_dir, file)
+        if not os.path.exists(file):
+            raise FileNotFoundError(f'Cannot find {file}')
+    return file
+
+
+def parse_cp2k_basic_set_potential(fp):
+    """
+    get all available basic set and potential from CP2K data file
+    """
+    parsed = {}
+    for line in fp:
+        line: str = line.strip()
+        if line.startswith('#'):
+            continue
+        tokens = line.split()
+        if re.match(r'^[A-Z][a-z]*$', tokens[0]):
+            parsed.setdefault(tokens[0], []).append(tokens[1])
+    return parsed
+
+
+class CmdEntries:
+
+    def build_config(self):
+        """
+        Build config file for catalyst
+        """
+        return ConfigBuilder
+
+
+if __name__ == '__main__':
+    fire.Fire(ConfigBuilder)

@@ -1,0 +1,46 @@
+&GLOBAL
+    PROJECT AI2KIT
+    RUN_TYPE $run_type
+&END GLOBAL
+&FORCE_EVAL
+    METHOD QS
+    STRESS_TENSOR ANALYTICAL
+    &DFT
+        BASIS_SET_FILE_NAME $basic_set_file
+        POTENTIAL_FILE_NAME $potential_file
+        CHARGE              0
+        UKS                 $uks
+        &MGRID
+            CUTOFF     $cutoff
+            REL_CUTOFF $rel_cutoff
+            NGRIDS     4
+        &END MGRID
+        &QS
+            EPS_DEFAULT 1.0E-12
+        &END QS
+$scf
+        &XC
+            &XC_FUNCTIONAL PBE
+            &END XC_FUNCTIONAL
+            &vdW_POTENTIAL
+                DISPERSION_FUNCTIONAL PAIR_POTENTIAL
+                &PAIR_POTENTIAL
+                    TYPE DFTD3
+                    PARAMETER_FILE_NAME $parameter_file
+                    REFERENCE_FUNCTIONAL PBE
+                &END PAIR_POTENTIAL
+            &END vdW_POTENTIAL
+        &END XC
+    &END DFT
+    &SUBSYS
+    @include(coord_n_cell.inc)
+$kinds
+    &END SUBSYS
+    &PRINT
+        &FORCES ON
+        &END FORCES
+        &STRESS_TENSOR ON
+        &END STRESS_TENSOR
+    &END PRINT
+&END FORCE_EVAL
+$motion

@@ -36,6 +36,8 @@ poetry install
 Note that instead of running global `ai2-kit` command, you should run `./ai2-kit` to run the command from source on Linux/MacOS or `.\ai2-kit.ps1` on Windows.
 
 ## Manuals
+### Featuring Tools
+* [AI4Cat](doc/manual/ai4cat.md) A toolkit contains useful functions for dynamic catalysis researching.
 
 ### Domain Specific Tools
 * [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)

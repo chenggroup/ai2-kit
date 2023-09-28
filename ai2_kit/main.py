@@ -67,6 +67,27 @@ class ToolGroup:
         from ai2_kit.core.checkpoint import CheckpointCmd
         return CheckpointCmd
 
+class FeatureGroup:
+    """
+    Featuring tools for specific domains.
+    """
+
+    @property
+    def catalysis(self):
+        """
+        Catalyst specific tools.
+        """
+        from ai2_kit.feat.catalysis import CmdEntries
+        return CmdEntries
+
+    @property
+    def cat(self):
+        """
+        Shortcut for catalyst.
+        """
+        return self.catalysis
+
+
 
 ai2_kit = Group({
     'workflow': WorkflowGroup(),
@@ -74,6 +95,8 @@ ai2_kit = Group({
         'proton-transfer': ProtonTransferGroup(),
     }),
     'tool': ToolGroup(),
+    'feat': FeatureGroup(),
+
 }, doc="Welcome to use ai2-kit!")
 
 

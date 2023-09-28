@@ -5,6 +5,7 @@ from ai2_kit.core.util import ensure_dir
 from typing import List, Union
 from ase import Atoms
 
+
 class AseHelper:
     def __init__(self):
         self._atoms_list: List[Atoms] = []

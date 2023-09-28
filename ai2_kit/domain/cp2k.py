@@ -196,9 +196,11 @@ def __export_remote_functions():
 
     return (
         make_cp2k_task_dirs,
+        dump_coord_n_cell,
     )
 
 
 (
     make_cp2k_task_dirs,
+    dump_coord_n_cell,
 ) = __export_remote_functions()

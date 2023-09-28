@@ -159,9 +159,6 @@ def del_checkpoint(key: str):
 
 class CheckpointCmd:
     """checkpoint command line interface"""
-    def __init__(self) -> None:
-        ...
-
     def load(self, file):
         set_checkpoint_file(file)
         return self

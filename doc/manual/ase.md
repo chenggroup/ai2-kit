@@ -41,4 +41,7 @@ ai2-kit tool ase read ./path/to/data1/*.xyz - read ./path/to/data2/*.xyz - write
 
 # Read all `good` structures generate by CLL training workflow
 ai2-kit tool ase read ./workdir/iters-*/selector*/model-devi/*/good.xyz  - write all-good.syz
+
+# Convert xyz file to cp2k-inc file
+ai2-kit tool ase read coord.xyz - set_cell "[10,10,10,90,90,90]" - write coord_n_cell.inc --format cp2k-inc
 ```

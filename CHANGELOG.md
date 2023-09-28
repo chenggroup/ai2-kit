@@ -1,4 +1,7 @@
 # Change Logs
+## v0.8.1
+* feat: `ase` toolkit support save atoms as `cp2k-inc` file, which can be used as `@include coord_n_cell.inc` macro in CP2K input file.
+
 ## v0.8.0
 * feat: `ai4cat` toolkit, for more detail please check [here](./doc/manual/ai4cat.md)
 

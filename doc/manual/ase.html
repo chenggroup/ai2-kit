@@ -505,6 +505,9 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 
 <span class="c1"># Read all `good` structures generate by CLL training workflow</span>
 ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./workdir/iters-*/selector*/model-devi/*/good.xyz<span class="w">  </span>-<span class="w"> </span>write<span class="w"> </span>all-good.syz
+
+<span class="c1"># Convert xyz file to cp2k-inc file</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>coord.xyz<span class="w"> </span>-<span class="w"> </span>set_cell<span class="w"> </span><span class="s2">&quot;[10,10,10,90,90,90]&quot;</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>coord_n_cell.inc<span class="w"> </span>--format<span class="w"> </span>cp2k-inc
 </pre></div>
 </div>
 </section>

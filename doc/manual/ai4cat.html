@@ -450,7 +450,7 @@ for a given system automatically with some simple commands.</p>
 </pre></div>
 </div>
 <p>For example, suppose you have a system file named <code class="docutils literal notranslate"><span class="pre">AuCu.xyz</span></code>,
-and the data files you want to use is in <code class="docutils literal notranslate"><span class="pre">CP2K_DATA_DIR</span></code>,
+and the basic set and potential files you want to use is in <code class="docutils literal notranslate"><span class="pre">CP2K_DATA_DIR</span></code>,
 then you can run the following command to generate CP2K input files for this system:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>feat<span class="w"> </span>cat<span class="w"> </span>build-config<span class="w"> </span>load_system<span class="w"> </span>AuCu.xyz<span class="w"> </span>-<span class="w"> </span>gen_cp2k_input<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--basic_set_file<span class="w"> </span>BASIS_MOLOPT<span class="w"> </span>--<span class="w"> </span>potential_file<span class="w"> </span>GTH_POTENTIALS<span class="w"> </span><span class="se">\</span>

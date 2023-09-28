@@ -1,4 +1,4 @@
-# AI4CAT Toolkit
+# ai2-cat Toolkit
 
 ```bash
 ai2-kit feat catalysis  # shortcut: cat

@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>FEP MLP Training Workflow &#8212; ai2-kit Reference</title>
+    <title>AI4CAT Toolkit &#8212; ai2-kit Reference</title>
   
   
   
@@ -61,11 +61,9 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'doc/manual/fep-workflow';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'doc/manual/ai4cat';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="ASE Toolkit" href="ase.html" />
-    <link rel="prev" title="CLL Machine Learning Potential Training Workflow" href="cll-workflow.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -151,10 +149,10 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cll-workflow.html">CLL Machine Learning Potential Training Workflow</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">FEP MLP Training Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fep-workflow.html">FEP MLP Training Workflow</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Build-in Functionalities</span></p>
 <ul class="nav bd-sidenav">
@@ -298,7 +296,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fdoc/manual/fep-workflow.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fdoc/manual/ai4cat.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -328,7 +326,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../../_sources/doc/manual/fep-workflow.md" target="_blank"
+      <li><a href="../../_sources/doc/manual/ai4cat.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -410,7 +408,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>FEP MLP Training Workflow</h1>
+    <h1>AI4CAT Toolkit</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -420,9 +418,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citation">Citation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-cp2k-input-files">Generate CP2K Input Files</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -434,23 +433,36 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="fep-mlp-training-workflow">
-<h1>FEP MLP Training Workflow<a class="headerlink" href="#fep-mlp-training-workflow" title="Permalink to this heading">#</a></h1>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>workflow<span class="w"> </span>fep-mlp-training
+  <section class="tex2jax_ignore mathjax_ignore" id="ai4cat-toolkit">
+<h1>AI4CAT Toolkit<a class="headerlink" href="#ai4cat-toolkit" title="Permalink to this heading">#</a></h1>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>feat<span class="w"> </span>catalysis<span class="w">  </span><span class="c1"># shortcut: cat</span>
 </pre></div>
 </div>
-<section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
-</section>
+<p>This toolkit is a collection of useful functions for dynamic catalysis researching.</p>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
+<section id="generate-cp2k-input-files">
+<h3>Generate CP2K Input Files<a class="headerlink" href="#generate-cp2k-input-files" title="Permalink to this heading">#</a></h3>
+<p>This toolkit can be used to generate CP2K input files
+for a given system automatically with some simple commands.</p>
+<p>You can run the following command to see the help message:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>feat<span class="w"> </span>cat<span class="w"> </span>build-config<span class="w"> </span>gen_cp2k_input<span class="w"> </span>--help
+</pre></div>
+</div>
+<p>For example, suppose you have a system file named <code class="docutils literal notranslate"><span class="pre">AuCu.xyz</span></code>,
+and the data files you want to use is in <code class="docutils literal notranslate"><span class="pre">CP2K_DATA_DIR</span></code>,
+then you can run the following command to generate CP2K input files for this system:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>feat<span class="w"> </span>cat<span class="w"> </span>build-config<span class="w"> </span>load_system<span class="w"> </span>AuCu.xyz<span class="w"> </span>-<span class="w"> </span>gen_cp2k_input<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--basic_set_file<span class="w"> </span>BASIS_MOLOPT<span class="w"> </span>--<span class="w"> </span>potential_file<span class="w"> </span>GTH_POTENTIALS<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--accuracy<span class="w"> </span>high<span class="w"> </span>--style<span class="w"> </span>metal<span class="w"> </span>--out_dir<span class="w"> </span>./cp2k_input
+</pre></div>
+</div>
+<p>The above command will generate two files in the <code class="docutils literal notranslate"><span class="pre">./cp2k_input</span></code> folder:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cp2k.inp</span></code>: The CP2K input file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coord_n_cell.inc</span></code>: The coordinate and cell sections.</p></li>
+</ul>
 </section>
-<section id="citation">
-<h2>Citation<a class="headerlink" href="#citation" title="Permalink to this heading">#</a></h2>
-<p>If you use this workflow in your research, please cite the following paper:</p>
-<blockquote>
-<div><p>Feng Wang and Jun Cheng, Automated Workflow for Computation of Redox Potentials, Acidity Constants and Solvation Free Energies Accelerated by Machine Learning. J. Chem. Phys, 2022. 157(2), 024103. DOI: <a class="reference external" href="https://doi.org/10.1063/5.0098330">https://doi.org/10.1063/5.0098330</a></p>
-</div></blockquote>
 </section>
 </section>
 
@@ -485,24 +497,6 @@ document.write(`
   
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="cll-workflow.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">CLL Machine Learning Potential Training Workflow</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="ase.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ASE Toolkit</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div></div>
   
 </div>
@@ -521,9 +515,10 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citation">Citation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-cp2k-input-files">Generate CP2K Input Files</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

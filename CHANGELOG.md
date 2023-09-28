@@ -1,4 +1,7 @@
 # Change Logs
+## v0.8.0
+* feat: `ai4cat` toolkit, for more detail please check [here](./doc/manual/ai4cat.md)
+
 ## v0.7.4
 * improvement: sorted input files for dpdata and ase tools
   * You may need to quote the input file name or else the file expansion will be handled by shell. e.g. `ai2-kit ase tool read './path/to/*.xyz'`

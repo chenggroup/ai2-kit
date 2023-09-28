@@ -1,4 +1,4 @@
-# AI4CAT Toolkit
+# ai2-cat Toolkit
 
 ```bash
 ai2-kit feat catalysis  # shortcut: cat
@@ -22,7 +22,7 @@ and the basic set and potential files you want to use is in `CP2K_DATA_DIR`,
 then you can run the following command to generate CP2K input files for this system:
 ```bash
 ai2-kit feat cat build-config load_system AuCu.xyz - gen_cp2k_input \
-    --basic_set_file BASIS_MOLOPT -- potential_file GTH_POTENTIALS \
+    --basic_set_file BASIS_MOLOPT --potential_file GTH_POTENTIALS \
     --accuracy high --style metal --out_dir ./cp2k_input
 ```
 

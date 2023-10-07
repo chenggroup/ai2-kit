@@ -63,10 +63,18 @@ class FepWorkflowConfig(BaseModel):
     workflow: Any
 
 
-def run_workflow(*config_files, executor: Optional[str] = None,
-                 path_prefix: Optional[str] = None, checkpoint: Optional[str] = None):
+def run_workflow(*config_files,
+                 executor: Optional[str] = None,
+                 path_prefix: Optional[str] = None,
+                 checkpoint: Optional[str] = None):
     """
     Training ML potential for FEP
+
+    Args:
+        config_files: path of config files, should be yaml files, can be multiple, support glob pattern
+        executor: name of executor, should be defined in config `executors` section
+        path_prefix: path prefix for output
+        checkpoint: checkpoint file
     """
     if checkpoint is not None:
         set_checkpoint_file(checkpoint)
@@ -160,7 +168,6 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
             type_map=type_map,
             old_dataset=[] if red_train_output is None else red_train_output.get_training_dataset(),
             new_dataset=red_label_output.get_labeled_system_dataset(),
-            initiated=i > 0,
         )
         red_deepmd_context = deepmd.CllDeepmdContext(
             path_prefix=os.path.join(iter_path_prefix, 'red-train-deepmd'),
@@ -172,7 +179,6 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
             type_map=type_map,
             old_dataset=[] if neu_train_output is None else neu_train_output.get_training_dataset(),
             new_dataset=neu_label_output.get_labeled_system_dataset(),
-            initiated=i > 0,
         )
         neu_deepmd_context = deepmd.CllDeepmdContext(
             path_prefix=os.path.join(iter_path_prefix, 'neu-train-deepmd'),
@@ -188,6 +194,7 @@ async def cll_mlp_training_workflow(config: FepWorkflowConfig, resource_manager:
         # explore
         lammps_input = lammps.CllLammpsInput(
             config=workflow_config.lammps,
+            new_system_files=[],
             type_map=type_map,
             mass_map=mass_map,
             dp_models={

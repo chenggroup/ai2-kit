@@ -68,51 +68,6 @@ def __export_remote_functions():
         return (coords, cell)
 
 
-    def convert_to_deepmd_npy(
-        base_dir: str,
-        type_map: List[str],
-        dataset: List[ArtifactDict],
-    ):
-        import dpdata
-        from itertools import groupby
-
-        dp_system_list: List[Tuple[ArtifactDict, dpdata.LabeledSystem]]= []
-        for data in dataset:
-            data_format = get_data_format(data)  # type: ignore
-            dp_system = None
-            try:
-                if data_format == DataFormat.CP2K_OUTPUT_DIR:
-                    dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'output'), fmt='cp2k/output', type_map=type_map)
-                elif data_format == DataFormat.VASP_OUTPUT_DIR:
-                    dp_system = dpdata.LabeledSystem(os.path.join(data['url'], 'OUTCAR'), fmt='vasp/outcar', type_map=type_map)
-            except Exception as e:
-                print(f'failed to load {data["url"]}: {e}')
-
-            # one case of len(dp_system) == 0 is when the system is not converged
-            if dp_system is not None and len(dp_system) > 0:
-                dp_system_list.append((data, dp_system))
-
-        output_dirs = []
-        # group dataset by ancestor key
-        for i, (key, dp_system_group) in enumerate(groupby(dp_system_list, key=lambda x: x[0]['attrs']['ancestor'])):
-            dp_system_group = list(dp_system_group)
-            if 0 == len(dp_system_group):
-                continue  # skip empty dataset
-
-            output_dir = os.path.join(base_dir, key.replace('/', '_'))
-            # merge dp_systems with the same ancestor into single data set
-            dp_system = dp_system_group[0][1]
-            for item in dp_system_group[1:]:
-                dp_system += item[1]
-
-            dp_system.to_deepmd_npy(output_dir, set_size=len(dp_system), type_map=type_map)  # type: ignore
-            # inherit attrs key from input artifact
-            output_dirs.append({'url': output_dir,
-                                'format': DataFormat.DEEPMD_NPY,
-                                'attrs': dp_system_group[0][0]['attrs']})  # type: ignore
-        return output_dirs
-
-
     def convert_to_lammps_input_data(systems: List[ArtifactDict], base_dir: str, type_map: List[str]):
         data_files = []
         atoms_list = artifacts_to_ase_atoms(systems, type_map=type_map)
@@ -128,7 +83,6 @@ def __export_remote_functions():
     return (
         artifacts_to_ase_atoms,
         ase_atoms_to_cp2k_input_data,
-        convert_to_deepmd_npy,
         convert_to_lammps_input_data,
         DataFormat,
         get_data_format,
@@ -137,7 +91,6 @@ def __export_remote_functions():
 (
     artifacts_to_ase_atoms,
     ase_atoms_to_cp2k_input_data,
-    convert_to_deepmd_npy,
     convert_to_lammps_input_data,
     DataFormat,
     get_data_format,

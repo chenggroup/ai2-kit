@@ -87,10 +87,18 @@ class CllWorkflowConfig(BaseModel):
     workflow: Any  # Keep it raw here, it should be parsed later in iteration
 
 
-def run_workflow(*config_files, executor: Optional[str] = None,
-                 path_prefix: Optional[str] = None, checkpoint: Optional[str] = None):
+def run_workflow(*config_files,
+                 executor: Optional[str] = None,
+                 path_prefix: Optional[str] = None,
+                 checkpoint: Optional[str] = None):
     """
     Run Closed-Loop Learning (CLL) workflow to train Machine Learning Potential (MLP) models.
+
+    Args:
+        config_files: path of config files, should be yaml files, can be multiple, support glob pattern
+        executor: name of executor, should be defined in config `executors` section
+        path_prefix: path prefix for output
+        checkpoint: checkpoint file
     """
     if checkpoint is not None:
         set_checkpoint_file(checkpoint)
@@ -187,7 +195,6 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager:
                 type_map=type_map,
                 old_dataset=[] if train_output is None else train_output.get_training_dataset(),
                 new_dataset=label_output.get_labeled_system_dataset(),
-                initiated=i > 0,
             )
             deepmd_context = deepmd.CllDeepmdContext(
                 path_prefix=os.path.join(iter_path_prefix, 'train-deepmd'),

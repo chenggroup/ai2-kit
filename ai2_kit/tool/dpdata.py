@@ -1,7 +1,10 @@
 from ai2_kit.core.util import ensure_dir
+from ai2_kit.core.log import get_logger
 
 import dpdata
 import glob
+
+logger = get_logger(__name__)
 
 class DpdataHelper:
 
@@ -21,7 +24,19 @@ class DpdataHelper:
             self._read(file, **kwargs)
         return self
 
-    def merge_write(self, out_path: str, fmt='deepmd/npy'):
+    def filter(self, lambda_expr: str):
+        fn = eval(lambda_expr)
+        def _fn(system):
+            return fn(system.data)
+        self._systems = list(filter(_fn, self._systems))
+        return self
+
+    @property
+    def merge_write(self):
+        logger.warn('merge_write is deprecated, use write instead')
+        return self.write
+
+    def write(self, out_path: str, fmt='deepmd/npy'):
         ensure_dir(out_path)
         if len(self._systems) == 0:
             raise ValueError('No data to merge')

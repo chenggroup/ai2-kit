@@ -15,6 +15,19 @@ workflow:
     # Default: false
     update_explore_systems: false
 
+    # Optional, whether to isolate the outliers in the training dataset.
+    # Default: false
+    isolate_outliers: true
+
+    # Optional, the outlier cutoff for the training dataset.
+    # Default: 10.
+    outlier_f_cutoff: 5.
+
+    # Optional, the weight of outlier data during training.
+    # Default: 0.003
+    outlier_weight: 0.003
+
+
   # The update section defines how to update the parameters of the workflow in each iteration.
   update:
     # The walkthrough updater is a table driven updater.

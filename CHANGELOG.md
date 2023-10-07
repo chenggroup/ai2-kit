@@ -1,4 +1,9 @@
 # Change Logs
+## v0.8.2
+* feat: handle outlier data in deepmd training stage, for more detail please check [here](./example/config/cll-mlp-training/train-deepmd.yml)
+* feat: dpdata tool support filter systems by lambda expression, for more detail please check [here](./doc/manual/dpdata.md)
+* improvement: cll-workflow now allow user to change init_dataset in each iteration.
+
 ## v0.8.1
 * feat: `ase` toolkit support save atoms as `cp2k-inc` file, which can be used as `@include coord_n_cell.inc` macro in CP2K input file.
 

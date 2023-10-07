@@ -34,6 +34,18 @@ workflow:
       # The number of models to train.
       model_num: 4
 
+      # Optional, whether to isolate the outliers in the training dataset.
+      # Default: false
+      isolate_outliers: true
+
+      # Optional, the outlier cutoff for the training dataset.
+      # Default: 10.
+      outlier_f_cutoff: 5.
+
+      # Optional, the weight of outlier data during training.
+      # Default: 0.003
+      outlier_weight: 0.003
+
       # Optional, the initial dataset to train the first model.
       # if not specified, it will use the dataset from previous label stage.
       # The value should correspond to the artifact name in artifact.yml

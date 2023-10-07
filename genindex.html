@@ -965,8 +965,6 @@ document.write(`
         <li><a href="_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.FepExecutorConfig.context">(ai2_kit.workflow.fep_mlp.FepExecutorConfig attribute)</a>
 </li>
       </ul></li>
-      <li><a href="_api/ai2_kit.domain.data.html#ai2_kit.domain.data.convert_to_deepmd_npy">convert_to_deepmd_npy() (in module ai2_kit.domain.data)</a>
-</li>
       <li><a href="_api/ai2_kit.domain.data.html#ai2_kit.domain.data.convert_to_lammps_input_data">convert_to_lammps_input_data() (in module ai2_kit.domain.data)</a>
 </li>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context.Label.cp2k">cp2k (ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context.Label attribute)</a>
@@ -998,6 +996,8 @@ document.write(`
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.domain.data.html#ai2_kit.domain.data.DataFormat">DataFormat (class in ai2_kit.domain.data)</a>
+</li>
+      <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.dataset">dataset (ai2_kit.domain.deepmd.GenericDeepmdOutput attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context.Train.deepmd">deepmd (ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context.Train attribute)</a>
 
@@ -1151,16 +1151,18 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.FepWorkflowConfig">FepWorkflowConfig (class in ai2_kit.workflow.fep_mlp)</a>
 </li>
+      <li><a href="_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.filter">filter() (ai2_kit.tool.dpdata.DpdataHelper method)</a>
+</li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.find_cp2k_data_file">find_cp2k_data_file() (in module ai2_kit.feat.catalysis)</a>
 </li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.flat_evenly">flat_evenly() (in module ai2_kit.core.util)</a>
 </li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.flatten">flatten() (in module ai2_kit.core.util)</a>
 </li>
-      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.flush_stdio">flush_stdio() (in module ai2_kit.core.util)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.flush_stdio">flush_stdio() (in module ai2_kit.core.util)</a>
+</li>
       <li><a href="_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.FnInfo.fn_name">fn_name (ai2_kit.core.checkpoint.FnInfo attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.fn_to_script">fn_to_script() (in module ai2_kit.core.executor)</a>
@@ -1418,13 +1420,9 @@ document.write(`
       <li><a href="_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kInput.initiated">initiated (ai2_kit.domain.cp2k.CllCp2kInput attribute)</a>
 
       <ul>
-        <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInput.initiated">(ai2_kit.domain.deepmd.CllDeepmdInput attribute)</a>
-</li>
         <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspInput.initiated">(ai2_kit.domain.vasp.CllVaspInput attribute)</a>
 </li>
       </ul></li>
-      <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.input">input (ai2_kit.domain.deepmd.GenericDeepmdOutput attribute)</a>
-</li>
       <li><a href="_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kInputConfig.input_template">input_template (ai2_kit.domain.cp2k.CllCp2kInputConfig attribute)</a>
 
       <ul>
@@ -1447,6 +1445,8 @@ document.write(`
         <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.QueueJobFuture.is_success">(ai2_kit.core.queue_system.QueueJobFuture method)</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.isolate_outliers">isolate_outliers (ai2_kit.domain.deepmd.CllDeepmdInputConfig attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1585,6 +1585,8 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.make_cp2k_task_dirs">make_cp2k_task_dirs() (in module ai2_kit.domain.cp2k)</a>
 </li>
+      <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.make_deepmd_dataset">make_deepmd_dataset() (in module ai2_kit.domain.deepmd)</a>
+</li>
       <li><a href="_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.make_lammps_task_dirs">make_lammps_task_dirs() (in module ai2_kit.domain.lammps)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.make_lasp_task_dirs">make_lasp_task_dirs() (in module ai2_kit.domain.lasp)</a>
@@ -1611,7 +1613,7 @@ document.write(`
       </ul></li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.merge_dict">merge_dict() (in module ai2_kit.core.util)</a>
 </li>
-      <li><a href="_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.merge_write">merge_write() (ai2_kit.tool.dpdata.DpdataHelper method)</a>
+      <li><a href="_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.merge_write">merge_write (ai2_kit.tool.dpdata.DpdataHelper property)</a>
 </li>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.SshConnector.mkdir">mkdir() (ai2_kit.core.connector.SshConnector method)</a>
 
@@ -1766,8 +1768,12 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInput.old_dataset">old_dataset (ai2_kit.domain.deepmd.CllDeepmdInput attribute)</a>
 </li>
+      <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.outlier_f_cutoff">outlier_f_cutoff (ai2_kit.domain.deepmd.CllDeepmdInputConfig attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.outlier_weight">outlier_weight (ai2_kit.domain.deepmd.CllDeepmdInputConfig attribute)</a>
+</li>
       <li><a href="_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspOutput.output_dirs">output_dirs (ai2_kit.domain.lasp.CllLaspOutput attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.outputs">outputs (ai2_kit.domain.deepmd.GenericDeepmdOutput attribute)</a>
@@ -2281,7 +2287,11 @@ document.write(`
       <li><a href="_api/ai2_kit.main.html#ai2_kit.main.WorkflowGroup">WorkflowGroup (class in ai2_kit.main)</a>
 </li>
       <li><a href="_api/ai2_kit.tool.ase.html#ai2_kit.tool.ase.AseHelper.write">write() (ai2_kit.tool.ase.AseHelper method)</a>
+
+      <ul>
+        <li><a href="_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.write">(ai2_kit.tool.dpdata.DpdataHelper method)</a>
 </li>
+      </ul></li>
       <li><a href="_api/ai2_kit.tool.ase.html#ai2_kit.tool.ase.AseHelper.write_each_frame">write_each_frame() (ai2_kit.tool.ase.AseHelper method)</a>
 </li>
   </ul></td>

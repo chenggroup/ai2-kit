@@ -437,10 +437,18 @@ document.write(`
     <span class="n">workflow</span><span class="p">:</span> <span class="n">Any</span></div>
 
 
-<div class="viewcode-block" id="run_workflow"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.run_workflow">[docs]</a><span class="k">def</span> <span class="nf">run_workflow</span><span class="p">(</span><span class="o">*</span><span class="n">config_files</span><span class="p">,</span> <span class="n">executor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">path_prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">checkpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="run_workflow"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.run_workflow">[docs]</a><span class="k">def</span> <span class="nf">run_workflow</span><span class="p">(</span><span class="o">*</span><span class="n">config_files</span><span class="p">,</span>
+                 <span class="n">executor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">path_prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">checkpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Training ML potential for FEP</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config_files: path of config files, should be yaml files, can be multiple, support glob pattern</span>
+<span class="sd">        executor: name of executor, should be defined in config `executors` section</span>
+<span class="sd">        path_prefix: path prefix for output</span>
+<span class="sd">        checkpoint: checkpoint file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">checkpoint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">set_checkpoint_file</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span>
@@ -534,7 +542,6 @@ document.write(`
             <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
             <span class="n">old_dataset</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="n">red_train_output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">red_train_output</span><span class="o">.</span><span class="n">get_training_dataset</span><span class="p">(),</span>
             <span class="n">new_dataset</span><span class="o">=</span><span class="n">red_label_output</span><span class="o">.</span><span class="n">get_labeled_system_dataset</span><span class="p">(),</span>
-            <span class="n">initiated</span><span class="o">=</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">red_deepmd_context</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdContext</span><span class="p">(</span>
             <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;red-train-deepmd&#39;</span><span class="p">),</span>
@@ -546,7 +553,6 @@ document.write(`
             <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
             <span class="n">old_dataset</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="n">neu_train_output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">neu_train_output</span><span class="o">.</span><span class="n">get_training_dataset</span><span class="p">(),</span>
             <span class="n">new_dataset</span><span class="o">=</span><span class="n">neu_label_output</span><span class="o">.</span><span class="n">get_labeled_system_dataset</span><span class="p">(),</span>
-            <span class="n">initiated</span><span class="o">=</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">neu_deepmd_context</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdContext</span><span class="p">(</span>
             <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;neu-train-deepmd&#39;</span><span class="p">),</span>
@@ -562,6 +568,7 @@ document.write(`
         <span class="c1"># explore</span>
         <span class="n">lammps_input</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsInput</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">lammps</span><span class="p">,</span>
+            <span class="n">new_system_files</span><span class="o">=</span><span class="p">[],</span>
             <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
             <span class="n">mass_map</span><span class="o">=</span><span class="n">mass_map</span><span class="p">,</span>
             <span class="n">dp_models</span><span class="o">=</span><span class="p">{</span>

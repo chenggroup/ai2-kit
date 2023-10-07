@@ -372,7 +372,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for ai2_kit.domain.deepmd</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span>
+<span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashTemplate</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.job</span> <span class="kn">import</span> <span class="n">JobFuture</span><span class="p">,</span> <span class="n">gather_jobs</span>
@@ -380,7 +380,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">dict_nested_get</span>
 
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">copy</span>
@@ -389,7 +389,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">.iface</span> <span class="kn">import</span> <span class="n">ICllTrainOutput</span><span class="p">,</span> <span class="n">BaseCllContext</span>
-<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">DataFormat</span><span class="p">,</span> <span class="n">get_data_format</span><span class="p">,</span> <span class="n">convert_to_deepmd_npy</span>
+<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">DataFormat</span><span class="p">,</span> <span class="n">get_data_format</span>
 
 <span class="kn">from</span> <span class="nn">.constant</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">DP_CHECKPOINT_FILE</span><span class="p">,</span>
@@ -407,7 +407,12 @@ document.write(`
     <span class="n">model_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
     <span class="n">init_dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">input_template</span><span class="p">:</span> <span class="nb">dict</span>
-    <span class="n">compress_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
+    <span class="n">compress_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">isolate_outliers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">outlier_f_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.</span>
+    <span class="n">outlier_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.003</span></div>
+
 
 <div class="viewcode-block" id="CllDeepmdContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdContextConfig">[docs]</a><span class="k">class</span> <span class="nc">CllDeepmdContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
@@ -420,7 +425,6 @@ document.write(`
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">old_dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>  <span class="c1"># training data used by previous iteration</span>
     <span class="n">new_dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>  <span class="c1"># training data used by current iteration</span>
-    <span class="n">initiated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># FIXME: this seems to be a bad design idea</span>
 
 <div class="viewcode-block" id="CllDeepmdInput.update_training_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInput.update_training_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">update_training_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">old_dataset</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_dataset</span>
@@ -435,13 +439,13 @@ document.write(`
 <div class="viewcode-block" id="GenericDeepmdOutput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">GenericDeepmdOutput</span><span class="p">(</span><span class="n">ICllTrainOutput</span><span class="p">):</span>
     <span class="n">outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
-    <span class="nb">input</span><span class="p">:</span> <span class="n">CllDeepmdInput</span>
+    <span class="n">dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
 
 <div class="viewcode-block" id="GenericDeepmdOutput.get_mlp_models"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.get_mlp_models">[docs]</a>    <span class="k">def</span> <span class="nf">get_mlp_models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DP_FROZEN_MODEL</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="GenericDeepmdOutput.get_training_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.get_training_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_training_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">new_dataset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">old_dataset</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span></div></div>
 
 
 <div class="viewcode-block" id="cll_deepmd"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.cll_deepmd">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">cll_deepmd</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllDeepmdInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllDeepmdContext</span><span class="p">):</span>
@@ -449,39 +453,29 @@ document.write(`
 
     <span class="c1"># setup workspace</span>
     <span class="n">work_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">path_prefix</span><span class="p">)</span>
-    <span class="p">[</span><span class="n">converted_data_dir</span><span class="p">,</span> <span class="n">tasks_dir</span><span class="p">]</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">setup_workspace</span><span class="p">(</span>
-        <span class="n">work_dir</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;converted_input_data&#39;</span><span class="p">,</span> <span class="s1">&#39;tasks&#39;</span><span class="p">])</span>
+    <span class="p">[</span><span class="n">new_dataset_dir</span><span class="p">,</span> <span class="n">tasks_dir</span><span class="p">,</span> <span class="n">outlier_dir</span><span class="p">]</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">setup_workspace</span><span class="p">(</span>
+        <span class="n">work_dir</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;new_dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;tasks&#39;</span><span class="p">,</span> <span class="s1">&#39;outlier_dataset&#39;</span><span class="p">])</span>
 
-    <span class="c1"># initialization</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">input</span><span class="o">.</span><span class="n">initiated</span><span class="p">:</span>
-        <span class="nb">input</span><span class="o">.</span><span class="n">new_dataset</span> <span class="o">+=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span>
-            <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">init_dataset</span><span class="p">)</span>
+    <span class="n">init_dataset</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">init_dataset</span><span class="p">)</span>
+    <span class="c1"># input dataset contains data that generated by previous iteration</span>
+    <span class="c1"># it should not contain the initial dataset</span>
+    <span class="n">input_dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">old_dataset</span>
 
-    <span class="c1"># convert data type if necessary, only needed for new data as old data is already converted</span>
-    <span class="n">deepmd_npy_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">data_to_be_converted</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">artifact</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">new_dataset</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">artifact</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-        <span class="nb">format</span> <span class="o">=</span> <span class="n">get_data_format</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">DEEPMD_NPY</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">format</span><span class="p">:</span>
-            <span class="n">deepmd_npy_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">data_to_be_converted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">artifact</span><span class="p">)</span>
-
-    <span class="c1"># convert data to deepmd/npy format</span>
-    <span class="n">converted_data_dirs</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">convert_to_deepmd_npy</span><span class="p">)(</span>
-        <span class="n">dataset</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">data_to_be_converted</span><span class="p">],</span>
-        <span class="n">base_dir</span><span class="o">=</span><span class="n">converted_data_dir</span><span class="p">,</span>
+    <span class="c1"># make new dataset from raw data</span>
+    <span class="n">new_dataset</span><span class="p">,</span> <span class="n">outlier_dataset</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">make_deepmd_dataset</span><span class="p">)(</span>
+        <span class="n">dataset_dir</span><span class="o">=</span><span class="n">new_dataset_dir</span><span class="p">,</span>
+        <span class="n">outlier_dir</span><span class="o">=</span><span class="n">outlier_dir</span><span class="p">,</span>
+        <span class="n">raw_data_collection</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">new_dataset</span><span class="p">],</span>
         <span class="n">type_map</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span>
+        <span class="n">isolate_outliers</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">isolate_outliers</span><span class="p">,</span>
+        <span class="n">outlier_f_cutoff</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">outlier_f_cutoff</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">deepmd_npy_data</span> <span class="o">+=</span> <span class="p">[</span><span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span>
-        <span class="n">url</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;format&#39;</span><span class="p">],</span> <span class="n">attrs</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span>
-    <span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">converted_data_dirs</span><span class="p">]</span>
+    <span class="n">input_dataset</span> <span class="o">+=</span> <span class="p">[</span> <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">new_dataset</span><span class="p">]</span>
+    <span class="c1"># use attrs to distinguish outlier dataset</span>
+    <span class="n">input_dataset</span> <span class="o">+=</span> <span class="p">[</span> <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="o">**</span><span class="n">a</span><span class="p">,</span> <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span> <span class="s1">&#39;outlier&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}})</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">outlier_dataset</span><span class="p">]</span>
 
-    <span class="nb">input</span><span class="o">.</span><span class="n">new_dataset</span> <span class="o">=</span> <span class="n">deepmd_npy_data</span>
-
+    <span class="c1">#TODO: separate job creation and submission</span>
     <span class="n">jobs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">JobFuture</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">output_dirs</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -518,25 +512,39 @@ document.write(`
         <span class="n">dp_input</span><span class="p">[</span><span class="s1">&#39;training&#39;</span><span class="p">][</span><span class="s1">&#39;seed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_random_seed</span><span class="p">()</span>
 
         <span class="c1"># set training data</span>
-        <span class="n">VALIDATION_DATA_KEY</span> <span class="o">=</span> <span class="s1">&#39;validation_data&#39;</span>
-        <span class="n">train_systems</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">url</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">old_dataset</span> <span class="o">+</span> <span class="nb">input</span><span class="o">.</span><span class="n">new_dataset</span>
-                         <span class="k">if</span> <span class="ow">not</span> <span class="n">dict_nested_get</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">attrs</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;deepmd&#39;</span><span class="p">,</span> <span class="n">VALIDATION_DATA_KEY</span><span class="p">],</span> <span class="kc">False</span><span class="p">)]</span>
-        <span class="n">validation_systems</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">url</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">old_dataset</span> <span class="o">+</span> <span class="nb">input</span><span class="o">.</span><span class="n">new_dataset</span>
-                            <span class="k">if</span> <span class="n">dict_nested_get</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">attrs</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;deepmd&#39;</span><span class="p">,</span> <span class="n">VALIDATION_DATA_KEY</span><span class="p">],</span> <span class="kc">False</span><span class="p">)]</span>
+        <span class="n">train_systems</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">outlier_systems</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">validation_systems</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">training</span><span class="p">[</span><span class="s1">&#39;systems&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_systems</span>
-        <span class="n">set_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">training</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
-            <span class="s1">&#39;set_prefix&#39;</span><span class="p">,</span> <span class="s1">&#39;set&#39;</span><span class="p">)</span>  <span class="c1"># respect user input</span>
-        <span class="n">auto_prob_str</span> <span class="o">=</span> <span class="s2">&quot;prob_sys_size&quot;</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">input_dataset</span> <span class="o">+</span> <span class="n">init_dataset</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dict_nested_get</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">attrs</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;deepmd&#39;</span><span class="p">,</span> <span class="s1">&#39;validation_data&#39;</span><span class="p">],</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">validation_systems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">dict_nested_get</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">attrs</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;outlier&#39;</span><span class="p">],</span> <span class="kc">False</span><span class="p">):</span>
+                    <span class="n">outlier_systems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">train_systems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="n">training</span><span class="p">[</span><span class="s1">&#39;systems&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_systems</span> <span class="o">+</span> <span class="n">outlier_systems</span>
+        <span class="n">training</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;set_prefix&#39;</span><span class="p">,</span> <span class="s1">&#39;set&#39;</span><span class="p">)</span>  <span class="c1"># respect user input</span>
         <span class="n">training</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;batch_size&#39;</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+
+        <span class="n">auto_prob_str</span> <span class="o">=</span> <span class="s2">&quot;prob_sys_size&quot;</span>
+        <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">isolate_outliers</span><span class="p">:</span>
+            <span class="c1"># if isolate_outlier is enabled, then we need to set different weight for outlier data</span>
+            <span class="c1"># e.g: prob_sys_size;0:57:0.9997;57:60:0.0003</span>
+            <span class="n">auto_prob_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;;0:</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_systems</span><span class="p">)</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="mi">1</span><span class="o">-</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">outlier_weight</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">auto_prob_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_systems</span><span class="p">)</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_systems</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">outlier_systems</span><span class="p">)</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">outlier_weight</span><span class="si">}</span><span class="s1">&#39;</span>
+
         <span class="n">training</span><span class="p">[</span><span class="s1">&#39;auto_prob_style&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">auto_prob_str</span>
 
         <span class="c1"># v2 training data</span>
         <span class="n">training_data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;systems&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;systems&#39;</span><span class="p">],</span>
             <span class="s1">&#39;set_prefix&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;set_prefix&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;auto_prob_style&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;auto_prob_style&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;auto_prob&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;auto_prob_style&#39;</span><span class="p">],</span>
             <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;sys_probs&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">training</span><span class="p">[</span><span class="s1">&#39;training_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">training_data</span>
 
@@ -589,7 +597,7 @@ document.write(`
     <span class="k">await</span> <span class="n">gather_jobs</span><span class="p">(</span><span class="n">jobs</span><span class="p">,</span> <span class="n">max_tries</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">GenericDeepmdOutput</span><span class="p">(</span>
-        <span class="nb">input</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
+        <span class="n">dataset</span><span class="o">=</span><span class="n">input_dataset</span><span class="p">,</span>
         <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
             <span class="nb">format</span><span class="o">=</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">DEEPMD_OUTPUT_DIR</span><span class="p">,</span>
@@ -599,6 +607,73 @@ document.write(`
 
 <span class="k">def</span> <span class="nf">_random_seed</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">__export_remote_functions</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">dpdata</span>
+    <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
+
+
+    <span class="k">def</span> <span class="nf">make_deepmd_dataset</span><span class="p">(</span>
+        <span class="n">dataset_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">outlier_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">raw_data_collection</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
+        <span class="n">isolate_outliers</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">outlier_f_cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="p">):</span>
+        <span class="n">dataset_collection</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">outlier_collection</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">raw_data</span> <span class="ow">in</span> <span class="n">raw_data_collection</span><span class="p">:</span>
+            <span class="n">data_format</span> <span class="o">=</span> <span class="n">get_data_format</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="n">dp_system</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">data_format</span> <span class="o">==</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">CP2K_OUTPUT_DIR</span><span class="p">:</span>
+                <span class="n">dp_system</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">raw_data</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="s1">&#39;output&#39;</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;cp2k/output&#39;</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">data_format</span> <span class="o">==</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">VASP_OUTPUT_DIR</span><span class="p">:</span>
+                <span class="n">dp_system</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">raw_data</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="s1">&#39;OUTCAR&#39;</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;vasp/outcar&#39;</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported data format: </span><span class="si">{</span><span class="n">data_format</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># one case of len(dp_system) == 0 is when the system is not converged</span>
+            <span class="k">if</span> <span class="n">dp_system</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="mi">0</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dp_system</span><span class="p">):</span>
+                <span class="k">continue</span>  <span class="c1"># skip invalid data</span>
+
+            <span class="k">if</span> <span class="n">isolate_outliers</span> <span class="ow">and</span> <span class="n">dp_system</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;forces&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">outlier_f_cutoff</span><span class="p">:</span>
+                <span class="n">outlier_collection</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">dp_system</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dataset_collection</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">dp_system</span><span class="p">))</span>
+
+        <span class="n">dataset_dirs</span> <span class="o">=</span> <span class="n">_write_dp_dataset</span><span class="p">(</span><span class="n">dp_system_list</span><span class="o">=</span><span class="n">dataset_collection</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
+        <span class="n">outlier_dirs</span> <span class="o">=</span> <span class="n">_write_dp_dataset</span><span class="p">(</span><span class="n">dp_system_list</span><span class="o">=</span><span class="n">outlier_collection</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="n">outlier_dir</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dataset_dirs</span><span class="p">,</span> <span class="n">outlier_dirs</span>
+
+
+    <span class="k">def</span> <span class="nf">_write_dp_dataset</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]],</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="n">output_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">dp_system_group</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">]):</span>
+            <span class="n">dp_system_group</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dp_system_group</span><span class="p">)</span>
+            <span class="k">if</span> <span class="mi">0</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">dp_system_group</span><span class="p">):</span>
+                <span class="k">continue</span>  <span class="c1"># skip empty dataset</span>
+            <span class="n">group_out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">))</span>
+
+            <span class="c1"># merge dp_systems with the same ancestor into single data set</span>
+            <span class="n">dp_system</span> <span class="o">=</span> <span class="n">dp_system_group</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">dp_system_group</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="n">dp_system</span> <span class="o">+=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">dp_system</span><span class="o">.</span><span class="n">to_deepmd_npy</span><span class="p">(</span><span class="n">group_out_dir</span><span class="p">,</span> <span class="n">set_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">dp_system</span><span class="p">),</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="c1"># inherit attrs key from input artifact</span>
+            <span class="n">output_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">group_out_dir</span><span class="p">,</span>
+                                <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">DEEPMD_NPY</span><span class="p">,</span>
+                                <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="n">dp_system_group</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;attrs&#39;</span><span class="p">]}})</span>  <span class="c1"># type: ignore</span>
+        <span class="k">return</span> <span class="n">output_dirs</span>
+
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">make_deepmd_dataset</span><span class="p">,</span> <span class="p">)</span>
+
+<span class="p">(</span>
+    <span class="n">make_deepmd_dataset</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">=</span> <span class="n">__export_remote_functions</span><span class="p">()</span>
 </pre></div>
 
                 </article>

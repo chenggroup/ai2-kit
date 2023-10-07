@@ -373,9 +373,12 @@ document.write(`
                   
   <h1>Source code for ai2_kit.tool.dpdata</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">ensure_dir</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="kn">import</span> <span class="nn">dpdata</span>
 <span class="kn">import</span> <span class="nn">glob</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DpdataHelper"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper">[docs]</a><span class="k">class</span> <span class="nc">DpdataHelper</span><span class="p">:</span>
 
@@ -395,7 +398,19 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="DpdataHelper.merge_write"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.merge_write">[docs]</a>    <span class="k">def</span> <span class="nf">merge_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;deepmd/npy&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="DpdataHelper.filter"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lambda_expr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">lambda_expr</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">_fn</span><span class="p">(</span><span class="n">system</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">_fn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">merge_write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;merge_write is deprecated, use write instead&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">write</span>
+
+<div class="viewcode-block" id="DpdataHelper.write"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;deepmd/npy&#39;</span><span class="p">):</span>
         <span class="n">ensure_dir</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No data to merge&#39;</span><span class="p">)</span>

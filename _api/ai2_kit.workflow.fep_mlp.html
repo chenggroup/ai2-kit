@@ -570,6 +570,16 @@ document.write(`
 <dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.run_workflow">
 <span class="sig-prename descclassname"><span class="pre">ai2_kit.workflow.fep_mlp.</span></span><span class="sig-name descname"><span class="pre">run_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">config_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/workflow/fep_mlp.html#run_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.run_workflow" title="Permalink to this definition">#</a></dt>
 <dd><p>Training ML potential for FEP</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_files</strong> – path of config files, should be yaml files, can be multiple, support glob pattern</p></li>
+<li><p><strong>executor</strong> – name of executor, should be defined in config <cite>executors</cite> section</p></li>
+<li><p><strong>path_prefix</strong> – path prefix for output</p></li>
+<li><p><strong>checkpoint</strong> – checkpoint file</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

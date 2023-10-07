@@ -14,6 +14,7 @@ This toolkit include the following commands:
 | read | Read dataset into memory. This command by itself is useless, you should chain other command after reading data into memory. | `ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy` | Support wildcard, can be call multiple time |
 | write | Use MultiSystems to merge dataset and write to directory. | `ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy - write ./path/to/merged_dataset` | |
 | filter | Use lambda expression to filter dataset by system data. | `ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy - filter "lambda x: x['forces'].max() < 10" - write ./path/to/filtered_dataset` | |
+
 Those commands are chainable and can be used to process trajectory in a pipeline fashion (separated by `-`). For more information, please refer to the following examples.
 
 ## Example

@@ -510,6 +510,43 @@ document.write(`
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">CP2K_DEFAULT_TEMPLATE</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">())</span></div>
 
+
+<div class="viewcode-block" id="ConfigBuilder.gen_plumed_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_plumed_input">[docs]</a>    <span class="k">def</span> <span class="nf">gen_plumed_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate Plumed input files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;atoms must be loaded first&#39;</span>
+        <span class="n">plumed_input</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;UNITS LENGTH=A&#39;</span> <span class="p">]</span>
+        <span class="c1"># define atoms groups by element, e.g:</span>
+        <span class="c1"># Ag: GROUP ATOMS=1,2,3,4,5,6,7,8,9,10</span>
+        <span class="c1"># O: GROUP ATOMS=11,12,13,14,15,16,17,18,19,20</span>
+        <span class="n">element2ids</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span><span class="o">.</span><span class="n">get_chemical_symbols</span><span class="p">(),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">element2ids</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">element</span><span class="p">,</span> <span class="n">ids</span> <span class="ow">in</span> <span class="n">element2ids</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">plumed_input</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s1">: GROUP ATOMS=</span><span class="si">{</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">ids</span><span class="p">))</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># define reaction coordinate</span>
+        <span class="n">plumed_input</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+            <span class="s1">&#39;#define more groups if needed&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;# define reaction coordinates&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;cv1: # should be defined by user&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;# define more CV if needed&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;# define sampling method: metadynamics&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;metad: METAD ARG=CV1,CV2 SIGMA=0.1,0.1 HEIGHT=5 PACE=100, TEMP=1000 FILE=HILLS&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;# define more commands&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;# print CVs&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;PRINT STRIDE=10 ARG=CV1 metad.bias FILE=COLVAR&#39;</span><span class="p">,</span>
+        <span class="p">])</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">plumed_input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;plumed.dat&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">plumed_input_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plumed_input</span><span class="p">))</span></div>
+
+
 <div class="viewcode-block" id="ConfigBuilder.gen_cp2k_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_cp2k_input">[docs]</a>    <span class="k">def</span> <span class="nf">gen_cp2k_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                        <span class="n">basic_set_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;BASIS_MOLOPT&#39;</span><span class="p">,</span>
                        <span class="n">potential_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;GTH_POTENTIALS&#39;</span><span class="p">,</span>

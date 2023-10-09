@@ -484,48 +484,65 @@ document.write(`
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ai2_kit.domain.deepmd.CllDeepmdInputConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.deepmd.</span></span><span class="sig-name descname"><span class="pre">CllDeepmdInputConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_template</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compress_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isolate_outliers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outlier_f_cutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outlier_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.003</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/deepmd.html#CllDeepmdInputConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.deepmd.CllDeepmdInputConfig" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.deepmd.</span></span><span class="sig-name descname"><span class="pre">CllDeepmdInputConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_template</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compress_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isolate_outliers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outlier_f_cutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outlier_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.003</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixture_models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/deepmd.html#CllDeepmdInputConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.deepmd.CllDeepmdInputConfig" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ai2_kit.domain.deepmd.CllDeepmdInputConfig.compress_model">
 <span class="sig-name descname"><span class="pre">compress_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#ai2_kit.domain.deepmd.CllDeepmdInputConfig.compress_model" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Whether to compress model after training.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.domain.deepmd.CllDeepmdInputConfig.fixture_models">
+<span class="sig-name descname"><span class="pre">fixture_models</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.domain.deepmd.CllDeepmdInputConfig.fixture_models" title="Permalink to this definition">#</a></dt>
+<dd><p>Fixture models used to initialize training, support glob pattern.
+If this is not empty, then the whole training process will be skipped.
+This feature is useful for debugging, or explore more structures without training.
+The models should be on the remote executor.
+The name fixture is used as the concept of fixture in pytest.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ai2_kit.domain.deepmd.CllDeepmdInputConfig.init_dataset">
 <span class="sig-name descname"><span class="pre">init_dataset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.domain.deepmd.CllDeepmdInputConfig.init_dataset" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Dataset used to initialize training.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ai2_kit.domain.deepmd.CllDeepmdInputConfig.input_template">
 <span class="sig-name descname"><span class="pre">input_template</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#ai2_kit.domain.deepmd.CllDeepmdInputConfig.input_template" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Deepmd input template.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ai2_kit.domain.deepmd.CllDeepmdInputConfig.isolate_outliers">
 <span class="sig-name descname"><span class="pre">isolate_outliers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#ai2_kit.domain.deepmd.CllDeepmdInputConfig.isolate_outliers" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>If isolate_outliers is enabled, then outlier data will be separated from training data.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ai2_kit.domain.deepmd.CllDeepmdInputConfig.model_num">
 <span class="sig-name descname"><span class="pre">model_num</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ai2_kit.domain.deepmd.CllDeepmdInputConfig.model_num" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Total number of models to train.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ai2_kit.domain.deepmd.CllDeepmdInputConfig.outlier_f_cutoff">
 <span class="sig-name descname"><span class="pre">outlier_f_cutoff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ai2_kit.domain.deepmd.CllDeepmdInputConfig.outlier_f_cutoff" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>The threshold of force magnitude to determine whether a data is outlier.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ai2_kit.domain.deepmd.CllDeepmdInputConfig.outlier_weight">
 <span class="sig-name descname"><span class="pre">outlier_weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ai2_kit.domain.deepmd.CllDeepmdInputConfig.outlier_weight" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>The weight of outlier data in training data.</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ai2_kit.domain.deepmd.GenericDeepmdOutput">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.deepmd.</span></span><span class="sig-name descname"><span class="pre">GenericDeepmdOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">ai2_kit.core.artifact.Artifact</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">ai2_kit.core.artifact.Artifact</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/deepmd.html#GenericDeepmdOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.deepmd.GenericDeepmdOutput" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.deepmd.</span></span><span class="sig-name descname"><span class="pre">GenericDeepmdOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">ai2_kit.core.artifact.Artifact</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">ai2_kit.core.artifact.Artifact</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/deepmd.html#GenericDeepmdOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.deepmd.GenericDeepmdOutput" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ai2_kit.domain.iface.html#ai2_kit.domain.iface.ICllTrainOutput" title="ai2_kit.domain.iface.ICllTrainOutput"><code class="xref py py-class docutils literal notranslate"><span class="pre">ICllTrainOutput</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ai2_kit.domain.deepmd.GenericDeepmdOutput.dataset">
@@ -543,8 +560,8 @@ document.write(`
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.deepmd.GenericDeepmdOutput.outputs">
-<span class="sig-name descname"><span class="pre">outputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.domain.deepmd.GenericDeepmdOutput.outputs" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ai2_kit.domain.deepmd.GenericDeepmdOutput.models">
+<span class="sig-name descname"><span class="pre">models</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.domain.deepmd.GenericDeepmdOutput.models" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

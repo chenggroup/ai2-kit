@@ -377,7 +377,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.job</span> <span class="kn">import</span> <span class="n">JobFuture</span><span class="p">,</span> <span class="n">gather_jobs</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">dict_nested_get</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">dict_nested_get</span><span class="p">,</span> <span class="n">expand_globs</span>
 
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
@@ -404,14 +404,44 @@ document.write(`
 
 
 <div class="viewcode-block" id="CllDeepmdInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig">[docs]</a><span class="k">class</span> <span class="nc">CllDeepmdInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">model_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">init_dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">input_template</span><span class="p">:</span> <span class="nb">dict</span>
-    <span class="n">compress_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
+    <span class="n">model_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Total number of models to train.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">init_dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dataset used to initialize training.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_template</span><span class="p">:</span> <span class="nb">dict</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deepmd input template.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">compress_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Whether to compress model after training.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">isolate_outliers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If isolate_outliers is enabled, then outlier data will be separated from training data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">outlier_f_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.</span>
-    <span class="n">outlier_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.003</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The threshold of force magnitude to determine whether a data is outlier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">outlier_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.003</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The weight of outlier data in training data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">fixture_models</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fixture models used to initialize training, support glob pattern.</span>
+<span class="sd">    If this is not empty, then the whole training process will be skipped.</span>
+<span class="sd">    This feature is useful for debugging, or explore more structures without training.</span>
+<span class="sd">    The models should be on the remote executor.</span>
+<span class="sd">    The name fixture is used as the concept of fixture in pytest.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="CllDeepmdContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdContextConfig">[docs]</a><span class="k">class</span> <span class="nc">CllDeepmdContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -438,11 +468,11 @@ document.write(`
 
 <div class="viewcode-block" id="GenericDeepmdOutput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">GenericDeepmdOutput</span><span class="p">(</span><span class="n">ICllTrainOutput</span><span class="p">):</span>
-    <span class="n">outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
+    <span class="n">models</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
     <span class="n">dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
 
 <div class="viewcode-block" id="GenericDeepmdOutput.get_mlp_models"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.get_mlp_models">[docs]</a>    <span class="k">def</span> <span class="nf">get_mlp_models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DP_FROZEN_MODEL</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span></div>
 
 <div class="viewcode-block" id="GenericDeepmdOutput.get_training_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.get_training_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_training_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span></div></div>
@@ -450,6 +480,17 @@ document.write(`
 
 <div class="viewcode-block" id="cll_deepmd"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.cll_deepmd">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">cll_deepmd</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllDeepmdInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllDeepmdContext</span><span class="p">):</span>
     <span class="n">executor</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">default_executor</span>
+
+    <span class="c1"># use fixture models</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fixture_models</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Using fixture models: </span><span class="si">{</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fixture_models</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">model_paths</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">expand_globs</span><span class="p">)(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fixture_models</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">model_paths</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;No fixture models found: </span><span class="si">{</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fixture_models</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="n">GenericDeepmdOutput</span><span class="p">(</span>
+            <span class="n">dataset</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">old_dataset</span><span class="p">,</span>
+            <span class="n">models</span><span class="o">=</span><span class="p">[</span><span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">DEEPMD_MODEL</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">model_paths</span><span class="p">]</span>
+        <span class="p">)</span>
 
     <span class="c1"># setup workspace</span>
     <span class="n">work_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">path_prefix</span><span class="p">)</span>
@@ -596,11 +637,12 @@ document.write(`
 
     <span class="k">await</span> <span class="n">gather_jobs</span><span class="p">(</span><span class="n">jobs</span><span class="p">,</span> <span class="n">max_tries</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;All models are trained, output dirs: </span><span class="si">{</span><span class="n">output_dirs</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">GenericDeepmdOutput</span><span class="p">(</span>
         <span class="n">dataset</span><span class="o">=</span><span class="n">input_dataset</span><span class="p">,</span>
-        <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span>
-            <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
-            <span class="nb">format</span><span class="o">=</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">DEEPMD_OUTPUT_DIR</span><span class="p">,</span>
+        <span class="n">models</span><span class="o">=</span><span class="p">[</span><span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">DP_FROZEN_MODEL</span><span class="p">),</span>
+            <span class="nb">format</span><span class="o">=</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">DEEPMD_MODEL</span><span class="p">,</span>
         <span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">output_dirs</span><span class="p">]</span>
     <span class="p">)</span></div>
 

@@ -1009,6 +1009,8 @@ document.write(`
         <li><a href="_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.deepmd">(ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch attribute)</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.domain.data.html#ai2_kit.domain.data.DataFormat.DEEPMD_MODEL">DEEPMD_MODEL (ai2_kit.domain.data.DataFormat attribute)</a>
+</li>
       <li><a href="_api/ai2_kit.domain.data.html#ai2_kit.domain.data.DataFormat.DEEPMD_NPY">DEEPMD_NPY (ai2_kit.domain.data.DataFormat attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.data.html#ai2_kit.domain.data.DataFormat.DEEPMD_OUTPUT_DIR">DEEPMD_OUTPUT_DIR (ai2_kit.domain.data.DataFormat attribute)</a>
@@ -1035,14 +1037,14 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.disable">disable (ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.future.html#ai2_kit.core.future.IFuture.done">done() (ai2_kit.core.future.IFuture method)</a>
 
       <ul>
         <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.QueueJobFuture.done">(ai2_kit.core.queue_system.QueueJobFuture method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.BaseConnector.download">download() (ai2_kit.core.connector.BaseConnector method)</a>
 
       <ul>
@@ -1107,17 +1109,19 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.ExecutorManager">ExecutorManager (class in ai2_kit.core.executor)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowConfig.executors">executors (ai2_kit.workflow.cll_mlp.CllWorkflowConfig attribute)</a>
 
       <ul>
         <li><a href="_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.FepWorkflowConfig.executors">(ai2_kit.workflow.fep_mlp.FepWorkflowConfig attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.script.html#ai2_kit.core.script.BashStep.exit_on_error">exit_on_error (ai2_kit.core.script.BashStep attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.core.script.html#ai2_kit.core.script.exit_on_error_statment">exit_on_error_statment() (in module ai2_kit.core.script)</a>
+</li>
+      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.expand_globs">expand_globs() (in module ai2_kit.core.util)</a>
 </li>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context.explore">explore (ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context attribute)</a>
 
@@ -1154,6 +1158,8 @@ document.write(`
       <li><a href="_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.filter">filter() (ai2_kit.tool.dpdata.DpdataHelper method)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.find_cp2k_data_file">find_cp2k_data_file() (in module ai2_kit.feat.catalysis)</a>
+</li>
+      <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.fixture_models">fixture_models (ai2_kit.domain.deepmd.CllDeepmdInputConfig attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.flat_evenly">flat_evenly() (in module ai2_kit.core.util)</a>
 </li>
@@ -1206,6 +1212,8 @@ document.write(`
       <li><a href="_api/ai2_kit.core.job.html#ai2_kit.core.job.gather_jobs">gather_jobs() (in module ai2_kit.core.job)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_cp2k_input">gen_cp2k_input() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
+</li>
+      <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_plumed_input">gen_plumed_input() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
 </li>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.general">general (ai2_kit.workflow.cll_mlp.WorkflowConfig attribute)</a>
 
@@ -1635,8 +1643,12 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.model_num">model_num (ai2_kit.domain.deepmd.CllDeepmdInputConfig attribute)</a>
 </li>
-      <li><a href="_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspInput.models">models (ai2_kit.domain.lasp.CllLaspInput attribute)</a>
+      <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.models">models (ai2_kit.domain.deepmd.GenericDeepmdOutput attribute)</a>
+
+      <ul>
+        <li><a href="_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspInput.models">(ai2_kit.domain.lasp.CllLaspInput attribute)</a>
 </li>
+      </ul></li>
       <li>
     module
 
@@ -1768,15 +1780,13 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInput.old_dataset">old_dataset (ai2_kit.domain.deepmd.CllDeepmdInput attribute)</a>
 </li>
-      <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.outlier_f_cutoff">outlier_f_cutoff (ai2_kit.domain.deepmd.CllDeepmdInputConfig attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.outlier_f_cutoff">outlier_f_cutoff (ai2_kit.domain.deepmd.CllDeepmdInputConfig attribute)</a>
+</li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.outlier_weight">outlier_weight (ai2_kit.domain.deepmd.CllDeepmdInputConfig attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspOutput.output_dirs">output_dirs (ai2_kit.domain.lasp.CllLaspOutput attribute)</a>
-</li>
-      <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.outputs">outputs (ai2_kit.domain.deepmd.GenericDeepmdOutput attribute)</a>
 </li>
   </ul></td>
 </tr></table>

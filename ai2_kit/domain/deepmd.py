@@ -3,7 +3,7 @@ from ai2_kit.core.script import BashTemplate
 from ai2_kit.core.script import BashScript, BashStep
 from ai2_kit.core.job import JobFuture, gather_jobs
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.util import dict_nested_get
+from ai2_kit.core.util import dict_nested_get, expand_globs
 
 from pydantic import BaseModel
 from typing import List, Tuple
@@ -30,14 +30,44 @@ logger = get_logger(__name__)
 
 
 class CllDeepmdInputConfig(BaseModel):
-    model_num: int = 4
-    init_dataset: List[str]
-    input_template: dict
-    compress_model: bool = False
 
+    model_num: int = 4
+    """
+    Total number of models to train.
+    """
+    init_dataset: List[str]
+    """
+    Dataset used to initialize training.
+    """
+    input_template: dict
+    """
+    Deepmd input template.
+    """
+    compress_model: bool = False
+    """
+    Whether to compress model after training.
+    """
     isolate_outliers: bool = False
+    """
+    If isolate_outliers is enabled, then outlier data will be separated from training data.
+    """
     outlier_f_cutoff: float = 10.
+    """
+    The threshold of force magnitude to determine whether a data is outlier.
+    """
     outlier_weight: float = 0.003
+    """
+    The weight of outlier data in training data.
+    """
+
+    fixture_models: List[str] = []
+    """
+    Fixture models used to initialize training, support glob pattern.
+    If this is not empty, then the whole training process will be skipped.
+    This feature is useful for debugging, or explore more structures without training.
+    The models should be on the remote executor.
+    The name fixture is used as the concept of fixture in pytest.
+    """
 
 
 class CllDeepmdContextConfig(BaseModel):
@@ -64,11 +94,11 @@ class CllDeepmdContext(BaseCllContext):
 
 @dataclass
 class GenericDeepmdOutput(ICllTrainOutput):
-    outputs: List[Artifact]
+    models: List[Artifact]
     dataset: List[Artifact]
 
     def get_mlp_models(self) -> List[Artifact]:
-        return [a.join(DP_FROZEN_MODEL) for a in self.outputs]
+        return self.models
 
     def get_training_dataset(self) -> List[Artifact]:
         return self.dataset
@@ -76,6 +106,17 @@ class GenericDeepmdOutput(ICllTrainOutput):
 
 async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
     executor = ctx.resource_manager.default_executor
+
+    # use fixture models
+    if len(input.config.fixture_models) > 0:
+        logger.info(f'Using fixture models: {input.config.fixture_models}')
+        model_paths = executor.run_python_fn(expand_globs)(input.config.fixture_models)
+        assert len(model_paths) > 0, f'No fixture models found: {input.config.fixture_models}'
+        return GenericDeepmdOutput(
+            dataset=input.old_dataset,
+            models=[Artifact.of(url=url, format=DataFormat.DEEPMD_MODEL)
+                    for url in model_paths]
+        )
 
     # setup workspace
     work_dir = os.path.join(executor.work_dir, ctx.path_prefix)
@@ -222,11 +263,12 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
 
     await gather_jobs(jobs, max_tries=2)
 
+    logger.info(f'All models are trained, output dirs: {output_dirs}')
     return GenericDeepmdOutput(
         dataset=input_dataset,
-        outputs=[Artifact.of(
-            url=url,
-            format=DataFormat.DEEPMD_OUTPUT_DIR,
+        models=[Artifact.of(
+            url=os.path.join(url, DP_FROZEN_MODEL),
+            format=DataFormat.DEEPMD_MODEL,
         ) for url in output_dirs]
     )
 

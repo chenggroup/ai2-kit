@@ -51,6 +51,12 @@ workflow:
       # The value should correspond to the artifact name in artifact.yml
       init_dataset: [ h2o-64-train ]
 
+      # Optional, skip training stage and use fixture models instead.
+      # This is useful for debugging or skipping training.
+      # Support globs, for example:
+      # [ /path/to/*/frozen_model.pb ]
+      fixture_models: []
+
       # The input template for deepmd-kit.
       # You can put the content of the input template here,
       # or you can put the input template in a file, for example, deepmd-input.json,

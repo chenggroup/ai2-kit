@@ -1,4 +1,6 @@
 # Change Logs
+## v0.8.4
+* feat: cll-workflow support screening by energy, for more detail please check [here](./example/config/cll-mlp-training/selector-model-devi.yml)
 
 ## v0.8.3
 * feat: cll-workflow deepmd support fixture_models, for more detail please check [here](./example/config/cll-mlp-training/train-deepmd.yml)

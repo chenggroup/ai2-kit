@@ -10,9 +10,11 @@ from dataclasses import dataclass
 import pandas as pd
 from tabulate import tabulate
 from itertools import groupby
+import os
+from functools import cache
 
 import ase.io
-import os
+from ase import Atoms
 
 from .data import get_data_format, DataFormat, artifacts_to_ase_atoms
 from .iface import ICllSelectorOutput, BaseCllContext
@@ -49,6 +51,12 @@ class CllModelDeviSelectorInputConfig(BaseModel):
     asap_options: Optional[AsapOptions]
     """
     options for ASAP to further select candidates
+    """
+
+    screening_fn: Optional[str] = None
+    """
+    the function to screen the candidates, e.g
+    "lambda x: x['ssw_energy'] < -1000"
     """
 
 
@@ -98,6 +106,7 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
         f_trust_lo=f_trust_lo, f_trust_hi=f_trust_hi,
         type_map=input.type_map, work_dir=work_dir,
         new_explore_system_q=input.config.new_explore_system_q,
+        screening_fn=input.config.screening_fn,
     )
 
     candidates = [ result['decent'] for result, _ in results if 'decent' in result ]
@@ -158,6 +167,7 @@ def __export_remote_functions():
                                              type_map: List[str],
                                              work_dir: str,
                                              workers: int = 4,
+                                             screening_fn: Optional[str] = None,
                                              ) -> List[Tuple[Dict[str, ArtifactDict], dict]]:
         import joblib
         return joblib.Parallel(n_jobs=workers)(
@@ -168,6 +178,7 @@ def __export_remote_functions():
                 type_map=type_map,
                 work_dir=os.path.join(work_dir, 'model_devi', f'{i:06}'),
                 new_explore_system_q=new_explore_system_q,
+                screening_fn=screening_fn,
             )
             for i, output in enumerate(model_devi_outputs)
         )  # type: ignore
@@ -180,6 +191,7 @@ def __export_remote_functions():
                                         type_map: List[str],
                                         work_dir: str,
                                         new_explore_system_q: float,
+                                        screening_fn: Optional[str] = None,
                                         ) -> Tuple[Dict[str, ArtifactDict], dict]:
         """
         analysis the model_devi output of explore stage and select candidates
@@ -203,6 +215,7 @@ def __export_remote_functions():
             raise ValueError('unknown model_devi_data types')
         logger.info('start to analysis file: %s', model_devi_file)
 
+
         # load model_devi data
         with open(model_devi_file, 'r') as f:
             text = f.read()
@@ -211,6 +224,39 @@ def __export_remote_functions():
         #        step  max_devi_v  min_devi_v  avg_devi_v  max_devi_f  min_devi_f  avg_devi_f
         # 0        0    0.006793    0.000672    0.003490    0.143317    0.005612    0.026106
         # 1      100    0.006987    0.000550    0.003952    0.128178    0.006042    0.022608
+
+        # load structures
+        atoms_list = []
+        if data_format == DataFormat.LAMMPS_OUTPUT_DIR:
+            lammps_dump_dir = model_devi_output['attrs'].pop('lammps_dump_dir', LAMMPS_DUMP_DIR)
+            for frame_id in df.step:
+                dump_file = os.path.join(model_devi_dir, lammps_dump_dir, f'{frame_id}{LAMMPS_DUMP_SUFFIX}')
+                atoms_list += ase.io.read(dump_file, ':', format='lammps-dump-text', specorder=type_map)
+        elif data_format == DataFormat.LASP_LAMMPS_OUT_DIR:
+            structures_file = os.path.join(model_devi_dir, 'structures.xyz')
+            atoms_list += ase.io.read(structures_file, ':', format='extxyz')
+        else:
+            raise ValueError('unknown model_devi_data types')
+
+        # screening structure before model_devi analysis
+        if screening_fn is not None:
+            _screening_fn = eval(screening_fn)  # str to function
+
+            if 'ssw_energy' in atoms_list[0].info:
+                s_ssw_energy = pd.Series(map(lambda atoms: atoms.info['ssw_energy'], atoms_list))  # type: ignore
+
+                # the following ssw_* methods are for the screening_fn
+                # so don't need to worry about the unused warning
+                ssw_enenrgy_max = s_ssw_energy.max()
+                ssw_enenrgy_min = s_ssw_energy.min()
+                def ssw_enenrgy_quantile(q):
+                    # the quantile will be evaluated every time, which is not efficient
+                    # so here we cache the result, carefully
+                    return cache(s_ssw_energy.quantile)(q)
+
+            # return the df row whose atoms pass the screening_fn
+            df = df[[ _screening_fn(atoms) for atoms in atoms_list ]]
+
 
         # evaluate new found structures by their model_devi score in 3 levels: good, decent, poor
         good_df   = df[df[force_col] < f_trust_lo]
@@ -231,18 +277,6 @@ def __export_remote_functions():
             'poor': len(poor_df),
         }
 
-        # load structures
-        atoms_list = []
-        if data_format == DataFormat.LAMMPS_OUTPUT_DIR:
-            lammps_dump_dir = model_devi_output['attrs'].pop('lammps_dump_dir', LAMMPS_DUMP_DIR)
-            for frame_id in df.step:
-                dump_file = os.path.join(model_devi_dir, lammps_dump_dir, f'{frame_id}{LAMMPS_DUMP_SUFFIX}')
-                atoms_list += ase.io.read(dump_file, ':', format='lammps-dump-text', specorder=type_map)
-        elif data_format == DataFormat.LASP_LAMMPS_OUT_DIR:
-            structures_file = os.path.join(model_devi_dir, 'structures.xyz')
-            atoms_list += ase.io.read(structures_file, ':', format='extxyz')
-        else:
-            raise ValueError('unknown model_devi_data types')
 
         result: Dict[str, ArtifactDict] = {}
 

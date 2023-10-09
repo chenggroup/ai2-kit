@@ -16,6 +16,13 @@ workflow:
         # for next round of exploration
         new_explore_system_q: 0.25
 
+        # Optional, filter structures by condition defined by lambda string
+        # The only input argument of lambda function is `ase.Atoms`
+        # The following local variable can be used in the expression:
+        # ssw_energy_quantile, ssw_energy_max, ssw_energy_min
+        # e.g: "lambda x: x.info['ssw_energy'] < ssw_energy_quantile(0.25)"
+        screening_fn:
+
         # Optional, select most dissimilar structures by clustering.
         # If it is None, this stage will be skipped.
         #

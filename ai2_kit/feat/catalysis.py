@@ -136,6 +136,43 @@ class ConfigBuilder:
         with open(CP2K_DEFAULT_TEMPLATE, 'r') as fp:
             print(fp.read())
 
+
+    def gen_plumed_input(self, out_dir: str = 'out'):
+        """
+        Generate Plumed input files
+        """
+        assert self._atoms is not None, 'atoms must be loaded first'
+        plumed_input = [ 'UNITS LENGTH=A' ]
+        # define atoms groups by element, e.g:
+        # Ag: GROUP ATOMS=1,2,3,4,5,6,7,8,9,10
+        # O: GROUP ATOMS=11,12,13,14,15,16,17,18,19,20
+        element2ids = {}
+        for i, element in enumerate(self._atoms.get_chemical_symbols(), start=1):
+            element2ids.setdefault(element, []).append(i)
+        for element, ids in element2ids.items():
+            plumed_input.append(f'{element}: GROUP ATOMS={",".join(map(str, ids))}')
+
+        # define reaction coordinate
+        plumed_input.extend([
+            '#define more groups if needed',
+            '',
+            '# define reaction coordinates',
+            'cv1: # should be defined by user',
+            '# define more CV if needed',
+            '',
+            '# define sampling method: metadynamics',
+            'metad: METAD ARG=CV1,CV2 SIGMA=0.1,0.1 HEIGHT=5 PACE=100, TEMP=1000 FILE=HILLS',
+            '# define more commands',
+            '',
+            '# print CVs',
+            'PRINT STRIDE=10 ARG=CV1 metad.bias FILE=COLVAR',
+        ])
+        os.makedirs(out_dir, exist_ok=True)
+        plumed_input_path = os.path.join(out_dir, 'plumed.dat')
+        with open(plumed_input_path, 'w', encoding='utf-8') as fp:
+            fp.write('\n'.join(plumed_input))
+
+
     def gen_cp2k_input(self,
                        basic_set_file: str = 'BASIS_MOLOPT',
                        potential_file: str = 'GTH_POTENTIALS',

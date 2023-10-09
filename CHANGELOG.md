@@ -1,4 +1,9 @@
 # Change Logs
+
+## v0.8.3
+* feat: cll-workflow deepmd support fixture_models, for more detail please check [here](./example/config/cll-mlp-training/train-deepmd.yml)
+* feat: `ai2cat` support gen plumed input.
+
 ## v0.8.2
 * feat: handle outlier data in deepmd training stage, for more detail please check [here](./example/config/cll-mlp-training/train-deepmd.yml)
 * feat: dpdata tool support filter systems by lambda expression, for more detail please check [here](./doc/manual/dpdata.md)

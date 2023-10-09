@@ -11,6 +11,7 @@ import copy
 import os
 import random
 import json
+import glob
 
 from .log import get_logger
 
@@ -248,6 +249,11 @@ def __export_remote_functions():
             os.makedirs(dirname, exist_ok=True)
 
 
+    def expand_globs(paths: List[str]) -> List[str]:
+        paths = flatten([glob.glob(path) for path in paths])
+        return sort_unique_str_list(paths)
+
+
     # export functions
     return (
         merge_dict,
@@ -261,6 +267,7 @@ def __export_remote_functions():
         dump_text,
         flush_stdio,
         ensure_dir,
+        expand_globs,
     )
 
 
@@ -276,4 +283,5 @@ def __export_remote_functions():
     dump_text,
     flush_stdio,
     ensure_dir,
+    expand_globs,
 ) = __export_remote_functions()

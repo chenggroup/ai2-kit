@@ -16,6 +16,7 @@ def __export_remote_functions():
         VASP_OUTPUT_DIR = 'vasp/output_dir'
         LAMMPS_OUTPUT_DIR = 'lammps/output_dir'
         DEEPMD_OUTPUT_DIR = 'deepmd/output_dir'
+        DEEPMD_MODEL = 'deepmd/model'
         DEEPMD_NPY = 'deepmd/npy'
         LASP_LAMMPS_OUT_DIR ='lasp+lammps/output_dir'
 

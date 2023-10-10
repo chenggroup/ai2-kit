@@ -37,6 +37,15 @@ workflow:
         # or you can specify the params directly as the follow
         asap_options:
 
+          # Optional, limit the number of structures selected from each cluster.
+          # Default: 1
+          # Set it to 0 if you want keep all structures.
+          limit_per_cluster: 1
+
+          # Optional, whether to sort the structures by ssw_energy.
+          # Default: false
+          sort_by_ssw_energy: true
+
           # Optional, specify the method to get global descriptors.
           # Only one of soap, acsf and cm need to be set.
           # Default: soap

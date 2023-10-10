@@ -1,7 +1,7 @@
 from asaplib.data.xyz import ASAPXYZ
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.util import flat_evenly, dump_json, flush_stdio
+from ai2_kit.core.util import dump_json, flush_stdio, flatten
 
 from typing import List, Optional, Tuple, Dict
 from io import StringIO
@@ -26,21 +26,26 @@ logger = get_logger(__name__)
 
 
 class CllModelDeviSelectorInputConfig(BaseModel):
+
     class AsapOptions(BaseModel):
         disable: bool = False
-        limit_per_system: int = 10
+        limit_per_cluster: int = 1
         """
-        limit the number of structures to be selected from the same group
+        limit the number of structures to be selected from the same cluster
+        """
+        sort_by_ssw_energy: bool = False
+        """
+        sorted the structures by ssw_energy in each cluster
         """
         descriptor: dict = {'soap': { **DEFAULT_ASAP_SOAP_DESC, 'preset': 'minimal'}}
         dim_reducer: dict = {'pca': DEFAULT_ASAP_PCA_REDUCER}
         cluster: dict = {'dbscan': {}}
 
-    f_trust_lo: float
+    f_trust_lo: float = 0.
     """
     the lower bound of model_devi score to select the structure for labeling
     """
-    f_trust_hi: float
+    f_trust_hi: float = 65535.
     """
     the upper bound of model_devi score to select the structure for labeling
     """
@@ -147,7 +152,8 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
             cluster_opt=asap_options.cluster,
             type_map=input.type_map,
             work_dir=work_dir,
-            limit_per_system=asap_options.limit_per_system,
+            limit_per_cluster=asap_options.limit_per_cluster,
+            sort_by_energy=asap_options.sort_by_ssw_energy,
         )
 
     return CllModelDeviSelectorOutput(
@@ -214,7 +220,6 @@ def __export_remote_functions():
         else:
             raise ValueError('unknown model_devi_data types')
         logger.info('start to analysis file: %s', model_devi_file)
-
 
         # load model_devi data
         with open(model_devi_file, 'r') as f:
@@ -307,13 +312,15 @@ def __export_remote_functions():
 
         return result, stats
 
+
     def bulk_select_distinct_structures(candidates: List[ArtifactDict],
                                         descriptor_opt: dict,
                                         dim_reducer_opt: dict,
                                         cluster_opt: dict,
                                         type_map: List[str],
                                         work_dir: str,
-                                        limit_per_system: int = -1,
+                                        limit_per_cluster: int = -1,
+                                        sort_by_energy: bool = False,
                                         workers: int = 4,
                                         ) -> List[ArtifactDict]:
         inputs = []
@@ -331,7 +338,8 @@ def __export_remote_functions():
                 cluster_opt=cluster_opt,
                 type_map=type_map,
                 work_dir=os.path.join(work_dir, 'asap', f'{i:06}'),
-                limit_per_system=limit_per_system,
+                limit_per_cluster=limit_per_cluster,
+                sort_by_energy=sort_by_energy,
             ) for i, (group, attrs) in enumerate(inputs)
         )  # type: ignore
 
@@ -343,7 +351,8 @@ def __export_remote_functions():
                                    cluster_opt: dict,
                                    type_map: List[str],
                                    work_dir: str,
-                                   limit_per_system: int = -1,
+                                   limit_per_cluster: int = -1,
+                                   sort_by_energy: bool = False,
                                    ):
         os.makedirs(work_dir, exist_ok=True)
 
@@ -351,36 +360,39 @@ def __export_remote_functions():
         # load structures and save it to a tmp file for ASAP to load
         atoms_list = [atoms for _, atoms in artifacts_to_ase_atoms(candidates, type_map=type_map)]
 
-        if len(atoms_list) < max(limit_per_system, 10):
-            # Nothing to do when the total number of atoms is small
+
+        if len(atoms_list) < 10:
             # FIXME: there are a lot of potential issue when the number of atoms is small
             # the root cause is in asaplib, which I guess has not been tested with small dataset
             selected_atoms_list = atoms_list
         else:
-            tmp_structures_file = os.path.join(work_dir, '.tmp-structures.xyz')
-            ase.io.write(tmp_structures_file, atoms_list, format='extxyz')
+            if sort_by_energy and 'ssw_energy' in atoms_list[0].info:
+                atoms_list = sorted(atoms_list, key=lambda atoms: atoms.info['ssw_energy'])
 
             # use asaplib to group structures
+            # load structures to ASAP
+            tmp_structures_file = os.path.join(work_dir, '.tmp-structures.xyz')
+            ase.io.write(tmp_structures_file, atoms_list, format='extxyz')
             asapxyz = ASAPXYZ(tmp_structures_file)
 
             # group structures
-            path_prefix = os.path.join(work_dir, 'asap')
-            descriptors, _ = get_descriptor(asapxyz, descriptor_opt, path_prefix=path_prefix)
+            asap_path_prefix = os.path.join(work_dir, 'asap')
+            descriptors, _ = get_descriptor(asapxyz, descriptor_opt, path_prefix=asap_path_prefix)
             reduced_descriptors = reduce_dimension(descriptors, dim_reducer_opt)
             trainer = get_trainer(reduced_descriptors, cluster_opt)
-            cluster_labels = get_cluster(asapxyz, reduced_descriptors, trainer, path_prefix=path_prefix)
+            cluster_labels = get_cluster(asapxyz, reduced_descriptors, trainer, path_prefix=asap_path_prefix)
 
-            # if limit_per_system is not set
-            # selected at least 1 structure from each group
-            if limit_per_system <= 0:
-                limit_per_system = len(cluster_labels)
-
-            # unpack clusters into a list and
-            # ensure frames of the same group won't be next to each other
-            # so that we can pick up distinct structures by simply choose the first N frames
-            order_frames = flat_evenly(cluster_labels.values())
-            selected_frames = order_frames[:limit_per_system]
-            selected_atoms_list = [atoms_list[i] for i in selected_frames]
+            # select frame from each cluster
+            if limit_per_cluster <= 0: # unlimit
+                selected_atoms_list = flatten(cluster_labels.values())  # TODO: fix type
+            else:
+                selected_frames = []
+                for frames in cluster_labels.values():
+                    if len(frames) < limit_per_cluster:
+                        selected_frames += frames
+                    else:
+                        selected_frames += frames[:limit_per_cluster]
+                selected_atoms_list = [atoms_list[i] for i in selected_frames]
 
         # write selected structures to file
         distinct_structures_file = os.path.join(work_dir,  'distinct_structures.xyz')

@@ -155,7 +155,7 @@ def __export_remote_functions():
         input_data = artifacts_to_ase_atoms(systems, type_map=type_map)
 
         i, task_dirs = 0, []  # TODO: why i is not generated from the loop?
-        for artifact,  atoms in input_data:
+        for artifact, atoms in input_data:
             # create task_dir
             task_dir = os.path.join(base_dir, f'task_{i:06}' )
             os.makedirs(task_dir, exist_ok=True)

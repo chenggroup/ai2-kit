@@ -1,4 +1,7 @@
 # Change Logs
+## v0.8.6
+* fix: drop deepmd v1 config format support as it is not compatible with v2.2.5
+
 ## v0.8.5
 * feat: cll-workflow support sort structure by energy, for more detail please check [here](./example/config/cll-mlp-training/selector-model-devi.yml)
 

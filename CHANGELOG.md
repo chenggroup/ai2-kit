@@ -1,4 +1,7 @@
 # Change Logs
+## v0.8.7
+* feat: new ai2-cat commands
+
 ## v0.8.6
 * fix: drop deepmd v1 config format support as it is not compatible with v2.2.5
 

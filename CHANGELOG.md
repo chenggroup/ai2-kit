@@ -1,4 +1,7 @@
 # Change Logs
+## v0.8.8
+* fix: cache for py38
+
 ## v0.8.7
 * feat: new ai2-cat commands
 

@@ -192,9 +192,6 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
                 else:
                     train_systems.append(a.url)
 
-        training['systems'] = train_systems + outlier_systems
-        training.setdefault('set_prefix', 'set')  # respect user input
-        training.setdefault('batch_size', 'auto')
 
         auto_prob_str = "prob_sys_size"
         if input.config.isolate_outliers:
@@ -203,15 +200,22 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
             auto_prob_str += f';0:{len(train_systems)}:{1-input.config.outlier_weight}'
             auto_prob_str += f';{len(train_systems)}:{len(train_systems)+len(outlier_systems)}:{input.config.outlier_weight}'
 
-        training['auto_prob_style'] = auto_prob_str
+        # Drop v1 support
+        # TODO: remove in the future
+        # training['systems'] = train_systems + outlier_systems
+        # training.setdefault('set_prefix', 'set')  # respect user input
+        # training.setdefault('batch_size', 'auto')
+        # training['auto_prob_style'] = auto_prob_str
 
         # v2 training data
+        training_data = training.get('training_data', {})
         training_data = {
-            'systems': training['systems'],
-            'set_prefix': training['set_prefix'],
-            'auto_prob': training['auto_prob_style'],
-            'batch_size': training['batch_size'],
+            'set_prefix': 'set',
+            'batch_size': 'auto',
             'sys_probs': None,
+            ** training_data,
+            'systems': train_systems + outlier_systems,
+            'auto_prob_style': auto_prob_str,
         }
         training['training_data'] = training_data
 
@@ -220,8 +224,8 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
         if len(validation_systems) > 0:
             validation_data = {
                 'systems': validation_systems,
-                'set_prefix': training['set_prefix'],
-                'batch_size': training['batch_size'],
+                'set_prefix': training_data['set_prefix'],
+                'batch_size': training_data['batch_size'],
             }
             training['validation_data'] = validation_data
 

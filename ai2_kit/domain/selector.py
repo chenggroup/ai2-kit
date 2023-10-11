@@ -11,7 +11,7 @@ import pandas as pd
 from tabulate import tabulate
 from itertools import groupby
 import os
-from functools import cache
+from functools import lru_cache
 
 import ase.io
 from ase import Atoms
@@ -257,7 +257,7 @@ def __export_remote_functions():
                 def ssw_enenrgy_quantile(q):
                     # the quantile will be evaluated every time, which is not efficient
                     # so here we cache the result, carefully
-                    return cache(s_ssw_energy.quantile)(q)
+                    return lru_cache()(s_ssw_energy.quantile)(q)
 
             # return the df row whose atoms pass the screening_fn
             df = df[[ _screening_fn(atoms) for atoms in atoms_list ]]

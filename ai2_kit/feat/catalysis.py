@@ -155,10 +155,13 @@ class ConfigBuilder:
 
     def gen_deepmd_input(self,
                          out_dir: str = 'out',
+                         steps: int = 10000,
                          template_file: str = DEEPMD_DEFAULT_TEMPLATE):
         with open(template_file, 'r') as fp:
             data = json.load(fp)
         os.makedirs(out_dir, exist_ok=True)
+
+        data['training']['numb_steps'] = steps
         deepmd_input_path = os.path.join(out_dir, 'deepmd.json')
         with open(deepmd_input_path, 'w', encoding='utf-8') as fp:
             json.dump(data, fp, indent=4)

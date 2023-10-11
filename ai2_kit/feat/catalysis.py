@@ -2,19 +2,23 @@ import ase.io
 import fire
 
 from ai2_kit.core.log import get_logger
-from ai2_kit.res import DIR_PATH
+from ai2_kit import res
 from ai2_kit.domain.cp2k import dump_coord_n_cell
 from typing import Optional, Literal
-from ase import Atoms
+from ase import Atoms, Atom
 from string import Template
 import re
 import os
+import json
 
 
 logger = get_logger(__name__)
 
+DEEPMD_DEFAULT_TEMPLATE = os.path.join(res.DIR_PATH, 'catalysis/deepmd.json')
+MLP_TRAINING_TEMPLATE = os.path.join(res.DIR_PATH, 'catalysis/mlp-training.yml')
 
-CP2K_DEFAULT_TEMPLATE = os.path.join(DIR_PATH, 'cp2k/catalysis_input_template.txt')
+CP2K_DEFAULT_TEMPLATE = os.path.join(res.DIR_PATH, 'catalysis/cp2k.inp')
+
 CP2K_SCF_SEMICONDUCTOR = """\
         # CONFIGURATION FOR SEMICONDUCTOR
         &SCF
@@ -31,8 +35,8 @@ CP2K_SCF_SEMICONDUCTOR = """\
                 ENERGY_GAP 0.1
             &END OT
         &END SCF
-        # END CONFIGURATION FOR SEMICONDUCTOR
-"""
+        # END CONFIGURATION FOR SEMICONDUCTOR"""
+
 CP2K_SCF_METAL = """\
         # CONFIGURATION FOR METAL
         &SCF
@@ -55,8 +59,7 @@ CP2K_SCF_METAL = """\
                 NBROYDEN 14
             &END MIXING
         &END SCF
-        # END CONFIGURATION FOR METAL
-"""
+        # END CONFIGURATION FOR METAL"""
 
 CP2K_MOTION_TEMPLATE = """\
 &MOTION
@@ -101,8 +104,7 @@ CP2K_MOTION_TEMPLATE = """\
      &END EACH
    &END RESTART
   &END PRINT
-&END MOTION
-"""
+&END MOTION"""
 
 CP2K_SCF_TABLE = {
     'metal': CP2K_SCF_METAL,
@@ -129,17 +131,44 @@ class ConfigBuilder:
         self._atoms = ase.io.read(file, **kwargs)  # type: ignore
         return self
 
-    def show_cp2k_default_template(self):
-        """
-        Print the default template of CP2K input file to stdout
-        """
-        with open(CP2K_DEFAULT_TEMPLATE, 'r') as fp:
-            print(fp.read())
+
+    def gen_mlp_training_input(self,
+                               out_dir: str = 'out',
+                               template_file: str = MLP_TRAINING_TEMPLATE):
+        # Read yaml file as text so that the comments are preserved
+        with open(template_file, 'r') as fp:
+            text = fp.read()
+        # Generate the type_map and mass_map automatically
+        assert self._atoms is not None, 'atoms must be loaded first'
+        type_map = list(set(self._atoms.get_chemical_symbols()))
+        mass_map = [Atom(symbol).mass for symbol in type_map]
+
+        out_data = Template(text).substitute(
+            type_map=json.dumps(type_map),
+            mass_map=json.dumps(mass_map),
+        )
+        os.makedirs(out_dir, exist_ok=True)
+        mlp_training_input_path = os.path.join(out_dir, 'mlp-training.yml')
+        with open(mlp_training_input_path, 'w', encoding='utf-8') as fp:
+            fp.write(out_data)
+
+
+    def gen_deepmd_input(self,
+                         out_dir: str = 'out',
+                         template_file: str = DEEPMD_DEFAULT_TEMPLATE):
+        with open(template_file, 'r') as fp:
+            data = json.load(fp)
+        os.makedirs(out_dir, exist_ok=True)
+        deepmd_input_path = os.path.join(out_dir, 'deepmd.json')
+        with open(deepmd_input_path, 'w', encoding='utf-8') as fp:
+            json.dump(data, fp, indent=4)
 
 
     def gen_plumed_input(self, out_dir: str = 'out'):
         """
         Generate Plumed input files
+        Args:
+            out_dir: output directory, plumed.dat will be generated in this directory
         """
         assert self._atoms is not None, 'atoms must be loaded first'
         plumed_input = [ 'UNITS LENGTH=A' ]
@@ -156,13 +185,13 @@ class ConfigBuilder:
         plumed_input.extend([
             '#define more groups if needed',
             '',
-            '# define reaction coordinates',
-            'cv1: # should be defined by user',
-            '# define more CV if needed',
+            '# define reaction coordinates, e.g. CV1, CV2, ...',
+            '# you may define as many as you want',
+            'CV1:',
             '',
             '# define sampling method: metadynamics',
-            'metad: METAD ARG=CV1,CV2 SIGMA=0.1,0.1 HEIGHT=5 PACE=100, TEMP=1000 FILE=HILLS',
-            '# define more commands',
+            'metad: METAD ARG=CV1 SIGMA=0.1 HEIGHT=5 PACE=100, TEMP=1000 FILE=HILLS',
+            '# define more commands if you need',
             '',
             '# print CVs',
             'PRINT STRIDE=10 ARG=CV1 metad.bias FILE=COLVAR',
@@ -171,6 +200,14 @@ class ConfigBuilder:
         plumed_input_path = os.path.join(out_dir, 'plumed.dat')
         with open(plumed_input_path, 'w', encoding='utf-8') as fp:
             fp.write('\n'.join(plumed_input))
+
+
+    def gen_lammps_input(self):
+        ... # TODO
+
+
+    def gen_report(self):
+        ... # TODO
 
 
     def gen_cp2k_input(self,
@@ -316,6 +353,10 @@ class CmdEntries:
         Build config file for catalyst
         """
         return ConfigBuilder
+
+
+def cli_main():
+    fire.Fire(CmdEntries)
 
 
 if __name__ == '__main__':

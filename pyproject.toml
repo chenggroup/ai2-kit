@@ -47,4 +47,5 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-ai2-kit= "ai2_kit.main:main"
+ai2-kit = "ai2_kit.main:main"
+ai2-cat = "ai2_kit.feat.catalysis:cli_main"

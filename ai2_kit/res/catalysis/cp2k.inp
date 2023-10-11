@@ -33,7 +33,7 @@ $scf
         &END XC
     &END DFT
     &SUBSYS
-    @include(coord_n_cell.inc)
+    @include coord_n_cell.inc
 $kinds
     &END SUBSYS
     &PRINT

@@ -1,0 +1,102 @@
+# Define artifacts here so that they can be used in the workflow sections.
+# You are free to define as many artifacts as you need.
+
+# The artifact for the training data must be npy format.
+# The artifact for the initial structure can be .xyz, POSCAR or other ase supported formats.
+
+artifacts:
+  training-data:
+    url : /path/to/training-data
+
+  init-structure:
+    url : /path/to/structure-file
+    # You may use includes to specify multiple files. For example:
+    # includes: POSCAR*
+
+    # You may define custom attrs for the artifact.
+    # The attrs defined here will override the corresponding options in workflow section.
+    # Uncomment the following lines in case you need.
+
+    # attrs:
+    #   lammps:
+    #     plumed_config: !load_text plumed.dat
+    #   cp2k:
+    #     input_template: !load_text cp2k.inp
+
+workflow:
+  general:
+    type_map: $type_map
+    mass_map: $mass_map
+    max_iters: 1
+
+  label:
+    cp2k:
+      limit: 100  # limit the max number of structures to label
+      input_template: !load_text cp2k.inp
+
+  train:
+    deepmd:
+      model_num: 4
+      # Specific the artifacts to be used as initial dataset here.
+      ########## CHANGE ME ##########
+      init_dataset : [ ]
+      ########## CHANGE ME ##########
+      input_template: !load_yaml deepmd.json
+
+  explore:
+    lammps:
+      nsteps: 1000
+      timestep: 0.0005
+      sample_freq: 100
+      ensemble: nvt
+
+      # Specific the artifacts to be used as initial structure here.
+      ########## CHANGE ME ##########
+      system_files: [ ]
+      ########## CHANGE ME ##########
+
+      template_vars:
+         POST_INIT: |
+            neighbor 2.0 bin
+            box      tilt large
+      explore_vars:
+        TEMP: [50,100,200,300,400,600,800,1000]
+
+  select:
+    model_devi:
+        f_trust_lo: 0.25
+        f_trust_hi: 0.5
+
+  update:
+    walkthrough:
+      # You can override the default configuration for each iteration here.
+      # The default configuration is for iter 0.
+      # The most common configuration to change includes: nsteps, system_files, etc.
+      table:
+        - explore:  # iter 1
+            lammps:
+              nsteps: 3000
+
+        - explore:  # iter 2
+            lammps:
+              nsteps: 5000
+
+        - explore:  # iter 3
+            lammps:
+              nsteps: 10000
+
+        - explore:  # iter 4
+            lammps:
+              nsteps: 20000
+
+        - explore:  # iter 5
+            lammps:
+              nsteps: 20000
+
+        - explore:  # iter 6
+            lammps:
+              nsteps: 50000
+
+        - explore:  # iter 7
+            lammps:
+              nsteps: 100000

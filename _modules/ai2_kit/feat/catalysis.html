@@ -567,11 +567,11 @@ document.write(`
             <span class="s1">&#39;CV1:&#39;</span><span class="p">,</span>
             <span class="s1">&#39;&#39;</span><span class="p">,</span>
             <span class="s1">&#39;# define sampling method: metadynamics&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;metad: METAD ARG=CV1 SIGMA=0.1 HEIGHT=5 PACE=100, TEMP=1000 FILE=HILLS&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;metad: METAD ARG=CV1 SIGMA=0.1 HEIGHT=5 PACE=100 TEMP=1000 FILE=HILLS&#39;</span><span class="p">,</span>
             <span class="s1">&#39;# define more commands if you need&#39;</span><span class="p">,</span>
             <span class="s1">&#39;&#39;</span><span class="p">,</span>
             <span class="s1">&#39;# print CVs&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;PRINT STRIDE=10 ARG=CV1 metad.bias FILE=COLVAR&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;PRINT STRIDE=10 ARG=CV1,metad.bias FILE=COLVAR&#39;</span><span class="p">,</span>
         <span class="p">])</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">plumed_input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;plumed.dat&#39;</span><span class="p">)</span>

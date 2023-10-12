@@ -1,4 +1,7 @@
 # Change Logs
+## v0.9.0
+* improvement: avoid unnecessary job submission
+
 ## v0.8.10
 * fix: plumed template
 

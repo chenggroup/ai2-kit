@@ -56,6 +56,10 @@ class BaseQueueSystem(ABC):
         ...
 
     @abstractmethod
+    def get_job_id_envvar(self) -> str:
+        ...
+
+    @abstractmethod
     def get_job_state(self, job_id: str, success_indicator_path: str) -> JobState:
         ...
 
@@ -66,10 +70,11 @@ class BaseQueueSystem(ABC):
     def _post_submit(self, job: 'QueueJobFuture'):
         ...
 
-    def submit(self, script: str, cwd: str,
+    def submit(self,
+               script: str,
+               cwd: str,
                name: Optional[str] = None,
                checkpoint_key: Optional[str] = None,
-               success_indicator: Optional[str] = None,
                ):
 
         # use hash instead of uuid to ensure idempotence
@@ -78,14 +83,13 @@ class BaseQueueSystem(ABC):
         quoted_cwd = shlex.quote(cwd)
 
         # a placeholder file that will be created when the script end without error
-        if success_indicator is None:
-            success_indicator = name + '.success'
+        success_indicator = name + '.success'
 
-        # create script
+        # create script and add a command to write job id to success indicator
         script = '\n'.join([
             script,
             '',
-            f'touch {shlex.quote(success_indicator)}',
+            f'echo ${self.get_job_id_envvar()} > {shlex.quote(success_indicator)}',
             '',
         ])
 
@@ -101,6 +105,10 @@ class BaseQueueSystem(ABC):
         if checkpoint_key is not None:
             submit_cmd_fn = apply_checkpoint(checkpoint_key)(submit_cmd_fn)
 
+        # try to recover job id from running job
+
+
+        # don't submit job that has been
         logger.info(f'Submit batch script: {script_path}')
         job_id = submit_cmd_fn(cmd)
 
@@ -156,6 +164,9 @@ class Slurm(BaseQueueSystem):
     def get_job_id_pattern(self):
         # example: Submitted batch job 123
         return r"Submitted batch job\s+(\d+)"
+
+    def get_job_id_envvar(self) -> str:
+        return 'SLURM_JOB_ID'
 
     def get_job_state(self, job_id: str, success_indicator_path: str) -> JobState:
         state = self._get_all_states().get(job_id)
@@ -222,6 +233,9 @@ class Lsf(BaseQueueSystem):
     def get_job_id_pattern(self):
         # example: Job <123> is submitted to queue <small>.
         return r"Job <(\d+)> is submitted to queue"
+
+    def get_job_id_envvar(self) -> str:
+        return 'LSB_JOBID'
 
     # TODO
     def get_job_state(self, job_id: str, success_indicator_path: str) -> JobState:

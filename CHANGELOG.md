@@ -1,4 +1,7 @@
 # Change Logs
+## v0.8.10
+* fix: plumed template
+
 ## v0.8.9
 * fix: deepmd template
 

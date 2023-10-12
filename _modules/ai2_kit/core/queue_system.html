@@ -458,6 +458,10 @@ document.write(`
 
         <span class="c1"># a placeholder file that will be created when the script end without error</span>
         <span class="n">success_indicator</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.success&#39;</span>
+        <span class="n">running_indicator</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.running&#39;</span>
+
+        <span class="c1"># TODO: maybe there are better way to inject running indicator</span>
+        <span class="n">script</span> <span class="o">=</span> <span class="n">inject_cmd_to_script</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;echo $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_job_id_envvar</span><span class="p">()</span><span class="si">}</span><span class="s1"> &gt; </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">running_indicator</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="c1"># create script and add a command to write job id to success indicator</span>
         <span class="n">script</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
@@ -479,12 +483,23 @@ document.write(`
         <span class="k">if</span> <span class="n">checkpoint_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">submit_cmd_fn</span> <span class="o">=</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="n">checkpoint_key</span><span class="p">)(</span><span class="n">submit_cmd_fn</span><span class="p">)</span>
 
-        <span class="c1"># try to recover job id from running job</span>
+        <span class="c1"># recover running job id</span>
+        <span class="c1"># TODO: refactor the following code as function</span>
+        <span class="n">job_id</span><span class="p">,</span> <span class="n">job_state</span>  <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">JobState</span><span class="o">.</span><span class="n">UNKNOWN</span>
+        <span class="n">recover_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cd </span><span class="si">{</span><span class="n">quoted_cwd</span><span class="si">}</span><span class="s2"> &amp;&amp; cat </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">running_indicator</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">job_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">recover_cmd</span><span class="p">,</span> <span class="n">hide</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">job_id</span><span class="p">:</span>
+                <span class="n">success_indicator_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">success_indicator</span><span class="p">)</span>
+                <span class="n">job_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_job_state</span><span class="p">(</span><span class="n">job_id</span><span class="p">,</span> <span class="n">success_indicator_path</span><span class="o">=</span><span class="n">success_indicator_path</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
 
-
-        <span class="c1"># don&#39;t submit job that has been</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Submit batch script: </span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">job_id</span> <span class="o">=</span> <span class="n">submit_cmd_fn</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">job_id</span> <span class="ow">and</span> <span class="n">job_state</span> <span class="ow">in</span> <span class="p">(</span><span class="n">JobState</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span> <span class="n">JobState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span> <span class="n">JobState</span><span class="o">.</span><span class="n">COMPLETED</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s2"> has been submmited (</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">) and in </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">job_state</span><span class="p">)</span><span class="si">}</span><span class="s2"> state, skip submit!&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Submit batch script: </span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">job_id</span> <span class="o">=</span> <span class="n">submit_cmd_fn</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
         <span class="n">job</span> <span class="o">=</span> <span class="n">QueueJobFuture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                              <span class="n">job_id</span><span class="o">=</span><span class="n">job_id</span><span class="p">,</span>
@@ -509,7 +524,7 @@ document.write(`
 <div class="viewcode-block" id="Slurm"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Slurm">[docs]</a><span class="k">class</span> <span class="nc">Slurm</span><span class="p">(</span><span class="n">BaseQueueSystem</span><span class="p">):</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">QueueSystemConfig</span><span class="o">.</span><span class="n">Slurm</span>
 
-    <span class="n">_last_states</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JobState</span><span class="p">]]</span>
+    <span class="n">_last_states</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JobState</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_last_update_at</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="n">translate_table</span> <span class="o">=</span> <span class="p">{</span>
@@ -567,11 +582,10 @@ document.write(`
     <span class="k">def</span> <span class="nf">_get_all_states</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JobState</span><span class="p">]:</span>
         <span class="n">current_ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="c1"># cache the states for 10 seconds to reduce the number of squeue calls</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">current_ts</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_update_at</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">polling_interval</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">current_ts</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_update_at</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">polling_interval</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span>
         <span class="c1"># call squeue to get all states</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> --noheader --format=&#39;</span><span class="si">%i</span><span class="s2"> %t&#39; -u $USER&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">squeue_bin</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">squeue_bin</span><span class="si">}</span><span class="s2"> --noheader --format=&#39;%i %t&#39; --me&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">hide</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">invoke</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">UnexpectedExit</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -579,7 +593,7 @@ document.write(`
             <span class="k">return</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span>
 
         <span class="n">states</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JobState</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>  <span class="c1"># skip empty line</span>
                 <span class="k">continue</span>
             <span class="n">job_id</span><span class="p">,</span> <span class="n">slurm_state</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
@@ -710,6 +724,21 @@ document.write(`
             <span class="n">polling_interval</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_polling_interval</span><span class="p">,</span>
             <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_job_state</span><span class="p">(),</span>
         <span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="inject_cmd_to_script"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.inject_cmd_to_script">[docs]</a><span class="k">def</span> <span class="nf">inject_cmd_to_script</span><span class="p">(</span><span class="n">script</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find the position of first none comment or empty lines,</span>
+<span class="sd">    and inject command before it</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">script</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+            <span class="k">break</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
 </pre></div>
 
                 </article>

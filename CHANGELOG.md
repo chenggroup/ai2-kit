@@ -1,4 +1,7 @@
 # Change Logs
+## v0.8.9
+* fix: deepmd template
+
 ## v0.8.8
 * fix: cache for py38
 

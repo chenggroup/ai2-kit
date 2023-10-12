@@ -37,7 +37,7 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 
 ## Manuals
 ### Featuring Tools
-* [ai2cat]doc/manual/ai2cat.md): A toolkit for dynamic catalysis researching.
+* [ai2-cat]doc/manual/ai2cat.md): A toolkit for dynamic catalysis researching.
 
 ### Domain Specific Tools
 * [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)

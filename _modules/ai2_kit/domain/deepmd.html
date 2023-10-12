@@ -566,9 +566,6 @@ document.write(`
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">train_systems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
 
-        <span class="n">training</span><span class="p">[</span><span class="s1">&#39;systems&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_systems</span> <span class="o">+</span> <span class="n">outlier_systems</span>
-        <span class="n">training</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;set_prefix&#39;</span><span class="p">,</span> <span class="s1">&#39;set&#39;</span><span class="p">)</span>  <span class="c1"># respect user input</span>
-        <span class="n">training</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;batch_size&#39;</span><span class="p">,</span> <span class="s1">&#39;auto&#39;</span><span class="p">)</span>
 
         <span class="n">auto_prob_str</span> <span class="o">=</span> <span class="s2">&quot;prob_sys_size&quot;</span>
         <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">isolate_outliers</span><span class="p">:</span>
@@ -577,15 +574,22 @@ document.write(`
             <span class="n">auto_prob_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;;0:</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_systems</span><span class="p">)</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="mi">1</span><span class="o">-</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">outlier_weight</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="n">auto_prob_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_systems</span><span class="p">)</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train_systems</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">outlier_systems</span><span class="p">)</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">outlier_weight</span><span class="si">}</span><span class="s1">&#39;</span>
 
-        <span class="n">training</span><span class="p">[</span><span class="s1">&#39;auto_prob_style&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">auto_prob_str</span>
+        <span class="c1"># Drop v1 support</span>
+        <span class="c1"># TODO: remove in the future</span>
+        <span class="c1"># training[&#39;systems&#39;] = train_systems + outlier_systems</span>
+        <span class="c1"># training.setdefault(&#39;set_prefix&#39;, &#39;set&#39;)  # respect user input</span>
+        <span class="c1"># training.setdefault(&#39;batch_size&#39;, &#39;auto&#39;)</span>
+        <span class="c1"># training[&#39;auto_prob_style&#39;] = auto_prob_str</span>
 
         <span class="c1"># v2 training data</span>
+        <span class="n">training_data</span> <span class="o">=</span> <span class="n">training</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;training_data&#39;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">training_data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;systems&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;systems&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;set_prefix&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;set_prefix&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;auto_prob&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;auto_prob_style&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;set_prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;set&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span>
             <span class="s1">&#39;sys_probs&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="o">**</span> <span class="n">training_data</span><span class="p">,</span>
+            <span class="s1">&#39;systems&#39;</span><span class="p">:</span> <span class="n">train_systems</span> <span class="o">+</span> <span class="n">outlier_systems</span><span class="p">,</span>
+            <span class="s1">&#39;auto_prob_style&#39;</span><span class="p">:</span> <span class="n">auto_prob_str</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">training</span><span class="p">[</span><span class="s1">&#39;training_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">training_data</span>
 
@@ -594,8 +598,8 @@ document.write(`
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">validation_systems</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">validation_data</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s1">&#39;systems&#39;</span><span class="p">:</span> <span class="n">validation_systems</span><span class="p">,</span>
-                <span class="s1">&#39;set_prefix&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;set_prefix&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="n">training</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;set_prefix&#39;</span><span class="p">:</span> <span class="n">training_data</span><span class="p">[</span><span class="s1">&#39;set_prefix&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="n">training_data</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">],</span>
             <span class="p">}</span>
             <span class="n">training</span><span class="p">[</span><span class="s1">&#39;validation_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">validation_data</span>
 

@@ -61,7 +61,7 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'doc/manual/ai4cat';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'doc/manual/ai2cat';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -296,7 +296,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fdoc/manual/ai4cat.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fdoc/manual/ai2cat.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -326,7 +326,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../../_sources/doc/manual/ai4cat.md" target="_blank"
+      <li><a href="../../_sources/doc/manual/ai2cat.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -435,7 +435,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="ai2-cat-toolkit">
 <h1>ai2-cat Toolkit<a class="headerlink" href="#ai2-cat-toolkit" title="Permalink to this heading">#</a></h1>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>feat<span class="w"> </span>catalysis<span class="w">  </span><span class="c1"># shortcut: cat</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-cat<span class="w">  </span><span class="c1">#  or ai2-kit feat cat</span>
 </pre></div>
 </div>
 <p>This toolkit is a collection of useful functions for dynamic catalysis researching.</p>
@@ -446,13 +446,13 @@ document.write(`
 <p>This toolkit can be used to generate CP2K input files
 for a given system automatically with some simple commands.</p>
 <p>You can run the following command to see the help message:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>feat<span class="w"> </span>cat<span class="w"> </span>build-config<span class="w"> </span>gen_cp2k_input<span class="w"> </span>--help
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-cat<span class="w"> </span>build-config<span class="w"> </span>gen_cp2k_input<span class="w"> </span>--help
 </pre></div>
 </div>
 <p>For example, suppose you have a system file named <code class="docutils literal notranslate"><span class="pre">AuCu.xyz</span></code>,
 and the basic set and potential files you want to use is in <code class="docutils literal notranslate"><span class="pre">CP2K_DATA_DIR</span></code>,
 then you can run the following command to generate CP2K input files for this system:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>feat<span class="w"> </span>cat<span class="w"> </span>build-config<span class="w"> </span>load_system<span class="w"> </span>AuCu.xyz<span class="w"> </span>-<span class="w"> </span>gen_cp2k_input<span class="w"> </span><span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-cat<span class="w"> </span>build-config<span class="w"> </span>load_system<span class="w"> </span>AuCu.xyz<span class="w"> </span>-<span class="w"> </span>gen_cp2k_input<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--basic_set_file<span class="w"> </span>BASIS_MOLOPT<span class="w"> </span>--potential_file<span class="w"> </span>GTH_POTENTIALS<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--accuracy<span class="w"> </span>high<span class="w"> </span>--style<span class="w"> </span>metal<span class="w"> </span>--out_dir<span class="w"> </span>./cp2k_input
 </pre></div>

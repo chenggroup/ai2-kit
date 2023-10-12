@@ -2,11 +2,7 @@
     "model": {
         "descriptor": {
             "type": "se_a",
-            "sel": [
-                150,
-                150,
-                150
-            ],
+            "sel": "auto",
             "rcut_smth": 2.0,
             "rcut": 15.0,
             "neuron": [

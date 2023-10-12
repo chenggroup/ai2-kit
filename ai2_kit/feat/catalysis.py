@@ -285,7 +285,7 @@ class ConfigBuilder:
             # then the ve is 6
             ve = int(re.match(r'.*?(\d+)$', potential).group(1))
             total_ve += ve * self._atoms.get_chemical_symbols().count(element)
-        logger.info("total valence Electron of the system: %d" % total_ve)
+        logger.info("total valence electron of the system: %d" % total_ve)
 
         motion = ''
         if aimd:

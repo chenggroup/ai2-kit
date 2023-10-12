@@ -84,6 +84,10 @@ class BaseQueueSystem(ABC):
 
         # a placeholder file that will be created when the script end without error
         success_indicator = name + '.success'
+        running_indicator = name + '.running'
+
+        # TODO: maybe there are better way to inject running indicator
+        script = inject_cmd_to_script(script, f'echo ${self.get_job_id_envvar()} > {shlex.quote(running_indicator)}')
 
         # create script and add a command to write job id to success indicator
         script = '\n'.join([
@@ -105,12 +109,22 @@ class BaseQueueSystem(ABC):
         if checkpoint_key is not None:
             submit_cmd_fn = apply_checkpoint(checkpoint_key)(submit_cmd_fn)
 
-        # try to recover job id from running job
+        # recover running job id
+        # TODO: refactor the following code as function
+        job_id, job_state  = None, JobState.UNKNOWN
+        recover_cmd = f"cd {quoted_cwd} && cat {shlex.quote(running_indicator)}"
+        try:
+            job_id = self.connector.run(recover_cmd).stdout.strip()
+            success_indicator_path = os.path.join(cwd, success_indicator)
+            job_state = self.get_job_state(job_id, success_indicator_path=success_indicator_path)
+        except:
+            pass
 
-
-        # don't submit job that has been
-        logger.info(f'Submit batch script: {script_path}')
-        job_id = submit_cmd_fn(cmd)
+        if job_id and job_state in (JobState.PENDING, JobState.RUNNING, JobState.COMPLETED):
+            logger.info(f"Job {job_id} is {job_state}, don't submit again")
+        else:
+            logger.info(f'Submit batch script: {script_path}')
+            job_id = submit_cmd_fn(cmd)
 
         job = QueueJobFuture(self,
                              job_id=job_id,

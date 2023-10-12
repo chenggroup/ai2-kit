@@ -193,11 +193,11 @@ class ConfigBuilder:
             'CV1:',
             '',
             '# define sampling method: metadynamics',
-            'metad: METAD ARG=CV1 SIGMA=0.1 HEIGHT=5 PACE=100, TEMP=1000 FILE=HILLS',
+            'metad: METAD ARG=CV1 SIGMA=0.1 HEIGHT=5 PACE=100 TEMP=1000 FILE=HILLS',
             '# define more commands if you need',
             '',
             '# print CVs',
-            'PRINT STRIDE=10 ARG=CV1 metad.bias FILE=COLVAR',
+            'PRINT STRIDE=10 ARG=CV1,metad.bias FILE=COLVAR',
         ])
         os.makedirs(out_dir, exist_ok=True)
         plumed_input_path = os.path.join(out_dir, 'plumed.dat')

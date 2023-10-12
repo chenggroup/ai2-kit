@@ -114,14 +114,15 @@ class BaseQueueSystem(ABC):
         job_id, job_state  = None, JobState.UNKNOWN
         recover_cmd = f"cd {quoted_cwd} && cat {shlex.quote(running_indicator)}"
         try:
-            job_id = self.connector.run(recover_cmd).stdout.strip()
-            success_indicator_path = os.path.join(cwd, success_indicator)
-            job_state = self.get_job_state(job_id, success_indicator_path=success_indicator_path)
+            job_id = self.connector.run(recover_cmd, hide=True).stdout.strip()
+            if job_id:
+                success_indicator_path = os.path.join(cwd, success_indicator)
+                job_state = self.get_job_state(job_id, success_indicator_path=success_indicator_path)
         except:
             pass
 
         if job_id and job_state in (JobState.PENDING, JobState.RUNNING, JobState.COMPLETED):
-            logger.info(f"Job {job_id} is {job_state}, don't submit again")
+            logger.info(f"{script_path} has been submmited ({job_id}) and in {str(job_state)} state, skip submit!")
         else:
             logger.info(f'Submit batch script: {script_path}')
             job_id = submit_cmd_fn(cmd)
@@ -149,7 +150,7 @@ class BaseQueueSystem(ABC):
 class Slurm(BaseQueueSystem):
     config: QueueSystemConfig.Slurm
 
-    _last_states: Optional[Dict[str, JobState]]
+    _last_states: Optional[Dict[str, JobState]] = None
     _last_update_at: float = 0
 
     translate_table = {
@@ -207,11 +208,10 @@ class Slurm(BaseQueueSystem):
     def _get_all_states(self) -> Dict[str, JobState]:
         current_ts = time.time()
         # cache the states for 10 seconds to reduce the number of squeue calls
-        if self._last_states is not None and current_ts - self._last_update_at < self.config.polling_interval:
+        if self._last_states is not None and (current_ts - self._last_update_at) < self.config.polling_interval:
             return self._last_states
         # call squeue to get all states
-        cmd = "{} --noheader --format='%i %t' -u $USER".format(
-            self.config.squeue_bin)
+        cmd = f"{self.config.squeue_bin} --noheader --format='%i %t' --me"
         try:
             r = self.connector.run(cmd, hide=True)
         except invoke.exceptions.UnexpectedExit as e:
@@ -219,7 +219,7 @@ class Slurm(BaseQueueSystem):
             return defaultdict(lambda: JobState.UNKNOWN) if self._last_states is None else self._last_states
 
         states: Dict[str, JobState] = dict()
-        for line in r.stdout.split('\n'):
+        for line in r.stdout.splitlines():
             if not line:  # skip empty line
                 continue
             job_id, slurm_state = line.split()

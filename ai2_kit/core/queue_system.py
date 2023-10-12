@@ -336,3 +336,18 @@ class QueueJobFuture(JobFuture):
             polling_interval=self._polling_interval,
             state=self.get_job_state(),
         ))
+
+
+def inject_cmd_to_script(script: str, cmd: str):
+    """
+    Find the position of first none comment or empty lines,
+    and inject command before it
+    """
+    lines = script.splitlines()
+    i = 0
+    for i, line in enumerate(lines):
+        line = line.strip()
+        if line and not line.startswith('#'):
+            break
+    lines.insert(i, cmd)
+    return '\n'.join(lines)

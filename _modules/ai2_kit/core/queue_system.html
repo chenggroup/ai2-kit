@@ -429,6 +429,10 @@ document.write(`
     <span class="k">def</span> <span class="nf">get_job_id_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="o">...</span></div>
 
+<div class="viewcode-block" id="BaseQueueSystem.get_job_id_envvar"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem.get_job_id_envvar">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_job_id_envvar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="o">...</span></div>
+
 <div class="viewcode-block" id="BaseQueueSystem.get_job_state"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem.get_job_state">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_job_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">success_indicator_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JobState</span><span class="p">:</span>
         <span class="o">...</span></div>
@@ -440,10 +444,11 @@ document.write(`
     <span class="k">def</span> <span class="nf">_post_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="s1">&#39;QueueJobFuture&#39;</span><span class="p">):</span>
         <span class="o">...</span>
 
-<div class="viewcode-block" id="BaseQueueSystem.submit"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem.submit">[docs]</a>    <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">script</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<div class="viewcode-block" id="BaseQueueSystem.submit"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem.submit">[docs]</a>    <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+               <span class="n">script</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+               <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                <span class="n">checkpoint_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-               <span class="n">success_indicator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                <span class="p">):</span>
 
         <span class="c1"># use hash instead of uuid to ensure idempotence</span>
@@ -452,14 +457,13 @@ document.write(`
         <span class="n">quoted_cwd</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
 
         <span class="c1"># a placeholder file that will be created when the script end without error</span>
-        <span class="k">if</span> <span class="n">success_indicator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">success_indicator</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.success&#39;</span>
+        <span class="n">success_indicator</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.success&#39;</span>
 
-        <span class="c1"># create script</span>
+        <span class="c1"># create script and add a command to write job id to success indicator</span>
         <span class="n">script</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
             <span class="n">script</span><span class="p">,</span>
             <span class="s1">&#39;&#39;</span><span class="p">,</span>
-            <span class="sa">f</span><span class="s1">&#39;touch </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">success_indicator</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;echo $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_job_id_envvar</span><span class="p">()</span><span class="si">}</span><span class="s1"> &gt; </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">success_indicator</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="s1">&#39;&#39;</span><span class="p">,</span>
         <span class="p">])</span>
 
@@ -475,6 +479,10 @@ document.write(`
         <span class="k">if</span> <span class="n">checkpoint_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">submit_cmd_fn</span> <span class="o">=</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="n">checkpoint_key</span><span class="p">)(</span><span class="n">submit_cmd_fn</span><span class="p">)</span>
 
+        <span class="c1"># try to recover job id from running job</span>
+
+
+        <span class="c1"># don&#39;t submit job that has been</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Submit batch script: </span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">job_id</span> <span class="o">=</span> <span class="n">submit_cmd_fn</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
@@ -530,6 +538,9 @@ document.write(`
 <div class="viewcode-block" id="Slurm.get_job_id_pattern"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Slurm.get_job_id_pattern">[docs]</a>    <span class="k">def</span> <span class="nf">get_job_id_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># example: Submitted batch job 123</span>
         <span class="k">return</span> <span class="sa">r</span><span class="s2">&quot;Submitted batch job\s+(\d+)&quot;</span></div>
+
+<div class="viewcode-block" id="Slurm.get_job_id_envvar"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Slurm.get_job_id_envvar">[docs]</a>    <span class="k">def</span> <span class="nf">get_job_id_envvar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;SLURM_JOB_ID&#39;</span></div>
 
 <div class="viewcode-block" id="Slurm.get_job_state"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Slurm.get_job_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_job_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">success_indicator_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JobState</span><span class="p">:</span>
         <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_all_states</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
@@ -596,6 +607,9 @@ document.write(`
 <div class="viewcode-block" id="Lsf.get_job_id_pattern"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Lsf.get_job_id_pattern">[docs]</a>    <span class="k">def</span> <span class="nf">get_job_id_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># example: Job &lt;123&gt; is submitted to queue &lt;small&gt;.</span>
         <span class="k">return</span> <span class="sa">r</span><span class="s2">&quot;Job &lt;(\d+)&gt; is submitted to queue&quot;</span></div>
+
+<div class="viewcode-block" id="Lsf.get_job_id_envvar"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Lsf.get_job_id_envvar">[docs]</a>    <span class="k">def</span> <span class="nf">get_job_id_envvar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;LSB_JOBID&#39;</span></div>
 
     <span class="c1"># TODO</span>
 <div class="viewcode-block" id="Lsf.get_job_state"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Lsf.get_job_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_job_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">success_indicator_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JobState</span><span class="p">:</span>

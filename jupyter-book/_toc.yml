@@ -4,6 +4,9 @@
 format: jb-book
 root: intro
 parts:
+  - caption: Featuring Tools
+    chapters:
+      - file: doc/manual/ai2cat.md
   - caption: Domain Specific Tools
     chapters:
       - file: doc/manual/proton-transfer
@@ -11,8 +14,10 @@ parts:
       - file: doc/manual/fep-workflow
   - caption: Build-in Functionalities
     chapters:
-      - file: doc/manual/ase
       - file: doc/manual/checkpoint
+      - file: doc/manual/hpc-executor
+      - file: doc/manual/ase
+      - file: doc/manual/dpdata
       - file: doc/manual/tips
   - caption: 中文文档
     chapters:

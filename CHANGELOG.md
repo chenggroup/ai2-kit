@@ -1,4 +1,7 @@
 # Change Logs
+## v0.9.1
+* fix: selector screening function
+
 ## v0.9.0
 * improvement: avoid unnecessary job submission
 

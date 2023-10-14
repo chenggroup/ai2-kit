@@ -245,21 +245,22 @@ def __export_remote_functions():
 
         # screening structure before model_devi analysis
         if screening_fn is not None:
-            _screening_fn = eval(screening_fn)  # str to function
 
             if 'ssw_energy' in atoms_list[0].info:
                 s_ssw_energy = pd.Series(map(lambda atoms: atoms.info['ssw_energy'], atoms_list))  # type: ignore
 
                 # the following ssw_* methods are for the screening_fn
                 # so don't need to worry about the unused warning
-                ssw_enenrgy_max = s_ssw_energy.max()
-                ssw_enenrgy_min = s_ssw_energy.min()
-                def ssw_enenrgy_quantile(q):
+                ssw_energy_max = s_ssw_energy.max()
+                ssw_energy_min = s_ssw_energy.min()
+                def ssw_energy_quantile(q):
                     # the quantile will be evaluated every time, which is not efficient
                     # so here we cache the result, carefully
                     return lru_cache()(s_ssw_energy.quantile)(q)
+                ssw_enenrgy_quantile = ssw_energy_quantile
 
             # return the df row whose atoms pass the screening_fn
+            _screening_fn = eval(screening_fn)  # str to function
             df = df[[ _screening_fn(atoms) for atoms in atoms_list ]]
 
 

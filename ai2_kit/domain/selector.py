@@ -1,7 +1,7 @@
 from asaplib.data.xyz import ASAPXYZ
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.util import dump_json, flush_stdio, flatten
+from ai2_kit.core.util import dump_json, flush_stdio
 
 from typing import List, Optional, Tuple, Dict
 from io import StringIO
@@ -10,11 +10,10 @@ from dataclasses import dataclass
 import pandas as pd
 from tabulate import tabulate
 from itertools import groupby
-import os
 from functools import lru_cache
 
 import ase.io
-from ase import Atoms
+import os
 
 from .data import get_data_format, DataFormat, artifacts_to_ase_atoms
 from .iface import ICllSelectorOutput, BaseCllContext
@@ -57,7 +56,6 @@ class CllModelDeviSelectorInputConfig(BaseModel):
     """
     options for ASAP to further select candidates
     """
-
     screening_fn: Optional[str] = None
     """
     the function to screen the candidates, e.g

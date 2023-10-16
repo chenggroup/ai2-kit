@@ -260,7 +260,7 @@ def __export_remote_functions():
                 ssw_enenrgy_quantile = ssw_energy_quantile
 
             # return the df row whose atoms pass the screening_fn
-            _screening_fn = eval(screening_fn)  # str to function
+            _screening_fn = eval(screening_fn, None, locals())  # str to function
             df = df[[ _screening_fn(atoms) for atoms in atoms_list ]]
 
 

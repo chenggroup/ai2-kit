@@ -115,9 +115,9 @@ workflow:
             # Optional, use DBSCAN and specify the params.
             # Set it to {} if you want to use default params.
             # Or you can specify the params directly as the follow
-            db_scan:
+            dbscan:
               eps:
               min_samples:
 
             # Optional, use LaioDB, no params need to be specified.
-            laio_db: {}
+            laiodb: {}

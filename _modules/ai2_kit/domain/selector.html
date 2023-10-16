@@ -619,21 +619,22 @@ document.write(`
 
         <span class="c1"># screening structure before model_devi analysis</span>
         <span class="k">if</span> <span class="n">screening_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">_screening_fn</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">screening_fn</span><span class="p">)</span>  <span class="c1"># str to function</span>
 
             <span class="k">if</span> <span class="s1">&#39;ssw_energy&#39;</span> <span class="ow">in</span> <span class="n">atoms_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">:</span>
                 <span class="n">s_ssw_energy</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;ssw_energy&#39;</span><span class="p">],</span> <span class="n">atoms_list</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
 
                 <span class="c1"># the following ssw_* methods are for the screening_fn</span>
                 <span class="c1"># so don&#39;t need to worry about the unused warning</span>
-                <span class="n">ssw_enenrgy_max</span> <span class="o">=</span> <span class="n">s_ssw_energy</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-                <span class="n">ssw_enenrgy_min</span> <span class="o">=</span> <span class="n">s_ssw_energy</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-                <span class="k">def</span> <span class="nf">ssw_enenrgy_quantile</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
+                <span class="n">ssw_energy_max</span> <span class="o">=</span> <span class="n">s_ssw_energy</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+                <span class="n">ssw_energy_min</span> <span class="o">=</span> <span class="n">s_ssw_energy</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+                <span class="k">def</span> <span class="nf">ssw_energy_quantile</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
                     <span class="c1"># the quantile will be evaluated every time, which is not efficient</span>
                     <span class="c1"># so here we cache the result, carefully</span>
                     <span class="k">return</span> <span class="n">lru_cache</span><span class="p">()(</span><span class="n">s_ssw_energy</span><span class="o">.</span><span class="n">quantile</span><span class="p">)(</span><span class="n">q</span><span class="p">)</span>
+                <span class="n">ssw_enenrgy_quantile</span> <span class="o">=</span> <span class="n">ssw_energy_quantile</span>
 
             <span class="c1"># return the df row whose atoms pass the screening_fn</span>
+            <span class="n">_screening_fn</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">screening_fn</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">locals</span><span class="p">())</span>  <span class="c1"># str to function</span>
             <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span> <span class="n">_screening_fn</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span> <span class="k">for</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="n">atoms_list</span> <span class="p">]]</span>
 
 

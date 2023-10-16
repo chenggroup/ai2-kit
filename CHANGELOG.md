@@ -1,4 +1,8 @@
 # Change Logs
+## v0.9.3
+* fix: asap selector
+* fix: doc typo
+
 ## v0.9.2
 * fix: inject locals to eval
 

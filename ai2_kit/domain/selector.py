@@ -383,16 +383,18 @@ def __export_remote_functions():
             trainer = get_trainer(reduced_descriptors, cluster_opt)
             cluster_labels = get_cluster(asapxyz, reduced_descriptors, trainer, path_prefix=asap_path_prefix)
 
+            dump_json(cluster_labels, os.path.join(work_dir, 'cluster.debug.json'))
+
             # select frame from each cluster
             if limit_per_cluster <= 0: # unlimit
-                selected_atoms_list = flatten(cluster_labels.values())  # TODO: fix type
+                selected_atoms_list = atoms_list  # do nothing
             else:
                 selected_frames = []
                 for frames in cluster_labels.values():
                     if len(frames) < limit_per_cluster:
-                        selected_frames += frames
+                        selected_frames += list(frames)
                     else:
-                        selected_frames += frames[:limit_per_cluster]
+                        selected_frames += list(frames[:limit_per_cluster])
                 selected_atoms_list = [atoms_list[i] for i in selected_frames]
 
         # write selected structures to file

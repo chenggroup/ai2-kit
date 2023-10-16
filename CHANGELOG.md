@@ -1,4 +1,7 @@
 # Change Logs
+## v0.9.2
+* fix: inject locals to eval
+
 ## v0.9.1
 * fix: selector screening function
 

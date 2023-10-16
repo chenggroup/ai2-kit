@@ -117,7 +117,7 @@ workflow:
             # Or you can specify the params directly as the follow
             dbscan:
               eps:
-              min_samples:
+              min_samples: 2
 
             # Optional, use LaioDB, no params need to be specified.
             laiodb: {}

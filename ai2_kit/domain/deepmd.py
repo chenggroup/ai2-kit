@@ -39,7 +39,7 @@ class CllDeepmdInputConfig(BaseModel):
     """
     Dataset used to initialize training.
     """
-    input_template: dict
+    input_template: dict = dict()
     """
     Deepmd input template.
     """

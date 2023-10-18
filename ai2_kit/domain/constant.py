@@ -137,11 +137,12 @@ variable LAMBDA_i equal 1-v_LAMBDA_f
 
 pair_style  hybrid/overlay &
             $$PAIR_STYLE_EXT &
-            deepmd $$DP_MODELS_0 type_order $$DP_FEP_INI_TYPE_ORDER &
-            deepmd $$DP_MODELS_0 type_order $$DP_FEP_FIN_TYPE_ORDER
+            deepmd $$DP_MODELS_0 &
+            deepmd $$DP_MODELS_0
 $$PAIR_COEFF_EXT
-pair_coeff  * * deepmd 1 *
-pair_coeff  * * deepmd 2 *
+pair_coeff  * * deepmd 1 $FEP_INI_SPECORDER
+pair_coeff  * * deepmd 2 $FEP_FIN_SPECORDER
+
 
 fix PES_Sampling all adapt 0 &
     pair deepmd:1 scale * * v_LAMBDA_f &
@@ -158,8 +159,8 @@ read_data {in_data}
 $$MASS_MAP_BASE
 $$POST_READ_DATA
 
-pair_style deepmd $$DP_MODELS out_freq 1 out_file model_devi_{ns}.out type_order $$DP_DEFAULT_TYPE_ORDER
-pair_coeff * *
+pair_style deepmd $$DP_MODELS out_freq 1 out_file model_devi_{ns}.out
+pair_coeff * * $$SPECORDER_BASE
 
 thermo 1
 thermo_style custom step temp pe ke etotal
@@ -179,8 +180,8 @@ shell env > debug.env.txt
 shell cat traj/*.lammpstrj > traj.lammpstrj
 shell cp ${DATA_FILE} ini.data
 clear
-shell $$AI2KIT_CMD tool ase read traj.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER" """ - write ini.lammpstrj --format lammps-dump-text  --type_map """ "$$SPECORDER_BASE" """
-shell $$AI2KIT_CMD tool ase read traj.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER" """ - delete_atoms """ "$$DELETE_ATOMS" """ - write fin.lammpstrj --format lammps-dump-text --type_map """ "$$SPECORDER_BASE" """
+shell $$AI2KIT_CMD tool ase read traj.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - write ini.lammpstrj --format lammps-dump-text  --type_map """ "$$SPECORDER_BASE" """
+shell $$AI2KIT_CMD tool ase read traj.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - delete_atoms """ "$$DELETE_ATOMS" """ - write fin.lammpstrj --format lammps-dump-text --type_map """ "$$SPECORDER_BASE_LIST" """
 shell $$AI2KIT_CMD tool ase read ini.data --format lammps-data --style "atomic" - delete_atoms """ "$$DELETE_ATOMS" """ - write fin.data --format lammps-data
 ''',
     _get_fep_rerun_setting('ini', 'ini.data', 'ini.lammpstrj'),

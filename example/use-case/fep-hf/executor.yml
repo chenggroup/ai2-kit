@@ -42,7 +42,7 @@ executors:
             setup: |
               set -e
               module load miniconda/3
-              source activate base /data/share/apps/deepmd/2.2.5-cpu
+              source activate /data/share/apps/deepmd/2.2.5-cpu
 
               export OMP_NUM_THREADS=1
               export TF_INTRA_OP_PARALLELISM_THREADS=1

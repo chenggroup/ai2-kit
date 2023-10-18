@@ -39,7 +39,8 @@ class CllLammpsInputConfig(BaseModel):
 
     explore_vars: Mapping[str, List[Any]]
     """
-    Variants to be explored.
+    Variants to be explore by full combination or n_wise combination.
+
     Variables defined here will become **LAMMPS variables**.
     If multiple value has been set for a variable,
     the cartesian product will be used to generate the combination.
@@ -48,10 +49,24 @@ class CllLammpsInputConfig(BaseModel):
     ```yaml
     TEMP: [330, 430, 530]  # Can be a scalar, e.g. 330
     PRES: 1                # Can be a vector, e.g. [1, 2, 3]
-    LAMBDA_f: [0.0, 0.25, 0.5, 0.75, 1.0]
     ```
     Then you can reference them in the LAMMPS input template as ${TEMP}, ${LAMBDA_f}, ${N_STEPS}, etc.
     """
+
+    broadcast_vars: Mapping[str, Any] = dict()
+    """
+    Variants to be explore by broadcast.
+
+    Variables defined here won't join the combination,
+    but will be broadcasted to all combinations.
+
+    This can be used to avoid combination explosion.
+
+    ```yaml
+    LAMBDA_f: [0.0, 0.25, 0.5, 0.75, 1.0]
+    ```
+    """
+
     preset_template: Optional[str] = None
     """
     Name of the preset template.
@@ -80,7 +95,6 @@ class CllLammpsInputConfig(BaseModel):
     timestep: float = 0.0005
     sample_freq: int = 100
     mode: Literal['default', 'fep'] = 'default'
-
 
     type_alias: Mapping[str, List[str]] = dict()
     '''
@@ -175,6 +189,7 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
 
     tasks_dir, task_dirs = executor.run_python_fn(make_lammps_task_dirs)(
         combination_vars=input.config.explore_vars,
+        broadcast_vars=input.config.broadcast_vars,
         data_files=[a.to_dict() for a in data_files],
         dp_models={k: [m.url for m in v] for k, v in input.dp_models.items()},
         n_steps=input.config.nsteps,
@@ -249,6 +264,7 @@ def __export_remote_functions():
         delimiter = '$$'
 
     def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
+                              broadcast_vars: Mapping[str, Sequence[Any]],
                               data_files: List[ArtifactDict],
                               dp_models: Mapping[str, List[str]],
                               n_steps: int,
@@ -296,6 +312,18 @@ def __export_remote_functions():
         else:
             logger.info('using full combination')
             combinations = itertools.product(*combination_values)
+
+        combinations = list(map(list, combinations))
+
+        # broadcast vars to all combinations
+        for k in broadcast_vars.keys():
+            # TODO: moving this check to pydatnic validator
+            assert k not in combination_fields, f'broadcast_vars {k} is already in explore_vars'
+
+        combination_fields.extend(broadcast_vars.keys())
+        for i, combination in enumerate(combinations):
+            for _vars in broadcast_vars.values():
+                combination.append(_vars[i % len(_vars)])
 
         # generate tasks input
         task_dirs = []

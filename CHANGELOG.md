@@ -1,4 +1,8 @@
 # Change Logs
+## v0.9.4
+* refactor: deprecate `type_order` for deepmd >= 2.2.4, more detail please check [here](https://github.com/deepmodeling/deepmd-kit/pull/2732)
+* fix: HPC executor resubmit error
+
 ## v0.9.3
 * fix: asap selector
 * fix: doc typo

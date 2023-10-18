@@ -330,7 +330,6 @@ def __export_remote_functions():
                 for t in alias:
                     if 'ghost' in t:  # atom type with 'ghost' in its name is considered as ghost atom type
                         ghost_loc.append(DP_GHOST)
-
                     ext_type_map.append(t)
                     ext_type_map_to_origin.append(origin_type)
                     ext_mass_map.append(type_to_mass[origin_type])
@@ -340,22 +339,28 @@ def __export_remote_functions():
             # then the specorder should be [H, O, O, O, H, H]
             specorder = type_map + ext_type_map_to_origin
 
-            # *_type_order is use to remap the lammps atom type to dp atom type
-            # For example, if the full_type_map is     [H, O, O_1, O_2, H_1, H_2],
-            # then the fep_ini_type_order should be    [0, 1, 1  , 1,   0  , 0]
-            fep_ini_type_order = [ type_map.index(t) for t in specorder]
-            # fep_fin_type_order is the same as fep_ini_type_order, except that the ghost atom type should be len(type_map)
-            fep_fin_type_order = fep_ini_type_order.copy()
+            # Since deepmd 2.2.4 its lammps module support specify type map via pair coeff,
+            # So we don't need to use the type order hack any more.
+            # ref: https://github.com/deepmodeling/deepmd-kit/pull/2732
+            fep_fin_specorder = specorder.copy()
             for loc in ghost_loc:
-                fep_fin_type_order[loc] = DP_GHOST
+                fep_fin_specorder[loc] = 'NULL'
 
-            template_vars['SPECORDER'] = specorder  # type: ignore
-            template_vars['SPECORDER_BASE'] = type_map  # type: ignore
+            # specorder in the format of H O H NULL, for lammps pair coeff input
+            template_vars['SPECORDER'] = ' '.join(specorder)
+            template_vars['SPECORDER_BASE'] = ' '.join(type_map)
+            template_vars['FEP_INI_SPECORDER'] = template_vars['SPECORDER']
+            template_vars['FEP_FIN_SPECORDER'] = ' '.join(fep_fin_specorder)
 
-            template_vars['DP_DEFAULT_TYPE_ORDER'] = ' '.join(map(str, range(len(type_map))))
-            template_vars['DP_FEP_INI_TYPE_ORDER'] = ' '.join(map(str, fep_ini_type_order))
-            template_vars['DP_FEP_FIN_TYPE_ORDER'] = ' '.join(map(str, fep_fin_type_order))
+            # specorder in the format of ['H', 'O', 'H', 'NULL'], for ai2-iit command line input
+            template_vars['SPECORDER_LIST'] = str(specorder)
+            template_vars['SPECORDER_BASE_LIST'] = str(type_map)
+            template_vars['FEP_INI_SPECORDER_LIST'] = template_vars['SPECORDER_LIST']
+            template_vars['FEP_FIN_SPECORDER_LIST'] = str(fep_fin_specorder)
 
+            # mass map in the form of
+            # mass ${H} 1.007
+            # mass ${O} 15.999
             template_vars['MASS_MAP_FULL'] = _get_masses(type_map + ext_type_map, mass_map + ext_mass_map)
             template_vars['MASS_MAP'] =  template_vars['MASS_MAP_FULL']
             template_vars['MASS_MAP_BASE'] = _get_masses(type_map, mass_map)

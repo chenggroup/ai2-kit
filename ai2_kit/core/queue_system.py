@@ -75,6 +75,7 @@ class BaseQueueSystem(ABC):
                cwd: str,
                name: Optional[str] = None,
                checkpoint_key: Optional[str] = None,
+               success_indicator: Optional[str] = None,
                ):
 
         # use hash instead of uuid to ensure idempotence
@@ -83,7 +84,8 @@ class BaseQueueSystem(ABC):
         quoted_cwd = shlex.quote(cwd)
 
         # a placeholder file that will be created when the script end without error
-        success_indicator = name + '.success'
+        if success_indicator is None:
+            success_indicator = name + '.success'
         running_indicator = name + '.running'
 
         # TODO: maybe there are better way to inject running indicator

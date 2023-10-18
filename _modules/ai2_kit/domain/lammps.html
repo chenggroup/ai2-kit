@@ -413,7 +413,8 @@ document.write(`
 
     <span class="n">explore_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Variants to be explored.</span>
+<span class="sd">    Variants to be explore by full combination or n_wise combination.</span>
+
 <span class="sd">    Variables defined here will become **LAMMPS variables**.</span>
 <span class="sd">    If multiple value has been set for a variable,</span>
 <span class="sd">    the cartesian product will be used to generate the combination.</span>
@@ -422,10 +423,24 @@ document.write(`
 <span class="sd">    ```yaml</span>
 <span class="sd">    TEMP: [330, 430, 530]  # Can be a scalar, e.g. 330</span>
 <span class="sd">    PRES: 1                # Can be a vector, e.g. [1, 2, 3]</span>
-<span class="sd">    LAMBDA_f: [0.0, 0.25, 0.5, 0.75, 1.0]</span>
 <span class="sd">    ```</span>
 <span class="sd">    Then you can reference them in the LAMMPS input template as ${TEMP}, ${LAMBDA_f}, ${N_STEPS}, etc.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">broadcast_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Variants to be explore by broadcast.</span>
+
+<span class="sd">    Variables defined here won&#39;t join the combination,</span>
+<span class="sd">    but will be broadcasted to all combinations.</span>
+
+<span class="sd">    This can be used to avoid combination explosion.</span>
+
+<span class="sd">    ```yaml</span>
+<span class="sd">    LAMBDA_f: [0.0, 0.25, 0.5, 0.75, 1.0]</span>
+<span class="sd">    ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">preset_template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Name of the preset template.</span>
@@ -454,7 +469,6 @@ document.write(`
     <span class="n">timestep</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005</span>
     <span class="n">sample_freq</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
     <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="s1">&#39;fep&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
-
 
     <span class="n">type_alias</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
@@ -549,6 +563,7 @@ document.write(`
 
     <span class="n">tasks_dir</span><span class="p">,</span> <span class="n">task_dirs</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">make_lammps_task_dirs</span><span class="p">)(</span>
         <span class="n">combination_vars</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">explore_vars</span><span class="p">,</span>
+        <span class="n">broadcast_vars</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">broadcast_vars</span><span class="p">,</span>
         <span class="n">data_files</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">data_files</span><span class="p">],</span>
         <span class="n">dp_models</span><span class="o">=</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">url</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">dp_models</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
         <span class="n">n_steps</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">nsteps</span><span class="p">,</span>
@@ -623,6 +638,7 @@ document.write(`
         <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;$$&#39;</span>
 
     <span class="k">def</span> <span class="nf">make_lammps_task_dirs</span><span class="p">(</span><span class="n">combination_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span>
+                              <span class="n">broadcast_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span>
                               <span class="n">data_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
                               <span class="n">dp_models</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
                               <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -670,6 +686,18 @@ document.write(`
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;using full combination&#39;</span><span class="p">)</span>
             <span class="n">combinations</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">combination_values</span><span class="p">)</span>
+
+        <span class="n">combinations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">combinations</span><span class="p">))</span>
+
+        <span class="c1"># broadcast vars to all combinations</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">broadcast_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># TODO: moving this check to pydatnic validator</span>
+            <span class="k">assert</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">combination_fields</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;broadcast_vars </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> is already in explore_vars&#39;</span>
+
+        <span class="n">combination_fields</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">broadcast_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">combination</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">combinations</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">_vars</span> <span class="ow">in</span> <span class="n">broadcast_vars</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">combination</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_vars</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">_vars</span><span class="p">)])</span>
 
         <span class="c1"># generate tasks input</span>
         <span class="n">task_dirs</span> <span class="o">=</span> <span class="p">[]</span>

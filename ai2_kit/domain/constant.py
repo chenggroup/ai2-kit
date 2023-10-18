@@ -140,8 +140,8 @@ pair_style  hybrid/overlay &
             deepmd $$DP_MODELS_0 &
             deepmd $$DP_MODELS_0
 $$PAIR_COEFF_EXT
-pair_coeff  * * deepmd 1 $FEP_INI_SPECORDER
-pair_coeff  * * deepmd 2 $FEP_FIN_SPECORDER
+pair_coeff  * * deepmd 1 $$FEP_INI_SPECORDER
+pair_coeff  * * deepmd 2 $$FEP_FIN_SPECORDER
 
 
 fix PES_Sampling all adapt 0 &

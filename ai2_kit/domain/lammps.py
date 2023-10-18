@@ -356,7 +356,7 @@ def __export_remote_functions():
             template_vars['SPECORDER_LIST'] = str(specorder)
             template_vars['SPECORDER_BASE_LIST'] = str(type_map)
             template_vars['FEP_INI_SPECORDER_LIST'] = template_vars['SPECORDER_LIST']
-            template_vars['FEP_FIN_SPECORDER'] = str(fep_fin_specorder)
+            template_vars['FEP_FIN_SPECORDER_LIST'] = str(fep_fin_specorder)
 
             # mass map in the form of
             # mass ${H} 1.007

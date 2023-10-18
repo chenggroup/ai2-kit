@@ -1,5 +1,4 @@
 artifacts:
-
   train-data:
     url: /data/home/whxu/data/FEP-HF/train
     includes: '*'

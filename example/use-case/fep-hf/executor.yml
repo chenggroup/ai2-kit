@@ -2,7 +2,6 @@ executors:
   chenglab:
     ssh:
       host: localhost
-
     queue_system:
       slurm: {}
 
@@ -29,23 +28,6 @@ executors:
               set +e
 
       explore:
-        lasp:
-          lasp_cmd: lasp
-          concurrency: 1
-          script_template:
-            header: |
-              #SBATCH -N 1
-              #SBATCH --ntasks-per-node=4
-              #SBATCH --job-name=lasp
-              #SBATCH --partition=gpu3
-              #SBATCH --gres=gpu:1
-              #SBATCH --mem=16G
-            setup: |
-              set -e
-              module load lasphub/3.4.5
-              module load deepmd/2.1
-              set +e
-
         lammps:
           lammps_cmd: lmp
           concurrency: 1

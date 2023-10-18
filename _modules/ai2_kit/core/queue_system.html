@@ -449,6 +449,7 @@ document.write(`
                <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                <span class="n">checkpoint_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">success_indicator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                <span class="p">):</span>
 
         <span class="c1"># use hash instead of uuid to ensure idempotence</span>
@@ -457,7 +458,8 @@ document.write(`
         <span class="n">quoted_cwd</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
 
         <span class="c1"># a placeholder file that will be created when the script end without error</span>
-        <span class="n">success_indicator</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.success&#39;</span>
+        <span class="k">if</span> <span class="n">success_indicator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">success_indicator</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.success&#39;</span>
         <span class="n">running_indicator</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.running&#39;</span>
 
         <span class="c1"># TODO: maybe there are better way to inject running indicator</span>

@@ -704,7 +704,6 @@ document.write(`
                 <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">alias</span><span class="p">:</span>
                     <span class="k">if</span> <span class="s1">&#39;ghost&#39;</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>  <span class="c1"># atom type with &#39;ghost&#39; in its name is considered as ghost atom type</span>
                         <span class="n">ghost_loc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DP_GHOST</span><span class="p">)</span>
-
                     <span class="n">ext_type_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
                     <span class="n">ext_type_map_to_origin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">origin_type</span><span class="p">)</span>
                     <span class="n">ext_mass_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">type_to_mass</span><span class="p">[</span><span class="n">origin_type</span><span class="p">])</span>
@@ -714,22 +713,28 @@ document.write(`
             <span class="c1"># then the specorder should be [H, O, O, O, H, H]</span>
             <span class="n">specorder</span> <span class="o">=</span> <span class="n">type_map</span> <span class="o">+</span> <span class="n">ext_type_map_to_origin</span>
 
-            <span class="c1"># *_type_order is use to remap the lammps atom type to dp atom type</span>
-            <span class="c1"># For example, if the full_type_map is     [H, O, O_1, O_2, H_1, H_2],</span>
-            <span class="c1"># then the fep_ini_type_order should be    [0, 1, 1  , 1,   0  , 0]</span>
-            <span class="n">fep_ini_type_order</span> <span class="o">=</span> <span class="p">[</span> <span class="n">type_map</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">specorder</span><span class="p">]</span>
-            <span class="c1"># fep_fin_type_order is the same as fep_ini_type_order, except that the ghost atom type should be len(type_map)</span>
-            <span class="n">fep_fin_type_order</span> <span class="o">=</span> <span class="n">fep_ini_type_order</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="c1"># Since deepmd 2.2.4 its lammps module support specify type map via pair coeff,</span>
+            <span class="c1"># So we don&#39;t need to use the type order hack any more.</span>
+            <span class="c1"># ref: https://github.com/deepmodeling/deepmd-kit/pull/2732</span>
+            <span class="n">fep_fin_specorder</span> <span class="o">=</span> <span class="n">specorder</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">ghost_loc</span><span class="p">:</span>
-                <span class="n">fep_fin_type_order</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">=</span> <span class="n">DP_GHOST</span>
+                <span class="n">fep_fin_specorder</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;NULL&#39;</span>
 
-            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SPECORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">specorder</span>  <span class="c1"># type: ignore</span>
-            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SPECORDER_BASE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">type_map</span>  <span class="c1"># type: ignore</span>
+            <span class="c1"># specorder in the format of H O H NULL, for lammps pair coeff input</span>
+            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SPECORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">specorder</span><span class="p">)</span>
+            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SPECORDER_BASE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">type_map</span><span class="p">)</span>
+            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;FEP_INI_SPECORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SPECORDER&#39;</span><span class="p">]</span>
+            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;FEP_FIN_SPECORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fep_fin_specorder</span><span class="p">)</span>
 
-            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;DP_DEFAULT_TYPE_ORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">type_map</span><span class="p">))))</span>
-            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;DP_FEP_INI_TYPE_ORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">fep_ini_type_order</span><span class="p">))</span>
-            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;DP_FEP_FIN_TYPE_ORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">fep_fin_type_order</span><span class="p">))</span>
+            <span class="c1"># specorder in the format of [&#39;H&#39;, &#39;O&#39;, &#39;H&#39;, &#39;NULL&#39;], for ai2-iit command line input</span>
+            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SPECORDER_LIST&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">specorder</span><span class="p">)</span>
+            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SPECORDER_BASE_LIST&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">type_map</span><span class="p">)</span>
+            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;FEP_INI_SPECORDER_LIST&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SPECORDER_LIST&#39;</span><span class="p">]</span>
+            <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;FEP_FIN_SPECORDER_LIST&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fep_fin_specorder</span><span class="p">)</span>
 
+            <span class="c1"># mass map in the form of</span>
+            <span class="c1"># mass ${H} 1.007</span>
+            <span class="c1"># mass ${O} 15.999</span>
             <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;MASS_MAP_FULL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_masses</span><span class="p">(</span><span class="n">type_map</span> <span class="o">+</span> <span class="n">ext_type_map</span><span class="p">,</span> <span class="n">mass_map</span> <span class="o">+</span> <span class="n">ext_mass_map</span><span class="p">)</span>
             <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;MASS_MAP&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;MASS_MAP_FULL&#39;</span><span class="p">]</span>
             <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;MASS_MAP_BASE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_masses</span><span class="p">(</span><span class="n">type_map</span><span class="p">,</span> <span class="n">mass_map</span><span class="p">)</span>

@@ -1,4 +1,7 @@
 # Change Logs
+## v0.9.5
+* feat: support `broadcast_vars` in explore step, for more detail please check [here](./example/config/cll-mlp-training/explore-lammps.yml)
+
 ## v0.9.4
 * refactor: deprecate `type_order` for deepmd >= 2.2.4, more detail please check [here](https://github.com/deepmodeling/deepmd-kit/pull/2732)
 * fix: HPC executor resubmit error

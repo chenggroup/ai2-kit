@@ -1,0 +1,87 @@
+artifacts:
+
+  train-data:
+    url: /data/home/whxu/data/FEP-HF/train
+    includes: '*'
+
+  explore-data:
+    url: /data/home/whxu/data/FEP-HF/explore
+    includes: '*.xyz'
+
+    attrs:
+      # fep-ini and fep-fin must be defined in the FEP mode
+      fep-ini:
+        cp2k:
+          input_template: !load_text cp2k-ini.inp
+      fep-fin:
+        cp2k:
+          input_template: !load_text cp2k-fin.inp
+
+workflow:
+  general:
+    type_map: [ O, H, F]
+    mass_map: [ 15.999, 1.0080, 18.9984 ]
+    max_iters: 1
+
+  label:
+    cp2k:
+      limit: 10
+
+  train:
+    deepmd:
+      model_num: 4
+      init_dataset: [ train-data ]
+      input_template: !load_yaml deepmd.json
+
+  explore:
+    lammps:
+      mode: fep
+      preset_template: fep
+
+      timestep: 0.0005
+      sample_freq: 100
+      nsteps: 1000
+      ensemble: nvt
+
+      system_files: [ explore-data ]
+      explore_vars:
+        TEMP: [ 473, 573, 673 ]
+        PRES: [1]
+        LAMBDA_f: [ 0.0, 0.25, 0.5, 0.75, 1.0]
+
+      type_alias:
+        H: [ H_ghost ]
+
+      template_vars:
+         SET_ATOM_TYPE: |
+            set atom 162 type ${H_ghost}
+
+         DELETE_ATOMS: [ 162 ]
+
+         # PAIR_STYLE_EXT:
+         # PAIR_COEFF_EXT:
+
+         POST_SIMULATION: |
+            fix  bondres all restrain &
+                 bond    163  164 ${K_Bonds} ${K_Bonds} 1.0 1.0
+
+         EXTRA_VARS: |
+            variable K_Bonds equal 0.972*5
+            variable K_Angle equal 1.36057*v_LAMBDA_f
+
+         POST_INIT: |
+            atom_modify map yes
+            neighbor 1.0 bin
+            box      tilt large
+
+         POST_READ_DATA: |
+            change_box all triclinic
+
+  select:
+    model_devi:
+        f_trust_lo: 0.12
+        f_trust_hi: 0.30
+
+  update:
+    walkthrough:
+      table: []

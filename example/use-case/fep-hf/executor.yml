@@ -1,0 +1,86 @@
+executors:
+  chenglab:
+    ssh:
+      host: localhost
+
+    queue_system:
+      slurm: {}
+
+    work_dir: /data/home/whxu/ai2-kit/workdir/FEP-HF/
+    python_cmd: /data/whxu/conda/env/py39/bin/python
+
+    context:
+      train:
+        deepmd:
+          script_template:
+            header: |
+              #SBATCH -N 1
+              #SBATCH --ntasks-per-node=4
+              #SBATCH --job-name=deepmd
+              #SBATCH --partition=gpu3
+              #SBATCH --gres=gpu:1
+              #SBATCH --mem=8G
+            setup: |
+              set -e
+              module load deepmd/2.1
+              export OMP_NUM_THREADS=1
+              export TF_INTRA_OP_PARALLELISM_THREADS=1
+              export TF_INTER_OP_PARALLELISM_THREADS=1
+              set +e
+
+      explore:
+        lasp:
+          lasp_cmd: lasp
+          concurrency: 1
+          script_template:
+            header: |
+              #SBATCH -N 1
+              #SBATCH --ntasks-per-node=4
+              #SBATCH --job-name=lasp
+              #SBATCH --partition=gpu3
+              #SBATCH --gres=gpu:1
+              #SBATCH --mem=16G
+            setup: |
+              set -e
+              module load lasphub/3.4.5
+              module load deepmd/2.1
+              set +e
+
+        lammps:
+          lammps_cmd: lmp
+          concurrency: 1
+          script_template:
+            header: |
+              #SBATCH -N 1
+              #SBATCH --ntasks-per-node=4
+              #SBATCH --job-name=lammps
+              #SBATCH --partition=gpu3
+              #SBATCH --gres=gpu:1
+              #SBATCH --mem=24G
+            setup: |
+              set -e
+              module load miniconda/3
+              source activate base /data/share/apps/deepmd/2.2.5-cpu
+
+              export OMP_NUM_THREADS=1
+              export TF_INTRA_OP_PARALLELISM_THREADS=1
+              export TF_INTER_OP_PARALLELISM_THREADS=1
+              set +e
+
+      label:
+        cp2k:
+          cp2k_cmd: mpiexec.hydra -env I_MPI_EXTRA_FILESYSTEM on -env I_MPI_EXTRA_FILESYSTEM_LIST gpfs cp2k.popt
+          concurrency: 1
+          script_template:
+            header: |
+              #SBATCH -N 1
+              #SBATCH --ntasks-per-node=28
+              #SBATCH -t 12:00:00
+              #SBATCH --job-name=cp2k
+              #SBATCH --partition=c52-medium
+            setup: |
+              set -e
+              module load intel/17.5.239 mpi/intel/2017.5.239
+              module load gcc/5.5.0
+              module load cp2k/7.1
+              set +e

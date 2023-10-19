@@ -1,4 +1,7 @@
 # Change Logs
+## v0.9.6
+* fix: squeue options
+
 ## v0.9.5
 * feat: support `broadcast_vars` in explore step, for more detail please check [here](./example/config/cll-mlp-training/explore-lammps.yml)
 

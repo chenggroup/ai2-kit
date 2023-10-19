@@ -213,7 +213,7 @@ class Slurm(BaseQueueSystem):
         if self._last_states is not None and (current_ts - self._last_update_at) < self.config.polling_interval:
             return self._last_states
         # call squeue to get all states
-        cmd = f"{self.config.squeue_bin} --noheader --format='%i %t' --me"
+        cmd = f"{self.config.squeue_bin} --noheader --format='%i %t' -u $USER"
         try:
             r = self.connector.run(cmd, hide=True)
         except invoke.exceptions.UnexpectedExit as e:

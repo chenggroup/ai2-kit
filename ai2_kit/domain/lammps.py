@@ -116,9 +116,6 @@ class CllLammpsInputConfig(BaseModel):
     def validate_explore_variants(cls, value):
         if not isinstance(value, dict):
             raise ValueError('explore_vars must be a dict')
-        for k in ['TEMP', 'PRES']:
-            if k not in value:
-                raise ValueError(f'{k} must be set in explore_variants')
         # override default values
         value = {
             'TAU_T': 0.1,

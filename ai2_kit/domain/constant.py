@@ -180,7 +180,7 @@ shell env > debug.env.txt
 shell cat traj/*.lammpstrj > traj.lammpstrj
 shell cp ${DATA_FILE} ini.data
 clear
-shell $$AI2KIT_CMD tool ase read traj.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - write ini.lammpstrj --format lammps-dump-text  --type_map """ "$$SPECORDER_BASE" """
+shell $$AI2KIT_CMD tool ase read traj.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - write ini.lammpstrj --format lammps-dump-text  --type_map """ "$$SPECORDER_BASE_LIST" """
 shell $$AI2KIT_CMD tool ase read traj.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - delete_atoms """ "$$DELETE_ATOMS" """ - write fin.lammpstrj --format lammps-dump-text --type_map """ "$$SPECORDER_BASE_LIST" """
 shell $$AI2KIT_CMD tool ase read ini.data --format lammps-data --style "atomic" - delete_atoms """ "$$DELETE_ATOMS" """ - write fin.data --format lammps-data
 ''',

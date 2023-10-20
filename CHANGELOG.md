@@ -1,4 +1,7 @@
 # Change Logs
+## v0.9.7
+* fix: fep lammps template
+
 ## v0.9.6
 * fix: squeue options
 

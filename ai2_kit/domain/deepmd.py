@@ -69,6 +69,15 @@ class CllDeepmdInputConfig(BaseModel):
     The name fixture is used as the concept of fixture in pytest.
     """
 
+    group_by_ancestor: bool = True
+    """
+    Grouping dataset by ancestor or not.
+    If this is enabled, then the dataset will be grouped by ancestor.
+    Otherwise, the dataset will be grouped by formula.
+
+    Set this to false when you have multiple structures with the same ancestor.
+    """
+
 
 class CllDeepmdContextConfig(BaseModel):
     script_template: BashTemplate
@@ -81,10 +90,6 @@ class CllDeepmdInput:
     type_map: List[str]
     old_dataset: List[Artifact]  # training data used by previous iteration
     new_dataset: List[Artifact]  # training data used by current iteration
-
-    def update_training_dataset(self, dataset: List[Artifact]):
-        self.old_dataset += self.new_dataset
-        self.new_dataset = dataset
 
 
 @dataclass
@@ -136,6 +141,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
         type_map=input.type_map,
         isolate_outliers=input.config.isolate_outliers,
         outlier_f_cutoff=input.config.outlier_f_cutoff,
+        group_by_ancestor=input.config.group_by_ancestor,
     )
 
     input_dataset += [ Artifact.of(**a) for a in new_dataset]
@@ -269,7 +275,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
 
     logger.info(f'All models are trained, output dirs: {output_dirs}')
     return GenericDeepmdOutput(
-        dataset=input_dataset,
+        dataset=input_dataset.copy(),
         models=[Artifact.of(
             url=os.path.join(url, DP_FROZEN_MODEL),
             format=DataFormat.DEEPMD_MODEL,
@@ -293,6 +299,7 @@ def __export_remote_functions():
         isolate_outliers: bool,
         outlier_f_cutoff: float,
         type_map: List[str],
+        group_by_ancestor: bool = True,
     ):
         dataset_collection: List[Tuple[ArtifactDict, dpdata.LabeledSystem]] = []
         outlier_collection: List[Tuple[ArtifactDict, dpdata.LabeledSystem]] = []
@@ -315,13 +322,41 @@ def __export_remote_functions():
             else:
                 dataset_collection.append((raw_data, dp_system))
 
+        _write_dp_dataset = _write_dp_dataset_by_ancestor if group_by_ancestor else _write_dp_dataset_by_formula
+
         dataset_dirs = _write_dp_dataset(dp_system_list=dataset_collection, out_dir=dataset_dir, type_map=type_map)
         outlier_dirs = _write_dp_dataset(dp_system_list=outlier_collection, out_dir=outlier_dir, type_map=type_map)
 
         return dataset_dirs, outlier_dirs
 
 
-    def _write_dp_dataset(dp_system_list: List[Tuple[ArtifactDict, dpdata.LabeledSystem]], out_dir: str, type_map: List[str]):
+    def _write_dp_dataset_by_formula(dp_system_list: List[Tuple[ArtifactDict, dpdata.LabeledSystem]], out_dir: str, type_map: List[str]):
+        """
+        Write dp dataset that grouping by formula
+        Use dpdata.MultipleSystems to merge systems with the same formula
+        Use this when group by ancestor not works for you
+        """
+        if len(dp_system_list) == 0:
+            return []
+        os.makedirs(out_dir, exist_ok=True)
+
+        multi_systems = dpdata.MultiSystems(dp_system_list[0][1])
+        for _, system in dp_system_list[1:]:
+            multi_systems.append(system)
+
+        multi_systems.to_deepmd_npy(out_dir, type_map=type_map)  # type: ignore
+
+        return [ {
+            'url': sys_dir,
+            'format': DataFormat.DEEPMD_NPY,
+            'attrs': {},  # it is meaning less to set attrs in this case
+        } for sys_dir in os.listdir(out_dir)]
+
+
+    def _write_dp_dataset_by_ancestor(dp_system_list: List[Tuple[ArtifactDict, dpdata.LabeledSystem]], out_dir: str, type_map: List[str]):
+        """
+        write dp dataset that grouping by ancestor
+        """
         output_dirs: List[ArtifactDict] = []
         for key, dp_system_group in groupby(dp_system_list, key=lambda x: x[0]['attrs']['ancestor']):
             dp_system_group = list(dp_system_group)

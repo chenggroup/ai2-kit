@@ -441,6 +441,15 @@ document.write(`
 <span class="sd">    This feature is useful for debugging, or explore more structures without training.</span>
 <span class="sd">    The models should be on the remote executor.</span>
 <span class="sd">    The name fixture is used as the concept of fixture in pytest.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">group_by_formula</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Grouping dataset by formula</span>
+<span class="sd">    If this is enabled, then the dataset will be grouped by formula.</span>
+<span class="sd">    Otherwise, the dataset will be grouped by ancestor.</span>
+
+<span class="sd">    Set this to True when you have multiple structures with the same ancestor.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
@@ -454,11 +463,7 @@ document.write(`
     <span class="n">config</span><span class="p">:</span> <span class="n">CllDeepmdInputConfig</span>
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">old_dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>  <span class="c1"># training data used by previous iteration</span>
-    <span class="n">new_dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>  <span class="c1"># training data used by current iteration</span>
-
-<div class="viewcode-block" id="CllDeepmdInput.update_training_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInput.update_training_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">update_training_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">old_dataset</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_dataset</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">new_dataset</span> <span class="o">=</span> <span class="n">dataset</span></div></div>
+    <span class="n">new_dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>  <span class="c1"># training data used by current iteration</span></div>
 
 
 <div class="viewcode-block" id="CllDeepmdContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdContext">[docs]</a><span class="nd">@dataclass</span>
@@ -510,6 +515,7 @@ document.write(`
         <span class="n">type_map</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span>
         <span class="n">isolate_outliers</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">isolate_outliers</span><span class="p">,</span>
         <span class="n">outlier_f_cutoff</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">outlier_f_cutoff</span><span class="p">,</span>
+        <span class="n">group_by_formula</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">group_by_formula</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">input_dataset</span> <span class="o">+=</span> <span class="p">[</span> <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">new_dataset</span><span class="p">]</span>
@@ -643,7 +649,7 @@ document.write(`
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;All models are trained, output dirs: </span><span class="si">{</span><span class="n">output_dirs</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">GenericDeepmdOutput</span><span class="p">(</span>
-        <span class="n">dataset</span><span class="o">=</span><span class="n">input_dataset</span><span class="p">,</span>
+        <span class="n">dataset</span><span class="o">=</span><span class="n">input_dataset</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
         <span class="n">models</span><span class="o">=</span><span class="p">[</span><span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">DP_FROZEN_MODEL</span><span class="p">),</span>
             <span class="nb">format</span><span class="o">=</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">DEEPMD_MODEL</span><span class="p">,</span>
@@ -667,6 +673,7 @@ document.write(`
         <span class="n">isolate_outliers</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">outlier_f_cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">group_by_formula</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">dataset_collection</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">outlier_collection</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -689,13 +696,41 @@ document.write(`
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">dataset_collection</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">dp_system</span><span class="p">))</span>
 
+        <span class="n">_write_dp_dataset</span> <span class="o">=</span> <span class="n">_write_dp_dataset_by_formula</span> <span class="k">if</span> <span class="n">group_by_formula</span> <span class="k">else</span> <span class="n">_write_dp_dataset_by_ancestor</span>
+
         <span class="n">dataset_dirs</span> <span class="o">=</span> <span class="n">_write_dp_dataset</span><span class="p">(</span><span class="n">dp_system_list</span><span class="o">=</span><span class="n">dataset_collection</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
         <span class="n">outlier_dirs</span> <span class="o">=</span> <span class="n">_write_dp_dataset</span><span class="p">(</span><span class="n">dp_system_list</span><span class="o">=</span><span class="n">outlier_collection</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="n">outlier_dir</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">dataset_dirs</span><span class="p">,</span> <span class="n">outlier_dirs</span>
 
 
-    <span class="k">def</span> <span class="nf">_write_dp_dataset</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]],</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span> <span class="nf">_write_dp_dataset_by_formula</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]],</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write dp dataset that grouping by formula</span>
+<span class="sd">        Use dpdata.MultipleSystems to merge systems with the same formula</span>
+<span class="sd">        Use this when group by ancestor not works for you</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">multi_systems</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">MultiSystems</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">dp_system_list</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">multi_systems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+
+        <span class="n">multi_systems</span><span class="o">.</span><span class="n">to_deepmd_npy</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">return</span> <span class="p">[</span> <span class="p">{</span>
+            <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">),</span>
+            <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">DEEPMD_NPY</span><span class="p">,</span>
+            <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{},</span>  <span class="c1"># it is meaning less to set attrs in this case</span>
+        <span class="p">}</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)]</span>
+
+
+    <span class="k">def</span> <span class="nf">_write_dp_dataset_by_ancestor</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]],</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        write dp dataset that grouping by ancestor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">output_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">dp_system_group</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">]):</span>
             <span class="n">dp_system_group</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dp_system_group</span><span class="p">)</span>

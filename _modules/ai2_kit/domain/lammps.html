@@ -490,9 +490,6 @@ document.write(`
     <span class="k">def</span> <span class="nf">validate_explore_variants</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;explore_vars must be a dict&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;TEMP&#39;</span><span class="p">,</span> <span class="s1">&#39;PRES&#39;</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> must be set in explore_variants&#39;</span><span class="p">)</span>
         <span class="c1"># override default values</span>
         <span class="n">value</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;TAU_T&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>

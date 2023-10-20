@@ -1,4 +1,7 @@
 # Change Logs
+## v0.9.10
+* fix: deepmd data path
+
 ## v0.9.9
 * feat: deepmd option to group data by formula
 * fix: fep lammps template

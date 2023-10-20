@@ -342,8 +342,10 @@ def parse_cp2k_basic_set_potential(fp):
     for line in fp:
         line: str = line.strip()
         if line.startswith('#'):
-            continue
+            continue # skip comment
         tokens = line.split()
+        if 0 == len(tokens):
+            continue  # skip empty line
         if re.match(r'^[A-Z][a-z]*$', tokens[0]):
             parsed.setdefault(tokens[0], []).append(tokens[1])
     return parsed

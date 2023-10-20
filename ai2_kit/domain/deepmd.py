@@ -347,10 +347,10 @@ def __export_remote_functions():
         multi_systems.to_deepmd_npy(out_dir, type_map=type_map)  # type: ignore
 
         return [ {
-            'url': sys_dir,
+            'url': os.path.join(out_dir, fname),
             'format': DataFormat.DEEPMD_NPY,
             'attrs': {},  # it is meaning less to set attrs in this case
-        } for sys_dir in os.listdir(out_dir)]
+        } for fname in os.listdir(out_dir)]
 
 
     def _write_dp_dataset_by_ancestor(dp_system_list: List[Tuple[ArtifactDict, dpdata.LabeledSystem]], out_dir: str, type_map: List[str]):

@@ -1,4 +1,9 @@
 # Change Logs
+## v0.9.8
+* fix: fep lammps template
+* fix: cp2k potential/basic-set parser
+* fix: lammps config validator
+
 ## v0.9.7
 * fix: fep lammps template
 

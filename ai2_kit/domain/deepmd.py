@@ -69,13 +69,13 @@ class CllDeepmdInputConfig(BaseModel):
     The name fixture is used as the concept of fixture in pytest.
     """
 
-    group_by_ancestor: bool = True
+    group_by_formula: bool = False
     """
-    Grouping dataset by ancestor or not.
-    If this is enabled, then the dataset will be grouped by ancestor.
-    Otherwise, the dataset will be grouped by formula.
+    Grouping dataset by formula
+    If this is enabled, then the dataset will be grouped by formula.
+    Otherwise, the dataset will be grouped by ancestor.
 
-    Set this to false when you have multiple structures with the same ancestor.
+    Set this to True when you have multiple structures with the same ancestor.
     """
 
 
@@ -141,7 +141,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
         type_map=input.type_map,
         isolate_outliers=input.config.isolate_outliers,
         outlier_f_cutoff=input.config.outlier_f_cutoff,
-        group_by_ancestor=input.config.group_by_ancestor,
+        group_by_formula=input.config.group_by_formula,
     )
 
     input_dataset += [ Artifact.of(**a) for a in new_dataset]
@@ -299,7 +299,7 @@ def __export_remote_functions():
         isolate_outliers: bool,
         outlier_f_cutoff: float,
         type_map: List[str],
-        group_by_ancestor: bool = True,
+        group_by_formula: bool = False,
     ):
         dataset_collection: List[Tuple[ArtifactDict, dpdata.LabeledSystem]] = []
         outlier_collection: List[Tuple[ArtifactDict, dpdata.LabeledSystem]] = []
@@ -322,7 +322,7 @@ def __export_remote_functions():
             else:
                 dataset_collection.append((raw_data, dp_system))
 
-        _write_dp_dataset = _write_dp_dataset_by_ancestor if group_by_ancestor else _write_dp_dataset_by_formula
+        _write_dp_dataset = _write_dp_dataset_by_formula if group_by_formula else _write_dp_dataset_by_ancestor
 
         dataset_dirs = _write_dp_dataset(dp_system_list=dataset_collection, out_dir=dataset_dir, type_map=type_map)
         outlier_dirs = _write_dp_dataset(dp_system_list=outlier_collection, out_dir=outlier_dir, type_map=type_map)

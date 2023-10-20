@@ -1,4 +1,9 @@
 # Change Logs
+## v0.9.9
+* feat: deepmd option to group data by formula
+* fix: fep lammps template
+* fix: copy dataset in deepmd
+
 ## v0.9.8
 * fix: fep lammps template
 * fix: cp2k potential/basic-set parser

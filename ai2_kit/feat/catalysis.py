@@ -1,5 +1,8 @@
 import ase.io
 import fire
+import numpy as np
+import matplotlib.pyplot as plt
+from typing import Optional
 
 from ai2_kit.core.log import get_logger
 from ai2_kit import res
@@ -349,6 +352,48 @@ def parse_cp2k_basic_set_potential(fp):
         if re.match(r'^[A-Z][a-z]*$', tokens[0]):
             parsed.setdefault(tokens[0], []).append(tokens[1])
     return parsed
+
+
+def inspect_explore_result(lammps_dir: str, save_to: Optional[str]=None):
+    model_devi_file = os.path.join(lammps_dir, 'model_devi.out')
+    colvar_file = os.path.join(lammps_dir, 'COLVAR')
+    lammps_input_file = os.path.join(lammps_dir, 'lammps.input')
+
+    # read TEMP, N_STEPS lammps input file
+    with open(lammps_input_file, 'r') as fp:
+        for line in fp:
+            line = line.strip()
+            if line.startswith('variable'):
+                tokens = line.split()
+                if tokens[1] == 'TEMP':
+                    temp = float(tokens[3])
+
+    # draw colvar
+    colvar = np.loadtxt(colvar_file, skiprows=1)
+    # read column names from the first line of colvar file
+    with open(colvar_file, 'r') as fp:
+        col_names = fp.readline().strip().split()[2:]
+    # x axis is the first column, and y axis is the rest columns
+    fig, axs = plt.subplots(1, 2, figsize=(12, 4))
+    axs[0].set_title(f'COLVAR @ TEMP {temp}')
+    axs[0].set_xlabel(col_names[0])
+    for i, _col in enumerate(col_names[1:], start=1):
+        axs[0].plot(colvar[:, 0], colvar[:, i])
+    axs[0].legend(col_names[1:])
+    axs[0].grid()
+
+    # draw model_devi
+    model_devi = np.loadtxt(model_devi_file, skiprows=1)  # the 4 colum is max_devi_f
+    axs[1].set_title(f'Model Devi at @ TEMP {temp}')
+    axs[1].set_xlabel('step')
+    axs[1].set_ylabel('max_devi_f')
+    axs[1].plot(model_devi[:, 0], model_devi[:, 4])
+    axs[1].grid()
+
+    if save_to is None:
+        plt.show()
+    else:
+        fig.savefig(save_to, dpi=300, bbox_inches='tight')
 
 
 class CmdEntries:

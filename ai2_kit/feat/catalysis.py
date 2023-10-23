@@ -300,8 +300,8 @@ class ConfigBuilder:
 
         template_vars = {
             'run_type': 'MD' if aimd else 'ENERGY_FORCE',
-            'basic_set_file': basic_set_file,
-            'potential_file': potential_file,
+            'basic_set_file': os.path.abspath(basic_set_file),
+            'potential_file': os.path.abspath(potential_file),
             'parameter_file': parameter_file,
             'uks': 'T' if total_ve % 2 else 'F',
             'kinds': kinds,
@@ -375,16 +375,16 @@ def inspect_explore_result(lammps_dir: str, save_to: Optional[str]=None):
         col_names = fp.readline().strip().split()[2:]
     # x axis is the first column, and y axis is the rest columns
     fig, axs = plt.subplots(1, 2, figsize=(12, 4))
-    axs[0].set_title(f'COLVAR @ TEMP {temp}')
-    axs[0].set_xlabel(col_names[0])
-    for i, _col in enumerate(col_names[1:], start=1):
+    axs[0].set_title(f'COLVAR @ TEMP {temp}K')
+    axs[0].set_xlabel(r'$time / s$')
+    for i, _col in enumerate(col_names[1:-1], start=1):
         axs[0].plot(colvar[:, 0], colvar[:, i])
     axs[0].legend(col_names[1:])
     axs[0].grid()
 
     # draw model_devi
     model_devi = np.loadtxt(model_devi_file, skiprows=1)  # the 4 colum is max_devi_f
-    axs[1].set_title(f'Model Devi at @ TEMP {temp}')
+    axs[1].set_title(f'Model Devi at @ TEMP {temp}K')
     axs[1].set_xlabel('step')
     axs[1].set_ylabel('max_devi_f')
     axs[1].plot(model_devi[:, 0], model_devi[:, 4])

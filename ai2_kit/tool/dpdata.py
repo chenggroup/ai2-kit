@@ -36,21 +36,28 @@ class DpdataHelper:
         logger.warn('merge_write is deprecated, use write instead')
         return self.write
 
-    def write(self, out_path: str, fmt='deepmd/npy'):
+    def write(self, out_path: str, fmt='deepmd/npy', merge: bool = True):
         ensure_dir(out_path)
         if len(self._systems) == 0:
             raise ValueError('No data to merge')
 
-        multi_systems = dpdata.MultiSystems(self._systems[0])
+        if merge:
+            systems = dpdata.MultiSystems(self._systems[0])
+        else:
+            if self._label:
+                systems = dpdata.LabeledSystem(self._systems[0])
+            else:
+                systems = dpdata.System(self._systems[0])
+
         for system in self._systems[1:]:
-            multi_systems.append(system)
+            systems.append(system)
 
         if fmt == 'deepmd/npy':
-            multi_systems.to_deepmd_npy(out_path)  # type: ignore
+            systems.to_deepmd_npy(out_path)  # type: ignore
         elif fmt == 'deepmd/raw':
-            multi_systems.to_deepmd_raw(out_path)  # type: ignore
+            systems.to_deepmd_raw(out_path)  # type: ignore
         elif fmt == 'deepmd/hdf5':
-            multi_systems.to_deepmd_hdf5(out_path)  # type: ignore
+            systems.to_deepmd_hdf5(out_path)  # type: ignore
         else:
             raise ValueError(f'Unknown fmt {fmt}')
 

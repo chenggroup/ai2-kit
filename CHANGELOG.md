@@ -1,4 +1,9 @@
 # Change Logs
+## v0.9.11
+* feat: ase tool support `set_by_ref` and `limit` method
+* feat: integrate `jupyter-formily`
+* wip: ai2cat tool and notebook
+
 ## v0.9.10
 * fix: deepmd data path
 

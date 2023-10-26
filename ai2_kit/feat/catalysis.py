@@ -403,12 +403,17 @@ class CmdEntries:
         """
         return ConfigBuilder
 
+
 class UiHelper:
 
     def __init__(self) -> None:
         self.aimd_schema_path = os.path.join(res.DIR_PATH, 'catalysis/gen-cp2k-aimd.formily.json')
         self.aimd_form = None
+        self.aimd_value = None
 
+        self.training_schema_path = os.path.join(res.DIR_PATH, 'catalysis/gen-training.formily.json')
+        self.training_form = None
+        self.training_value = None
 
     def gen_aimd_config(self, cp2k_search_path: str = './', out_dir: str = './'):
         from jupyter_formily import Formily
@@ -430,22 +435,32 @@ class UiHelper:
 
         display(self.aimd_form)
         async def _task():
-            value = await wait_for_change(self.aimd_form, 'value')
+            self.aimd_value = await wait_for_change(self.aimd_form, 'value')
             try:
                 config_builder = ConfigBuilder()
                 print('Start to generate AMID input files...')
-                system_file = value.pop('system_file')
+                system_file = self.aimd_value.pop('system_file')
                 config_builder.load_system(system_file)
-                config_builder.gen_cp2k_input(**value)
+                config_builder.gen_cp2k_input(**self.aimd_value)
                 print('Success!')  # TODO: Send a toast message
             except Exception as e:
                 print('Failed!', e)  # TODO: Send a alert message
-
         asyncio.ensure_future(_task())
 
 
     def gen_training_config(self):
         ...
+
+
+_UI_HELPER = None
+def get_the_ui_helper():
+    """
+    Singleton for UiHelper
+    """
+    global _UI_HELPER  # pylint: disable=global-statement
+    if _UI_HELPER is None:
+        _UI_HELPER = UiHelper()
+    return _UI_HELPER
 
 
 def cli_main():

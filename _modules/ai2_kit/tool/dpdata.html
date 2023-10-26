@@ -411,21 +411,28 @@ document.write(`
         <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;merge_write is deprecated, use write instead&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">write</span>
 
-<div class="viewcode-block" id="DpdataHelper.write"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;deepmd/npy&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="DpdataHelper.write"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;deepmd/npy&#39;</span><span class="p">,</span> <span class="n">merge</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="n">ensure_dir</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No data to merge&#39;</span><span class="p">)</span>
 
-        <span class="n">multi_systems</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">MultiSystems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">merge</span><span class="p">:</span>
+            <span class="n">systems</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">MultiSystems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">:</span>
+                <span class="n">systems</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">systems</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">System</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
         <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="n">multi_systems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+            <span class="n">systems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;deepmd/npy&#39;</span><span class="p">:</span>
-            <span class="n">multi_systems</span><span class="o">.</span><span class="n">to_deepmd_npy</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="n">systems</span><span class="o">.</span><span class="n">to_deepmd_npy</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;deepmd/raw&#39;</span><span class="p">:</span>
-            <span class="n">multi_systems</span><span class="o">.</span><span class="n">to_deepmd_raw</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="n">systems</span><span class="o">.</span><span class="n">to_deepmd_raw</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;deepmd/hdf5&#39;</span><span class="p">:</span>
-            <span class="n">multi_systems</span><span class="o">.</span><span class="n">to_deepmd_hdf5</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="n">systems</span><span class="o">.</span><span class="n">to_deepmd_hdf5</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown fmt </span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 

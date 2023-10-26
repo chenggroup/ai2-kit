@@ -380,12 +380,13 @@ document.write(`
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">merge_dict</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">merge_dict</span><span class="p">,</span> <span class="n">wait_for_change</span>
 <span class="kn">from</span> <span class="nn">ai2_kit</span> <span class="kn">import</span> <span class="n">res</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.domain.cp2k</span> <span class="kn">import</span> <span class="n">dump_coord_n_cell</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Literal</span>
 <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span><span class="p">,</span> <span class="n">Atom</span>
 <span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">Template</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -496,7 +497,6 @@ document.write(`
     <span class="s1">&#39;low&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cutoff&#39;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span> <span class="s1">&#39;rel_cutoff&#39;</span><span class="p">:</span> <span class="mi">50</span> <span class="p">},</span>
 <span class="p">}</span>
 
-
 <div class="viewcode-block" id="ConfigBuilder"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder">[docs]</a><span class="k">class</span> <span class="nc">ConfigBuilder</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -509,7 +509,6 @@ document.write(`
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;atoms is already loaded&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="o">=</span> <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">return</span> <span class="bp">self</span></div>
-
 
 <div class="viewcode-block" id="ConfigBuilder.gen_mlp_training_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_mlp_training_input">[docs]</a>    <span class="k">def</span> <span class="nf">gen_mlp_training_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span><span class="p">,</span>
@@ -773,7 +772,6 @@ document.write(`
 
 
 <div class="viewcode-block" id="CmdEntries"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.CmdEntries">[docs]</a><span class="k">class</span> <span class="nc">CmdEntries</span><span class="p">:</span>
-
 <div class="viewcode-block" id="CmdEntries.build_config"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.CmdEntries.build_config">[docs]</a>    <span class="k">def</span> <span class="nf">build_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Build config file for catalyst</span>
@@ -781,33 +779,63 @@ document.write(`
         <span class="k">return</span> <span class="n">ConfigBuilder</span></div></div>
 
 
-<div class="viewcode-block" id="GenCp2kAimdUi"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.GenCp2kAimdUi">[docs]</a><span class="k">class</span> <span class="nc">GenCp2kAimdUi</span><span class="p">:</span>
+<div class="viewcode-block" id="UiHelper"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.UiHelper">[docs]</a><span class="k">class</span> <span class="nc">UiHelper</span><span class="p">:</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">schema_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">DIR_PATH</span><span class="p">,</span> <span class="s1">&#39;catalysis/gen-cp2k-aimd.formily.json&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">form</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aimd_schema_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">DIR_PATH</span><span class="p">,</span> <span class="s1">&#39;catalysis/gen-cp2k-aimd.formily.json&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aimd_form</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aimd_value</span> <span class="o">=</span> <span class="kc">None</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_schema_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">DIR_PATH</span><span class="p">,</span> <span class="s1">&#39;catalysis/gen-training.formily.json&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_form</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_value</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="GenCp2kAimdUi.open_form"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.GenCp2kAimdUi.open_form">[docs]</a>    <span class="k">def</span> <span class="nf">open_form</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cp2k_search_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;./&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="UiHelper.gen_aimd_config"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.UiHelper.gen_aimd_config">[docs]</a>    <span class="k">def</span> <span class="nf">gen_aimd_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cp2k_search_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;./&#39;</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;./&#39;</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">jupyter_formily</span> <span class="kn">import</span> <span class="n">Formily</span>
         <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schema_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-            <span class="n">schema</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
-        <span class="c1"># patch for FilePicker</span>
-        <span class="n">cp2k_file_picker</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x-component&#39;</span><span class="p">:</span> <span class="s1">&#39;FilePicker&#39;</span><span class="p">,</span> <span class="s1">&#39;x-component-props&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;init_path&#39;</span><span class="p">:</span> <span class="n">cp2k_search_path</span><span class="p">}},</span>
-        <span class="c1"># schema = merge_dict(schema, {&#39;schema&#39;: {&#39;properties&#39;: {</span>
-        <span class="c1">#     &#39;system_file&#39;: cp2k_file_picker,</span>
-        <span class="c1">#     &#39;basic_set_file&#39;: cp2k_file_picker,</span>
-        <span class="c1">#     &#39;potential_file&#39;: cp2k_file_picker,</span>
-        <span class="c1">#     &#39;parameter_file&#39;: cp2k_file_picker,</span>
-        <span class="c1">#     &#39;out_dir&#39;: {&#39;x-component&#39;: &#39;FilePicker&#39;, &#39;x-component-props&#39;: {&#39;init_path&#39;: out_dir}},</span>
-        <span class="c1"># }}}, quiet=True)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">form</span> <span class="o">=</span> <span class="n">Formily</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Config CP2K AIMD&#39;</span><span class="p">})</span>
-        <span class="n">display</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">aimd_form</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aimd_schema_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                <span class="n">schema</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+            <span class="c1"># patch for FilePicker</span>
+            <span class="n">schema</span> <span class="o">=</span> <span class="n">merge_dict</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;schema&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;system_file&#39;</span><span class="p">:</span>    <span class="p">{</span><span class="s1">&#39;x-component&#39;</span><span class="p">:</span> <span class="s1">&#39;FilePicker&#39;</span><span class="p">,</span> <span class="s1">&#39;x-component-props&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;init_path&#39;</span><span class="p">:</span> <span class="n">cp2k_search_path</span><span class="p">}},</span>
+                <span class="s1">&#39;basic_set_file&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;x-component&#39;</span><span class="p">:</span> <span class="s1">&#39;FilePicker&#39;</span><span class="p">,</span> <span class="s1">&#39;x-component-props&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;init_path&#39;</span><span class="p">:</span> <span class="n">cp2k_search_path</span><span class="p">}},</span>
+                <span class="s1">&#39;potential_file&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;x-component&#39;</span><span class="p">:</span> <span class="s1">&#39;FilePicker&#39;</span><span class="p">,</span> <span class="s1">&#39;x-component-props&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;init_path&#39;</span><span class="p">:</span> <span class="n">cp2k_search_path</span><span class="p">}},</span>
+                <span class="s1">&#39;parameter_file&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;x-component&#39;</span><span class="p">:</span> <span class="s1">&#39;FilePicker&#39;</span><span class="p">,</span> <span class="s1">&#39;x-component-props&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;init_path&#39;</span><span class="p">:</span> <span class="n">cp2k_search_path</span><span class="p">}},</span>
+                <span class="s1">&#39;out_dir&#39;</span><span class="p">:</span>        <span class="p">{</span><span class="s1">&#39;x-component&#39;</span><span class="p">:</span> <span class="s1">&#39;FilePicker&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="n">out_dir</span> <span class="p">},</span>
+            <span class="p">}}},</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aimd_form</span> <span class="o">=</span> <span class="n">Formily</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;modal_props&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Config CP2K AIMD&quot;</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;60vw&quot;</span><span class="p">,</span><span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;max-width&quot;</span><span class="p">:</span> <span class="s2">&quot;800px&quot;</span><span class="p">},</span> <span class="s2">&quot;styles&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;max-height&quot;</span><span class="p">:</span> <span class="s2">&quot;70vh&quot;</span><span class="p">,</span> <span class="s2">&quot;overflow-y&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">}}}</span>
+            <span class="p">})</span>
 
-<div class="viewcode-block" id="GenCp2kAimdUi.gen_config"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.GenCp2kAimdUi.gen_config">[docs]</a>    <span class="k">def</span> <span class="nf">gen_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;form is not opened&#39;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div></div>
+        <span class="n">display</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aimd_form</span><span class="p">)</span>
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">_task</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aimd_value</span> <span class="o">=</span> <span class="k">await</span> <span class="n">wait_for_change</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aimd_form</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">config_builder</span> <span class="o">=</span> <span class="n">ConfigBuilder</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Start to generate AMID input files...&#39;</span><span class="p">)</span>
+                <span class="n">system_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aimd_value</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;system_file&#39;</span><span class="p">)</span>
+                <span class="n">config_builder</span><span class="o">.</span><span class="n">load_system</span><span class="p">(</span><span class="n">system_file</span><span class="p">)</span>
+                <span class="n">config_builder</span><span class="o">.</span><span class="n">gen_cp2k_input</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">aimd_value</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Success!&#39;</span><span class="p">)</span>  <span class="c1"># TODO: Send a toast message</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Failed!&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>  <span class="c1"># TODO: Send a alert message</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="n">_task</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="UiHelper.gen_training_config"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.UiHelper.gen_training_config">[docs]</a>    <span class="k">def</span> <span class="nf">gen_training_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span></div></div>
+
+
+<span class="n">_UI_HELPER</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="get_the_ui_helper"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.get_the_ui_helper">[docs]</a><span class="k">def</span> <span class="nf">get_the_ui_helper</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Singleton for UiHelper</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_UI_HELPER</span>  <span class="c1"># pylint: disable=global-statement</span>
+    <span class="k">if</span> <span class="n">_UI_HELPER</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_UI_HELPER</span> <span class="o">=</span> <span class="n">UiHelper</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">_UI_HELPER</span></div>
 
 
 <div class="viewcode-block" id="cli_main"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.cli_main">[docs]</a><span class="k">def</span> <span class="nf">cli_main</span><span class="p">():</span>

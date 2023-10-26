@@ -378,6 +378,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">field</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">zip_longest</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
 
 <span class="kn">import</span> <span class="nn">shortuuid</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
@@ -393,6 +394,19 @@ document.write(`
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">EMPTY</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="wait_for_change"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.wait_for_change">[docs]</a><span class="k">def</span> <span class="nf">wait_for_change</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">attribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wait for attribute change of a Jupyter widget</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">future</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">getvalue</span><span class="p">(</span><span class="n">change</span><span class="p">):</span>
+        <span class="c1"># make the new value available</span>
+        <span class="n">future</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">change</span><span class="o">.</span><span class="n">new</span><span class="p">)</span>
+        <span class="n">widget</span><span class="o">.</span><span class="n">unobserve</span><span class="p">(</span><span class="n">getvalue</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
+    <span class="n">widget</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">getvalue</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">future</span></div>
 
 
 <div class="viewcode-block" id="default_mutable_field"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.default_mutable_field">[docs]</a><span class="k">def</span> <span class="nf">default_mutable_field</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>

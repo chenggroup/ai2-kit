@@ -116,7 +116,7 @@
         "x-designable-id": "di6iprhfh7t",
         "x-index": 4
       },
-      "rn8rfxk5tyj": {
+      "timestep": {
         "type": "number",
         "title": "Timestep ",
         "x-decorator": "FormItem",
@@ -142,7 +142,7 @@
         "description": "CP2K basic set file.",
         "default": "BASIS_MOLOPT"
       },
-      "potential": {
+      "potential_file": {
         "type": "string",
         "title": "Potential File",
         "x-decorator": "FormItem",
@@ -179,6 +179,7 @@
         "x-component-props": {},
         "x-decorator-props": {},
         "name": "out_dir",
+        "default": "./out",
         "x-designable-id": "jjsga9jn8nh",
         "x-index": 9,
         "description": "",

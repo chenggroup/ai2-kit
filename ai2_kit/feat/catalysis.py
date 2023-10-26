@@ -121,7 +121,6 @@ CP2K_ACCURACY_TABLE = {
     'low': {'cutoff': 600, 'rel_cutoff': 50 },
 }
 
-
 class ConfigBuilder:
 
     def __init__(self):
@@ -398,7 +397,6 @@ def inspect_explore_result(lammps_dir: str, save_to: Optional[str]=None):
 
 
 class CmdEntries:
-
     def build_config(self):
         """
         Build config file for catalyst
@@ -411,28 +409,32 @@ class GenCp2kAimdUi:
         self.schema_path = os.path.join(res.DIR_PATH, 'catalysis/gen-cp2k-aimd.formily.json')
         self.form = None
 
-
     def open_form(self, cp2k_search_path: str = './', out_dir: str = './'):
         from jupyter_formily import Formily
         from IPython.display import display
         with open(self.schema_path, 'r') as fp:
             schema = json.load(fp)
-        print(schema)
         # patch for FilePicker
-        cp2k_file_picker = {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-        # schema = merge_dict(schema, {'schema': {'properties': {
-        #     'system_file': cp2k_file_picker,
-        #     'basic_set_file': cp2k_file_picker,
-        #     'potential_file': cp2k_file_picker,
-        #     'parameter_file': cp2k_file_picker,
-        #     'out_dir': {'x-component': 'FilePicker', 'x-component-props': {'init_path': out_dir}},
-        # }}}, quiet=True)
-        self.form = Formily(schema, options={'title': 'Config CP2K AIMD'})
+        schema = merge_dict(schema, {'schema': {'properties': {
+            'system_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+            'basic_set_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+            'potential_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+            'parameter_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+            'out_dir': {'x-component': 'FilePicker', 'x-component-props': {'init_path': out_dir}},
+        }}}, quiet=True)
+        self.form = Formily(schema, options={
+            "modal_props": {"title": "Config CP2K AIMD", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
+        })
         display(self.form)
 
     def gen_config(self):
         assert self.form is not None, 'form is not opened'
-        print(self.form.value)
+        config_builder = ConfigBuilder()
+        value: dict = self.form.value
+        print(value)
+        system_file = value.pop('system_file')
+        config_builder.load_system(system_file)
+        config_builder.gen_cp2k_input(**value)
 
 
 def cli_main():

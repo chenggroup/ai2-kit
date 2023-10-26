@@ -52,6 +52,11 @@ class AseHelper:
         return self
 
 
+    def limit(self, n: int):
+        self._atoms_list = self._atoms_list[:n]
+        return self
+
+
     def delete_atoms(self, id: Union[int, List[int]]):
         ids = [id] if isinstance(id, int) else id
         for atoms in self._atoms_list:

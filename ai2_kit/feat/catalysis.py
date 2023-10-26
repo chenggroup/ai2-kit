@@ -5,12 +5,13 @@ import matplotlib.pyplot as plt
 from typing import Optional
 
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.util import merge_dict
+from ai2_kit.core.util import merge_dict, wait_for_change
 from ai2_kit import res
 from ai2_kit.domain.cp2k import dump_coord_n_cell
 from typing import Optional, Literal
 from ase import Atoms, Atom
 from string import Template
+import asyncio
 import re
 import os
 import json
@@ -403,38 +404,49 @@ class CmdEntries:
         """
         return ConfigBuilder
 
+class UiHelper:
 
-class GenCp2kAimdUi:
     def __init__(self) -> None:
-        self.schema_path = os.path.join(res.DIR_PATH, 'catalysis/gen-cp2k-aimd.formily.json')
-        self.form = None
+        self.aimd_schema_path = os.path.join(res.DIR_PATH, 'catalysis/gen-cp2k-aimd.formily.json')
+        self.aimd_form = None
 
-    def open_form(self, cp2k_search_path: str = './', out_dir: str = './'):
+
+    def gen_aimd_config(self, cp2k_search_path: str = './', out_dir: str = './'):
         from jupyter_formily import Formily
         from IPython.display import display
-        with open(self.schema_path, 'r') as fp:
-            schema = json.load(fp)
-        # patch for FilePicker
-        schema = merge_dict(schema, {'schema': {'properties': {
-            'system_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-            'basic_set_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-            'potential_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-            'parameter_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-            'out_dir': {'x-component': 'FilePicker', 'x-component-props': {'init_path': out_dir}},
-        }}}, quiet=True)
-        self.form = Formily(schema, options={
-            "modal_props": {"title": "Config CP2K AIMD", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
-        })
-        display(self.form)
+        if self.aimd_form is None:
+            with open(self.aimd_schema_path, 'r') as fp:
+                schema = json.load(fp)
+            # patch for FilePicker
+            schema = merge_dict(schema, {'schema': {'properties': {
+                'system_file':    {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                'basic_set_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                'potential_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                'parameter_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                'out_dir':        {'x-component': 'FilePicker', 'x-component-props': {'init_path': out_dir}},
+            }}}, quiet=True)
+            self.aimd_form = Formily(schema, options={
+                "modal_props": {"title": "Config CP2K AIMD", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
+            })
 
-    def gen_config(self):
-        assert self.form is not None, 'form is not opened'
-        config_builder = ConfigBuilder()
-        value: dict = self.form.value
-        print(value)
-        system_file = value.pop('system_file')
-        config_builder.load_system(system_file)
-        config_builder.gen_cp2k_input(**value)
+        display(self.aimd_form)
+        async def _task():
+            value = await wait_for_change(self.aimd_form, 'value')
+            try:
+                config_builder = ConfigBuilder()
+                print('Start to generate AMID input files...')
+                system_file = value.pop('system_file')
+                config_builder.load_system(system_file)
+                config_builder.gen_cp2k_input(**value)
+                print('Success!')  # TODO: Send a toast message
+            except Exception as e:
+                print('Failed!', e)  # TODO: Send a alert message
+
+        asyncio.ensure_future(_task())
+
+
+    def gen_training_config(self):
+        ...
 
 
 def cli_main():

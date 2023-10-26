@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Tuple, List, TypeVar, Union
 from dataclasses import field
 from itertools import zip_longest
+import asyncio
 
 import shortuuid
 import hashlib
@@ -18,6 +19,19 @@ from .log import get_logger
 logger = get_logger(__name__)
 
 EMPTY = object()
+
+
+def wait_for_change(widget, attribute):
+    """
+    Wait for attribute change of a Jupyter widget
+    """
+    future = asyncio.Future()
+    def getvalue(change):
+        # make the new value available
+        future.set_result(change.new)
+        widget.unobserve(getvalue, attribute)
+    widget.observe(getvalue, attribute)
+    return future
 
 
 def default_mutable_field(obj):

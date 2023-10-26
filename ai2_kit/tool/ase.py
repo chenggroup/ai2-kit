@@ -35,6 +35,23 @@ class AseHelper:
             atoms.set_pbc(pbc)
         return self
 
+
+    def set_by_ref(self, ref_file: str, **kwargs):
+        kwargs.setdefault('index', 0)
+        ref_atoms = ase.io.read(ref_file, **kwargs)
+        assert isinstance(ref_atoms, Atoms), 'Only support single frame reference'
+        for atoms in self._atoms_list:
+            try:
+                atoms.set_cell(ref_atoms.get_cell())
+            except ValueError:
+                pass
+            try:
+                atoms.set_pbc(ref_atoms.get_pbc())
+            except ValueError:
+                pass
+        return self
+
+
     def delete_atoms(self, id: Union[int, List[int]]):
         ids = [id] if isinstance(id, int) else id
         for atoms in self._atoms_list:

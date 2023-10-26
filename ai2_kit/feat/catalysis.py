@@ -135,7 +135,6 @@ class ConfigBuilder:
         self._atoms = ase.io.read(file, **kwargs)  # type: ignore
         return self
 
-
     def gen_mlp_training_input(self,
                                out_dir: str = 'out',
                                template_file: str = MLP_TRAINING_TEMPLATE):
@@ -423,7 +422,7 @@ class UiHelper:
                 'basic_set_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
                 'potential_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
                 'parameter_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-                'out_dir':        {'x-component': 'FilePicker', 'x-component-props': {'init_path': out_dir}},
+                'out_dir':        {'x-component': 'FilePicker', 'default': out_dir },
             }}}, quiet=True)
             self.aimd_form = Formily(schema, options={
                 "modal_props": {"title": "Config CP2K AIMD", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}

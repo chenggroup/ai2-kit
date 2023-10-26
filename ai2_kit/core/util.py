@@ -158,7 +158,7 @@ def _yaml_get_path_node(node, constructor):
 def __export_remote_functions():
     """cloudpickle compatible: https://stackoverflow.com/questions/75292769"""
 
-    def merge_dict(lo: dict, ro: dict, path=None, ignore_none=True):
+    def merge_dict(lo: dict, ro: dict, path=None, ignore_none=True, quiet=False):
         """
         Merge two dict, the left dict will be overridden.
         Note: list will be replaced instead of merged.
@@ -171,9 +171,10 @@ def __export_remote_functions():
             if key in lo:
                 current_path = path + [str(key)]
                 if isinstance(lo[key], dict) and isinstance(value, dict):
-                    merge_dict(lo[key], value, path=current_path, ignore_none=ignore_none)
+                    merge_dict(lo[key], value, path=current_path, ignore_none=ignore_none, quiet=quiet)
                 else:
-                    print('.'.join(current_path) + ' has been overridden')
+                    if not quiet:
+                        print('.'.join(current_path) + ' has been overridden')
                     lo[key] = value
             else:
                 lo[key] = value

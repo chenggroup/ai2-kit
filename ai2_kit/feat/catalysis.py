@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from typing import Optional
 
 from ai2_kit.core.log import get_logger
+from ai2_kit.core.util import merge_dict
 from ai2_kit import res
 from ai2_kit.domain.cp2k import dump_coord_n_cell
 from typing import Optional, Literal
@@ -403,6 +404,35 @@ class CmdEntries:
         Build config file for catalyst
         """
         return ConfigBuilder
+
+
+class GenCp2kAimdUi:
+    def __init__(self) -> None:
+        self.schema_path = os.path.join(res.DIR_PATH, 'catalysis/gen-cp2k-aimd.formily.json')
+        self.form = None
+
+
+    def open_form(self, cp2k_search_path: str = './', out_dir: str = './'):
+        from jupyter_formily import Formily
+        from IPython.display import display
+        with open(self.schema_path, 'r') as fp:
+            schema = json.load(fp)
+        print(schema)
+        # patch for FilePicker
+        cp2k_file_picker = {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+        # schema = merge_dict(schema, {'schema': {'properties': {
+        #     'system_file': cp2k_file_picker,
+        #     'basic_set_file': cp2k_file_picker,
+        #     'potential_file': cp2k_file_picker,
+        #     'parameter_file': cp2k_file_picker,
+        #     'out_dir': {'x-component': 'FilePicker', 'x-component-props': {'init_path': out_dir}},
+        # }}}, quiet=True)
+        self.form = Formily(schema, options={'title': 'Config CP2K AIMD'})
+        display(self.form)
+
+    def gen_config(self):
+        assert self.form is not None, 'form is not opened'
+        print(self.form.value)
 
 
 def cli_main():

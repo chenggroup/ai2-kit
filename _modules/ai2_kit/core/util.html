@@ -210,6 +210,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.res.html">ai2_kit.res package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.tool.html">ai2_kit.tool package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 </ul>
@@ -532,7 +533,7 @@ document.write(`
 <span class="k">def</span> <span class="nf">__export_remote_functions</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;cloudpickle compatible: https://stackoverflow.com/questions/75292769&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">merge_dict</span><span class="p">(</span><span class="n">lo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">ro</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignore_none</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">merge_dict</span><span class="p">(</span><span class="n">lo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">ro</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignore_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Merge two dict, the left dict will be overridden.</span>
 <span class="sd">        Note: list will be replaced instead of merged.</span>
@@ -545,9 +546,10 @@ document.write(`
             <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">lo</span><span class="p">:</span>
                 <span class="n">current_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lo</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                    <span class="n">merge_dict</span><span class="p">(</span><span class="n">lo</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">value</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">current_path</span><span class="p">,</span> <span class="n">ignore_none</span><span class="o">=</span><span class="n">ignore_none</span><span class="p">)</span>
+                    <span class="n">merge_dict</span><span class="p">(</span><span class="n">lo</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">value</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">current_path</span><span class="p">,</span> <span class="n">ignore_none</span><span class="o">=</span><span class="n">ignore_none</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="n">quiet</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_path</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; has been overridden&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_path</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; has been overridden&#39;</span><span class="p">)</span>
                     <span class="n">lo</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">lo</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>

@@ -210,6 +210,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="_api/ai2_kit.res.html">ai2_kit.res package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="_api/ai2_kit.tool.html">ai2_kit.tool package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 </ul>
@@ -661,6 +662,13 @@ document.write(`
 </li>
       </ul></li>
       <li>
+    ai2_kit.tool.deepmd
+
+      <ul>
+        <li><a href="_api/ai2_kit.tool.deepmd.html#module-ai2_kit.tool.deepmd">module</a>
+</li>
+      </ul></li>
+      <li>
     ai2_kit.tool.dpdata
 
       <ul>
@@ -1041,6 +1049,8 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.disable">disable (ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions attribute)</a>
 </li>
+      <li><a href="_api/ai2_kit.tool.deepmd.html#ai2_kit.tool.deepmd.display_lcurve">display_lcurve() (in module ai2_kit.tool.deepmd)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.future.html#ai2_kit.core.future.IFuture.done">done() (ai2_kit.core.future.IFuture method)</a>
@@ -1215,6 +1225,8 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.core.job.html#ai2_kit.core.job.gather_jobs">gather_jobs() (in module ai2_kit.core.job)</a>
 </li>
+      <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.GenCp2kAimdUi.gen_config">gen_config() (ai2_kit.feat.catalysis.GenCp2kAimdUi method)</a>
+</li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_cp2k_input">gen_cp2k_input() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_deepmd_input">gen_deepmd_input() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
@@ -1226,6 +1238,8 @@ document.write(`
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_plumed_input">gen_plumed_input() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_report">gen_report() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
+</li>
+      <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.GenCp2kAimdUi">GenCp2kAimdUi (class in ai2_kit.feat.catalysis)</a>
 </li>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.general">general (ai2_kit.workflow.cll_mlp.WorkflowConfig attribute)</a>
 
@@ -1289,6 +1303,8 @@ document.write(`
         <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Slurm.get_job_state">(ai2_kit.core.queue_system.Slurm method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.GenericCp2kOutput.get_labeled_system_dataset">get_labeled_system_dataset() (ai2_kit.domain.cp2k.GenericCp2kOutput method)</a>
 
       <ul>
@@ -1297,8 +1313,6 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.GenericVaspOutput.get_labeled_system_dataset">(ai2_kit.domain.vasp.GenericVaspOutput method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.get_ln_cmd">get_ln_cmd() (in module ai2_kit.core.connector)</a>
 </li>
       <li><a href="_api/ai2_kit.core.log.html#ai2_kit.core.log.get_logger">get_logger() (in module ai2_kit.core.log)</a>
@@ -1469,6 +1483,8 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspInputConfig.input_template">(ai2_kit.domain.vasp.CllVaspInputConfig attribute)</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.inspect_explore_result">inspect_explore_result() (in module ai2_kit.feat.catalysis)</a>
+</li>
       <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.HpcExecutor.is_local">is_local (ai2_kit.core.executor.HpcExecutor property)</a>
 </li>
       <li><a href="_api/ai2_kit.core.job.html#ai2_kit.core.job.JobFuture.is_success">is_success() (ai2_kit.core.job.JobFuture method)</a>
@@ -1749,6 +1765,8 @@ document.write(`
 </li>
         <li><a href="_api/ai2_kit.tool.ase.html#module-ai2_kit.tool.ase">ai2_kit.tool.ase</a>
 </li>
+        <li><a href="_api/ai2_kit.tool.deepmd.html#module-ai2_kit.tool.deepmd">ai2_kit.tool.deepmd</a>
+</li>
         <li><a href="_api/ai2_kit.tool.dpdata.html#module-ai2_kit.tool.dpdata">ai2_kit.tool.dpdata</a>
 </li>
         <li><a href="_api/ai2_kit.tool.misc.html#module-ai2_kit.tool.misc">ai2_kit.tool.misc</a>
@@ -1803,6 +1821,8 @@ document.write(`
       <li><a href="_api/ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact.of">of() (ai2_kit.core.artifact.Artifact class method)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInput.old_dataset">old_dataset (ai2_kit.domain.deepmd.CllDeepmdInput attribute)</a>
+</li>
+      <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.GenCp2kAimdUi.open_form">open_form() (ai2_kit.feat.catalysis.GenCp2kAimdUi method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>

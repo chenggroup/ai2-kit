@@ -120,7 +120,10 @@ def run_workflow(*config_files,
     return asyncio.run(cll_mlp_training_workflow(config, resource_manager, executor, path_prefix))
 
 
-async def cll_mlp_training_workflow(config: CllWorkflowConfig, resource_manager: ResourceManager, executor: str, path_prefix: str):
+async def cll_mlp_training_workflow(config: CllWorkflowConfig,
+                                    resource_manager: ResourceManager,
+                                    executor: str,
+                                    path_prefix: str):
     context_config = config.executors[executor].context
     raw_workflow_config = copy.deepcopy(config.workflow)
 

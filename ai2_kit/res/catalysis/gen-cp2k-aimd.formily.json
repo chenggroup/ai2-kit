@@ -1,19 +1,7 @@
 {
   "form": {
     "labelCol": 6,
-    "wrapperCol": 12,
-    "labelAlign": "right",
-    "size": "default",
-    "feedbackLayout": "loose",
-    "fullness": false,
-    "labelWrap": false,
-    "wrapperWrap": false,
-    "inset": false,
-    "shallow": true,
-    "bordered": true,
-    "style": {
-      "display": "block"
-    }
+    "wrapperCol": 12
   },
   "schema": {
     "type": "object",

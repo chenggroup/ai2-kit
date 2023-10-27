@@ -2,7 +2,7 @@ import ase.io
 import fire
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import Optional
+from typing import Optional, List
 
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import merge_dict, wait_for_change
@@ -194,7 +194,7 @@ class ConfigBuilder:
             'CV1:',
             '',
             '# define sampling method: metadynamics',
-            'metad: METAD ARG=CV1 SIGMA=0.1 HEIGHT=5 PACE=100 TEMP=1000 FILE=HILLS',
+            'metad: METAD ARG=CV1 SIGMA=0.1 HEIGHT=5 PACE=100 FILE=HILLS',
             '# define more commands if you need',
             '',
             '# print CVs',
@@ -205,9 +205,37 @@ class ConfigBuilder:
         with open(plumed_input_path, 'w', encoding='utf-8') as fp:
             fp.write('\n'.join(plumed_input))
 
-    def gen_lammps_input(self):
-        ... # TODO
+    def gen_lammps_input(self, **kwargs):
+# variable        NSTEPS          equal $$nsteps
+# variable        STEPSIZE        equal $$stepsize
+# variable        TEMP            equal $$temp
+# variable        SAMPLE_FREQ     equal $$sample_freq
+# variable        PRES            equal $$pres   # -1.000000
+# variable        TAU_T           equal $$tau_t  # 0.100000
+# variable        TAU_P           equal $$tau_p  # 0.500000
+#
+# variable        DP_MODELS       string $$dp_models
+# variable        DATA_FILE       string $$data_file
+# variable        TYPE_MAP        string $$type_map   # Cu C O
+# variable        MODEL_DEVI_OUT  string $$model_devi_out
+# variable        DUMP_OUT        string $$dump_out
+# variable        ENERGY_OUT      string $$energy_out  # energy.log
+        assert self._atoms is not None, 'atoms must be loaded first'
+        default_args = {
+            'nsteps': 10000,
+            'stepsize': 0.5,
+            'temp': 330,
+            'sample_freq': 100,
+            'pres': -1,
+            'tau_t': 0.1,
+            'tau_p': 0.5,
+            'model_devi_out': 'model_devi.out',
+            'dump_out': 'traj.lammpstrj',
+            'energy_out': 'energy.log',
+        }
 
+
+        ... # TODO
 
     def gen_report(self):
         ... # TODO

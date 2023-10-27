@@ -151,7 +151,7 @@ class ConfigBuilder:
             mass_map=json.dumps(mass_map),
         )
         os.makedirs(out_dir, exist_ok=True)
-        mlp_training_input_path = os.path.join(out_dir, 'mlp-training.yml')
+        mlp_training_input_path = os.path.join(out_dir, 'training.yml')
         with open(mlp_training_input_path, 'w', encoding='utf-8') as fp:
             fp.write(out_data)
 

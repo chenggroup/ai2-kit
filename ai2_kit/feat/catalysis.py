@@ -403,9 +403,8 @@ class CmdEntries:
         """
         return ConfigBuilder
 
-
+# TODO: move this to dedicated ui module
 class UiHelper:
-
     def __init__(self) -> None:
         self.aimd_schema_path = os.path.join(res.DIR_PATH, 'catalysis/gen-cp2k-aimd.formily.json')
         self.aimd_form = None
@@ -430,26 +429,67 @@ class UiHelper:
                 'out_dir':        {'x-component': 'FilePicker', 'default': out_dir },
             }}}, quiet=True)
             self.aimd_form = Formily(schema, options={
-                "modal_props": {"title": "Config CP2K AIMD", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
+                "modal_props": {"title": "Provision AIMD Task", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
             })
 
         display(self.aimd_form)
         async def _task():
             self.aimd_value = await wait_for_change(self.aimd_form, 'value')
+            self.aimd_value['aimd'] = True
             try:
-                config_builder = ConfigBuilder()
                 print('Start to generate AMID input files...')
-                system_file = self.aimd_value.pop('system_file')
+                cp2k_kwargs: dict = self.aimd_value.copy()
+                system_file = cp2k_kwargs.pop('system_file')
+
+                config_builder = ConfigBuilder()
                 config_builder.load_system(system_file)
-                config_builder.gen_cp2k_input(**self.aimd_value)
+                config_builder.gen_cp2k_input(**cp2k_kwargs)  # this is quick but prone to error, fix it later
                 print('Success!')  # TODO: Send a toast message
             except Exception as e:
                 print('Failed!', e)  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
+    def gen_training_config(self, cp2k_search_path: str = './', out_dir: str = './'):
+        from jupyter_formily import Formily
+        from IPython.display import display
+        if self.training_form is None:
+            with open(self.training_schema_path, 'r') as fp:
+                schema = json.load(fp)
+            # patch for FilePicker
+            schema = merge_dict(schema, {'schema': {'properties': {
+                'system_file':    {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                'basic_set_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                'potential_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                'parameter_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                'out_dir':        {'x-component': 'FilePicker', 'default': out_dir },
+            }}}, quiet=True)
+            self.training_form = Formily(schema, options={
+                "modal_props": {"title": "Provision Training Workflow", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
+            })
+        display(self.training_form)
+        async def _task():
+            self.training_value = await wait_for_change(self.training_form, 'value')
+            self.training_value['aimd'] = False
+            try:
+                print('Start to generate Training input files...')
+                cp2k_kwargs: dict = self.training_value.copy()
+                system_file = cp2k_kwargs.pop('system_file')
+                dp_steps = cp2k_kwargs.pop('dp_steps')
+                out_dir = cp2k_kwargs.get('out_dir', './out')
 
-    def gen_training_config(self):
-        ...
+                config_builder = ConfigBuilder()
+                config_builder.load_system(system_file)
+                config_builder.gen_plumed_input(out_dir=out_dir)
+                config_builder.gen_mlp_training_input(out_dir=out_dir)
+                config_builder.gen_cp2k_input(**cp2k_kwargs)  # FIXME: this is quick but prone to error, fix it later
+                config_builder.gen_deepmd_input(
+                    out_dir=out_dir,
+                    steps=dp_steps,
+                )
+                print('Success!')  # TODO: Send a toast message
+            except Exception as e:
+                print('Failed!', e)  # TODO: Send a alert message
+        asyncio.ensure_future(_task())
 
 
 _UI_HELPER = None

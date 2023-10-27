@@ -2,13 +2,14 @@ import ase.io
 import fire
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import Optional, List
 
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import merge_dict, wait_for_change
-from ai2_kit import res
 from ai2_kit.domain.cp2k import dump_coord_n_cell
-from typing import Optional, Literal
+from ai2_kit.domain.lammps import get_ensemble
+from ai2_kit import res
+
+from typing import Optional, Literal, List
 from ase import Atoms, Atom
 from string import Template
 import asyncio
@@ -19,10 +20,11 @@ import json
 
 logger = get_logger(__name__)
 
-DEEPMD_DEFAULT_TEMPLATE = os.path.join(res.DIR_PATH, 'catalysis/deepmd.json')
-MLP_TRAINING_TEMPLATE = os.path.join(res.DIR_PATH, 'catalysis/mlp-training.yml')
+AI2CAT_RES_DIR = os.path.join(res.DIR_PATH, 'catalysis')
 
-CP2K_DEFAULT_TEMPLATE = os.path.join(res.DIR_PATH, 'catalysis/cp2k.inp')
+DEEPMD_DEFAULT_TEMPLATE = os.path.join(AI2CAT_RES_DIR, 'deepmd.json')
+MLP_TRAINING_TEMPLATE   = os.path.join(AI2CAT_RES_DIR, 'mlp-training.yml')
+CP2K_DEFAULT_TEMPLATE   = os.path.join(AI2CAT_RES_DIR, 'cp2k.inp')
 
 CP2K_SCF_SEMICONDUCTOR = """\
         # CONFIGURATION FOR SEMICONDUCTOR
@@ -205,23 +207,9 @@ class ConfigBuilder:
         with open(plumed_input_path, 'w', encoding='utf-8') as fp:
             fp.write('\n'.join(plumed_input))
 
-    def gen_lammps_input(self, **kwargs):
-# variable        NSTEPS          equal $$nsteps
-# variable        STEPSIZE        equal $$stepsize
-# variable        TEMP            equal $$temp
-# variable        SAMPLE_FREQ     equal $$sample_freq
-# variable        PRES            equal $$pres   # -1.000000
-# variable        TAU_T           equal $$tau_t  # 0.100000
-# variable        TAU_P           equal $$tau_p  # 0.500000
-#
-# variable        DP_MODELS       string $$dp_models
-# variable        DATA_FILE       string $$data_file
-# variable        TYPE_MAP        string $$type_map   # Cu C O
-# variable        MODEL_DEVI_OUT  string $$model_devi_out
-# variable        DUMP_OUT        string $$dump_out
-# variable        ENERGY_OUT      string $$energy_out  # energy.log
+    def gen_lammps_input(self, out_dir='./out', **kwargs):
         assert self._atoms is not None, 'atoms must be loaded first'
-        default_args = {
+        kwargs = {
             'nsteps': 10000,
             'stepsize': 0.5,
             'temp': 330,
@@ -229,16 +217,47 @@ class ConfigBuilder:
             'pres': -1,
             'tau_t': 0.1,
             'tau_p': 0.5,
+            'time_const': 0.1,
             'model_devi_out': 'model_devi.out',
             'dump_out': 'traj.lammpstrj',
             'energy_out': 'energy.log',
+            'data_file': 'lammps.dat',
+            'lammps_file': 'lammps.inp',
+            'plumed_file': 'plumed.dat',
+            'plumed_out': 'plumed.out',
+            ** kwargs,
         }
 
+        template_file  = kwargs.pop('template_file', os.path.join(AI2CAT_RES_DIR, 'lammps-post.inp'))
+        dp_models = kwargs.pop('dp_models')
+        ensemble = kwargs.pop('ensemble')
 
-        ... # TODO
+        type_map, mass_map = get_type_map(self._atoms)
+        ensemble_config = get_ensemble(ensemble)
 
-    def gen_report(self):
-        ... # TODO
+        template_vars = {
+            **kwargs,
+            'type_map': ' '.join(type_map),
+            'mass_map': '\n'.join([f'mass {i} {m}' for i, m in enumerate(mass_map, start=1)]),
+            'dp_models': ' '.join(dp_models),
+            'ensemble_config': ensemble_config,
+        }
+
+        class LammpsTemplate(Template):
+            delimiter = '$$'
+
+        with open(template_file, 'r') as fp:
+            template = LammpsTemplate(fp.read())
+        lammps_input = template.substitute(**template_vars)
+
+        # write lammps input and data to output dir
+        os.makedirs(out_dir, exist_ok=True)
+        lammps_file_path = os.path.join(out_dir, kwargs['lammps_file'])
+        with open(lammps_file_path, 'w', encoding='utf8') as fp:
+            fp.write(lammps_input)
+        lammps_data_path = os.path.join(out_dir, kwargs['data_file'])
+        ase.io.write(lammps_data_path, self._atoms, format='lammps-data', specorder=type_map)  # type: ignore
+
 
     def gen_cp2k_input(self,
                        basic_set_file: str = 'BASIS_MOLOPT',
@@ -277,9 +296,9 @@ class ConfigBuilder:
         assert self._atoms is not None, 'atoms must be loaded first'
         # get available basic set and potential
         with open(find_cp2k_data_file(basic_set_file), 'r') as fp:
-            basic_set_table = parse_cp2k_basic_set_potential(fp)
+            basic_set_table = parse_cp2k_data_file(fp)
         with open(find_cp2k_data_file(potential_file), 'r') as fp:
-            potential_table = parse_cp2k_basic_set_potential(fp)
+            potential_table = parse_cp2k_data_file(fp)
         with open(template_file, 'r') as fp:
             template = fp.read()
         # build kinds
@@ -367,7 +386,7 @@ def find_cp2k_data_file(file: str):
     return file
 
 
-def parse_cp2k_basic_set_potential(fp):
+def parse_cp2k_data_file(fp):
     """
     get all available basic set and potential from CP2K data file
     """
@@ -436,11 +455,11 @@ class CmdEntries:
 # TODO: move this to dedicated ui module
 class UiHelper:
     def __init__(self) -> None:
-        self.aimd_schema_path = os.path.join(res.DIR_PATH, 'catalysis/gen-cp2k-aimd.formily.json')
+        self.aimd_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-cp2k-aimd.formily.json')
         self.aimd_form = None
         self.aimd_value = None
 
-        self.training_schema_path = os.path.join(res.DIR_PATH, 'catalysis/gen-training.formily.json')
+        self.training_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-training.formily.json')
         self.training_form = None
         self.training_value = None
 

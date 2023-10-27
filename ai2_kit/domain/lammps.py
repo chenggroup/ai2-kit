@@ -415,7 +415,7 @@ def __export_remote_functions():
             ## build simulation
             simulation = [
                 '''if "${restart} == 0" then "velocity all create ${TEMP} %d"''' % (random.randrange(10^6 - 1) + 1),
-                _get_ensemble(ensemble),
+                get_ensemble(ensemble),
             ]
 
             if plumed_config:
@@ -493,7 +493,7 @@ def __export_remote_functions():
         return '\n'.join(lines)
 
 
-    def _get_ensemble(ensemble: str):
+    def get_ensemble(ensemble: str):
         lines = []
         if ensemble in ('npt', 'npt-i', 'npt-iso',):
             lines.append('fix 1 all npt temp ${TEMP} ${TEMP} ${TAU_T} iso ${PRES} ${PRES} ${TAU_P}')
@@ -515,10 +515,12 @@ def __export_remote_functions():
     return (
         LammpsInputTemplate,
         make_lammps_task_dirs,
+        get_ensemble,
     )
 
 
 (
     LammpsInputTemplate,
     make_lammps_task_dirs,
+    get_ensemble,
 ) = __export_remote_functions()

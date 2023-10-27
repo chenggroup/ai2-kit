@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.util import merge_dict, wait_for_change
+from ai2_kit.core.util import merge_dict, wait_for_change, parse_path_list
 from ai2_kit.domain.cp2k import dump_coord_n_cell
 from ai2_kit.domain.lammps import get_ensemble
 from ai2_kit import res
@@ -229,7 +229,7 @@ class ConfigBuilder:
         }
 
         template_file  = kwargs.pop('template_file', os.path.join(AI2CAT_RES_DIR, 'lammps-post.inp'))
-        dp_models = kwargs.pop('dp_models')
+        dp_models = parse_path_list(kwargs.pop('dp_models'), to_abs=True)
         ensemble = kwargs.pop('ensemble')
 
         type_map, mass_map = get_type_map(self._atoms)

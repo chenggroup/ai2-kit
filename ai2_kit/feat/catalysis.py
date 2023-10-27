@@ -422,7 +422,7 @@ class UiHelper:
                 schema = json.load(fp)
             # patch for FilePicker
             schema = merge_dict(schema, {'schema': {'properties': {
-                'system_file':    {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                'system_file':    {'x-component': 'FilePicker', 'x-component-props': {'init_path': './'}},
                 'basic_set_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
                 'potential_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
                 'parameter_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
@@ -436,17 +436,18 @@ class UiHelper:
         async def _task():
             self.aimd_value = await wait_for_change(self.aimd_form, 'value')
             self.aimd_value['aimd'] = True
+            logger.info('form value: %s', self.aimd_value)
             try:
-                print('Start to generate AMID input files...')
+                logger.info('Start to generate AMID input files...')
                 cp2k_kwargs: dict = self.aimd_value.copy()
                 system_file = cp2k_kwargs.pop('system_file')
 
                 config_builder = ConfigBuilder()
                 config_builder.load_system(system_file)
                 config_builder.gen_cp2k_input(**cp2k_kwargs)  # this is quick but prone to error, fix it later
-                print('Success!')  # TODO: Send a toast message
+                logger.info('Success!')  # TODO: Send a toast message
             except Exception as e:
-                print('Failed!', e)  # TODO: Send a alert message
+                logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
     def gen_training_config(self, cp2k_search_path: str = './', out_dir: str = './'):
@@ -456,13 +457,17 @@ class UiHelper:
             with open(self.training_schema_path, 'r') as fp:
                 schema = json.load(fp)
             # patch for FilePicker
-            schema = merge_dict(schema, {'schema': {'properties': {
-                'system_file':    {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-                'basic_set_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-                'potential_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-                'parameter_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-                'out_dir':        {'x-component': 'FilePicker', 'default': out_dir },
-            }}}, quiet=True)
+            schema = merge_dict(schema, {'schema': {'properties': { 'collapse': {'properties':{
+                'general': {'properties': {
+                    'system_file':    {'x-component': 'FilePicker', 'x-component-props': {'init_path': './'}},
+                    'out_dir':        {'x-component': 'FilePicker', 'default': out_dir},
+                }},
+                'cp2k' : {'properties': {
+                    'basic_set_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                    'potential_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                    'parameter_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                }},
+            }}}}}, quiet=True)
             self.training_form = Formily(schema, options={
                 "modal_props": {"title": "Provision Training Workflow", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
             })
@@ -470,8 +475,9 @@ class UiHelper:
         async def _task():
             self.training_value = await wait_for_change(self.training_form, 'value')
             self.training_value['aimd'] = False
+            logger.info('form value: %s', self.training_value)
             try:
-                print('Start to generate Training input files...')
+                logger.info('Start to generate Training input files...')
                 cp2k_kwargs: dict = self.training_value.copy()
                 system_file = cp2k_kwargs.pop('system_file')
                 dp_steps = cp2k_kwargs.pop('dp_steps')
@@ -486,9 +492,9 @@ class UiHelper:
                     out_dir=out_dir,
                     steps=dp_steps,
                 )
-                print('Success!')  # TODO: Send a toast message
+                logger.info('Success!')  # TODO: Send a toast message
             except Exception as e:
-                print('Failed!', e)  # TODO: Send a alert message
+                logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
 

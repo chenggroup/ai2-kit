@@ -6,48 +6,64 @@
   "schema": {
     "type": "object",
     "properties": {
-      "system_file": {
-        "type": "string",
-        "title": "System File",
-        "x-decorator": "FormItem",
-        "x-component": "Input",
-        "x-validator": [],
-        "x-component-props": {},
-        "x-decorator-props": {},
-        "name": "system_file",
-        "description": "System file in POSCAR, .xyz, .cif format.",
-        "x-designable-id": "y35y340yrs4",
-        "x-index": 0,
-        "required": true
-      },
-      "out_dir": {
-        "type": "string",
-        "title": "Output Directry",
-        "x-decorator": "FormItem",
-        "x-component": "Input",
-        "x-validator": [],
-        "x-component-props": {},
-        "x-decorator-props": {},
-        "name": "out_dir",
-        "default": "./out",
-        "x-designable-id": "jjsga9jn8nh",
-        "x-index": 1,
-        "description": "",
-        "required": true
-      },
-      "tgg2ki18uxp": {
+      "collapse": {
         "type": "void",
         "x-component": "FormCollapse",
         "x-component-props": {},
         "x-designable-id": "tgg2ki18uxp",
+        "x-index": 0,
+        "name": "collapse",
         "properties": {
-          "mg88st436tg": {
+          "general": {
+            "type": "void",
+            "x-component": "FormCollapse.CollapsePanel",
+            "x-component-props": {
+              "header": "General"
+            },
+            "name": "general",
+            "x-designable-id": "syu67wzxhdg",
+            "x-index": 0,
+            "properties": {
+              "system_file": {
+                "type": "string",
+                "title": "System File",
+                "x-decorator": "FormItem",
+                "x-component": "Input",
+                "x-validator": [],
+                "x-component-props": {},
+                "x-decorator-props": {},
+                "name": "system_file",
+                "description": "System file in POSCAR, .xyz, .cif format.",
+                "x-designable-id": "y35y340yrs4",
+                "x-index": 0,
+                "required": true
+              },
+              "out_dir": {
+                "type": "string",
+                "title": "Output Directry",
+                "x-decorator": "FormItem",
+                "x-component": "Input",
+                "x-validator": [],
+                "x-component-props": {},
+                "x-decorator-props": {},
+                "name": "out_dir",
+                "default": "./out",
+                "x-designable-id": "jjsga9jn8nh",
+                "x-index": 1,
+                "description": "",
+                "required": true
+              }
+            }
+          },
+          "cp2k": {
             "type": "void",
             "x-component": "FormCollapse.CollapsePanel",
             "x-component-props": {
               "header": "CP2K"
             },
             "x-designable-id": "mg88st436tg",
+            "x-index": 1,
+            "name": "cp2k",
             "properties": {
               "style": {
                 "type": "string | number",
@@ -147,16 +163,17 @@
                 "x-designable-id": "vskcjarnpz9",
                 "x-index": 4
               }
-            },
-            "x-index": 0
+            }
           },
-          "k5o61ule4lx": {
+          "deepmd": {
             "type": "void",
             "x-component": "FormCollapse.CollapsePanel",
             "x-component-props": {
               "header": "DeepMD"
             },
             "x-designable-id": "k5o61ule4lx",
+            "x-index": 2,
+            "name": "deepmd",
             "properties": {
               "dp_steps": {
                 "type": "number",
@@ -172,13 +189,11 @@
                 "x-designable-id": "zwbb9xpi81i",
                 "x-index": 0
               }
-            },
-            "x-index": 1
+            }
           }
-        },
-        "x-index": 2
+        }
       }
     },
-    "x-designable-id": "381o7fkiica"
+    "x-designable-id": "8pa5g6cjeq5"
   }
 }

@@ -1,0 +1,52 @@
+variable        NSTEPS          equal $$nsteps
+variable        STEPSIZE        equal $$stepsize
+variable        TEMP            equal $$temp
+variable        SAMPLE_FREQ     equal $$sample_freq
+variable        PRES            equal $$pres
+variable        TAU_T           equal $$tau_t
+variable        TAU_P           equal $$tau_p
+variable        TIME_CONST      equal $$time_const
+
+variable        DP_MODELS       string "$$dp_models"
+variable        DATA_FILE       string "$$data_file"
+variable        PLUMED_FILE     string "$$plumed_file"
+variable        PLUMED_OUT      string "$$plumed_out"
+variable        TYPE_MAP        string "$$type_map"
+variable        MODEL_DEVI_OUT  string "$$model_devi_out"
+variable        DUMP_OUT        string "$$dump_out"
+variable        ENERGY_OUT      string "$$energy_out"
+
+units           metal
+boundary        p p p
+atom_style      atomic
+atom_modify     map yes
+neighbor        1.0 bin
+
+read_data       ${DATA_FILE}
+
+$$mass_map
+
+pair_style      deepmd ${DP_MODELS} out_freq ${SAMPLE_FREQ} out_file ${MODEL_DEVI_OUT}
+pair_coeff      * *
+
+thermo_style    custom step temp pe ke etotal
+thermo          1000
+
+dump            1 all custom ${SAMPLE_FREQ} ${DUMP_OUT} id type x y z fx fy fz
+dump_modify     1 sort id
+dump_modify     1 element ${TYPE_MAP}
+restart         100000 restart/ai2cat.restart
+
+$$ensemble_config
+fix             ai2cat_plm all plumed plumedfile ${PLUMED_FILE} outfile ${PLUMED_OUT}
+
+
+variable temp   equal temp
+variable etotal equal etotal
+variable pe     equal pe
+variable ke     equal ke
+variable step   equal step
+fix             sys_info all print 1 "${temp} ${etotal} ${pe} ${ke} ${step}" title "temp etotal pe ke step" file ${ENERGY_OUT}
+
+timestep        ${STEPSIZE}
+run             ${NSTEPS} upto

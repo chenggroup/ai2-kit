@@ -132,6 +132,7 @@ class ConfigBuilder:
         Loading system to memory using ASE
         """
         assert self._atoms is None, 'atoms is already loaded'
+        kwargs.setdefault('index', 0)
         self._atoms = ase.io.read(file, **kwargs)  # type: ignore
         return self
 
@@ -143,8 +144,7 @@ class ConfigBuilder:
             text = fp.read()
         # Generate the type_map and mass_map automatically
         assert self._atoms is not None, 'atoms must be loaded first'
-        type_map = list(set(self._atoms.get_chemical_symbols()))
-        mass_map = [Atom(symbol).mass for symbol in type_map]
+        type_map, mass_map = get_type_map(self._atoms)
 
         out_data = Template(text).substitute(
             type_map=json.dumps(type_map),
@@ -154,7 +154,6 @@ class ConfigBuilder:
         mlp_training_input_path = os.path.join(out_dir, 'training.yml')
         with open(mlp_training_input_path, 'w', encoding='utf-8') as fp:
             fp.write(out_data)
-
 
     def gen_deepmd_input(self,
                          out_dir: str = 'out',
@@ -168,7 +167,6 @@ class ConfigBuilder:
         deepmd_input_path = os.path.join(out_dir, 'deepmd.json')
         with open(deepmd_input_path, 'w', encoding='utf-8') as fp:
             json.dump(data, fp, indent=4)
-
 
     def gen_plumed_input(self, out_dir: str = 'out'):
         """
@@ -207,14 +205,12 @@ class ConfigBuilder:
         with open(plumed_input_path, 'w', encoding='utf-8') as fp:
             fp.write('\n'.join(plumed_input))
 
-
     def gen_lammps_input(self):
         ... # TODO
 
 
     def gen_report(self):
         ... # TODO
-
 
     def gen_cp2k_input(self,
                        basic_set_file: str = 'BASIS_MOLOPT',
@@ -321,6 +317,12 @@ class ConfigBuilder:
         with open(coord_n_cell_path, 'w') as fp:
             dump_coord_n_cell(fp, self._atoms)
         logger.info(f'coord_n_cell.inc is generated at {coord_n_cell_path}')
+
+
+def get_type_map(atoms: Atoms):
+    type_map = sorted(set(atoms.get_chemical_symbols()))  # sorted to ensure order
+    mass_map = [Atom(symbol).mass for symbol in type_map]
+    return type_map, mass_map
 
 
 def find_cp2k_data_file(file: str):

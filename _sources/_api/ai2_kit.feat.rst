@@ -1,8 +1,8 @@
 ai2\_kit.feat package
 =====================
 
-Submodules
-----------
+Subpackages
+-----------
 
 .. toctree::
    :maxdepth: 4

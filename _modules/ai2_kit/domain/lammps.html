@@ -204,7 +204,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.feat.html">ai2_kit.feat package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.feat.catalysis.html">ai2_kit.feat.catalysis module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.feat.catalysis.html">ai2_kit.feat.catalysis package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.res.html">ai2_kit.res package</a></li>
@@ -790,7 +790,7 @@ document.write(`
             <span class="c1">## build simulation</span>
             <span class="n">simulation</span> <span class="o">=</span> <span class="p">[</span>
 <span class="w">                </span><span class="sd">&#39;&#39;&#39;if &quot;${restart} == 0&quot; then &quot;velocity all create ${TEMP} %d&quot;&#39;&#39;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">10</span><span class="o">^</span><span class="mi">6</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="n">_get_ensemble</span><span class="p">(</span><span class="n">ensemble</span><span class="p">),</span>
+                <span class="n">get_ensemble</span><span class="p">(</span><span class="n">ensemble</span><span class="p">),</span>
             <span class="p">]</span>
 
             <span class="k">if</span> <span class="n">plumed_config</span><span class="p">:</span>
@@ -868,7 +868,7 @@ document.write(`
         <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 
 
-    <span class="k">def</span> <span class="nf">_get_ensemble</span><span class="p">(</span><span class="n">ensemble</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_ensemble</span><span class="p">(</span><span class="n">ensemble</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;npt&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-i&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-iso&#39;</span><span class="p">,):</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fix 1 all npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> iso $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -890,12 +890,14 @@ document.write(`
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">LammpsInputTemplate</span><span class="p">,</span>
         <span class="n">make_lammps_task_dirs</span><span class="p">,</span>
+        <span class="n">get_ensemble</span><span class="p">,</span>
     <span class="p">)</span>
 
 
 <span class="p">(</span>
     <span class="n">LammpsInputTemplate</span><span class="p">,</span>
     <span class="n">make_lammps_task_dirs</span><span class="p">,</span>
+    <span class="n">get_ensemble</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">=</span> <span class="n">__export_remote_functions</span><span class="p">()</span>
 </pre></div>
 

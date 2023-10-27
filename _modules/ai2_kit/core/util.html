@@ -204,7 +204,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.feat.html">ai2_kit.feat package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.feat.catalysis.html">ai2_kit.feat.catalysis module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.feat.catalysis.html">ai2_kit.feat.catalysis package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.res.html">ai2_kit.res package</a></li>
@@ -394,6 +394,21 @@ document.write(`
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">EMPTY</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="parse_path_list"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.parse_path_list">[docs]</a><span class="k">def</span> <span class="nf">parse_path_list</span><span class="p">(</span><span class="n">path_list_str</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">to_abs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse path list of environment variable style string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">parse_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;~/&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">path</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path_list_str</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">path_list</span> <span class="o">=</span> <span class="n">path_list_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">path_list</span> <span class="o">=</span> <span class="n">path_list_str</span>
+    <span class="k">if</span> <span class="n">to_abs</span><span class="p">:</span>
+        <span class="n">path_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">parse_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">path_list</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">path_list</span></div>
 
 
 <div class="viewcode-block" id="wait_for_change"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.wait_for_change">[docs]</a><span class="k">def</span> <span class="nf">wait_for_change</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">attribute</span><span class="p">):</span>

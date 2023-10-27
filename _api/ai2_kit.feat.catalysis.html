@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>ai2_kit.feat.catalysis module &#8212; ai2-kit Reference</title>
+    <title>ai2_kit.feat.catalysis package &#8212; ai2-kit Reference</title>
   
   
   
@@ -64,7 +64,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = '_api/ai2_kit.feat.catalysis';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ai2_kit.res package" href="ai2_kit.res.html" />
+    <link rel="next" title="ai2_kit.feat.catalysis.ui module" href="ai2_kit.feat.catalysis.ui.html" />
     <link rel="prev" title="ai2_kit.feat package" href="ai2_kit.feat.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -207,7 +207,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="ai2_kit.feat.html">ai2_kit.feat package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l4 current active"><a class="current reference internal" href="#">ai2_kit.feat.catalysis module</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">ai2_kit.feat.catalysis package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ai2_kit.res.html">ai2_kit.res package</a></li>
@@ -398,7 +398,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -409,11 +411,20 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>ai2_kit.feat.catalysis module</h1>
+    <h1>ai2_kit.feat.catalysis package</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-ai2_kit.feat.catalysis">Module contents</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -423,8 +434,18 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="module-ai2_kit.feat.catalysis">
-<span id="ai2-kit-feat-catalysis-module"></span><h1>ai2_kit.feat.catalysis module<a class="headerlink" href="#module-ai2_kit.feat.catalysis" title="Permalink to this heading">#</a></h1>
+  <section id="ai2-kit-feat-catalysis-package">
+<h1>ai2_kit.feat.catalysis package<a class="headerlink" href="#ai2-kit-feat-catalysis-package" title="Permalink to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ai2_kit.feat.catalysis.ui.html">ai2_kit.feat.catalysis.ui module</a></li>
+</ul>
+</div>
+</section>
+<section id="module-ai2_kit.feat.catalysis">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ai2_kit.feat.catalysis" title="Permalink to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="ai2_kit.feat.catalysis.CmdEntries">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.catalysis.</span></span><span class="sig-name descname"><span class="pre">CmdEntries</span></span><a class="reference internal" href="../_modules/ai2_kit/feat/catalysis.html#CmdEntries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.catalysis.CmdEntries" title="Permalink to this definition">#</a></dt>
@@ -475,7 +496,7 @@ or else you have to specify the full path instead of their file name.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ai2_kit.feat.catalysis.ConfigBuilder.gen_lammps_input">
-<span class="sig-name descname"><span class="pre">gen_lammps_input</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/catalysis.html#ConfigBuilder.gen_lammps_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.catalysis.ConfigBuilder.gen_lammps_input" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">gen_lammps_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./out'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/catalysis.html#ConfigBuilder.gen_lammps_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.catalysis.ConfigBuilder.gen_lammps_input" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -491,31 +512,10 @@ or else you have to specify the full path instead of their file name.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.feat.catalysis.ConfigBuilder.gen_report">
-<span class="sig-name descname"><span class="pre">gen_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/catalysis.html#ConfigBuilder.gen_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.catalysis.ConfigBuilder.gen_report" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="ai2_kit.feat.catalysis.ConfigBuilder.load_system">
 <span class="sig-name descname"><span class="pre">load_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/catalysis.html#ConfigBuilder.load_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.catalysis.ConfigBuilder.load_system" title="Permalink to this definition">#</a></dt>
 <dd><p>Loading system to memory using ASE</p>
 </dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ai2_kit.feat.catalysis.UiHelper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.catalysis.</span></span><span class="sig-name descname"><span class="pre">UiHelper</span></span><a class="reference internal" href="../_modules/ai2_kit/feat/catalysis.html#UiHelper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.catalysis.UiHelper" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.feat.catalysis.UiHelper.gen_aimd_config">
-<span class="sig-name descname"><span class="pre">gen_aimd_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cp2k_search_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/catalysis.html#UiHelper.gen_aimd_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.catalysis.UiHelper.gen_aimd_config" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.feat.catalysis.UiHelper.gen_training_config">
-<span class="sig-name descname"><span class="pre">gen_training_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cp2k_search_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/catalysis.html#UiHelper.gen_training_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.catalysis.UiHelper.gen_training_config" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -531,10 +531,9 @@ or else you have to specify the full path instead of their file name.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="ai2_kit.feat.catalysis.get_the_ui_helper">
-<span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.catalysis.</span></span><span class="sig-name descname"><span class="pre">get_the_ui_helper</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/catalysis.html#get_the_ui_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.catalysis.get_the_ui_helper" title="Permalink to this definition">#</a></dt>
-<dd><p>Singleton for UiHelper</p>
-</dd></dl>
+<dt class="sig sig-object py" id="ai2_kit.feat.catalysis.get_type_map">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.catalysis.</span></span><span class="sig-name descname"><span class="pre">get_type_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Atoms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/catalysis.html#get_type_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.catalysis.get_type_map" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ai2_kit.feat.catalysis.inspect_explore_result">
@@ -542,11 +541,12 @@ or else you have to specify the full path instead of their file name.</p>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="ai2_kit.feat.catalysis.parse_cp2k_basic_set_potential">
-<span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.catalysis.</span></span><span class="sig-name descname"><span class="pre">parse_cp2k_basic_set_potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/catalysis.html#parse_cp2k_basic_set_potential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.catalysis.parse_cp2k_basic_set_potential" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ai2_kit.feat.catalysis.parse_cp2k_data_file">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.catalysis.</span></span><span class="sig-name descname"><span class="pre">parse_cp2k_data_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/catalysis.html#parse_cp2k_data_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.catalysis.parse_cp2k_data_file" title="Permalink to this definition">#</a></dt>
 <dd><p>get all available basic set and potential from CP2K data file</p>
 </dd></dl>
 
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -590,11 +590,11 @@ or else you have to specify the full path instead of their file name.</p>
       </div>
     </a>
     <a class="right-next"
-       href="ai2_kit.res.html"
+       href="ai2_kit.feat.catalysis.ui.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ai2_kit.res package</p>
+        <p class="prev-next-title">ai2_kit.feat.catalysis.ui module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -607,6 +607,21 @@ or else you have to specify the full path instead of their file name.</p>
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-ai2_kit.feat.catalysis">Module contents</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

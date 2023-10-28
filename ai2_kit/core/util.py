@@ -68,11 +68,11 @@ def load_yaml_file(path: Union[Path, str]):
     return yaml.load(path)
 
 
-def load_yaml_files(*paths: Tuple[Path]):
+def load_yaml_files(*paths: Tuple[Path], quiet: bool = False):
     d = {}
     for path in paths:
         print('load yaml file: ', path)
-        d = merge_dict(d, load_yaml_file(Path(path)))  # type: ignore
+        d = merge_dict(d, load_yaml_file(Path(path)), quiet=quiet)  # type: ignore
     return d
 
 

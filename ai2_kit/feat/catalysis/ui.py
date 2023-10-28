@@ -4,6 +4,8 @@ from ai2_kit.core.log import get_logger
 from IPython.display import display
 from jupyter_formily import Formily
 
+from types import SimpleNamespace
+
 import asyncio
 import os
 import json
@@ -40,9 +42,10 @@ class UiHelper:
                 "modal_props": {"title": "Provision AIMD Task", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
             })
 
-        display(self.aimd_form)
+        self.aimd_form.display()
         async def _task():
-            self.aimd_value = await wait_for_change(self.aimd_form, 'value')
+            res = await wait_for_change(self.aimd_form, 'value')
+            self.aimd_value = res['data']
             self.aimd_value['aimd'] = True
             logger.info('form value: %s', self.aimd_value)
             try:
@@ -77,9 +80,10 @@ class UiHelper:
             self.training_form = Formily(schema, options={
                 "modal_props": {"title": "Provision Training Workflow", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
             })
-        display(self.training_form)
+        self.training_form.display()
         async def _task():
-            self.training_value = await wait_for_change(self.training_form, 'value')
+            res = await wait_for_change(self.training_form, 'value')
+            self.training_value = res['data']
             self.training_value['aimd'] = False
             logger.info('form value: %s', self.training_value)
             try:
@@ -113,3 +117,5 @@ def get_the_ui_helper():
     if _UI_HELPER is None:
         _UI_HELPER = UiHelper()
     return _UI_HELPER
+
+

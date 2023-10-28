@@ -26,13 +26,17 @@ tabulate = "^0.9.0"
 asaplib = "^0.0.2"
 joblib = "^1.2.0"
 dscribe = "1.2.2"
+jupyter-formily = "0.0.4"
 
 
 [[tool.poetry.source]]
 name = "ustc"
 url = "https://pypi.mirrors.ustc.edu.cn/simple/"
-default = true
-secondary = false
+priority = "default"
+
+[[tool.poetry.source]]
+name = "pypi"
+priority = "secondary"
 
 
 [tool.poetry.group.dev.dependencies]

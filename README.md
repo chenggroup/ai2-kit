@@ -51,6 +51,9 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 * [dpdata Toolkit](doc/manual/dpdata.md)
 * [Tips](doc/manual/tips.md)
 
+### Notebooks
+* [ai2cat](notebook/ai2cat.ipynb)
+
 
 ## Acknowledgement
 This project is inspired by and built upon the following projects:

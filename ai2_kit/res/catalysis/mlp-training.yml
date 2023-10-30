@@ -4,7 +4,11 @@
 # The artifact for the training data must be npy format.
 # The artifact for the initial structure can be .xyz, POSCAR or other ase supported formats.
 
-# Path here should use absolute path.
+# Path here should use absolute path (full path).
+# For example:
+# /public/home/user01/demo/ai2cat/data/train/Ag13O2
+# /public/home/user01/demo/ai2cat/data/explore/init.xyz
+
 
 artifacts:
   training-data:
@@ -17,13 +21,12 @@ artifacts:
 
     # You may define custom attrs for the artifact.
     # The attrs defined here will override the corresponding options in workflow section.
-    # Uncomment the following lines in case you need.
-
-    # attrs:
-    #   lammps:
-    #     plumed_config: !load_text plumed.inp
-    #   cp2k:
-    #     input_template: !load_text cp2k.inp
+    # Remove the following lines in case you don't need them.
+    attrs:
+      lammps:
+        plumed_config: !load_text plumed.inp
+      cp2k:
+        input_template: !load_text cp2k.inp
 
 workflow:
   general:

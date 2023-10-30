@@ -63,6 +63,11 @@ class ToolGroup:
         return DpdataHelper
 
     @property
+    def yaml(self):
+        from ai2_kit.tool.yaml import Yaml
+        return Yaml
+
+    @property
     def checkpoint(self):
         from ai2_kit.core.checkpoint import CheckpointCmd
         return CheckpointCmd

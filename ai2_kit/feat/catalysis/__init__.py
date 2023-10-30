@@ -174,7 +174,7 @@ class ConfigBuilder:
         """
         Generate Plumed input files
         Args:
-            out_dir: output directory, plumed.dat will be generated in this directory
+            out_dir: output directory, plumed.inp will be generated in this directory
         """
         assert self._atoms is not None, 'atoms must be loaded first'
         plumed_input = [ 'UNITS LENGTH=A' ]
@@ -203,7 +203,7 @@ class ConfigBuilder:
             'PRINT STRIDE=10 ARG=CV1,metad.bias FILE=COLVAR',
         ])
         os.makedirs(out_dir, exist_ok=True)
-        plumed_input_path = os.path.join(out_dir, 'plumed.dat')
+        plumed_input_path = os.path.join(out_dir, 'plumed.inp')
         with open(plumed_input_path, 'w', encoding='utf-8') as fp:
             fp.write('\n'.join(plumed_input))
 
@@ -223,7 +223,7 @@ class ConfigBuilder:
             'energy_out': 'energy.log',
             'data_file': 'lammps.dat',
             'lammps_file': 'lammps.inp',
-            'plumed_file': 'plumed.dat',
+            'plumed_file': 'plumed.inp',
             'plumed_out': 'plumed.out',
             ** kwargs,
         }

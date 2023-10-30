@@ -4,6 +4,8 @@
 # The artifact for the training data must be npy format.
 # The artifact for the initial structure can be .xyz, POSCAR or other ase supported formats.
 
+# Path here should use absolute path.
+
 artifacts:
   training-data:
     url : /path/to/training-data
@@ -19,7 +21,7 @@ artifacts:
 
     # attrs:
     #   lammps:
-    #     plumed_config: !load_text plumed.dat
+    #     plumed_config: !load_text plumed.inp
     #   cp2k:
     #     input_template: !load_text cp2k.inp
 

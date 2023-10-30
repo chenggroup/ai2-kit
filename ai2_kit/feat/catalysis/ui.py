@@ -1,10 +1,7 @@
 from ai2_kit.core.util import merge_dict, wait_for_change
 from ai2_kit.core.log import get_logger
 
-from IPython.display import display
 from jupyter_formily import Formily
-
-from types import SimpleNamespace
 
 import asyncio
 import os
@@ -117,5 +114,4 @@ def get_the_ui_helper():
     if _UI_HELPER is None:
         _UI_HELPER = UiHelper()
     return _UI_HELPER
-
 

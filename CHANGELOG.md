@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.9.14
+* feat: ai2cat notebook
+
 ## v0.9.13
 * chore: upgrade jupyter-formily
 

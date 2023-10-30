@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.9.13
+* chore: upgrade jupyter-formily
+
 ## v0.9.12
 * wip: ai2cat tool and notebook
 * fix: asap log error

@@ -381,7 +381,7 @@ def __export_remote_functions():
             trainer = get_trainer(reduced_descriptors, cluster_opt)
             cluster_labels = get_cluster(asapxyz, reduced_descriptors, trainer, path_prefix=asap_path_prefix)
 
-            dump_json(cluster_labels, os.path.join(work_dir, 'cluster.debug.json'))
+            # dump_json(cluster_labels, os.path.join(work_dir, 'cluster.debug.json'))
 
             # select frame from each cluster
             if limit_per_cluster <= 0: # unlimit

@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.9.12
+* wip: ai2cat tool and notebook
+* fix: asap log error
+
 ## v0.9.11
 * feat: ase tool support `set_by_ref` and `limit` method
 * feat: integrate `jupyter-formily`

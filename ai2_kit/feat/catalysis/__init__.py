@@ -403,7 +403,7 @@ def parse_cp2k_data_file(fp):
     return parsed
 
 
-def inspect_explore_result(lammps_dir: str, save_to: Optional[str]=None):
+def inspect_lammps_output(lammps_dir: str, save_to: Optional[str]=None, fig_ax = None):
     model_devi_file = os.path.join(lammps_dir, 'model_devi.out')
     colvar_file = os.path.join(lammps_dir, 'COLVAR')
     lammps_input_file = os.path.join(lammps_dir, 'lammps.input')
@@ -423,7 +423,10 @@ def inspect_explore_result(lammps_dir: str, save_to: Optional[str]=None):
     with open(colvar_file, 'r') as fp:
         col_names = fp.readline().strip().split()[2:]
     # x axis is the first column, and y axis is the rest columns
-    fig, axs = plt.subplots(1, 2, figsize=(12, 4))
+    if fig_ax is None:
+        fig, axs = plt.subplots(1, 2, figsize=(12, 4), constrained_layout=True)
+    else:
+        fig, axs = fig_ax
     axs[0].set_title(f'COLVAR @ TEMP {temp}K')
     axs[0].set_xlabel(r'$time / s$')
     for i, _col in enumerate(col_names[1:-1], start=1):
@@ -440,7 +443,8 @@ def inspect_explore_result(lammps_dir: str, save_to: Optional[str]=None):
     axs[1].grid()
 
     if save_to is None:
-        plt.show()
+        fig.canvas.draw()
+        fig.canvas.flush_events()
     else:
         fig.savefig(save_to, dpi=300, bbox_inches='tight')
 

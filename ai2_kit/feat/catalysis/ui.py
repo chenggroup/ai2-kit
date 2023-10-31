@@ -1,19 +1,26 @@
 from ai2_kit.core.util import merge_dict, wait_for_change
 from ai2_kit.core.log import get_logger
+from ai2_kit.tool.deepmd import display_lcurve
+from ..catalysis import AI2CAT_RES_DIR, ConfigBuilder, inspect_lammps_output
 
+import matplotlib.pyplot as plt
 from jupyter_formily import Formily
-
+from typing import List, Tuple, Callable
+from pathlib import Path
 import asyncio
 import os
 import json
-
-from ..catalysis import AI2CAT_RES_DIR, ConfigBuilder
+import glob
 
 
 logger = get_logger(__name__)
 
 
 class UiHelper:
+    """
+    Jupyter Widget for AI2CAT
+    """
+
     def __init__(self) -> None:
         self.aimd_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-cp2k-aimd.formily.json')
         self.aimd_form = None
@@ -22,6 +29,9 @@ class UiHelper:
         self.training_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-training.formily.json')
         self.training_form = None
         self.training_value = None
+
+        self.selector_schema_path = os.path.join(AI2CAT_RES_DIR, 'selector.formily.json')
+
 
     def gen_aimd_config(self, cp2k_search_path: str = './', out_dir: str = './'):
         if self.aimd_form is None:
@@ -104,6 +114,57 @@ class UiHelper:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
+    def inspect_deepmd_output(self, work_dir: str):
+        pattern = os.path.join(work_dir, '*/iters-*/train-deepmd/tasks/*'  )
+        dirs = glob.glob(pattern)
+        options = []
+        for d in sorted(dirs):
+            parts = Path(d).parts
+            task_no = parts[-1]
+            iter_dir = parts[-4]
+            run_dir = parts[-5]
+            options.append((f'DeepMD task {task_no} at {iter_dir} of {run_dir}', d))
+        fig_ax = plt.subplots(1, 2, figsize=(12, 4), constrained_layout=True)
+        def _task(dir_path):
+            display_lcurve(os.path.join(dir_path, 'lcurve.out'), fig_ax=fig_ax)
+        self._gen_selector(title='Inspect DeepMD Result', label='Select DeepMD Task', options=options, cb=_task)
+
+    def inspect_lammps_output(self, work_dir: str):
+        pattern = os.path.join(work_dir, '*/iters-*/explore-lammps/tasks/*')
+        dirs = glob.glob(pattern)
+        options = []
+        for d in sorted(dirs):
+            parts = Path(d).parts
+            task_no = parts[-1]
+            iter_dir = parts[-4]
+            run_dir = parts[-5]
+            options.append((f'LAMMPS task {task_no} at {iter_dir} of {run_dir}', d))
+        fig_ax = plt.subplots(1, 2, figsize=(12, 4), constrained_layout=True)
+        def _task(dir_path):
+            inspect_lammps_output(dir_path, fig_ax=fig_ax)
+        self._gen_selector(title='Inspect LAMMPS Result', label='Select LAMMPS Task', options=options, cb=_task)
+
+    def _gen_selector(self, title: str, label: str, options: List[Tuple[str, str]], cb: Callable):
+        with open(self.selector_schema_path, 'r') as fp:
+            schema = json.load(fp)
+        # patch options
+        schema['schema']['properties']['selected']['enum'] = [{'children': [], 'label': opt[0], 'value': opt[1]} for opt in options]
+        schema['schema']['properties']['selected']['title'] = label
+        form = Formily(schema, options={
+            "modal_props": {"title": title, "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
+        })
+        form.display()
+        async def _task():
+            res = await wait_for_change(form, 'value')
+            logger.info('form data: %s', res)
+            value = res['data']['selected']
+            try:
+                cb(value)
+                logger.info('Success!')
+            except Exception as e:
+                logger.exception('Failed!')  # TODO: Send a alert message
+        asyncio.ensure_future(_task())
+
 
 _UI_HELPER = None
 def get_the_ui_helper():
@@ -114,4 +175,3 @@ def get_the_ui_helper():
     if _UI_HELPER is None:
         _UI_HELPER = UiHelper()
     return _UI_HELPER
-

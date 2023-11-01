@@ -32,6 +32,9 @@ class UiHelper:
 
         self.selector_schema_path = os.path.join(AI2CAT_RES_DIR, 'selector.formily.json')
 
+        self.lammps_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-lammps.formily.json')
+        self.lammps_value = None
+
     def gen_aimd_config(self, cp2k_search_path: str = './', out_dir: str = './'):
         if self.aimd_form is None:
             with open(self.aimd_schema_path, 'r') as fp:
@@ -113,8 +116,47 @@ class UiHelper:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
-    def gen_lammps_config(self, work_dir: str = './'):
-        ...
+
+    def gen_lammps_config(self, work_dir: str = './', out_dir = './'):
+        pattern = os.path.join(work_dir, '*/iters-*/train-deepmd/tasks/*/*.pb'  )
+        dp_model_files = glob.glob(pattern)
+        ensembles = ['nvt', 'nvt-i', 'nvt-a', 'nvt-iso', 'nvt-aniso', 'npt', 'npt-t', 'npt-tri', 'nve', 'csvr']
+
+        with open(self.lammps_schema_path, 'r') as fp:
+            schema = json.load(fp)
+        # patch for FilePicker
+        schema = merge_dict(schema, {'schema': {'properties': {
+            'system_file': file_picker({'init_path': './'}),
+            'out_dir':     {**file_picker(), 'default': out_dir },
+            'dp_models': {
+                'enum': [{'children': [], 'label': os.path.relpath(f, work_dir), 'value': f}  for f in sorted(dp_model_files)]
+            },
+            'ensemble': {
+                'enum': [{'children': [], 'label': e.upper(), 'value': e} for e in ensembles]
+            },
+        }}}, quiet=True)
+
+        form = Formily(schema, options={
+            "modal_props": {"title": "Provision AIMD Task", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
+        }, default_value=self.lammps_value)
+        form.display()
+        async def _task():
+            res = await wait_for_change(form, 'value')
+            self.lammps_value = res['data']
+            logger.info('form value: %s', self.lammps_value)
+            try:
+                kwargs = self.lammps_value.copy()
+                system_file = kwargs.pop('system_file')
+                out_dir = kwargs.pop('out_dir')
+                logger.info('Start to generate LAMMPS input files...')
+                config_builder = ConfigBuilder()
+                config_builder.load_system(system_file)
+                config_builder.gen_lammps_input(out_dir, **kwargs)
+                config_builder.gen_plumed_input(out_dir=out_dir)
+                logger.info('Success!')  # TODO: Send a toast message
+            except Exception as e:
+                logger.exception('Failed!')  # TODO: Send a alert message
+        asyncio.ensure_future(_task())
 
 
 

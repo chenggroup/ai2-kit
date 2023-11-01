@@ -5,7 +5,7 @@ from ..catalysis import AI2CAT_RES_DIR, ConfigBuilder, inspect_lammps_output
 
 import matplotlib.pyplot as plt
 from jupyter_formily import Formily
-from typing import List, Tuple, Callable
+from typing import List, Tuple, Callable, Optional
 from pathlib import Path
 import asyncio
 import os
@@ -32,18 +32,17 @@ class UiHelper:
 
         self.selector_schema_path = os.path.join(AI2CAT_RES_DIR, 'selector.formily.json')
 
-
     def gen_aimd_config(self, cp2k_search_path: str = './', out_dir: str = './'):
         if self.aimd_form is None:
             with open(self.aimd_schema_path, 'r') as fp:
                 schema = json.load(fp)
             # patch for FilePicker
             schema = merge_dict(schema, {'schema': {'properties': {
-                'system_file':    {'x-component': 'FilePicker', 'x-component-props': {'init_path': './'}},
-                'basic_set_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-                'potential_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-                'parameter_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-                'out_dir':        {'x-component': 'FilePicker', 'default': out_dir },
+                'system_file':    file_picker({'init_path': './'}),
+                'basic_set_file': file_picker({'init_path': cp2k_search_path}),
+                'potential_file': file_picker({'init_path': cp2k_search_path}),
+                'parameter_file': file_picker({'init_path': cp2k_search_path}),
+                'out_dir':        {**file_picker(), 'default': out_dir },
             }}}, quiet=True)
             self.aimd_form = Formily(schema, options={
                 "modal_props": {"title": "Provision AIMD Task", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
@@ -75,13 +74,13 @@ class UiHelper:
             # patch for FilePicker
             schema = merge_dict(schema, {'schema': {'properties': { 'collapse': {'properties':{
                 'general': {'properties': {
-                    'system_file':    {'x-component': 'FilePicker', 'x-component-props': {'init_path': './'}},
-                    'out_dir':        {'x-component': 'FilePicker', 'default': out_dir},
+                    'system_file': file_picker({'init_path': './'}),
+                    'out_dir':     {**file_picker(), 'default': out_dir},
                 }},
-                'cp2k' : {'properties': {
-                    'basic_set_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-                    'potential_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
-                    'parameter_file': {'x-component': 'FilePicker', 'x-component-props': {'init_path': cp2k_search_path}},
+                'cp2k': {'properties': {
+                    'basic_set_file': file_picker({'init_path': cp2k_search_path}),
+                    'potential_file': file_picker({'init_path': cp2k_search_path}),
+                    'parameter_file': file_picker({'init_path': cp2k_search_path}),
                 }},
             }}}}}, quiet=True)
             self.training_form = Formily(schema, options={
@@ -114,16 +113,15 @@ class UiHelper:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
+    def gen_lammps_config(self, work_dir: str = './'):
+        ...
+
+
+
     def inspect_deepmd_output(self, work_dir: str):
         pattern = os.path.join(work_dir, '*/iters-*/train-deepmd/tasks/*'  )
         dirs = glob.glob(pattern)
-        options = []
-        for d in sorted(dirs):
-            parts = Path(d).parts
-            task_no = parts[-1]
-            iter_dir = parts[-4]
-            run_dir = parts[-5]
-            options.append((f'DeepMD task {task_no} at {iter_dir} of {run_dir}', d))
+        options = [(os.path.relpath(d, work_dir), d) for d in sorted(dirs)]
         fig_ax = plt.subplots(1, 2, figsize=(12, 4), constrained_layout=True)
         def _task(dir_path):
             display_lcurve(os.path.join(dir_path, 'lcurve.out'), fig_ax=fig_ax)
@@ -132,13 +130,7 @@ class UiHelper:
     def inspect_lammps_output(self, work_dir: str):
         pattern = os.path.join(work_dir, '*/iters-*/explore-lammps/tasks/*')
         dirs = glob.glob(pattern)
-        options = []
-        for d in sorted(dirs):
-            parts = Path(d).parts
-            task_no = parts[-1]
-            iter_dir = parts[-4]
-            run_dir = parts[-5]
-            options.append((f'LAMMPS task {task_no} at {iter_dir} of {run_dir}', d))
+        options = [(os.path.relpath(d, work_dir), d) for d in sorted(dirs)]
         fig_ax = plt.subplots(1, 2, figsize=(12, 4), constrained_layout=True)
         def _task(dir_path):
             inspect_lammps_output(dir_path, fig_ax=fig_ax)
@@ -164,6 +156,12 @@ class UiHelper:
             except Exception as e:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
+
+
+def file_picker(props: Optional[dict] = None) -> dict:
+    if props is None:
+        props = {}
+    return {'x-component': 'FilePicker', 'x-component-props': props}
 
 
 _UI_HELPER = None

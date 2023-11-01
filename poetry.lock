@@ -87,13 +87,13 @@ reference = "ustc"
 
 [[package]]
 name = "anywidget"
-version = "0.7.1"
+version = "0.7.0"
 description = "custom jupyter widgets made easy"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "anywidget-0.7.1-py3-none-any.whl", hash = "sha256:17828c6e255a7066c960636cbda045d55b08c996a2fc4e886e4c8507db6e9407"},
-    {file = "anywidget-0.7.1.tar.gz", hash = "sha256:1c4cb51063f8ec5172b8c8efb1bfb79861d340c3491220d56b8c2a6aa8db3b3d"},
+    {file = "anywidget-0.7.0-py3-none-any.whl", hash = "sha256:8a4b7cd2506acd7fdb75d34c665277ade81989abf9e4bf1944553d55ee3c0b3e"},
+    {file = "anywidget-0.7.0.tar.gz", hash = "sha256:3b1c029c21af4b0ad5c41cd0c31301a844ac113bb6ab5bdd7af2470ebfc87d42"},
 ]
 
 [package.dependencies]
@@ -1756,17 +1756,17 @@ reference = "ustc"
 
 [[package]]
 name = "jupyter-formily"
-version = "0.0.4"
+version = "0.0.6"
 description = "Integrates fomily to jupyter notebook, which base on anywidget"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "jupyter_formily-0.0.4-py3-none-any.whl", hash = "sha256:83e5aceb1f5cb668f979a72617c9ddf25c5a9ec7a2775aef66432beea720893b"},
-    {file = "jupyter_formily-0.0.4.tar.gz", hash = "sha256:250c3620d8307eae6a9c663a99c4d665c8e4d730942c8a5e3f82d212e2f62f84"},
+    {file = "jupyter_formily-0.0.6-py3-none-any.whl", hash = "sha256:2e9c99a3154fc8bc0b4b6cc7d2802492d8bae3a96d535e0df6c720dd4409a662"},
+    {file = "jupyter_formily-0.0.6.tar.gz", hash = "sha256:45b0b560fc8b2c023537a6cfad841f70638c1ad66dabd0db3652de8683c157ff"},
 ]
 
 [package.dependencies]
-anywidget = {version = ">=0.7.0,<0.8.0", extras = ["dev"]}
+anywidget = {version = "0.7.0", extras = ["dev"]}
 
 [[package]]
 name = "jupyterlab-widgets"
@@ -5109,4 +5109,4 @@ reference = "ustc"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "1536f581ae3a5a53b4c8737bbc9e31ee8b0568251bc205128e0a2280648736a6"
+content-hash = "44cd78a9dc9b34cb830366c6dab6f16deffc3106fbda023aad5815c057422f4b"

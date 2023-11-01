@@ -6,7 +6,6 @@ from ..catalysis import AI2CAT_RES_DIR, ConfigBuilder, inspect_lammps_output
 import matplotlib.pyplot as plt
 from jupyter_formily import Formily
 from typing import List, Tuple, Callable, Optional
-from pathlib import Path
 import asyncio
 import os
 import json
@@ -156,8 +155,6 @@ class UiHelper:
             except Exception as e:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
-
-
 
     def inspect_deepmd_output(self, work_dir: str):
         pattern = os.path.join(work_dir, '*/iters-*/train-deepmd/tasks/*'  )

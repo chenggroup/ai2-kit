@@ -116,7 +116,6 @@ class UiHelper:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
-
     def gen_lammps_config(self, work_dir: str = './', out_dir = './'):
         pattern = os.path.join(work_dir, '*/iters-*/train-deepmd/tasks/*/*.pb'  )
         dp_model_files = glob.glob(pattern)

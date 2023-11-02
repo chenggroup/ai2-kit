@@ -211,7 +211,7 @@ class ConfigBuilder:
         assert self._atoms is not None, 'atoms must be loaded first'
         kwargs = {
             'nsteps': 10000,
-            'stepsize': 0.5,
+            'stepsize': 0.0005,
             'temp': 330,
             'sample_freq': 100,
             'pres': -1,

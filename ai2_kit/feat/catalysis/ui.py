@@ -127,7 +127,7 @@ class UiHelper:
             'system_file': file_picker({'init_path': './'}),
             'out_dir':     {**file_picker(), 'default': out_dir },
             'dp_models': {
-                'enum': [{'children': [], 'label': os.path.relpath(f, work_dir), 'value': f}  for f in sorted(dp_model_files)]
+                'enum': [{'children': [], 'label': os.path.relpath(f, work_dir), 'value': os.path.abspath(f)}  for f in sorted(dp_model_files)]
             },
             'ensemble': {
                 'enum': [{'children': [], 'label': e.upper(), 'value': e} for e in ensembles]
@@ -135,7 +135,7 @@ class UiHelper:
         }}}, quiet=True)
 
         form = Formily(schema, options={
-            "modal_props": {"title": "Provision AIMD Task", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
+            "modal_props": {"title": "Provision LAMMPS Task", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
         }, default_value=self.lammps_value)
         form.display()
         async def _task():
@@ -159,7 +159,7 @@ class UiHelper:
     def inspect_deepmd_output(self, work_dir: str):
         pattern = os.path.join(work_dir, '*/iters-*/train-deepmd/tasks/*'  )
         dirs = glob.glob(pattern)
-        options = [(os.path.relpath(d, work_dir), d) for d in sorted(dirs)]
+        options = [(os.path.relpath(d, work_dir), os.path.abspath(d)) for d in sorted(dirs)]
         fig_ax = plt.subplots(1, 2, figsize=(12, 4), constrained_layout=True)
         def _task(dir_path):
             display_lcurve(os.path.join(dir_path, 'lcurve.out'), fig_ax=fig_ax)
@@ -168,7 +168,7 @@ class UiHelper:
     def inspect_lammps_output(self, work_dir: str):
         pattern = os.path.join(work_dir, '*/iters-*/explore-lammps/tasks/*')
         dirs = glob.glob(pattern)
-        options = [(os.path.relpath(d, work_dir), d) for d in sorted(dirs)]
+        options = [(os.path.relpath(d, work_dir), os.path.abspath(d)) for d in sorted(dirs)]
         fig_ax = plt.subplots(1, 2, figsize=(12, 4), constrained_layout=True)
         def _task(dir_path):
             inspect_lammps_output(dir_path, fig_ax=fig_ax)

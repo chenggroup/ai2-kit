@@ -1,0 +1,36 @@
+{
+  "form": {
+    "labelCol": 6,
+    "wrapperCol": 12
+  },
+  "schema": {
+    "type": "object",
+    "properties": {
+      "selected": {
+        "title": "",
+        "x-decorator": "FormItem",
+        "x-component": "Select",
+        "x-validator": [],
+        "x-component-props": {},
+        "x-decorator-props": {},
+        "name": "selected",
+        "enum": [
+          {
+            "children": [],
+            "label": "Item 1",
+            "value": "6e566uwznvd"
+          },
+          {
+            "children": [],
+            "label": "Item 2",
+            "value": "w01rtksf16z"
+          }
+        ],
+        "required": true,
+        "x-designable-id": "iklvhzmpigc",
+        "x-index": 0
+      }
+    },
+    "x-designable-id": "qgwxn3bzcon"
+  }
+}

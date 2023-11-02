@@ -5,19 +5,6 @@ from ruamel.yaml.scalarstring import LiteralScalarString as LSS
 from copy import deepcopy
 import sys
 
-def _apply_lss(data: dict):
-    """
-    For each value in data, if it is a multiple line string, convert it to LSS.
-    """
-    for k, v in data.items():
-        if isinstance(v, str) and '\n' in v:
-            data[k] = LSS(v)
-        elif isinstance(v, dict):
-            _apply_lss(v)
-        elif isinstance(v, list):
-            for item in v:
-                if isinstance(item, dict):
-                    _apply_lss(item)
 
 class Yaml:
     def __init__(self) -> None:
@@ -55,3 +42,18 @@ class Yaml:
                 yaml.dump(data, fp)
         else: # to stdout
             yaml.dump(data, sys.stdout)
+
+
+def _apply_lss(data: dict):
+    """
+    For each value in data, if it is a multiple line string, convert it to LSS.
+    """
+    for k, v in data.items():
+        if isinstance(v, str) and '\n' in v:
+            data[k] = LSS(v)
+        elif isinstance(v, dict):
+            _apply_lss(v)
+        elif isinstance(v, list):
+            for item in v:
+                if isinstance(item, dict):
+                    _apply_lss(item)

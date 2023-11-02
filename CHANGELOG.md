@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.9.16
+* feat: interactive ui for generate lammps input
+
 ## v0.9.15
 * feat: yaml tool
 

@@ -1470,6 +1470,34 @@ url = "https://pypi.mirrors.ustc.edu.cn/simple"
 reference = "ustc"
 
 [[package]]
+name = "ipympl"
+version = "0.9.3"
+description = "Matplotlib Jupyter Extension"
+optional = false
+python-versions = "*"
+files = [
+    {file = "ipympl-0.9.3-py2.py3-none-any.whl", hash = "sha256:d113cd55891bafe9b27ef99b6dd111a87beb6bb2ae550c404292272103be8013"},
+    {file = "ipympl-0.9.3.tar.gz", hash = "sha256:49bab75c05673a6881d1aaec5d8ac81d4624f73d292d154c5fb7096f10236a2b"},
+]
+
+[package.dependencies]
+ipython = "<9"
+ipython-genutils = "*"
+ipywidgets = ">=7.6.0,<9"
+matplotlib = ">=3.4.0,<4"
+numpy = "*"
+pillow = "*"
+traitlets = "<6"
+
+[package.extras]
+docs = ["Sphinx (>=1.5)", "myst-nb", "sphinx-book-theme", "sphinx-copybutton", "sphinx-thebe", "sphinx-togglebutton"]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.mirrors.ustc.edu.cn/simple"
+reference = "ustc"
+
+[[package]]
 name = "ipython"
 version = "8.12.2"
 description = "IPython: Productive Interactive Computing"
@@ -1507,6 +1535,22 @@ parallel = ["ipyparallel"]
 qtconsole = ["qtconsole"]
 test = ["pytest (<7.1)", "pytest-asyncio", "testpath"]
 test-extra = ["curio", "matplotlib (!=3.2.0)", "nbformat", "numpy (>=1.21)", "pandas", "pytest (<7.1)", "pytest-asyncio", "testpath", "trio"]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.mirrors.ustc.edu.cn/simple"
+reference = "ustc"
+
+[[package]]
+name = "ipython-genutils"
+version = "0.2.0"
+description = "Vestigial utilities from IPython"
+optional = false
+python-versions = "*"
+files = [
+    {file = "ipython_genutils-0.2.0-py2.py3-none-any.whl", hash = "sha256:72dd37233799e619666c9f639a9da83c34013a73e8bbc79a7a6348d93c61fab8"},
+    {file = "ipython_genutils-0.2.0.tar.gz", hash = "sha256:eb2e116e75ecef9d4d228fdc66af54269afa26ab4463042e33785b887c628ba8"},
+]
 
 [package.source]
 type = "legacy"
@@ -1767,6 +1811,11 @@ files = [
 
 [package.dependencies]
 anywidget = {version = "0.7.0", extras = ["dev"]}
+
+[package.source]
+type = "legacy"
+url = "https://pypi.mirrors.ustc.edu.cn/simple"
+reference = "ustc"
 
 [[package]]
 name = "jupyterlab-widgets"
@@ -5109,4 +5158,4 @@ reference = "ustc"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "44cd78a9dc9b34cb830366c6dab6f16deffc3106fbda023aad5815c057422f4b"
+content-hash = "e4d7bef1170d3a04e9f162991ae37512e6b537843fffbdb5418479c9305dd93d"

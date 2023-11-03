@@ -1,4 +1,4 @@
-from ai2_kit.core.util import merge_dict, wait_for_change
+from ai2_kit.core.util import merge_dict, wait_for_change, load_json, load_text
 from ai2_kit.core.log import get_logger
 from ai2_kit.tool.deepmd import display_lcurve
 from ..catalysis import AI2CAT_RES_DIR, ConfigBuilder, inspect_lammps_output
@@ -22,11 +22,9 @@ class UiHelper:
 
     def __init__(self) -> None:
         self.aimd_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-cp2k-aimd.formily.json')
-        self.aimd_form = None
         self.aimd_value = None
 
         self.training_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-training.formily.json')
-        self.training_form = None
         self.training_value = None
 
         self.selector_schema_path = os.path.join(AI2CAT_RES_DIR, 'selector.formily.json')
@@ -34,25 +32,25 @@ class UiHelper:
         self.lammps_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-lammps.formily.json')
         self.lammps_value = None
 
-    def gen_aimd_config(self, cp2k_search_path: str = './', out_dir: str = './'):
-        if self.aimd_form is None:
-            with open(self.aimd_schema_path, 'r') as fp:
-                schema = json.load(fp)
-            # patch for FilePicker
-            schema = merge_dict(schema, {'schema': {'properties': {
-                'system_file':    file_picker({'init_path': './'}),
-                'basic_set_file': file_picker({'init_path': cp2k_search_path}),
-                'potential_file': file_picker({'init_path': cp2k_search_path}),
-                'parameter_file': file_picker({'init_path': cp2k_search_path}),
-                'out_dir':        {**file_picker(), 'default': out_dir },
-            }}}, quiet=True)
-            self.aimd_form = Formily(schema, options={
-                "modal_props": {"title": "Provision AIMD Task", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
-            })
+    def gen_aimd_config(self, default_value: dict = None):
+        if default_value is not None:
+            self.aimd_value = default_value
 
-        self.aimd_form.display()
+        schema = load_json(self.aimd_schema_path)
+        # patch for FilePicker
+        schema = merge_dict(schema, {'schema': {'properties': {
+            'system_file':    file_picker(),
+            'basic_set_file': file_picker(),
+            'potential_file': file_picker(),
+            'parameter_file': file_picker(),
+            'out_dir':        file_picker(),
+        }}}, quiet=True)
+        form = Formily(schema, options={
+            "modal_props": {"title": "Provision AIMD Task", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
+        }, default_value=self.aimd_value)
+        form.display()
         async def _task():
-            res = await wait_for_change(self.aimd_form, 'value')
+            res = await wait_for_change(form, 'value')
             self.aimd_value = res['data']
             self.aimd_value['aimd'] = True
             logger.info('form value: %s', self.aimd_value)
@@ -60,7 +58,6 @@ class UiHelper:
                 logger.info('Start to generate AMID input files...')
                 cp2k_kwargs: dict = self.aimd_value.copy()
                 system_file = cp2k_kwargs.pop('system_file')
-
                 config_builder = ConfigBuilder()
                 config_builder.load_system(system_file)
                 config_builder.gen_cp2k_input(**cp2k_kwargs)  # this is quick but prone to error, fix it later
@@ -69,28 +66,28 @@ class UiHelper:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
-    def gen_training_config(self, cp2k_search_path: str = './', out_dir: str = './'):
-        if self.training_form is None:
-            with open(self.training_schema_path, 'r') as fp:
-                schema = json.load(fp)
-            # patch for FilePicker
-            schema = merge_dict(schema, {'schema': {'properties': { 'collapse': {'properties':{
-                'general': {'properties': {
-                    'system_file': file_picker({'init_path': './'}),
-                    'out_dir':     {**file_picker(), 'default': out_dir},
-                }},
-                'cp2k': {'properties': {
-                    'basic_set_file': file_picker({'init_path': cp2k_search_path}),
-                    'potential_file': file_picker({'init_path': cp2k_search_path}),
-                    'parameter_file': file_picker({'init_path': cp2k_search_path}),
-                }},
-            }}}}}, quiet=True)
-            self.training_form = Formily(schema, options={
-                "modal_props": {"title": "Provision Training Workflow", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
-            })
-        self.training_form.display()
+    def gen_training_config(self, default_value: dict = None):
+        if default_value is not None:
+            self.training_value = default_value
+        schema = load_json(self.training_schema_path)
+        # patch for FilePicker
+        schema = merge_dict(schema, {'schema': {'properties': { 'collapse': {'properties':{
+            'general': {'properties': {
+                'system_file': file_picker(),
+                'out_dir':     file_picker(),
+            }},
+            'cp2k': {'properties': {
+                'basic_set_file': file_picker(),
+                'potential_file': file_picker(),
+                'parameter_file': file_picker(),
+            }},
+        }}}}}, quiet=True)
+        form = Formily(schema, options={
+            "modal_props": {"title": "Provision Training Workflow", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
+        }, default_value=self.training_value)
+        form.display()
         async def _task():
-            res = await wait_for_change(self.training_form, 'value')
+            res = await wait_for_change(form, 'value')
             self.training_value = res['data']
             self.training_value['aimd'] = False
             logger.info('form value: %s', self.training_value)
@@ -120,8 +117,7 @@ class UiHelper:
         dp_model_files = glob.glob(pattern)
         ensembles = ['nvt', 'nvt-i', 'nvt-a', 'nvt-iso', 'nvt-aniso', 'npt', 'npt-t', 'npt-tri', 'nve', 'csvr']
 
-        with open(self.lammps_schema_path, 'r') as fp:
-            schema = json.load(fp)
+        schema = load_json(self.lammps_schema_path)
         # patch for FilePicker
         schema = merge_dict(schema, {'schema': {'properties': {
             'system_file': file_picker({'init_path': './'}),
@@ -175,8 +171,7 @@ class UiHelper:
         self._gen_selector(title='Inspect LAMMPS Result', label='Select LAMMPS Task', options=options, cb=_task)
 
     def _gen_selector(self, title: str, label: str, options: List[Tuple[str, str]], cb: Callable):
-        with open(self.selector_schema_path, 'r') as fp:
-            schema = json.load(fp)
+        schema = load_json(self.selector_schema_path)
         # patch options
         schema['schema']['properties']['selected']['enum'] = [{'children': [], 'label': opt[0], 'value': opt[1]} for opt in options]
         schema['schema']['properties']['selected']['title'] = label

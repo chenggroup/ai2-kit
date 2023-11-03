@@ -1,4 +1,4 @@
-from ai2_kit.core.util import merge_dict, wait_for_change, load_json, load_text
+from ai2_kit.core.util import merge_dict, wait_for_change, load_json, dump_json
 from ai2_kit.core.log import get_logger
 from ai2_kit.tool.deepmd import display_lcurve
 from ..catalysis import AI2CAT_RES_DIR, ConfigBuilder, inspect_lammps_output
@@ -179,7 +179,8 @@ class UiHelper:
     def _get_training_schema(self):
         schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-training.v2.formily.json')
         schema = load_json(schema_path)
-        return merge_dict(schema, {'schema': {'properties': { 'collapse': {'properties':{
+        select_artifact_expr = "($deps[0] || []).map(item => ({label:item.key, value: item.key}))"
+        schema = merge_dict(schema, {'schema': {'properties': { 'collapse': {'properties':{
             'general': {'properties': {
                 'system_file': _get_file_picker(),
                 'out_dir':     _get_file_picker(),
@@ -189,13 +190,30 @@ class UiHelper:
                 'potential_file': _get_file_picker(),
                 'parameter_file': _get_file_picker(),
             }},
-            'deepmd': {'properties': {'dp_artifacts': {'items': {'properties': {'dp_artifact': {'properties': {
-                'url': _get_file_picker(),
-                'plumed_file': _get_file_picker(),
-                'cp2k_file': _get_file_picker(),
-            }}}}}}},
-
+            'deepmd': {'properties': {
+                'dp_train_data': _get_select_reactor(['dp_artifacts'], select_artifact_expr),
+                'dp_explore_data': _get_select_reactor(['dp_artifacts'], select_artifact_expr),
+                'dp_train_data_unlabeled': _get_select_reactor(['dp_artifacts'], select_artifact_expr),
+                'dp_artifacts': {'items': {'properties': {'dp_artifact': {'properties': {
+                    'url': _get_file_picker(),
+                    'plumed_file': _get_file_picker(),
+                    'cp2k_file': _get_file_picker(),
+                }}}}}
+            }},
         }}}}}, quiet=True)
+        dump_json(schema, '/tmp/schema.json')
+        return schema
+
+
+def _get_select_reactor(deps: List[str], expr: str):
+    return {"x-reactions": {
+        "dependencies": deps,
+        "fulfill": {
+            "schema": {
+                "enum": "{{%s}}" % expr,
+            }
+        }
+    } }
 
 
 def _get_file_picker(props: Optional[dict] = None) -> dict:

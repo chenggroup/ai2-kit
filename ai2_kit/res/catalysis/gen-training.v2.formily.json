@@ -78,7 +78,7 @@
                   "tooltip": "Select artifacts that will be used as train data. Usually they are deepmd/npy format. You should add artifacts first before you can use them."
                 },
                 "name": "dp_train_data",
-                "description": "Use this if train data has been labeled.",
+                "description": "Use this if train data has been labeled, you should add artifacts first",
                 "x-designable-id": "oim1s8g0m3f",
                 "x-index": 0
               },
@@ -94,7 +94,7 @@
                   "tooltip": "Select artifacts that will be used as initial structure of LAMMPS. Usually they are XYZ, POSCAR format. You should add artifacts first before you can use them."
                 },
                 "name": "dp_explore_data",
-                "description": "",
+                "description": "Select init data for LAMMPS, you should add artifacts first",
                 "x-designable-id": "v72jopdnqzx",
                 "x-index": 1
               },
@@ -110,7 +110,7 @@
                 "x-decorator-props": {
                   "tooltip": "Select artifacts that will be used as train data. Usually they are deepmd/npy format. You should add artifacts first before you can use them."
                 },
-                "description": "Use this if train data is not labeled yet.",
+                "description": "Use this if train data is not labeled yet, you should add artifacts first",
                 "x-designable-id": "ug1xw4gk71h",
                 "x-index": 2
               },

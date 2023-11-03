@@ -189,6 +189,12 @@ class UiHelper:
                 'potential_file': _get_file_picker(),
                 'parameter_file': _get_file_picker(),
             }},
+            'deepmd': {'properties': {'dp_artifacts': {'items': {'properties': {'dp_artifact': {'properties': {
+                'url': _get_file_picker(),
+                'plumed_file': _get_file_picker(),
+                'cp2k_file': _get_file_picker(),
+            }}}}}}},
+
         }}}}}, quiet=True)
 
 
@@ -203,9 +209,9 @@ def _get_form_options(title: str):
         "modal_props": {
             "title": title,
             "width": "60vw",
-            "style": {"max-width": "800px"},
+            "style": {"max-width": "1200px"},
             "styles": {
-                "body": {"max-height": "70vh", "overflow-y": "auto"}
+                "body": {"max-height": "75vh", "overflow-y": "auto"}
             }
         }
     }

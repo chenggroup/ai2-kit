@@ -27,13 +27,13 @@ class UiHelper:
         self.training_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-training.formily.json')
         self.training_value = None
 
-        self.selector_schema_path = os.path.join(AI2CAT_RES_DIR, 'selector.formily.json')
-
         self.lammps_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-lammps.formily.json')
         self.lammps_value = None
 
-    def gen_aimd_config(self, default_value: dict = None):
-        if default_value is not None:
+        self.selector_schema_path = os.path.join(AI2CAT_RES_DIR, 'selector.formily.json')
+
+    def gen_aimd_config(self, **default_value):
+        if self.aimd_value is None:
             self.aimd_value = default_value
 
         schema = load_json(self.aimd_schema_path)
@@ -66,8 +66,8 @@ class UiHelper:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
-    def gen_training_config(self, default_value: dict = None):
-        if default_value is not None:
+    def gen_training_config(self, **default_value):
+        if self.training_value is None:
             self.training_value = default_value
         schema = load_json(self.training_schema_path)
         # patch for FilePicker
@@ -112,7 +112,9 @@ class UiHelper:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
-    def gen_lammps_config(self, work_dir: str = './', out_dir = './'):
+    def gen_lammps_config(self, work_dir: str = './', /, **default_value):
+        if self.lammps_value is None:
+            self.lammps_value = default_value
         pattern = os.path.join(work_dir, '*/iters-*/train-deepmd/tasks/*/*.pb'  )
         dp_model_files = glob.glob(pattern)
         ensembles = ['nvt', 'nvt-i', 'nvt-a', 'nvt-iso', 'nvt-aniso', 'npt', 'npt-t', 'npt-tri', 'nve', 'csvr']
@@ -120,18 +122,19 @@ class UiHelper:
         schema = load_json(self.lammps_schema_path)
         # patch for FilePicker
         schema = merge_dict(schema, {'schema': {'properties': {
-            'system_file': file_picker({'init_path': './'}),
-            'out_dir':     {**file_picker(), 'default': out_dir },
-            'dp_models': {
-                'enum': [{'children': [], 'label': os.path.relpath(f, work_dir), 'value': os.path.abspath(f)}  for f in sorted(dp_model_files)]
-            },
+            'system_file': file_picker(),
+            'out_dir'    : file_picker(),
             'ensemble': {
                 'enum': [{'children': [], 'label': e.upper(), 'value': e} for e in ensembles]
+            },
+            'dp_models': {
+                'enum': [{'children': [], 'label': os.path.relpath(f, work_dir), 'value': os.path.abspath(f)}
+                         for f in sorted(dp_model_files)]
             },
         }}}, quiet=True)
 
         form = Formily(schema, options={
-            "modal_props": {"title": "Provision LAMMPS Task", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
+            "modal_props": {"title": "Provision LAMMPS Task", "width": "60vw", "style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
         }, default_value=self.lammps_value)
         form.display()
         async def _task():

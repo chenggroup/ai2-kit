@@ -21,6 +21,20 @@ logger = get_logger(__name__)
 EMPTY = object()
 
 
+def load_json(path: Union[Path, str], encoding: str = 'utf-8'):
+    if isinstance(path, str):
+        path = Path(path)
+    with open(path, 'r', encoding=encoding) as f:
+        return json.load(f)
+
+
+def load_text(path: Union[Path, str], encoding: str = 'utf-8'):
+    if isinstance(path, str):
+        path = Path(path)
+    with open(path, 'r', encoding=encoding) as f:
+        return f.read()
+
+
 def parse_path_list(path_list_str: Union[str, List[str]], to_abs: bool = False):
     """
     Parse path list of environment variable style string

@@ -22,10 +22,9 @@ class UiHelper:
     def __init__(self) -> None:
         self.aimd_value = None
         self.training_value = None
-
-        self.lammps_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-lammps.formily.json')
         self.lammps_value = None
 
+        self.lammps_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-lammps.formily.json')
         self.selector_schema_path = os.path.join(AI2CAT_RES_DIR, 'selector.formily.json')
 
     def gen_aimd_config(self, **default_value):
@@ -152,8 +151,7 @@ class UiHelper:
         # patch options
         schema['schema']['properties']['selected']['enum'] = [{'children': [], 'label': opt[0], 'value': opt[1]} for opt in options]
         schema['schema']['properties']['selected']['title'] = label
-        options = _get_form_options(title)
-        form = Formily(schema, options=options)
+        form = Formily(schema, options=_get_form_options(title))
         form.display()
         async def _task():
             res = await wait_for_change(form, 'value')

@@ -365,6 +365,22 @@ class ConfigBuilder:
             dump_coord_n_cell(fp, self._atoms)
         logger.info(f'coord_n_cell.inc is generated at {coord_n_cell_path}')
 
+    def get_plumed_group(self):
+        """
+        Get auto generated plumed group
+        """
+        assert self._atoms is not None, 'atoms must be loaded first'
+        plumed_input = []
+        # define atoms groups by element, e.g:
+        # Ag: GROUP ATOMS=1,2,3,4,5,6,7,8,9,10
+        # O: GROUP ATOMS=11,12,13,14,15,16,17,18,19,20
+        element2ids = {}
+        for i, element in enumerate(self._atoms.get_chemical_symbols(), start=1):
+            element2ids.setdefault(element, []).append(i)
+        for element, ids in element2ids.items():
+            plumed_input.append(f'{element}: GROUP ATOMS={",".join(map(str, ids))}')
+        return '\n'.join(plumed_input)
+
 
 def get_type_map(atoms: Atoms):
     type_map = sorted(set(atoms.get_chemical_symbols()))  # sorted to ensure order

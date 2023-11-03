@@ -1800,13 +1800,13 @@ reference = "ustc"
 
 [[package]]
 name = "jupyter-formily"
-version = "0.0.6"
+version = "0.0.7"
 description = "Integrates fomily to jupyter notebook, which base on anywidget"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "jupyter_formily-0.0.6-py3-none-any.whl", hash = "sha256:2e9c99a3154fc8bc0b4b6cc7d2802492d8bae3a96d535e0df6c720dd4409a662"},
-    {file = "jupyter_formily-0.0.6.tar.gz", hash = "sha256:45b0b560fc8b2c023537a6cfad841f70638c1ad66dabd0db3652de8683c157ff"},
+    {file = "jupyter_formily-0.0.7-py3-none-any.whl", hash = "sha256:71fe2f3b19ba7eff0e271763801c83523b248b5fe069d6516722c00483312892"},
+    {file = "jupyter_formily-0.0.7.tar.gz", hash = "sha256:4e0fd96178ea2c33fc16d4fe94533e6d219185016d6a4d3cd64ea159d888697e"},
 ]
 
 [package.dependencies]
@@ -5158,4 +5158,4 @@ reference = "ustc"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "e4d7bef1170d3a04e9f162991ae37512e6b537843fffbdb5418479c9305dd93d"
+content-hash = "0667c6b42aec56d756a271620b1f1492dc661c4b17e26b4265b5f48b40d00837"

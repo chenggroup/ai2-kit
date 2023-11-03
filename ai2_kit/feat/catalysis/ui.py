@@ -8,7 +8,6 @@ from jupyter_formily import Formily
 from typing import List, Tuple, Callable, Optional
 import asyncio
 import os
-import json
 import glob
 
 
@@ -21,10 +20,7 @@ class UiHelper:
     """
 
     def __init__(self) -> None:
-        self.aimd_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-cp2k-aimd.formily.json')
         self.aimd_value = None
-
-        self.training_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-training.formily.json')
         self.training_value = None
 
         self.lammps_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-lammps.formily.json')
@@ -36,18 +32,10 @@ class UiHelper:
         if self.aimd_value is None:
             self.aimd_value = default_value
 
-        schema = load_json(self.aimd_schema_path)
-        # patch for FilePicker
-        schema = merge_dict(schema, {'schema': {'properties': {
-            'system_file':    file_picker(),
-            'basic_set_file': file_picker(),
-            'potential_file': file_picker(),
-            'parameter_file': file_picker(),
-            'out_dir':        file_picker(),
-        }}}, quiet=True)
-        form = Formily(schema, options={
-            "modal_props": {"title": "Provision AIMD Task", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
-        }, default_value=self.aimd_value)
+        schema = self._get_aimd_schema()
+        options = _get_form_options('Provision AIMD Task')
+        form = Formily(schema, options=options , default_value=self.aimd_value)
+
         form.display()
         async def _task():
             res = await wait_for_change(form, 'value')
@@ -69,22 +57,9 @@ class UiHelper:
     def gen_training_config(self, **default_value):
         if self.training_value is None:
             self.training_value = default_value
-        schema = load_json(self.training_schema_path)
-        # patch for FilePicker
-        schema = merge_dict(schema, {'schema': {'properties': { 'collapse': {'properties':{
-            'general': {'properties': {
-                'system_file': file_picker(),
-                'out_dir':     file_picker(),
-            }},
-            'cp2k': {'properties': {
-                'basic_set_file': file_picker(),
-                'potential_file': file_picker(),
-                'parameter_file': file_picker(),
-            }},
-        }}}}}, quiet=True)
-        form = Formily(schema, options={
-            "modal_props": {"title": "Provision Training Workflow", "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
-        }, default_value=self.training_value)
+        schema = self._get_training_schema()
+        options = _get_form_options('Provision Training Workflow')
+        form = Formily(schema, options=options, default_value=self.training_value)
         form.display()
         async def _task():
             res = await wait_for_change(form, 'value')
@@ -122,8 +97,8 @@ class UiHelper:
         schema = load_json(self.lammps_schema_path)
         # patch for FilePicker
         schema = merge_dict(schema, {'schema': {'properties': {
-            'system_file': file_picker(),
-            'out_dir'    : file_picker(),
+            'system_file': _get_file_picker(),
+            'out_dir'    : _get_file_picker(),
             'ensemble': {
                 'enum': [{'children': [], 'label': e.upper(), 'value': e} for e in ensembles]
             },
@@ -132,11 +107,10 @@ class UiHelper:
                          for f in sorted(dp_model_files)]
             },
         }}}, quiet=True)
-
-        form = Formily(schema, options={
-            "modal_props": {"title": "Provision LAMMPS Task", "width": "60vw", "style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
-        }, default_value=self.lammps_value)
+        options = _get_form_options('Provision LAMMPS Task')
+        form = Formily(schema, options=options, default_value=self.lammps_value)
         form.display()
+
         async def _task():
             res = await wait_for_change(form, 'value')
             self.lammps_value = res['data']
@@ -178,9 +152,8 @@ class UiHelper:
         # patch options
         schema['schema']['properties']['selected']['enum'] = [{'children': [], 'label': opt[0], 'value': opt[1]} for opt in options]
         schema['schema']['properties']['selected']['title'] = label
-        form = Formily(schema, options={
-            "modal_props": {"title": title, "width": "60vw","style": {"max-width": "800px"}, "styles": {"body": {"max-height": "70vh", "overflow-y": "auto"}}}
-        })
+        options = _get_form_options(title)
+        form = Formily(schema, options=options)
         form.display()
         async def _task():
             res = await wait_for_change(form, 'value')
@@ -193,11 +166,51 @@ class UiHelper:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
+    def _get_aimd_schema(self):
+        schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-cp2k-aimd.formily.json')
+        schema = load_json(schema_path)
+        # patch for FilePicker
+        return merge_dict(schema, {'schema': {'properties': {
+            'system_file':    _get_file_picker(),
+            'basic_set_file': _get_file_picker(),
+            'potential_file': _get_file_picker(),
+            'parameter_file': _get_file_picker(),
+            'out_dir':        _get_file_picker(),
+        }}}, quiet=True)
 
-def file_picker(props: Optional[dict] = None) -> dict:
+    def _get_training_schema(self):
+        schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-training.v2.formily.json')
+        schema = load_json(schema_path)
+        return merge_dict(schema, {'schema': {'properties': { 'collapse': {'properties':{
+            'general': {'properties': {
+                'system_file': _get_file_picker(),
+                'out_dir':     _get_file_picker(),
+            }},
+            'cp2k': {'properties': {
+                'basic_set_file': _get_file_picker(),
+                'potential_file': _get_file_picker(),
+                'parameter_file': _get_file_picker(),
+            }},
+        }}}}}, quiet=True)
+
+
+def _get_file_picker(props: Optional[dict] = None) -> dict:
     if props is None:
         props = {}
     return {'x-component': 'FilePicker', 'x-component-props': props}
+
+
+def _get_form_options(title: str):
+    return {
+        "modal_props": {
+            "title": title,
+            "width": "60vw",
+            "style": {"max-width": "800px"},
+            "styles": {
+                "body": {"max-height": "70vh", "overflow-y": "auto"}
+            }
+        }
+    }
 
 
 _UI_HELPER = None

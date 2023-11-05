@@ -157,21 +157,6 @@
         "default": "dftd3.dat",
         "x-designable-id": "vskcjarnpz9",
         "x-index": 8
-      },
-      "out_dir": {
-        "type": "string",
-        "title": "Output Directory",
-        "x-decorator": "FormItem",
-        "x-component": "Input",
-        "x-validator": [],
-        "x-component-props": {},
-        "x-decorator-props": {},
-        "name": "out_dir",
-        "default": "./out",
-        "x-designable-id": "jjsga9jn8nh",
-        "x-index": 9,
-        "description": "",
-        "required": true
       }
     },
     "x-designable-id": "poma16e9ojv"

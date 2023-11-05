@@ -51,19 +51,6 @@
         "default": "csvr",
         "x-designable-id": "5pclopuitpo",
         "x-index": 2
-      },
-      "out_dir": {
-        "type": "string",
-        "title": "Output Directory",
-        "x-decorator": "FormItem",
-        "x-component": "Input",
-        "x-validator": [],
-        "x-component-props": {},
-        "x-decorator-props": {},
-        "name": "out_dir",
-        "required": true,
-        "x-designable-id": "7j9y94m0u40",
-        "x-index": 3
       }
     },
     "x-designable-id": "qgwxn3bzcon"

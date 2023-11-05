@@ -54,7 +54,7 @@ class UiHelper:
         self.cp2k_parameter_file = args.get('parameter_file', self.cp2k_parameter_file)
 
 
-    def gen_aimd_config(self, **default_value):
+    def gen_aimd_config(self, out_dir: str, **default_value):
         if self.aimd_args is None:
             self.aimd_args = default_value
         self._set_default_system_file(self.aimd_args)
@@ -77,20 +77,21 @@ class UiHelper:
                 system_file = cp2k_kwargs.pop('system_file')
                 config_builder = ConfigBuilder()
                 config_builder.load_system(system_file)
-                config_builder.gen_cp2k_input(**cp2k_kwargs, aimd=True)
+                config_builder.gen_cp2k_input(out_dir=out_dir, **cp2k_kwargs, aimd=True)
                 logger.info('Success!')  # TODO: Send a toast message
             except Exception as e:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
-    def gen_label_explore_config(self, out_dir: str, **default_value):
+
+    def gen_train_vendors_config(self, out_dir: str, **default_value):
         if self.label_explore_args is None:
             self.label_explore_args = default_value
         self._set_default_system_file(self.label_explore_args)
         self._set_default_cp2k_basic_args(self.label_explore_args)
 
         schema = self._get_label_explore_schema()
-        options = _get_form_options('Generate CP2K and plumed Inputs')
+        options = _get_form_options('Generate CP2K and Plumed Inputs')
         form = Formily(schema, options=options, default_value=self.label_explore_args)
         form.display()
         async def _task():
@@ -146,7 +147,7 @@ class UiHelper:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
-    def gen_lammps_config(self, work_dir: str = './', **default_value):
+    def gen_lammps_config(self, out_dir: str, work_dir: str, **default_value):
         if self.lammps_args is None:
             self.lammps_args = default_value
         self._set_default_system_file(self.lammps_args)
@@ -159,7 +160,6 @@ class UiHelper:
         # patch for FilePicker
         schema = merge_dict(schema, {'schema': {'properties': {
             'system_file': _get_file_picker(),
-            'out_dir'    : _get_file_picker(),
             'ensemble': {
                 'enum': [{'children': [], 'label': e.upper(), 'value': e} for e in ensembles]
             },
@@ -179,7 +179,6 @@ class UiHelper:
             try:
                 kwargs = self.lammps_args.copy()
                 system_file = kwargs.pop('system_file')
-                out_dir = kwargs.pop('out_dir')
                 logger.info('Start to generate LAMMPS input files...')
                 config_builder = ConfigBuilder()
                 config_builder.load_system(system_file)
@@ -235,7 +234,6 @@ class UiHelper:
             'basic_set_file': _get_file_picker(),
             'potential_file': _get_file_picker(),
             'parameter_file': _get_file_picker(),
-            'out_dir':        _get_file_picker(),
         }}}, quiet=True)
 
 

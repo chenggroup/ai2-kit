@@ -224,7 +224,7 @@ class ConfigBuilder:
     def gen_lammps_input(self, out_dir='./out', **kwargs):
         assert self._atoms is not None, 'atoms must be loaded first'
         kwargs = {
-            'nsteps': 10000,
+            'nsteps': 20000,
             'stepsize': 0.0005,
             'temp': 330,
             'sample_freq': 100,

@@ -20,54 +20,57 @@ class UiHelper:
     """
 
     def __init__(self) -> None:
-        self.aimd_value = None
-        self.training_value = None
-        self.lammps_value = None
+        self.aimd_args = None
+        self.train_args = None
+        self.lammps_args = None
+
+        self.cp2k_basic_args = None
 
         self.lammps_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-lammps.formily.json')
         self.selector_schema_path = os.path.join(AI2CAT_RES_DIR, 'selector.formily.json')
 
+
     def gen_aimd_config(self, **default_value):
-        if self.aimd_value is None:
-            self.aimd_value = default_value
+        if self.aimd_args is None:
+            self.aimd_args = default_value
 
         schema = self._get_aimd_schema()
         options = _get_form_options('Provision AIMD Task')
-        form = Formily(schema, options=options , default_value=self.aimd_value)
+        form = Formily(schema, options=options , default_value=self.aimd_args)
 
         form.display()
         async def _task():
             res = await wait_for_change(form, 'value')
-            self.aimd_value = res['data']
-            self.aimd_value['aimd'] = True
-            logger.info('form value: %s', self.aimd_value)
+            self.aimd_args = res['data']
+            logger.info('form value: %s', self.aimd_args)
             try:
                 logger.info('Start to generate AMID input files...')
-                cp2k_kwargs: dict = self.aimd_value.copy()
+                cp2k_kwargs: dict = self.aimd_args.copy()
                 system_file = cp2k_kwargs.pop('system_file')
                 config_builder = ConfigBuilder()
                 config_builder.load_system(system_file)
-                config_builder.gen_cp2k_input(**cp2k_kwargs)  # this is quick but prone to error, fix it later
+                config_builder.gen_cp2k_input(**cp2k_kwargs, aimd=True)  # this is quick but prone to error, fix it later
+
                 logger.info('Success!')  # TODO: Send a toast message
             except Exception as e:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
     def gen_training_config(self, **default_value):
-        if self.training_value is None:
-            self.training_value = default_value
+        if self.train_args is None:
+            self.train_args = default_value
         schema = self._get_training_schema()
         options = _get_form_options('Provision Training Workflow')
-        form = Formily(schema, options=options, default_value=self.training_value)
+        form = Formily(schema, options=options, default_value=self.train_args)
         form.display()
         async def _task():
             res = await wait_for_change(form, 'value')
-            self.training_value = res['data']
-            self.training_value['aimd'] = False
-            logger.info('form value: %s', self.training_value)
+            self.train_args = res['data']
+            self.train_args['aimd'] = False
+            logger.info('form value: %s', self.train_args)
             try:
                 logger.info('Start to generate Training input files...')
-                cp2k_kwargs: dict = self.training_value.copy()
+                cp2k_kwargs: dict = self.train_args.copy()
                 system_file = cp2k_kwargs.pop('system_file')
                 dp_steps = cp2k_kwargs.pop('dp_steps')
                 out_dir = cp2k_kwargs.get('out_dir', './out')
@@ -87,8 +90,8 @@ class UiHelper:
         asyncio.ensure_future(_task())
 
     def gen_lammps_config(self, work_dir: str = './', /, **default_value):
-        if self.lammps_value is None:
-            self.lammps_value = default_value
+        if self.lammps_args is None:
+            self.lammps_args = default_value
         pattern = os.path.join(work_dir, '*/iters-*/train-deepmd/tasks/*/*.pb'  )
         dp_model_files = glob.glob(pattern)
         ensembles = ['nvt', 'nvt-i', 'nvt-a', 'nvt-iso', 'nvt-aniso', 'npt', 'npt-t', 'npt-tri', 'nve', 'csvr']
@@ -107,15 +110,15 @@ class UiHelper:
             },
         }}}, quiet=True)
         options = _get_form_options('Provision LAMMPS Task')
-        form = Formily(schema, options=options, default_value=self.lammps_value)
+        form = Formily(schema, options=options, default_value=self.lammps_args)
         form.display()
 
         async def _task():
             res = await wait_for_change(form, 'value')
-            self.lammps_value = res['data']
-            logger.info('form value: %s', self.lammps_value)
+            self.lammps_args = res['data']
+            logger.info('form value: %s', self.lammps_args)
             try:
-                kwargs = self.lammps_value.copy()
+                kwargs = self.lammps_args.copy()
                 system_file = kwargs.pop('system_file')
                 out_dir = kwargs.pop('out_dir')
                 logger.info('Start to generate LAMMPS input files...')
@@ -175,6 +178,20 @@ class UiHelper:
             'parameter_file': _get_file_picker(),
             'out_dir':        _get_file_picker(),
         }}}, quiet=True)
+
+
+    def _get_label_explore_schema(self):
+        schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-label-explore.formily.json')
+        schema = load_json(schema_path)
+        return merge_dict(schema, {'schema': {'properties': {
+            'system_file':    _get_file_picker(),
+            'basic_set_file': _get_file_picker(),
+            'potential_file': _get_file_picker(),
+            'parameter_file': _get_file_picker(),
+            'out_dir':        _get_file_picker(),
+        }}}, quiet=True)
+
+
 
     def _get_training_schema(self):
         schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-training.v2.formily.json')

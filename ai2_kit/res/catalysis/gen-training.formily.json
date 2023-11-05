@@ -6,6 +6,18 @@
   "schema": {
     "type": "object",
     "properties": {
+      "system_file": {
+        "type": "string",
+        "title": "System File",
+        "x-decorator": "FormItem",
+        "x-component": "Input",
+        "x-validator": [],
+        "x-component-props": {},
+        "x-decorator-props": {},
+        "name": "system_file",
+        "x-designable-id": "ieturbomom9",
+        "x-index": 0
+      },
       "train_data": {
         "title": "Train Data",
         "x-decorator": "FormItem",
@@ -20,7 +32,7 @@
         "name": "train_data",
         "description": "Use this if train data has been labeled, you should add artifacts first",
         "x-designable-id": "oim1s8g0m3f",
-        "x-index": 0
+        "x-index": 1
       },
       "explore_data": {
         "title": "Explore Data",
@@ -36,7 +48,7 @@
         "name": "explore_data",
         "description": "Select init data for LAMMPS, you should add artifacts first",
         "x-designable-id": "v72jopdnqzx",
-        "x-index": 1
+        "x-index": 2
       },
       "steps": {
         "type": "number",
@@ -49,7 +61,7 @@
         "name": "steps",
         "description": "numb_step of deepmd.json",
         "x-designable-id": "zwbb9xpi81i",
-        "x-index": 2
+        "x-index": 3
       },
       "artifacts": {
         "type": "array",
@@ -63,7 +75,7 @@
         "title": "Artifacts",
         "name": "artifacts",
         "x-designable-id": "gsl36g9kpif",
-        "x-index": 3,
+        "x-index": 4,
         "items": {
           "type": "object",
           "x-validator": [],

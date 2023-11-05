@@ -129,16 +129,17 @@ class UiHelper:
             logger.info('form value: %s', self.train_args)
             try:
                 logger.info('Start to generate Training input files...')
-                system_file = self.train_args.pop('system_file')
-                steps = cp2k_kwargs.pop('steps')
-
-
                 config_builder = ConfigBuilder()
-                config_builder.load_system(system_file)
-                config_builder.gen_mlp_training_input(out_dir=out_dir)
+                config_builder.load_system(self.train_args['system_file'])
+                config_builder.gen_mlp_training_input(
+                    out_dir=out_dir,
+                    train_data=self.train_args.get('train_data', []),
+                    explore_data=self.train_args.get('explore_data', []),
+                    artifacts=self.train_args.get('artifacts', []),
+                )
                 config_builder.gen_deepmd_input(
                     out_dir=out_dir,
-                    steps=steps,
+                    steps=self.train_args.get('steps'),  # TODO: provide default value
                 )
                 logger.info('Success!')  # TODO: Send a toast message
             except Exception as e:
@@ -254,6 +255,7 @@ class UiHelper:
         schema = load_json(schema_path)
         select_artifact_expr = "($deps[0] || []).map(item => ({label:item.key, value: item.key}))"
         schema = merge_dict(schema, {'schema': {'properties': {
+            'system_file': _get_file_picker(),
             'train_data': _get_select_reactor(['artifacts'], select_artifact_expr),
             'explore_data': _get_select_reactor(['artifacts'], select_artifact_expr),
             'artifacts': {'items': { 'properties': {'artifact': {'properties': {

@@ -90,6 +90,12 @@ def load_yaml_files(*paths: Tuple[Path], quiet: bool = False):
     return d
 
 
+def nested_set(d: dict, keys: List[str], value):
+    for key in keys[:-1]:
+        d = d.setdefault(key, {})
+    d[keys[-1]] = value
+
+
 def s_uuid():
     """short uuid"""
     return shortuuid.uuid()

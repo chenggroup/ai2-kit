@@ -23,6 +23,7 @@ workflow:
     cp2k:
       # limit the max number of structures to label
       limit: 50
+      # default input template for cp2k
       input_template: !load_text cp2k.inp
 
   train:

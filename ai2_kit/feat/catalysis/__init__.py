@@ -3,8 +3,11 @@ import fire
 import numpy as np
 import matplotlib.pyplot as plt
 
+from ruamel.yaml import YAML
+from ruamel.yaml.comments import TaggedScalar
+
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.util import merge_dict, wait_for_change, parse_path_list
+from ai2_kit.core.util import parse_path_list, nested_set
 from ai2_kit.domain.cp2k import dump_coord_n_cell
 from ai2_kit.domain.lammps import get_ensemble
 from ai2_kit import res
@@ -12,10 +15,10 @@ from ai2_kit import res
 from typing import Optional, Literal, List
 from ase import Atoms, Atom
 from string import Template
-import asyncio
 import re
 import os
 import json
+import io
 
 
 logger = get_logger(__name__)
@@ -124,6 +127,7 @@ CP2K_ACCURACY_TABLE = {
     'low': {'cutoff': 600, 'rel_cutoff': 50 },
 }
 
+
 class ConfigBuilder:
 
     def __init__(self):
@@ -140,7 +144,14 @@ class ConfigBuilder:
 
     def gen_mlp_training_input(self,
                                out_dir: str = 'out',
+                               train_data: Optional[List[str]] = None,
+                               explore_data: Optional[List[str]] = None,
+                               artifacts: Optional[List[dict]] = None,
                                template_file: str = MLP_TRAINING_TEMPLATE):
+        train_data = train_data or []
+        explore_data = explore_data or []
+        artifacts = artifacts or []
+
         # Read yaml file as text so that the comments are preserved
         with open(template_file, 'r') as fp:
             text = fp.read()
@@ -151,6 +162,9 @@ class ConfigBuilder:
         out_data = Template(text).substitute(
             type_map=json.dumps(type_map),
             mass_map=json.dumps(mass_map),
+            train_data=json.dumps(train_data),
+            explore_data=json.dumps(explore_data),
+            artifacts=dump_artifacts(artifacts),
         )
         os.makedirs(out_dir, exist_ok=True)
         mlp_training_input_path = os.path.join(out_dir, 'training.yml')
@@ -417,6 +431,29 @@ def parse_cp2k_data_file(fp):
         if re.match(r'^[A-Z][a-z]*$', tokens[0]):
             parsed.setdefault(tokens[0], []).append(tokens[1])
     return parsed
+
+
+def dump_artifacts(artifacts: List[dict]) -> str:
+    out = {}
+    for artifact in artifacts:
+        key = artifact['key']
+        out[key] = {}
+        out[key]['url'] = artifact['url']
+        attrs = {}
+        out[key]['attrs'] = attrs
+
+        if 'cp2k_file' in artifact:
+            cp2k_file = os.path.abspath(artifact['cp2k_file'])
+            nested_set(attrs, ['cp2k', 'input_template'], TaggedScalar(value=cp2k_file, tag='!load_text'))
+        if 'plumed_file' in artifact:
+            plumed_file = os.path.abspath(artifact['plumed_file'])
+            nested_set(attrs, ['lammps', 'plumed_config', ], TaggedScalar(value=plumed_file, tag='!load_text'))
+
+    yaml = YAML()
+    yaml.default_flow_style = False
+    buf = io.BytesIO()
+    yaml.dump({'artifacts': out}, buf)
+    return buf.getvalue().decode('utf-8')
 
 
 def inspect_lammps_output(lammps_dir: str, save_to: Optional[str]=None, fig_ax = None):

@@ -15,6 +15,7 @@ from ai2_kit import res
 from typing import Optional, Literal, List
 from ase import Atoms, Atom
 from string import Template
+import random
 import re
 import os
 import json
@@ -247,7 +248,10 @@ class ConfigBuilder:
         ensemble = kwargs.pop('ensemble')
 
         type_map, mass_map = get_type_map(self._atoms)
-        ensemble_config = get_ensemble(ensemble)
+        ensemble_config = '\n'.join([
+            '''velocity all create ${TEMP} %d"''' % (random.randrange(10^6 - 1) + 1),
+            get_ensemble(ensemble),
+        ])
 
         template_vars = {
             **kwargs,

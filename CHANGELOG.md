@@ -1,4 +1,6 @@
 # Change Logs
+## v0.10.0
+* feat: release of ai2cat notebook
 
 ## v0.9.17
 * fix: missing files

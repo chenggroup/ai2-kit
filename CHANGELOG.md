@@ -1,4 +1,8 @@
 # Change Logs
+
+## v0.10.1
+* fix: ai2cat lammps template
+
 ## v0.10.0
 * feat: release of ai2cat notebook
 

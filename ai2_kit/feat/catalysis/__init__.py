@@ -249,7 +249,7 @@ class ConfigBuilder:
 
         type_map, mass_map = get_type_map(self._atoms)
         ensemble_config = '\n'.join([
-            '''velocity all create ${TEMP} %d"''' % (random.randrange(10^6 - 1) + 1),
+            '''velocity all create ${TEMP} %d''' % (random.randrange(10^6 - 1) + 1),
             get_ensemble(ensemble),
         ])
 

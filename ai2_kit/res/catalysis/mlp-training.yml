@@ -9,43 +9,27 @@
 # /public/home/user01/demo/ai2cat/data/train/Ag13O2
 # /public/home/user01/demo/ai2cat/data/explore/init.xyz
 
-
-artifacts:
-  training-data:
-    url : /path/to/training-data
-
-  init-structure:
-    url : /path/to/structure-file
-    # You may use includes to specify multiple files. For example:
-    # includes: POSCAR*
-
-    # You may define custom attrs for the artifact.
-    # The attrs defined here will override the corresponding options in workflow section.
-    # Remove the following lines in case you don't need them.
-    attrs:
-      lammps:
-        plumed_config: !load_text plumed.inp
-      cp2k:
-        input_template: !load_text cp2k.inp
+$artifacts
 
 workflow:
   general:
     type_map: $type_map
     mass_map: $mass_map
+    # limit the max iteration of the workflow
+    # increase this when you want to run more iterations
     max_iters: 1
 
   label:
     cp2k:
-      limit: 100  # limit the max number of structures to label
+      # limit the max number of structures to label
+      limit: 50
       input_template: !load_text cp2k.inp
 
   train:
     deepmd:
       model_num: 4
-      # Specific the artifacts to be used as initial dataset here.
-      ########## CHANGE ME ##########
-      init_dataset : [ ]
-      ########## CHANGE ME ##########
+      # Specific the artifacts to be used as initial train data here.
+      init_dataset : $train_data
       input_template: !load_yaml deepmd.json
 
   explore:
@@ -54,23 +38,21 @@ workflow:
       timestep: 0.0005
       sample_freq: 100
       ensemble: nvt
-
       # Specific the artifacts to be used as initial structure here.
-      ########## CHANGE ME ##########
-      system_files: [ ]
-      ########## CHANGE ME ##########
+      system_files: $explore_data
 
       template_vars:
          POST_INIT: |
             neighbor 2.0 bin
             box      tilt large
+
       explore_vars:
         TEMP: [50,100,200,300,400,600,800,1000]
         PRES: [ 1 ]
 
-
   select:
     model_devi:
+        # the upper and lower bound of the deviation of the model
         f_trust_lo: 0.25
         f_trust_hi: 0.5
 
@@ -78,7 +60,7 @@ workflow:
     walkthrough:
       # You can override the default configuration for each iteration here.
       # The default configuration is for iter 0.
-      # The most common configuration to change includes: nsteps, system_files, etc.
+      # Some common configurations to change includes: nsteps, system_files, etc.
       table:
         - explore:  # iter 1
             lammps:

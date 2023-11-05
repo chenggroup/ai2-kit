@@ -33,7 +33,6 @@ class UiHelper:
         self.lammps_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-lammps.formily.json')
         self.selector_schema_path = os.path.join(AI2CAT_RES_DIR, 'selector.formily.json')
 
-
     def _set_default_system_file(self, args: dict):
         if self.system_file is not None:
             args['system_file'] = self.system_file
@@ -78,8 +77,7 @@ class UiHelper:
                 system_file = cp2k_kwargs.pop('system_file')
                 config_builder = ConfigBuilder()
                 config_builder.load_system(system_file)
-                config_builder.gen_cp2k_input(**cp2k_kwargs, aimd=True)  # this is quick but prone to error, fix it later
-
+                config_builder.gen_cp2k_input(**cp2k_kwargs, aimd=True)
                 logger.info('Success!')  # TODO: Send a toast message
             except Exception as e:
                 logger.exception('Failed!')  # TODO: Send a alert message
@@ -115,39 +113,39 @@ class UiHelper:
                 logger.exception('Failed!')
         asyncio.ensure_future(_task())
 
-    def gen_training_config(self, **default_value):
+    def gen_train_config(self, out_dir: str, **default_value):
         if self.train_args is None:
             self.train_args = default_value
         self._set_default_system_file(self.train_args)
 
-        schema = self._get_training_schema()
+        schema = self._get_train_schema()
         options = _get_form_options('Provision Training Workflow')
         form = Formily(schema, options=options, default_value=self.train_args)
         form.display()
         async def _task():
             res = await wait_for_change(form, 'value')
             self.train_args = res['data']
+            self._update_default_system_file(self.train_args)
             logger.info('form value: %s', self.train_args)
             try:
                 logger.info('Start to generate Training input files...')
-                cp2k_kwargs: dict = self.train_args.copy()
-                system_file = cp2k_kwargs.pop('system_file')
-                dp_steps = cp2k_kwargs.pop('dp_steps')
-                out_dir = cp2k_kwargs.get('out_dir', './out')
+                system_file = self.train_args.pop('system_file')
+                steps = cp2k_kwargs.pop('steps')
+
 
                 config_builder = ConfigBuilder()
                 config_builder.load_system(system_file)
                 config_builder.gen_mlp_training_input(out_dir=out_dir)
                 config_builder.gen_deepmd_input(
                     out_dir=out_dir,
-                    steps=dp_steps,
+                    steps=steps,
                 )
                 logger.info('Success!')  # TODO: Send a toast message
             except Exception as e:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
-    def gen_lammps_config(self, work_dir: str = './', /, **default_value):
+    def gen_lammps_config(self, work_dir: str = './', **default_value):
         if self.lammps_args is None:
             self.lammps_args = default_value
         self._set_default_system_file(self.lammps_args)
@@ -251,32 +249,19 @@ class UiHelper:
         }}}, quiet=True)
 
 
-    def _get_training_schema(self):
-        schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-training.v2.formily.json')
+    def _get_train_schema(self):
+        schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-training.formily.json')
         schema = load_json(schema_path)
         select_artifact_expr = "($deps[0] || []).map(item => ({label:item.key, value: item.key}))"
-        schema = merge_dict(schema, {'schema': {'properties': { 'collapse': {'properties':{
-            'general': {'properties': {
-                'system_file': _get_file_picker(),
-                'out_dir':     _get_file_picker(),
-            }},
-            'cp2k': {'properties': {
-                'basic_set_file': _get_file_picker(),
-                'potential_file': _get_file_picker(),
-                'parameter_file': _get_file_picker(),
-            }},
-            'deepmd': {'properties': {
-                'dp_train_data': _get_select_reactor(['dp_artifacts'], select_artifact_expr),
-                'dp_explore_data': _get_select_reactor(['dp_artifacts'], select_artifact_expr),
-                'dp_train_data_unlabeled': _get_select_reactor(['dp_artifacts'], select_artifact_expr),
-                'dp_artifacts': {'items': {'properties': {'dp_artifact': {'properties': {
-                    'url': _get_file_picker(),
-                    'plumed_file': _get_file_picker(),
-                    'cp2k_file': _get_file_picker(),
-                }}}}}
-            }},
-        }}}}}, quiet=True)
-        dump_json(schema, '/tmp/schema.json')
+        schema = merge_dict(schema, {'schema': {'properties': {
+            'train_data': _get_select_reactor(['artifacts'], select_artifact_expr),
+            'explore_data': _get_select_reactor(['artifacts'], select_artifact_expr),
+            'artifacts': {'items': { 'properties': {'artifact': {'properties': {
+                'url': _get_file_picker(),
+                'plumed_file': _get_file_picker(),
+                'cp2k_file': _get_file_picker(),
+            }}}}},
+        }}}, quiet=True)
         return schema
 
 

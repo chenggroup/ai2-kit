@@ -6,194 +6,185 @@
   "schema": {
     "type": "object",
     "properties": {
-      "collapse": {
-        "type": "void",
-        "x-component": "FormCollapse",
+      "train_data": {
+        "title": "Train Data",
+        "x-decorator": "FormItem",
+        "x-component": "Select",
+        "x-validator": [],
+        "x-component-props": {
+          "mode": "multiple"
+        },
+        "x-decorator-props": {
+          "tooltip": "Select artifacts that will be used as train data. Usually they are deepmd/npy format. You should add artifacts first before you can use them."
+        },
+        "name": "train_data",
+        "description": "Use this if train data has been labeled, you should add artifacts first",
+        "x-designable-id": "oim1s8g0m3f",
+        "x-index": 0
+      },
+      "explore_data": {
+        "title": "Explore Data",
+        "x-decorator": "FormItem",
+        "x-component": "Select",
+        "x-validator": [],
+        "x-component-props": {
+          "mode": "multiple"
+        },
+        "x-decorator-props": {
+          "tooltip": "Select artifacts that will be used as initial structure of LAMMPS. Usually they are XYZ, POSCAR format. You should add artifacts first before you can use them."
+        },
+        "name": "explore_data",
+        "description": "Select init data for LAMMPS, you should add artifacts first",
+        "x-designable-id": "v72jopdnqzx",
+        "x-index": 1
+      },
+      "steps": {
+        "type": "number",
+        "title": "Steps",
+        "x-decorator": "FormItem",
+        "x-component": "NumberPicker",
+        "x-validator": [],
         "x-component-props": {},
-        "x-designable-id": "tgg2ki18uxp",
-        "x-index": 0,
-        "name": "collapse",
+        "x-decorator-props": {},
+        "name": "steps",
+        "description": "numb_step of deepmd.json",
+        "x-designable-id": "zwbb9xpi81i",
+        "x-index": 2
+      },
+      "artifacts": {
+        "type": "array",
+        "x-decorator": "FormItem",
+        "x-component": "ArrayCards",
+        "x-component-props": {
+          "title": "Artifact"
+        },
+        "x-validator": [],
+        "x-decorator-props": {},
+        "title": "Artifacts",
+        "name": "artifacts",
+        "x-designable-id": "gsl36g9kpif",
+        "x-index": 3,
+        "items": {
+          "type": "object",
+          "x-validator": [],
+          "x-designable-id": "hf08hpy7i64",
+          "properties": {
+            "o44jnk8kuxa": {
+              "type": "void",
+              "x-component": "ArrayCards.Index",
+              "x-designable-id": "o44jnk8kuxa",
+              "x-index": 0
+            },
+            "ojayp7c4wfa": {
+              "type": "void",
+              "title": "Addition",
+              "x-component": "ArrayCards.Remove",
+              "x-designable-id": "ojayp7c4wfa",
+              "x-index": 1
+            },
+            "xmwclx2wl54": {
+              "type": "void",
+              "title": "Addition",
+              "x-component": "ArrayCards.MoveDown",
+              "x-designable-id": "xmwclx2wl54",
+              "x-index": 2
+            },
+            "k6kcbatrrm4": {
+              "type": "void",
+              "title": "Addition",
+              "x-component": "ArrayCards.MoveUp",
+              "x-designable-id": "k6kcbatrrm4",
+              "x-index": 3
+            },
+            "artifact": {
+              "type": "void",
+              "x-component": "FormLayout",
+              "x-component-props": {
+                "labelCol": 4,
+                "wrapperCol": null
+              },
+              "x-designable-id": "792vly63b4c",
+              "x-index": 4,
+              "name": "artifact",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "title": "Key",
+                  "x-decorator": "FormItem",
+                  "x-component": "Input",
+                  "x-validator": [
+                    {
+                      "triggerType": "onInput",
+                      "message": "",
+                      "validator": "{{function(value){\r\n const items = $values.artifacts.map(item => item.key); \r\n if(items.length !== new Set(items).size) {\r\n   return \"Key duplicated!\";\r\n }\r\n}}}"
+                    }
+                  ],
+                  "x-component-props": {},
+                  "x-decorator-props": {},
+                  "name": "key",
+                  "required": true,
+                  "description": "Must not duplicated, e.g. train-data-01",
+                  "x-designable-id": "mzak9i2a9vv",
+                  "x-index": 0
+                },
+                "url": {
+                  "type": "string",
+                  "title": "Path",
+                  "x-decorator": "FormItem",
+                  "x-component": "Input",
+                  "x-validator": [],
+                  "x-component-props": {},
+                  "x-decorator-props": {},
+                  "name": "url",
+                  "required": true,
+                  "description": "Path to target file or folder",
+                  "x-designable-id": "6mzf67h0oy6",
+                  "x-index": 1
+                },
+                "cp2k_file": {
+                  "type": "string",
+                  "title": "CP2K",
+                  "x-decorator": "FormItem",
+                  "x-component": "Input",
+                  "x-validator": [],
+                  "x-component-props": {},
+                  "x-decorator-props": {},
+                  "name": "cp2k_file",
+                  "description": "CP2K input file. Explore data only!",
+                  "required": false,
+                  "x-designable-id": "hx2qi8v0jhq",
+                  "x-index": 2
+                },
+                "plumed_file": {
+                  "type": "string",
+                  "title": "Plumed",
+                  "x-decorator": "FormItem",
+                  "x-component": "Input",
+                  "x-validator": [],
+                  "x-component-props": {},
+                  "x-decorator-props": {},
+                  "name": "plumed_file",
+                  "description": "plumed input file. Explore data only!",
+                  "required": false,
+                  "x-designable-id": "mxhlwt68j93",
+                  "x-index": 3
+                }
+              }
+            }
+          }
+        },
         "properties": {
-          "general": {
+          "nlq71ujsem7": {
             "type": "void",
-            "x-component": "FormCollapse.CollapsePanel",
-            "x-component-props": {
-              "header": "General"
-            },
-            "name": "general",
-            "x-designable-id": "syu67wzxhdg",
-            "x-index": 0,
-            "properties": {
-              "system_file": {
-                "type": "string",
-                "title": "System File",
-                "x-decorator": "FormItem",
-                "x-component": "Input",
-                "x-validator": [],
-                "x-component-props": {},
-                "x-decorator-props": {},
-                "name": "system_file",
-                "description": "System file in POSCAR, .xyz, .cif format.",
-                "x-designable-id": "y35y340yrs4",
-                "x-index": 0,
-                "required": true
-              },
-              "out_dir": {
-                "type": "string",
-                "title": "Output Directry",
-                "x-decorator": "FormItem",
-                "x-component": "Input",
-                "x-validator": [],
-                "x-component-props": {},
-                "x-decorator-props": {},
-                "name": "out_dir",
-                "default": "./out",
-                "x-designable-id": "jjsga9jn8nh",
-                "x-index": 1,
-                "description": "",
-                "required": true
-              }
-            }
-          },
-          "cp2k": {
-            "type": "void",
-            "x-component": "FormCollapse.CollapsePanel",
-            "x-component-props": {
-              "header": "CP2K"
-            },
-            "x-designable-id": "mg88st436tg",
-            "x-index": 1,
-            "name": "cp2k",
-            "properties": {
-              "style": {
-                "type": "string | number",
-                "title": "Style",
-                "x-decorator": "FormItem",
-                "x-component": "Radio.Group",
-                "enum": [
-                  {
-                    "children": [],
-                    "label": "Metal",
-                    "value": "metal"
-                  },
-                  {
-                    "children": [],
-                    "label": "Semiconductor",
-                    "value": "semi"
-                  }
-                ],
-                "x-validator": [],
-                "x-component-props": {},
-                "x-decorator-props": {},
-                "name": "style",
-                "default": "metal",
-                "x-designable-id": "bya1s5c3txl",
-                "x-index": 0
-              },
-              "accuracy": {
-                "type": "string | number",
-                "title": "Accuracy",
-                "x-decorator": "FormItem",
-                "x-component": "Radio.Group",
-                "enum": [
-                  {
-                    "children": [],
-                    "label": "Low",
-                    "value": "low"
-                  },
-                  {
-                    "children": [],
-                    "label": "Medium",
-                    "value": "medium"
-                  },
-                  {
-                    "children": [],
-                    "label": "High",
-                    "value": "high"
-                  }
-                ],
-                "x-validator": [],
-                "x-component-props": {},
-                "x-decorator-props": {},
-                "name": "accuracy",
-                "description": "",
-                "default": "low",
-                "x-designable-id": "7ri1h7284k4",
-                "x-index": 1
-              },
-              "basic_set_file": {
-                "type": "string",
-                "title": "Basic Set File",
-                "x-decorator": "FormItem",
-                "x-component": "Input",
-                "x-validator": [],
-                "x-component-props": {},
-                "x-decorator-props": {},
-                "name": "basic_set_file",
-                "x-designable-id": "5czwq9wajpu",
-                "x-index": 2,
-                "description": "CP2K basic set file.",
-                "default": "BASIS_MOLOPT"
-              },
-              "potential_file": {
-                "type": "string",
-                "title": "Potential File",
-                "x-decorator": "FormItem",
-                "x-component": "Input",
-                "x-validator": [],
-                "x-component-props": {},
-                "x-decorator-props": {},
-                "name": "potential_file",
-                "x-designable-id": "g4xqm9nq4o7",
-                "x-index": 3,
-                "description": "CP2K potential file.",
-                "default": "GTH_POTENTIALS"
-              },
-              "parameter_file": {
-                "type": "string",
-                "title": "Parameter file",
-                "x-decorator": "FormItem",
-                "x-component": "Input",
-                "x-validator": [],
-                "x-component-props": {},
-                "x-decorator-props": {},
-                "description": "CP2K parameter file.",
-                "name": "parameter_file",
-                "default": "dftd3.dat",
-                "x-designable-id": "vskcjarnpz9",
-                "x-index": 4
-              }
-            }
-          },
-          "deepmd": {
-            "type": "void",
-            "x-component": "FormCollapse.CollapsePanel",
-            "x-component-props": {
-              "header": "DeepMD"
-            },
-            "x-designable-id": "k5o61ule4lx",
-            "x-index": 2,
-            "name": "deepmd",
-            "properties": {
-              "dp_steps": {
-                "type": "number",
-                "title": "Steps",
-                "x-decorator": "FormItem",
-                "x-component": "NumberPicker",
-                "x-validator": [],
-                "x-component-props": {},
-                "x-decorator-props": {},
-                "name": "dp_steps",
-                "description": "numb_step  of deepmd.json",
-                "default": 5000,
-                "x-designable-id": "zwbb9xpi81i",
-                "x-index": 0
-              }
-            }
+            "title": "Addition",
+            "x-component": "ArrayCards.Addition",
+            "x-component-props": {},
+            "x-designable-id": "nlq71ujsem7",
+            "x-index": 0
           }
         }
       }
     },
-    "x-designable-id": "8pa5g6cjeq5"
+    "x-designable-id": "ch3zbqbsvlz"
   }
 }

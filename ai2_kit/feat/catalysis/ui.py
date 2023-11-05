@@ -22,17 +22,44 @@ class UiHelper:
     def __init__(self) -> None:
         self.aimd_args = None
         self.train_args = None
+        self.label_explore_args = None
         self.lammps_args = None
 
-        self.cp2k_basic_args = None
+        self.system_file = None
+        self.cp2k_basic_set_file = None
+        self.cp2k_potential_file = None
+        self.cp2k_parameter_file = None
 
         self.lammps_schema_path = os.path.join(AI2CAT_RES_DIR, 'gen-lammps.formily.json')
         self.selector_schema_path = os.path.join(AI2CAT_RES_DIR, 'selector.formily.json')
 
 
+    def _set_default_system_file(self, args: dict):
+        if self.system_file is not None:
+            args['system_file'] = self.system_file
+
+    def _update_default_system_file(self, args: dict):
+        self.system_file = args.get('system_file', self.system_file)
+
+    def _set_default_cp2k_basic_args(self, args: dict):
+        if self.cp2k_basic_set_file is not None:
+            args['basic_set_file'] = self.cp2k_basic_set_file
+        if self.cp2k_potential_file is not None:
+            args['potential_file'] = self.cp2k_potential_file
+        if self.cp2k_parameter_file is not None:
+            args['parameter_file'] = self.cp2k_parameter_file
+
+    def _update_default_cp2k_basic_args(self, args: dict):
+        self.cp2k_basic_set_file = args.get('basic_set_file', self.cp2k_basic_set_file)
+        self.cp2k_potential_file = args.get('potential_file', self.cp2k_potential_file)
+        self.cp2k_parameter_file = args.get('parameter_file', self.cp2k_parameter_file)
+
+
     def gen_aimd_config(self, **default_value):
         if self.aimd_args is None:
             self.aimd_args = default_value
+        self._set_default_system_file(self.aimd_args)
+        self._set_default_cp2k_basic_args(self.aimd_args)
 
         schema = self._get_aimd_schema()
         options = _get_form_options('Provision AIMD Task')
@@ -42,6 +69,8 @@ class UiHelper:
         async def _task():
             res = await wait_for_change(form, 'value')
             self.aimd_args = res['data']
+            self._update_default_system_file(self.aimd_args)
+            self._update_default_cp2k_basic_args(self.aimd_args)
             logger.info('form value: %s', self.aimd_args)
             try:
                 logger.info('Start to generate AMID input files...')
@@ -56,9 +85,41 @@ class UiHelper:
                 logger.exception('Failed!')  # TODO: Send a alert message
         asyncio.ensure_future(_task())
 
+    def gen_label_explore_config(self, out_dir: str, **default_value):
+        if self.label_explore_args is None:
+            self.label_explore_args = default_value
+        self._set_default_system_file(self.label_explore_args)
+        self._set_default_cp2k_basic_args(self.label_explore_args)
+
+        schema = self._get_label_explore_schema()
+        options = _get_form_options('Generate CP2K and plumed Inputs')
+        form = Formily(schema, options=options, default_value=self.label_explore_args)
+        form.display()
+        async def _task():
+            res = await wait_for_change(form, 'value')
+            self.label_explore_args = res['data']
+            self._update_default_system_file(self.label_explore_args)
+            self._update_default_cp2k_basic_args(self.label_explore_args)
+
+            logger.info('form value: %s', self.label_explore_args)
+            try:
+                logger.info('Start to generate CP2K and plumed input files...')
+                cp2k_kwargs: dict = self.label_explore_args.copy()
+                system_file = cp2k_kwargs.pop('system_file')
+                config_builder = ConfigBuilder()
+                config_builder.load_system(system_file)
+                config_builder.gen_cp2k_input(out_dir=out_dir, **cp2k_kwargs, aimd=False)
+                config_builder.gen_plumed_input(out_dir=out_dir)
+                logger.info('Success!')  # TODO: Send a toast message
+            except Exception as e:
+                logger.exception('Failed!')
+        asyncio.ensure_future(_task())
+
     def gen_training_config(self, **default_value):
         if self.train_args is None:
             self.train_args = default_value
+        self._set_default_system_file(self.train_args)
+
         schema = self._get_training_schema()
         options = _get_form_options('Provision Training Workflow')
         form = Formily(schema, options=options, default_value=self.train_args)
@@ -66,7 +127,6 @@ class UiHelper:
         async def _task():
             res = await wait_for_change(form, 'value')
             self.train_args = res['data']
-            self.train_args['aimd'] = False
             logger.info('form value: %s', self.train_args)
             try:
                 logger.info('Start to generate Training input files...')
@@ -79,7 +139,7 @@ class UiHelper:
                 config_builder.load_system(system_file)
                 config_builder.gen_plumed_input(out_dir=out_dir)
                 config_builder.gen_mlp_training_input(out_dir=out_dir)
-                config_builder.gen_cp2k_input(**cp2k_kwargs)  # FIXME: this is quick but prone to error, fix it later
+                config_builder.gen_cp2k_input(**cp2k_kwargs, aimd=False)
                 config_builder.gen_deepmd_input(
                     out_dir=out_dir,
                     steps=dp_steps,
@@ -92,6 +152,8 @@ class UiHelper:
     def gen_lammps_config(self, work_dir: str = './', /, **default_value):
         if self.lammps_args is None:
             self.lammps_args = default_value
+        self._set_default_system_file(self.lammps_args)
+
         pattern = os.path.join(work_dir, '*/iters-*/train-deepmd/tasks/*/*.pb'  )
         dp_model_files = glob.glob(pattern)
         ensembles = ['nvt', 'nvt-i', 'nvt-a', 'nvt-iso', 'nvt-aniso', 'npt', 'npt-t', 'npt-tri', 'nve', 'csvr']
@@ -188,9 +250,7 @@ class UiHelper:
             'basic_set_file': _get_file_picker(),
             'potential_file': _get_file_picker(),
             'parameter_file': _get_file_picker(),
-            'out_dir':        _get_file_picker(),
         }}}, quiet=True)
-
 
 
     def _get_training_schema(self):

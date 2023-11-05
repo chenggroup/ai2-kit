@@ -260,9 +260,9 @@ class ConfigBuilder:
 
 
     def gen_cp2k_input(self,
+                       out_dir: str = 'out',
                        basic_set_file: str = 'BASIS_MOLOPT',
                        potential_file: str = 'GTH_POTENTIALS',
-                       out_dir: str = 'out',
                        style: Literal['metal', 'semi'] = 'metal',
                        accuracy: Literal['high', 'medium', 'low'] = 'medium',
                        aimd: bool = False,

@@ -1,0 +1,124 @@
+{
+  "form": {
+    "labelCol": 6,
+    "wrapperCol": 12
+  },
+  "schema": {
+    "type": "object",
+    "properties": {
+      "system_file": {
+        "type": "string",
+        "title": "System File",
+        "x-decorator": "FormItem",
+        "x-component": "Input",
+        "x-validator": [],
+        "x-component-props": {},
+        "x-decorator-props": {},
+        "name": "system_file",
+        "description": "System file in POSCAR, .xyz, .cif format.",
+        "x-designable-id": "y35y340yrs4",
+        "x-index": 0,
+        "required": true
+      },
+      "style": {
+        "type": "string | number",
+        "title": "Style",
+        "x-decorator": "FormItem",
+        "x-component": "Radio.Group",
+        "enum": [
+          {
+            "children": [],
+            "label": "Metal",
+            "value": "metal"
+          },
+          {
+            "children": [],
+            "label": "Semiconductor",
+            "value": "semi"
+          }
+        ],
+        "x-validator": [],
+        "x-component-props": {},
+        "x-decorator-props": {},
+        "name": "style",
+        "default": "metal",
+        "x-designable-id": "bya1s5c3txl",
+        "x-index": 1
+      },
+      "accuracy": {
+        "type": "string | number",
+        "title": "Accuracy",
+        "x-decorator": "FormItem",
+        "x-component": "Radio.Group",
+        "enum": [
+          {
+            "children": [],
+            "label": "Low",
+            "value": "low"
+          },
+          {
+            "children": [],
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "children": [],
+            "label": "High",
+            "value": "high"
+          }
+        ],
+        "x-validator": [],
+        "x-component-props": {},
+        "x-decorator-props": {},
+        "name": "accuracy",
+        "description": "",
+        "default": "low",
+        "x-designable-id": "7ri1h7284k4",
+        "x-index": 2
+      },
+      "basic_set_file": {
+        "type": "string",
+        "title": "Basic Set File",
+        "x-decorator": "FormItem",
+        "x-component": "Input",
+        "x-validator": [],
+        "x-component-props": {},
+        "x-decorator-props": {},
+        "name": "basic_set_file",
+        "x-designable-id": "5czwq9wajpu",
+        "x-index": 3,
+        "description": "CP2K basic set file.",
+        "default": "BASIS_MOLOPT"
+      },
+      "potential_file": {
+        "type": "string",
+        "title": "Potential File",
+        "x-decorator": "FormItem",
+        "x-component": "Input",
+        "x-validator": [],
+        "x-component-props": {},
+        "x-decorator-props": {},
+        "name": "potential_file",
+        "x-designable-id": "g4xqm9nq4o7",
+        "x-index": 4,
+        "description": "CP2K potential file.",
+        "default": "GTH_POTENTIALS"
+      },
+      "parameter_file": {
+        "type": "string",
+        "title": "Parameter file",
+        "x-decorator": "FormItem",
+        "x-component": "Input",
+        "x-validator": [],
+        "x-component-props": {},
+        "x-decorator-props": {},
+        "description": "CP2K parameter file.",
+        "name": "parameter_file",
+        "default": "dftd3.dat",
+        "x-designable-id": "vskcjarnpz9",
+        "x-index": 5
+      }
+    },
+    "x-designable-id": "ch3zbqbsvlz"
+  }
+}

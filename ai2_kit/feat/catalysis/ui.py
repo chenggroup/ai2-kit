@@ -137,9 +137,7 @@ class UiHelper:
 
                 config_builder = ConfigBuilder()
                 config_builder.load_system(system_file)
-                config_builder.gen_plumed_input(out_dir=out_dir)
                 config_builder.gen_mlp_training_input(out_dir=out_dir)
-                config_builder.gen_cp2k_input(**cp2k_kwargs, aimd=False)
                 config_builder.gen_deepmd_input(
                     out_dir=out_dir,
                     steps=dp_steps,

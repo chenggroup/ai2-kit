@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.10.2
+* fix: formily schema
+
 ## v0.10.1
 * fix: ai2cat lammps template
 

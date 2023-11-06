@@ -15,6 +15,7 @@
         "x-component-props": {},
         "x-decorator-props": {},
         "name": "system_file",
+        "required": true,
         "x-designable-id": "ieturbomom9",
         "x-index": 0
       },
@@ -30,6 +31,7 @@
           "tooltip": "Select artifacts that will be used as train data. Usually they are deepmd/npy format. You should add artifacts first before you can use them."
         },
         "name": "train_data",
+        "required": true,
         "description": "Use this if train data has been labeled, you should add artifacts first",
         "x-designable-id": "oim1s8g0m3f",
         "x-index": 1
@@ -46,6 +48,7 @@
           "tooltip": "Select artifacts that will be used as initial structure of LAMMPS. Usually they are XYZ, POSCAR format. You should add artifacts first before you can use them."
         },
         "name": "explore_data",
+        "required": true,
         "description": "Select init data for LAMMPS, you should add artifacts first",
         "x-designable-id": "v72jopdnqzx",
         "x-index": 2
@@ -59,6 +62,7 @@
         "x-component-props": {},
         "x-decorator-props": {},
         "name": "steps",
+        "required": true,
         "description": "numb_step of deepmd.json",
         "x-designable-id": "zwbb9xpi81i",
         "x-index": 3

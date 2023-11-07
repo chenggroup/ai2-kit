@@ -89,7 +89,10 @@ class CllLammpsInputConfig(BaseModel):
     """
     Artifacts key of lammps input data
     """
-    ensemble: Literal['nvt', 'nvt-i', 'nvt-a', 'nvt-iso', 'nvt-aniso', 'npt', 'npt-t', 'npt-tri', 'nve', 'csvr']
+
+    ensemble: Optional[Literal['nvt', 'nvt-i', 'nvt-a', 'nvt-iso', 'nvt-aniso', 'npt', 'npt-t', 'npt-tri', 'nve', 'csvr']] = None
+    fix_statement: Optional[str] = None
+
     no_pbc: bool = False
     nsteps: int
     timestep: float = 0.0005
@@ -195,6 +198,7 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
         no_pbc=input.config.no_pbc,
         n_wise=input.config.n_wise,
         ensemble=input.config.ensemble,
+        fix_statement=input.config.fix_statement,
         preset_template=input.config.preset_template or input.preset_template,
         input_template=input.config.input_template,
         plumed_config=input.config.plumed_config,
@@ -269,7 +273,8 @@ def __export_remote_functions():
                               sample_freq: float,
                               no_pbc: bool,
                               n_wise: int,
-                              ensemble: str,
+                              ensemble: Optional[str],
+                              fix_statement: Optional[str],
                               preset_template: str,
                               input_template: Optional[str],
                               plumed_config: Optional[str],
@@ -413,9 +418,13 @@ def __export_remote_functions():
             )
 
             ## build simulation
+            if fix_statement is None:
+                assert ensemble is not None, 'either fix_statement or ensemble is required'
+                fix_statement = get_ensemble(ensemble)
+
             simulation = [
                 '''if "${restart} == 0" then "velocity all create ${TEMP} %d"''' % (random.randrange(10^6 - 1) + 1),
-                get_ensemble(ensemble),
+                fix_statement,
             ]
 
             if plumed_config:

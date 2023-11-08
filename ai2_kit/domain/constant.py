@@ -128,8 +128,8 @@ pair_coeff  * * deepmd 1 *
 pair_coeff  * * deepmd 2 *
 
 fix PES_Sampling all adapt 0 &
-    pair deepmd:1 scale * * v_LAMBDA_f &
-    pair deepmd:2 scale * * v_LAMBDA_i
+    pair deepmd:1 scale * * v_LAMBDA_i &
+    pair deepmd:2 scale * * v_LAMBDA_f
 '''
 
 _DP_FEP_UNI_FORCE_FIELD = '''\
@@ -145,8 +145,8 @@ pair_coeff  * * deepmd 2 $$FEP_FIN_SPECORDER
 
 
 fix PES_Sampling all adapt 0 &
-    pair deepmd:1 scale * * v_LAMBDA_f &
-    pair deepmd:2 scale * * v_LAMBDA_i
+    pair deepmd:1 scale * * v_LAMBDA_i &
+    pair deepmd:2 scale * * v_LAMBDA_f
 '''
 
 def _get_fep_rerun_setting(ns: str, in_data:str, in_traj: str):

@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.10.4
+* fix: scale factor of fep lammps template
+
 ## v0.10.3
 * feat: support customize fix statement
 

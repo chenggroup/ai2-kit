@@ -74,7 +74,6 @@ class BaseQueueSystem(ABC):
                script: str,
                cwd: str,
                name: Optional[str] = None,
-               checkpoint_key: Optional[str] = None,
                success_indicator: Optional[str] = None,
                ):
 
@@ -108,8 +107,6 @@ class BaseQueueSystem(ABC):
 
         # apply checkpoint
         submit_cmd_fn = self._submit_cmd
-        if checkpoint_key is not None:
-            submit_cmd_fn = apply_checkpoint(checkpoint_key)(submit_cmd_fn)
 
         # recover running job id
         # TODO: refactor the following code as function
@@ -134,7 +131,6 @@ class BaseQueueSystem(ABC):
                              name=name,
                              script=script,
                              cwd=cwd,
-                             checkpoint_key=checkpoint_key,
                              success_indicator=success_indicator,
                              polling_interval=self.get_polling_interval() // 2,
                              )
@@ -271,7 +267,6 @@ class QueueJobFuture(JobFuture):
                  cwd: str,
                  name: str,
                  success_indicator: str,
-                 checkpoint_key: Optional[str],
                  polling_interval=10,
                  ):
         self._queue_system = queue_system
@@ -279,7 +274,6 @@ class QueueJobFuture(JobFuture):
         self._script = script
         self._cwd = cwd
         self._job_id = job_id
-        self._checkpoint_key = checkpoint_key
         self._success_indicator = success_indicator
         self._polling_interval = polling_interval
         self._final_state = None
@@ -303,17 +297,11 @@ class QueueJobFuture(JobFuture):
         if not self.done():
             raise RuntimeError('Cannot resubmit an unfinished job!')
 
-        # delete checkpoint on resubmit
-        if self._checkpoint_key is not None:
-            logger.info(f'Delete checkpoint due to resubmit {self._checkpoint_key}')
-            del_checkpoint(self._checkpoint_key)
-
         logger.info(f'Resubmit job: {self._job_id}')
         return self._queue_system.submit(
             script=self._script,
             cwd=self._cwd,
             name=self._name,
-            checkpoint_key=self._checkpoint_key,
             success_indicator=self._success_indicator,
         )
 

@@ -134,8 +134,7 @@ async def cll_vasp(input: CllVaspInput, ctx: CllVaspContext) -> GenericVaspOutpu
             template=ctx.config.script_template,
             steps=steps_group,
         )
-        job = executor.submit(script.render(), cwd=tasks_dir,
-                              checkpoint_key=f'queue-job:vasp:{tasks_dir}:{i}')
+        job = executor.submit(script.render(), cwd=tasks_dir)
         jobs.append(job)
     jobs = await gather_jobs(jobs, max_tries=2)
 

@@ -268,7 +268,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
         output_dirs.append(task_dir)
 
         # submit job
-        job = executor.submit(dp_train_script.render(), cwd=task_dir, checkpoint_key=f'queue-job:dp-train:{task_dir}:{i}')
+        job = executor.submit(dp_train_script.render(), cwd=task_dir)
         jobs.append(job)
 
     await gather_jobs(jobs, max_tries=2)

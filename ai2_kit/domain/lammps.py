@@ -228,8 +228,7 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
             template=ctx.config.script_template,
             steps=steps_group,
         )
-        job = executor.submit(script.render(), cwd=tasks_dir,
-                              checkpoint_key=f'queue-job/lammps/{i}:{tasks_dir}')
+        job = executor.submit(script.render(), cwd=tasks_dir)
         jobs.append(job)
 
     await gather_jobs(jobs, max_tries=2)

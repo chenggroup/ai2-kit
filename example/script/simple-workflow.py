@@ -55,9 +55,7 @@ async def workflow(n: int, path_prefix: str, executor: HpcExecutor, script_heade
             template=BashTemplate(header=script_header),
             steps=group,
         )
-        job = executor.submit(script.render(),
-                              cwd=base_dir,
-                              checkpoint_key=f'queue-job:{base_dir}')
+        job = executor.submit(script.render(), cwd=base_dir)
         jobs.append(job)
 
     # wait for all jobs to complete

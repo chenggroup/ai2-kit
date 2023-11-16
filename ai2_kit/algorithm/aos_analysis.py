@@ -24,7 +24,7 @@ def _ecn_analysis_per_frame(frame_index, reference_group, configuration_group, u
     ecn_part = np.sum(ecn_part)/n_in
     l_avg += l_av
     ecn += ecn_part
-    return [frame_index, l_avg, ecn]
+    return frame_index, l_avg, ecn
 
 
 def ecn_analysis(input_traj: str, out_dir: str, ref: str, conf: str, cell: list[float]):

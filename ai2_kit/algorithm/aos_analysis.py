@@ -131,8 +131,11 @@ def count_shared_polyhedra(input_traj: str, out_dir: str, ref: str, conf: str, c
                             f'Face-share = {avg_arr[3]:.4f}', ]))
 
 
+cli_entry = {
+    'ecn-analysis': ecn_analysis,
+    'count-shared-polyhedra': count_shared_polyhedra,
+}
+
+
 if __name__ == '__main__':
-    fire.Fire({
-        'ecn-analysis': ecn_analysis,
-        'count-shared-polyhedra': count_shared_polyhedra,
-    })
+    fire.Fire(cli_entry)

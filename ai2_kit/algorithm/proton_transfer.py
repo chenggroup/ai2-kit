@@ -335,12 +335,15 @@ def detect_type_change(analysis_result: str, atom_types: dict, donors: list):
             print(f"{content}")
 
 
+cli_entry = {
+    'analyze': proton_transfer_detection,
+    'visualize': visualize_transfer,
+    'show-transfer-paths': analysis_transfer_paths,
+    'show-type-change': detect_type_change,
+    'calculate-distances': calculate_distances,
+    'show-distance-change': show_distance_change,
+}
+
+
 if __name__ == '__main__':
-    fire.Fire({
-        "analyze": proton_transfer_detection,
-        "visualize": visualize_transfer,
-        "show-transfer-paths": analysis_transfer_paths,
-        "show-type-change": detect_type_change,
-        "calculate-distances": calculate_distances,
-        "show-distance-change": show_distance_change
-    })
+    fire.Fire(cli_entry)

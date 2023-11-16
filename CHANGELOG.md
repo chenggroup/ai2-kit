@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.10.5
+* feat: Amorphous Oxides Structure Analysis toolkit, for more detail please check [here](./doc/manual/aos-analysis.md)
+
 ## v0.10.4
 * fix: scale factor of fep lammps template
 

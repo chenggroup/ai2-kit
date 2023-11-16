@@ -7,39 +7,31 @@ class Group:
         self.__dict__.update(items)
 
 
-class ProtonTransferGroup:
-    @property
-    def analyze(self):
-        from ai2_kit.algorithm import proton_transfer
-        return proton_transfer.proton_transfer_detection
+class AlgorithmGroup:
+    """
+    Algorithms for specific domains.
+    """
 
-    @property
-    def visualize(self):
+    def proton_transfer(self):
+        """
+        Proton transfer analysis toolkit.
+        """
         from ai2_kit.algorithm import proton_transfer
-        return proton_transfer.visualize_transfer
+        return proton_transfer.cli_entry
 
-    @property
-    def show_transfer_paths(self):
-        from ai2_kit.algorithm import proton_transfer
-        return proton_transfer.analysis_transfer_paths
-
-    @property
-    def show_type_change(self):
-        from ai2_kit.algorithm import proton_transfer
-        return proton_transfer.detect_type_change
-
-    @property
-    def calculate_distances(self):
-        from ai2_kit.algorithm import proton_transfer
-        return proton_transfer.calculate_distances
-
-    @property
-    def show_distance_change(self):
-        from ai2_kit.algorithm import proton_transfer
-        return proton_transfer.show_distance_change
+    def aosa(self):
+        """
+        Amorphous oxides structure analysis toolkit.
+        """
+        from ai2_kit.algorithm import aos_analysis
+        return aos_analysis.cli_entry
 
 
 class WorkflowGroup:
+    """
+    Workflows for specific domains.
+    """
+
     @property
     def cll_mlp_training(self):
         from ai2_kit.workflow.cll_mlp import run_workflow
@@ -51,6 +43,9 @@ class WorkflowGroup:
         return run_workflow
 
 class ToolGroup:
+    """
+    Tools for specific domains.
+    """
 
     @property
     def ase(self):
@@ -93,12 +88,9 @@ class FeatureGroup:
         return self.catalysis
 
 
-
 ai2_kit = Group({
     'workflow': WorkflowGroup(),
-    'algorithm': Group({
-        'proton-transfer': ProtonTransferGroup(),
-    }),
+    'algorithm': AlgorithmGroup(),
     'tool': ToolGroup(),
     'feat': FeatureGroup(),
 
@@ -107,6 +99,7 @@ ai2_kit = Group({
 
 def main():
     Fire(ai2_kit)
+
 
 if __name__ == '__main__':
     main()

@@ -28,6 +28,16 @@ def _ecn_analysis_per_frame(frame_index, reference_group, configuration_group, u
 
 
 def ecn_analysis(input_traj: str, out_dir: str, ref: str, conf: str, cell: list[float]):
+    """
+    Calculate ECN (effective coordination number) and l_av (average bond length).
+
+    :param input_traj: path of input trajectory file
+    :param out_dir: path of output directory
+    :param ref: atom selection string of reference group
+    :param conf: atom selection string of configuration group
+    :param cell: cell dimensions
+    """
+
     universe = mda.Universe(input_traj)
     universe.dimensions = np.array(cell)
     atomgroup = universe.atoms
@@ -41,17 +51,17 @@ def ecn_analysis(input_traj: str, out_dir: str, ref: str, conf: str, cell: list[
                                          configuration_group=configuration_group,
                                          universe=universe)
         results.append(result)
-    results = np.array(results)
-    avg_array = np.mean(results, axis=0)
+    results_arr = np.array(results)
+    avr_arr = np.mean(results_arr, axis=0)
 
     # dump results
     os.makedirs(out_dir, exist_ok=True)
-    np.savetxt(os.path.join(out_dir, 'raw.txt'), results,
+    np.savetxt(os.path.join(out_dir, 'raw.txt'), results_arr,
                fmt='    %d        %.4f   %.4f',
                delimiter='   ', header='frame_index   l_av   ECN')
     with open(os.path.join(out_dir, 'stats.txt'), mode='w') as fp:
-        fp.write('\n'.join([f'l_av = {avg_array[1]:.4f}',
-           f'ECN = {avg_array[2]:.4f}']))
+        fp.write('\n'.join([f'l_av = {avr_arr[1]:.4f}',
+           f'ECN = {avr_arr[2]:.4f}']))
 
 
 def _count_shared_polyhedra_per_frame(frame_index, reference_group, configuration_group, universe, cutoff, coordination_num = -1):
@@ -79,6 +89,17 @@ def _count_shared_polyhedra_per_frame(frame_index, reference_group, configuratio
 
 
 def count_shared_polyhedra(input_traj: str, out_dir: str, ref: str, conf: str, cell: list[float], cutoff: float, coord_num: int):
+    """
+    Count the number of shared polyhedra in each frame of the trajectory.
+
+    :param input_traj: path of input trajectory file
+    :param out_dir: path of output directory
+    :param ref: atom selection string of reference group
+    :param conf: atom selection string of configuration group
+    :param cell: cell dimensions
+    :param cutoff: cutoff distance
+    :param coord_num: coordination number
+    """
     universe = mda.Universe(input_traj)
     universe.dimensions = np.array(cell)
     atomgroup = universe.atoms
@@ -95,19 +116,19 @@ def count_shared_polyhedra(input_traj: str, out_dir: str, ref: str, conf: str, c
                                                    cutoff=cutoff, coordination_num=coord_num)
         results.append(result)
 
-    results = np.array(results)
-    avg_array = np.mean(results, axis=0)
+    results_arr = np.array(results)
+    avg_arr = np.mean(results_arr, axis=0)
 
     # dump results
     os.makedirs(out_dir, exist_ok=True)
-    np.savetxt(os.path.join(out_dir, 'raw.txt'), results,
+    np.savetxt(os.path.join(out_dir, 'raw.txt'), results_arr,
                fmt='    %d        %.4f   %.4f   %.4f',
                delimiter='   ', header='frame_index   corner   edge   face')
 
     with open(os.path.join(out_dir, 'stats.txt'), mode='w') as fp:
-        fp.write('\n'.join([f'Corner-share = {avg_array[1]:.4f}',
-                            f'Edge-share = {avg_array[2]:.4f}',
-                            f'Face-share = {avg_array[3]:.4f}', ]))
+        fp.write('\n'.join([f'Corner-share = {avg_arr[1]:.4f}',
+                            f'Edge-share = {avg_arr[2]:.4f}',
+                            f'Face-share = {avg_arr[3]:.4f}', ]))
 
 
 if __name__ == '__main__':

@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.10.7
+* chore: update ai2cat default value
+
 ## v0.10.6
 * chore: update ai2cat workflow template
 

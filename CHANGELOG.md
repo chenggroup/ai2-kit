@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.10.6
+* chore: update ai2cat workflow template
+
 ## v0.10.5
 * feat: Amorphous Oxides Structure Analysis toolkit, for more detail please check [here](./doc/manual/aos-analysis.md)
 

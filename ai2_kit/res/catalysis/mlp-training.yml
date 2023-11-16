@@ -54,8 +54,8 @@ workflow:
   select:
     model_devi:
         # the upper and lower bound of the deviation of the model
-        f_trust_lo: 0.25
-        f_trust_hi: 0.5
+        f_trust_lo: 0.2
+        f_trust_hi: 0.6
 
   update:
     walkthrough:

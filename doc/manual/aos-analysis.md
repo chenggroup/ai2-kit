@@ -72,7 +72,7 @@ This command is used to count the numbers and fractions of polyhedra linked in d
 |ref|Reference atom (Central atom), the syntax is 'name X'.|str|(Required)|--ref 'name In'|
 |conf|Configuration atom (Coordination atom), the syntax is 'name Y'.|str|(Required)|--conf 'name O'|
 |cell|Setting the parameters of the cell.|list[float]|(Required)|--cell '[10.2, 10.2, 10.2, 90, 90, 90]'
-|cutoff|Setting the cutoff distance to define a bond.|float|(Required)|--cutoff '2.36'|
+|cutoff|Setting the cutoff distance to define a bond.|float|(Required)|--cutoff 2.36|
 |coord_num|Provide the coordination number of polyhedra that you want to count. For example, you could set `6` for $octahedra$. In particular, `-1` corresponds to counting $All\ categories\ of\ the\ polyhedra$.|int|(Required)|--coord_num -1|
 
 #### Examples
@@ -84,7 +84,7 @@ ai2-kit algorithm aosa count-shared-polyhedra \
     --ref 'name In' \
     --conf 'name O' \
     --cell '[20.23845286, 20.23845286, 20.23845286, 90, 90, 90]' \
-    --cutoff '2.36' \
+    --cutoff 2.36 \
     --coord_num -1  
 ```
 

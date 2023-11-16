@@ -39,10 +39,13 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 ### Featuring Tools
 * [ai2-cat](doc/manual/ai2cat.md): A toolkit for dynamic catalysis researching.
 
-### Domain Specific Tools
-* [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
+### Workflows
 * [CLL MLP Training Workflow](doc/manual/cll-workflow.md) ([zh](doc/manual/cll-workflow.zh.md))
 * [FEP MLP Training Workflow](doc/manual/fep-workflow.md)
+
+### Domain Specific Tools
+* [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
+* [Amorphous Oxides Structure Analysis Toolkit](doc/manual/aos-analysis.md)
 
 ### Build-in Functionalities
 * [Checkpoint Mechanism](doc/manual/checkpoint.md)

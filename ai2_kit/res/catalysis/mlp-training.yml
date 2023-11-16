@@ -37,7 +37,7 @@ workflow:
     lammps:
       nsteps: 1000
       timestep: 0.0005
-      sample_freq: 100
+      sample_freq: 10
       ensemble: nvt
       # Specific the artifacts to be used as initial structure here.
       system_files: $explore_data

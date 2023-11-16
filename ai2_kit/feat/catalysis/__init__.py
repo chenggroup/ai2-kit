@@ -228,7 +228,7 @@ class ConfigBuilder:
             'nsteps': 20000,
             'stepsize': 0.0005,
             'temp': 330,
-            'sample_freq': 100,
+            'sample_freq': 10,
             'pres': -1,
             'tau_t': 0.1,
             'tau_p': 0.5,

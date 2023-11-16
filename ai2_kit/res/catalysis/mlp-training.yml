@@ -59,6 +59,11 @@ workflow:
 
   update:
     walkthrough:
+      # The threshold decides when to move to next row of the table.
+      # The passing rate is defined as the ration of good structures.
+      # The smaller the threshold is, the more aggressive the workflow is.
+      passing_rate_threshold: 0.8
+
       # You can override the default configuration for each iteration here.
       # The default configuration is for iter 0.
       # Some common configurations to change includes: nsteps, system_files, etc.

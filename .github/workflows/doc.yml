@@ -11,18 +11,16 @@ jobs:
   deploy-book:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     # Install dependencies
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.8
+        python-version: 3.9
 
     - name: Run image
       uses: abatilo/actions-poetry@v2
-      with:
-        poetry-version: 1.4.2
     
     - name: Install dependencies
       run: |
@@ -39,7 +37,7 @@ jobs:
 
     # Push the book's HTML to github-pages
     - name: GitHub Pages action
-      uses: peaceiris/actions-gh-pages@v3.6.1
+      uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: jupyter-book/_build/html

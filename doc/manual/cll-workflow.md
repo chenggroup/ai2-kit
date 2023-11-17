@@ -334,6 +334,9 @@ workflow:
     model_devi:
         f_trust_lo: 0.4
         f_trust_hi: 0.6
+        # Remove structurally similar configuration using clustering method.
+        # If not needed, delete the following line. 
+        asap_options: {}
 
   update:
     walkthrough:
@@ -369,7 +372,10 @@ In the above parameters,
 
 
 ## Citation
-If you use this workflow with LASP in your research, please cite the following papers: 
-> Yu-Xin Guo, Yong-Bin Zhuang, Jueli Shi, Jun Cheng; ChecMatE: A workflow package to automatically generate machine learning potentials and phase diagrams for semiconductor alloys. J. Chem. Phys. 7 September 2023; 159 (9): 094801. https://doi.org/10.1063/5.0166858
-> Huang, S., Shang, C., Kang, P., Zhang, X. & Liu, Z. LASP: Fast global potential energy surface exploration. Wiley Interdiscip Rev Comput Mol Sci 9, (2019). https://doi.org/10.1002/wcms.1415
+If you use this workflow with LASP and ASAP in your research, please cite the following papers: 
+> - Yu-Xin Guo, Yong-Bin Zhuang, Jueli Shi, Jun Cheng; ChecMatE: A workflow package to automatically generate machine learning potentials and phase diagrams for semiconductor alloys. J. Chem. Phys. 7 September 2023; 159 (9): 094801. https://doi.org/10.1063/5.0166858
+> - Huang, S., Shang, C., Kang, P., Zhang, X. & Liu, Z. LASP: Fast global potential energy surface exploration. Wiley Interdiscip Rev Comput Mol Sci 9, (2019). https://doi.org/10.1002/wcms.1415
+> - Cheng, B. et al. Mapping Materials and Molecules. Accounts Chem Res 53, 1981–1991 (2020).
+  
+  
   

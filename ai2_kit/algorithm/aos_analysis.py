@@ -27,22 +27,22 @@ def _ecn_analysis_per_frame(frame_index, reference_group, configuration_group, u
     return frame_index, l_avg, ecn
 
 
-def ecn_analysis(input_traj: str, out_dir: str, ref: str, conf: str, cell: list[float]):
+def ecn_analysis(input_traj: str, out_dir: str, center: str, ligand: str, cell: list[float]):
     """
     Calculate ECN (effective coordination number) and l_av (average bond length).
 
     :param input_traj: path of input trajectory file
     :param out_dir: path of output directory
-    :param ref: atom selection string of reference group
-    :param conf: atom selection string of configuration group
+    :param center: central atoms, in the format of MDA atom selection string, e.g. 'name In'
+    :param ligand: atoms that surround the central atoms, in the format of MDA atom selection string, e.g. 'name O'
     :param cell: cell dimensions
     """
 
     universe = mda.Universe(input_traj)
     universe.dimensions = np.array(cell)
     atomgroup = universe.atoms
-    reference_group = atomgroup.select_atoms(ref)
-    configuration_group = atomgroup.select_atoms(conf)
+    reference_group = atomgroup.select_atoms(center)
+    configuration_group = atomgroup.select_atoms(ligand)
     # TODO: this can be parallelized
     results = []
     for k in range(universe.trajectory.n_frames):
@@ -88,14 +88,14 @@ def _count_shared_polyhedra_per_frame(frame_index, reference_group, configuratio
     return frame_index, corner, edge, face
 
 
-def count_shared_polyhedra(input_traj: str, out_dir: str, ref: str, conf: str, cell: list[float], cutoff: float, coord_num: int):
+def count_shared_polyhedra(input_traj: str, out_dir: str, center: str, ligand: str, cell: list[float], cutoff: float, coord_num: int):
     """
     Count the number of shared polyhedra in each frame of the trajectory.
 
     :param input_traj: path of input trajectory file
     :param out_dir: path of output directory
-    :param ref: atom selection string of reference group
-    :param conf: atom selection string of configuration group
+    :param center: central atoms, in the format of MDA atom selection string, e.g. 'name In'
+    :param ligand: atoms that surround the central atoms, in the format of MDA atom selection string, e.g. 'name O'
     :param cell: cell dimensions
     :param cutoff: cutoff distance
     :param coord_num: coordination number
@@ -103,8 +103,8 @@ def count_shared_polyhedra(input_traj: str, out_dir: str, ref: str, conf: str, c
     universe = mda.Universe(input_traj)
     universe.dimensions = np.array(cell)
     atomgroup = universe.atoms
-    reference_group = atomgroup.select_atoms(ref)
-    configuration_group = atomgroup.select_atoms(conf)
+    reference_group = atomgroup.select_atoms(center)
+    configuration_group = atomgroup.select_atoms(ligand)
 
     # TODO: this can be parallelized
     results = []

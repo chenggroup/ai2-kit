@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.10.9
+* refactor: aos-analysis options
+
 ## v0.10.8
 * fix: dp train should support restart
 

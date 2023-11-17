@@ -245,10 +245,11 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
 
         # build script
         dp_cmd = ctx.config.dp_cmd
-        dp_train_cmd = [dp_cmd, 'train', DP_INPUT_FILE]
+        dp_train_cmd = f'{ctx.config.dp_cmd} train {DP_INPUT_FILE}'
+        dp_train_cmd_restart = f'if [ ! -f model.ckpt.index ]; then {dp_train_cmd}; else {dp_train_cmd} --restart model.ckpt; fi'
 
         steps = [
-            BashStep(cmd=dp_train_cmd, checkpoint='dp-train') # type: ignore
+            BashStep(cmd=dp_train_cmd_restart, checkpoint='dp-train') # type: ignore
         ]
 
         if input.config.compress_model:

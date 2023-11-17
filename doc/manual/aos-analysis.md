@@ -23,7 +23,7 @@ This command is used to calculate the average bond length and effective coordina
 |input_traj|The trajectory you need to input for analysis.|str|(Required)|--input_traj ./in2o3-eq.xyz|
 |out_dir|Dump the result of analysis `result (per frame)` and `average (average values)` in a new directory.|str|(Required)|--out_dir ./out|
 |center|Reference atom (Central atom), in the format of [MDA select_atoms](https://docs.mdanalysis.org/stable/documentation_pages/selections.html)|str|(Required)|--center 'name In'|
-|ligand|Configuration atom (Coordination atom), use the same format of `center` |str|(Required)|--ligand'name O'|
+|ligand|Configuration atom (Coordination atom), use the same format of `center` |str|(Required)|--ligand 'name O'|
 |cell|Setting the parameters of the cell.|list[float]|(Required)|--cell '[10.2, 10.2, 10.2, 90, 90, 90]'|
 
 #### Examples

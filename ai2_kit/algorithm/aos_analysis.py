@@ -88,7 +88,7 @@ def _count_shared_polyhedra_per_frame(frame_index, reference_group, configuratio
     return frame_index, corner, edge, face
 
 
-def count_shared_polyhedra(input_traj: str, out_dir: str, center: str, ligand: str, cell: list[float], cutoff: float, coord_num: int):
+def count_shared_polyhedra(input_traj: str, out_dir: str, center: str, ligand: str, cell: list[float], cutoff: float, coord_num: int = -1):
     """
     Count the number of shared polyhedra in each frame of the trajectory.
 

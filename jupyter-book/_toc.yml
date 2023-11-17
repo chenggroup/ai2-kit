@@ -7,11 +7,14 @@ parts:
   - caption: Featuring Tools
     chapters:
       - file: doc/manual/ai2cat.md
+  - caption: Workflows
+    chapters:
+      - file: doc/manual/cll-workflow
+      - file: doc/manual/fep-workflow
   - caption: Domain Specific Tools
     chapters:
       - file: doc/manual/proton-transfer
-      - file: doc/manual/cll-workflow
-      - file: doc/manual/fep-workflow
+      - file: doc/manual/aos-analysis
   - caption: Build-in Functionalities
     chapters:
       - file: doc/manual/checkpoint
@@ -19,6 +22,9 @@ parts:
       - file: doc/manual/ase
       - file: doc/manual/dpdata
       - file: doc/manual/tips
+  - caption: Notebooks
+    chapters:
+      - file: notebook/ai2cat.ipynb
   - caption: 中文文档
     chapters:
       - file: doc/manual/cll-workflow.zh

@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.10.8
+* fix: dp train should support restart
+
 ## v0.10.7
 * chore: update ai2cat default value
 

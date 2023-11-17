@@ -37,7 +37,7 @@ priority = "default"
 
 [[tool.poetry.source]]
 name = "pypi"
-priority = "secondary"
+priority = "primary"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>ai2_kit.tool.misc module &#8212; ai2-kit Reference</title>
+    <title>ai2_kit.algorithm.aos_analysis module &#8212; ai2-kit Reference</title>
   
   
   
@@ -19,12 +19,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -38,8 +38,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -61,11 +62,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_api/ai2_kit.tool.misc';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_api/ai2_kit.algorithm.aos_analysis';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ai2_kit.workflow package" href="ai2_kit.workflow.html" />
-    <link rel="prev" title="ai2_kit.tool.dpdata module" href="ai2_kit.tool.dpdata.html" />
+    <link rel="next" title="ai2_kit.algorithm.proton_transfer module" href="ai2_kit.algorithm.proton_transfer.html" />
+    <link rel="prev" title="ai2_kit.algorithm package" href="ai2_kit.algorithm.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -76,6 +77,15 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -137,6 +147,7 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   
+  
     <p class="title logo__title">ai2-kit Reference</p>
   
 </a></div>
@@ -150,17 +161,34 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Featuring Tools</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../doc/manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/ai2cat.html">ai2-cat Toolkit</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Workflows</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../doc/manual/cll-workflow.html">CLL Machine Learning Potential Training Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../doc/manual/fep-workflow.html">FEP MLP Training Workflow</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/aos-analysis.html">Amorphous Oxides Structure Analysis</a></li>
+</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Build-in Functionalities</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../doc/manual/ase.html">ASE Toolkit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../doc/manual/checkpoint.html">Checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/hpc-executor.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/ase.html">ASE Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/dpdata.html">Dpdata Toolkit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../doc/manual/tips.html">Tips</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebooks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notebook/ai2cat.html">AI2-Cat Calculation Notebook</a></li>
+
+
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">中文文档</span></p>
 <ul class="nav bd-sidenav">
@@ -171,7 +199,8 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">ai2_kit</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="ai2_kit.html">ai2_kit package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.algorithm.html">ai2_kit.algorithm package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="ai2_kit.algorithm.html">ai2_kit.algorithm package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 </ul>
 </li>
@@ -211,11 +240,11 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ai2_kit.res.html">ai2_kit.res package</a></li>
-<li class="toctree-l3 current active has-children"><a class="reference internal" href="ai2_kit.tool.html">ai2_kit.tool package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.tool.html">ai2_kit.tool package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
-<li class="toctree-l4 current active"><a class="current reference internal" href="#">ai2_kit.tool.misc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.workflow.html">ai2_kit.workflow package</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -299,7 +328,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2F_api/ai2_kit.tool.misc.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2F_api/ai2_kit.algorithm.aos_analysis.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -329,7 +358,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../_sources/_api/ai2_kit.tool.misc.rst" target="_blank"
+      <li><a href="../_sources/_api/ai2_kit.algorithm.aos_analysis.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -383,10 +412,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -394,7 +423,7 @@ document.write(`
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -409,7 +438,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>ai2_kit.tool.misc module</h1>
+    <h1>ai2_kit.algorithm.aos_analysis module</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -423,8 +452,44 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="module-ai2_kit.tool.misc">
-<span id="ai2-kit-tool-misc-module"></span><h1>ai2_kit.tool.misc module<a class="headerlink" href="#module-ai2_kit.tool.misc" title="Permalink to this heading">#</a></h1>
+  <section id="module-ai2_kit.algorithm.aos_analysis">
+<span id="ai2-kit-algorithm-aos-analysis-module"></span><h1>ai2_kit.algorithm.aos_analysis module<a class="headerlink" href="#module-ai2_kit.algorithm.aos_analysis" title="Permalink to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.algorithm.aos_analysis.count_shared_polyhedra">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.algorithm.aos_analysis.</span></span><span class="sig-name descname"><span class="pre">count_shared_polyhedra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_traj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ligand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/algorithm/aos_analysis.html#count_shared_polyhedra"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.algorithm.aos_analysis.count_shared_polyhedra" title="Permalink to this definition">#</a></dt>
+<dd><p>Count the number of shared polyhedra in each frame of the trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_traj</strong> – path of input trajectory file</p></li>
+<li><p><strong>out_dir</strong> – path of output directory</p></li>
+<li><p><strong>center</strong> – central atoms, in the format of MDA atom selection string, e.g. ‘name In’</p></li>
+<li><p><strong>ligand</strong> – atoms that surround the central atoms, in the format of MDA atom selection string, e.g. ‘name O’</p></li>
+<li><p><strong>cell</strong> – cell dimensions</p></li>
+<li><p><strong>cutoff</strong> – cutoff distance</p></li>
+<li><p><strong>coord_num</strong> – coordination number</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.algorithm.aos_analysis.ecn_analysis">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.algorithm.aos_analysis.</span></span><span class="sig-name descname"><span class="pre">ecn_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_traj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ligand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/algorithm/aos_analysis.html#ecn_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.algorithm.aos_analysis.ecn_analysis" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate ECN (effective coordination number) and l_av (average bond length).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_traj</strong> – path of input trajectory file</p></li>
+<li><p><strong>out_dir</strong> – path of output directory</p></li>
+<li><p><strong>center</strong> – central atoms, in the format of MDA atom selection string, e.g. ‘name In’</p></li>
+<li><p><strong>ligand</strong> – atoms that surround the central atoms, in the format of MDA atom selection string, e.g. ‘name O’</p></li>
+<li><p><strong>cell</strong> – cell dimensions</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
     <script type="text/x-thebe-config">
@@ -452,34 +517,30 @@ document.write(`
 
               
               
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="ai2_kit.tool.dpdata.html"
+       href="ai2_kit.algorithm.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">ai2_kit.tool.dpdata module</p>
+        <p class="prev-next-title">ai2_kit.algorithm package</p>
       </div>
     </a>
     <a class="right-next"
-       href="ai2_kit.workflow.html"
+       href="ai2_kit.algorithm.proton_transfer.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ai2_kit.workflow package</p>
+        <p class="prev-next-title">ai2_kit.algorithm.proton_transfer module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -528,8 +589,8 @@ By weihong.xu
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
 
   <footer class="bd-footer">
   </footer>

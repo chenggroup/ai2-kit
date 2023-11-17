@@ -1,0 +1,1025 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>AI2-Cat Calculation Notebook &#8212; ai2-kit Reference</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebook/ai2cat';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CLL 势函数训练工作流" href="../doc/manual/cll-workflow.zh.html" />
+    <link rel="prev" title="Tips" href="../doc/manual/tips.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">ai2-kit Reference</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    ai<sup>2</sup>-kit
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Featuring Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/ai2cat.html">ai2-cat Toolkit</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Workflows</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/cll-workflow.html">CLL Machine Learning Potential Training Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/fep-workflow.html">FEP MLP Training Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/aos-analysis.html">Amorphous Oxides Structure Analysis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Build-in Functionalities</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/checkpoint.html">Checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/hpc-executor.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/ase.html">ASE Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/dpdata.html">Dpdata Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/tips.html">Tips</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebooks</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">AI2-Cat Calculation Notebook</a></li>
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">中文文档</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/cll-workflow.zh.html">CLL 势函数训练工作流</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/hpc-executor.zh.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../_api/modules.html">ai2_kit</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../_api/ai2_kit.html">ai2_kit package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.core.html">ai2_kit.core package</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.artifact.html">ai2_kit.core.artifact module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.checkpoint.html">ai2_kit.core.checkpoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.cmd.html">ai2_kit.core.cmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.connector.html">ai2_kit.core.connector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.executor.html">ai2_kit.core.executor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.future.html">ai2_kit.core.future module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.job.html">ai2_kit.core.job module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.log.html">ai2_kit.core.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.queue_system.html">ai2_kit.core.queue_system module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.resource_manager.html">ai2_kit.core.resource_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.domain.html">ai2_kit.domain package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.selector.html">ai2_kit.domain.selector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.updater.html">ai2_kit.domain.updater module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.vasp.html">ai2_kit.domain.vasp module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.feat.html">ai2_kit.feat package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.feat.catalysis.html">ai2_kit.feat.catalysis package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../_api/ai2_kit.res.html">ai2_kit.res package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.tool.html">ai2_kit.tool package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.workflow.html">ai2_kit.workflow package</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.workflow.cll_mlp.html">ai2_kit.workflow.cll_mlp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.workflow.fep_mlp.html">ai2_kit.workflow.fep_mlp module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../_api/ai2_kit.main.html">ai2_kit.main module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/chenggroup/ai2-kit" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fnotebook/ai2cat.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebook/ai2cat.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>AI2-Cat Calculation Notebook</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">AI2-Cat Calculation Notebook</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">准备工作</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">查看初始结构（可选）</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#aimd">AIMD生成初始数据集 (可选)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">生成 AIMD 配置</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">提交 AIMD 作业</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deepmd-lammps">生成 DeepMD 数据集和 LAMMPS 初始文件</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">训练势函数</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ai2-kit">生成 ai2-kit 势函数训练工作流配置</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">编辑 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 势函数训练工作流配置</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">执行 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 势函数训练工作流</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">阶段性结果检查</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deepmd">检查 DeepMD 输出</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lammps">检查 LAMMPS 输出</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">基于势函数进行动态催化模拟</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">配置生成</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">提交作业</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">生成报告</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="ai2-cat-calculation-notebook">
+<h1>AI2-Cat Calculation Notebook<a class="headerlink" href="#ai2-cat-calculation-notebook" title="Permalink to this heading">#</a></h1>
+<p>此 Notebook 将演示如何从一个结构文件出发，借助 <code class="docutils literal notranslate"><span class="pre">ai2-cat</span></code> 所提供的工具构建执行 AIMD, 势函数训练和性质计算的配置文件并执行以得到所需求数据的方法。</p>
+<ol class="arabic simple">
+<li><p>提供初始结构，进行AIMD模拟获取获取轨迹文件与相关能量和力等信息 (可选)</p></li>
+<li><p>收集轨迹中的结构与对应的能量和力转化为机器学习势函数可训练的数据集格式</p></li>
+<li><p>基于上述的训练数据集训练机器学习势函数</p></li>
+<li><p>基于上述的机器学习势函数进行分子动力学模拟+增强采样，获取新的结构</p></li>
+<li><p>基于力误差判据筛选出新的结构</p></li>
+<li><p>对上述的新结构进行第一性原理计算获取结构对应的能量和力并加入数据集</p></li>
+<li><p>迭代步骤3-6直至步骤5无法筛选出新的构象</p></li>
+<li><p>基于最后的机器学习势函数进行分子动力学模拟+增强采样</p></li>
+<li><p>基于模拟结果计算反应自由能</p></li>
+</ol>
+<p><img alt="5253d51c6dded94850b0f214716b1ca.jpg" src="notebook/attachment:4598c744-3184-49ae-8af4-6c0b0a75e9a5.jpg" /></p>
+<section id="id1">
+<h2>准备工作<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 将此 Notebook 下载到电脑。</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 在 Open Ondemand 打开的 Jupyter Lab 页面中，通过左边栏上传该文件到工作目录中</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 打开该 Notebook</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> 将初始结构文件上传到 Notebook 中</p></li>
+</ul>
+<p>上述操作仅在初次或者需要更新 Notebook 时执行即可。</p>
+<p>完成 Notebook 上传后，即可按顺序执行各个模块。</p>
+<div class="cell tag_ActiveScene docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 每次新打开 notebook 或者重启 kernel 后，该模块均需要执行一次</span>
+<span class="o">%</span><span class="k">matplotlib</span> widget
+<span class="o">%</span><span class="k">gui</span> asyncio
+
+<span class="kn">from</span> <span class="nn">ai2_kit.feat</span> <span class="kn">import</span> <span class="n">catalysis</span> <span class="k">as</span> <span class="n">ai2cat</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.feat.catalysis</span> <span class="kn">import</span> <span class="n">ui</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">AI4EC_DIR</span>              <span class="o">=</span> <span class="s1">&#39;/public/groups/ai4ec/data&#39;</span>
+<span class="n">CP2K_DATA</span>              <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/cp2k&#39;</span>
+<span class="n">CP2K_BATCH_TEMPLATE</span>    <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/slurm/ai2cat-cp2k.sbatch&#39;</span>
+<span class="n">LAMMPS_BATCH_TEMPLATE</span>  <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/slurm/ai2cat-lammps.sbatch&#39;</span>
+<span class="n">AI2KIT_EXECUTOR_CONFIG</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/ai2-kit/executor.yml&#39;</span>
+
+<span class="n">CP2K_DEFAULTS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">basic_set_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CP2K_DATA</span><span class="p">,</span> <span class="s1">&#39;BASIS_MOLOPT&#39;</span><span class="p">),</span>
+    <span class="n">potential_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CP2K_DATA</span><span class="p">,</span> <span class="s1">&#39;GTH_POTENTIALS&#39;</span><span class="p">),</span>
+    <span class="n">parameter_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CP2K_DATA</span><span class="p">,</span> <span class="s1">&#39;dftd3.dat&#39;</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">ui_helper</span> <span class="o">=</span> <span class="n">ui</span><span class="o">.</span><span class="n">get_the_ui_helper</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current Directory Is: &quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Current Directory Is:  /home/runner/work/ai2-kit/ai2-kit/notebook
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id2">
+<h2>查看初始结构（可选）<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>初始结构上传后，可执行以下代码对结构进行可视化。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ase.visualize</span> <span class="kn">import</span> <span class="n">view</span>
+<span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Code</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">Markdown</span>
+
+<span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;./POSCAR&#39;</span><span class="p">)</span>  <span class="c1"># 可更改此路径以改变要显示的文件</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">view</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">viewer</span><span class="o">=</span><span class="s1">&#39;ngl&#39;</span><span class="p">)</span>
+<span class="n">v</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">add_ball_and_stick</span><span class="p">()</span>
+<span class="n">display</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Code</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">Markdown</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;./POSCAR&#39;</span><span class="p">)</span>  <span class="c1"># 可更改此路径以改变要显示的文件</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">v</span> <span class="o">=</span> <span class="n">view</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">viewer</span><span class="o">=</span><span class="s1">&#39;ngl&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="n">v</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">add_ball_and_stick</span><span class="p">()</span>
+
+<span class="nn">File ~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/ase/io/formats.py:736,</span> in <span class="ni">read</span><span class="nt">(filename, index, format, parallel, do_not_split_by_at_sign, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">733</span>     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_iread</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="n">parallel</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">734</span>                        <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+<span class="g g-Whitespace">    </span><span class="mi">735</span> <span class="k">else</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">736</span>     <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">_iread</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="nb">format</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">737</span>                        <span class="n">parallel</span><span class="o">=</span><span class="n">parallel</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+
+<span class="nn">File ~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/ase/parallel.py:275,</span> in <span class="ni">parallel_generator.&lt;locals&gt;.new_generator</span><span class="nt">(*args, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">269</span> <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">270</span> <span class="k">def</span> <span class="nf">new_generator</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">271</span>     <span class="k">if</span> <span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span>
+<span class="g g-Whitespace">    </span><span class="mi">272</span>         <span class="n">args</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;serial&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">or</span>
+<span class="g g-Whitespace">    </span><span class="mi">273</span>         <span class="ow">not</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)):</span>
+<span class="g g-Whitespace">    </span><span class="mi">274</span>         <span class="c1"># Disable:</span>
+<span class="ne">--&gt; </span><span class="mi">275</span>         <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">generator</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">276</span>             <span class="k">yield</span> <span class="n">result</span>
+<span class="g g-Whitespace">    </span><span class="mi">277</span>         <span class="k">return</span>
+
+<span class="nn">File ~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/ase/io/formats.py:793,</span> in <span class="ni">_iread</span><span class="nt">(filename, index, format, io, parallel, full_output, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">791</span> <span class="k">if</span> <span class="n">io</span><span class="o">.</span><span class="n">acceptsfd</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">792</span>     <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;rb&#39;</span> <span class="k">if</span> <span class="n">io</span><span class="o">.</span><span class="n">isbinary</span> <span class="k">else</span> <span class="s1">&#39;r&#39;</span>
+<span class="ne">--&gt; </span><span class="mi">793</span>     <span class="n">fd</span> <span class="o">=</span> <span class="n">open_with_compression</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">794</span>     <span class="n">must_close_fd</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="g g-Whitespace">    </span><span class="mi">795</span> <span class="k">else</span><span class="p">:</span>
+
+<span class="nn">File ~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/ase/io/formats.py:551,</span> in <span class="ni">open_with_compression</span><span class="nt">(filename, mode)</span>
+<span class="g g-Whitespace">    </span><span class="mi">548</span>     <span class="k">return</span> <span class="n">lzma</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">549</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">550</span>     <span class="c1"># Either None or unknown string</span>
+<span class="ne">--&gt; </span><span class="mi">551</span>     <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+
+<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;./POSCAR&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="aimd">
+<h1>AIMD生成初始数据集 (可选)<a class="headerlink" href="#aimd" title="Permalink to this heading">#</a></h1>
+<p>初始数据集是启动势函数训练的必要输入。如果已经有适用于 DeepMD 的初始数据集和用于 LAMMPS 结构搜索的初始结构，则可以直接上传相应数据直接进入下一步的势函数训练中。</p>
+<p>如果没有所需的数据，则可以采用本节所提供的 AIMD 相关功能生成所需的数据。</p>
+<section id="id3">
+<h2>生成 AIMD 配置<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>计算所需要的结构文件（支持 xyz, cif, POSCAR 等格式) 需自行构建并上传，然后使用以下命令即可生成用于 AIMD 执行的 CP2K 配置。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>./00-aimd
+<span class="n">ui_helper</span><span class="o">.</span><span class="n">gen_aimd_config</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;./00-aimd&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">CP2K_DEFAULTS</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>此时 <code class="docutils literal notranslate"><span class="pre">00-aimd</span></code> 目录里能找到生成的 CP2K 配置和数据文件。
+通过左边栏打开文件可进行检查或编辑。
+确认无误后可使用 CP2K 作业模板提交任务。</p>
+</section>
+<section id="id4">
+<h2>提交 AIMD 作业<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 复制作业提交脚本到任务目录 (复制后可根据需要进行调整)</span>
+<span class="o">!</span><span class="w"> </span>cp<span class="w"> </span><span class="o">{</span>CP2K_BATCH_TEMPLATE<span class="o">}</span><span class="w"> </span>./00-aimd/cp2k.sbatch
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 提交作业</span>
+<span class="o">!</span><span class="w"> </span><span class="o">(</span><span class="nb">cd</span><span class="w"> </span>./00-aimd<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sbatch<span class="w"> </span>cp2k.sbatch<span class="o">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 检查任务队列</span>
+<span class="o">!</span><span class="w"> </span>squeue<span class="w"> </span>-u<span class="w"> </span><span class="nv">$USER</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 检查作业执行情况，该命令需要手动停止</span>
+<span class="o">!</span><span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>./00-aimd/output
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="deepmd-lammps">
+<h2>生成 DeepMD 数据集和 LAMMPS 初始文件<a class="headerlink" href="#deepmd-lammps" title="Permalink to this heading">#</a></h2>
+<p>AIMD 作业完成后会在工作目录下生成相应的结构和力数据。通过 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 所提供的数据格式处理工具可以轻松地将其转换成所需的数据格式。</p>
+<p>相关工具的详细使用文档，可见 <a class="reference external" href="https://github.com/chenggroup/ai2-kit/blob/main/doc/manual/ase.md">ai2-kit ase</a> 和 <a class="reference external" href="https://github.com/chenggroup/ai2-kit/blob/main/doc/manual/dpdata.md">ai2-kit dpdata</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 生成初始训练数据集</span>
+<span class="o">!</span><span class="w"> </span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./00-aimd<span class="w"> </span>--fmt<span class="w"> </span>cp2kdata/md<span class="w"> </span>--cp2k_output_name<span class="o">=</span>output<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./data/train
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 生成初始结构</span>
+<span class="c1"># 以下命令以每 20 帧为间隔从 AIMD 轨迹中抽取结构</span>
+<span class="c1"># 并限制最大帧数为 20</span>
+<span class="c1"># 使用 `set_by_ref` 从原始结构文件获取 cell, pbc 等缺失信息</span>
+<span class="c1"># 然后以 xyz 格式写入指定位置</span>
+<span class="c1"># 实际使用时可根据实际需求对参数进行调整</span>
+<span class="o">!</span><span class="w"> </span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./00-aimd/*-pos-1.xyz<span class="w"> </span>--index<span class="w"> </span><span class="s1">&#39;::20&#39;</span><span class="w"> </span>-<span class="w"> </span>limit<span class="w"> </span><span class="m">20</span><span class="w"> </span>-<span class="w"> </span>set_by_ref<span class="w"> </span>POSCAR<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./data/explore/init.xyz
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="id5">
+<h1>训练势函数<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h1>
+<section id="ai2-kit">
+<h2>生成 ai2-kit 势函数训练工作流配置<a class="headerlink" href="#ai2-kit" title="Permalink to this heading">#</a></h2>
+<p>AIMD 作业顺利完成后可从其输出得到轨迹数据。这里可同样借助 <code class="docutils literal notranslate"><span class="pre">ai2-cat</span></code> 自动生成相关配置文件。需要生成的文件包括</p>
+<ol class="arabic simple">
+<li><p>CP2K 配置文件 cp2k.inp</p></li>
+<li><p>DeepMD 配置文件 deepmd.json</p></li>
+<li><p>plumed 配置文件 plumed.inp</p></li>
+<li><p>ai2-kit cll-mpl-training 配置文件 training.yml 和 executor.yml</p></li>
+</ol>
+<p>配置生成分为两部分，首先执行下面代码生成工作流所依赖的第三方软件的配置，包括数据标注用的CP2K配置和增强采样需要用到的plumed配置，执行成功后将在输出目录内产生 cp2k.inp 和 plumed.inp 两个文件。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>./01-train
+<span class="n">ui_helper</span><span class="o">.</span><span class="n">gen_train_vendors_config</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;./01-train&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">CP2K_DEFAULTS</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>接下来是生成工作流相关的配置。</p>
+<blockquote>
+<div><p>在工作流配置中使用到的DeepMD训练数据和LAMMPS需要首先注册为 artifacts, 再通过对应的 key 进行引用。</p>
+<p>例如，通过上述命令产生的假设 DeepMD 训练数据位于 ./data/train/Ag13O2, 要使用这笔数据，首先要在配置界面中的 artifacts字段里添加一个新artifact, 其中key可以任意指定（例如 train-data), 并设定 url 为 ./data/train/Ag13O2。设置完成后，即可在 train data 的下拉中选择刚刚配置 train-data 引用该数据。</p>
+<p>同理，LAMMPS 的初始结构也需要通过上述方法添加后使用，假设训练数据位于 ./data/explore/init.xyz，可添加一个key为 explore-data 的 artifact, 并指定 url 为 ./data/explore/init.xyz。除此之外，由于新搜索的结构需要被标记，因此需要额外选择要使用的 CP2K 文件，例如 ./01-train/cp2k.inp, 由于需要使用plumed进行增强采样，因此还需要选择相应的 plumed 配置，例如 ./01-train/plumed.inp</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;./01-train/work_dir&#39;</span><span class="p">)</span>
+<span class="o">!</span><span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w">  </span><span class="o">{</span>train_dir<span class="o">}</span>
+<span class="n">ui_helper</span><span class="o">.</span><span class="n">gen_train_config</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;./01-train&#39;</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">400000</span><span class="p">)</span>
+<span class="o">!</span><span class="w"> </span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>yaml<span class="w"> </span>load<span class="w"> </span><span class="o">{</span>AI2KIT_EXECUTOR_CONFIG<span class="o">}</span><span class="w"> </span>-<span class="w"> </span>set_value<span class="w"> </span><span class="s2">&quot;executors.ikkem.work_dir&quot;</span><span class="w"> </span><span class="o">{</span>train_dir<span class="o">}</span><span class="w"> </span>-<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>./01-train/executor.yml
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id6">
+<h2>编辑 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 势函数训练工作流配置<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h2>
+<p>目前由于技术方案的限制，自动生成的配置文件中仍有部分需要人工进行调整，必要改动如下</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">plumed.inp</span></code>, plumed 的配置, 需要由用户定义增强采样的反应坐标, 以及其它所需的命令</p>
+<ul>
+<li><p>例如增加 <code class="docutils literal notranslate"><span class="pre">CV1:</span> <span class="pre">DISTANCE</span> <span class="pre">ATOMS=14,15</span></code>，根据具体的研究目标进行配置</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">training.yml</span></code>，需要用户指定使用的数据路径，并在工作流中引用</p>
+<ul>
+<li><p>例如在 <code class="docutils literal notranslate"><span class="pre">artifacts</span></code> 一节中需要配置所需使用的体系等</p></li>
+</ul>
+</li>
+</ul>
+<p>更具体的配置文档可参考相关 <a class="reference external" href="https://github.com/chenggroup/ai2-kit/blob/main/doc/manual/cll-workflow.zh.md">文档</a> 和 <a class="reference external" href="https://github.com/chenggroup/ai2-kit/tree/main/example/config/cll-mlp-training">配置示例</a>。</p>
+</section>
+<section id="id7">
+<h2>执行 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 势函数训练工作流<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h2>
+<p>配置确认无误后，即可使用以下命令在后台启动训练。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">project_prefix</span> <span class="o">=</span> <span class="s1">&#39;run-01&#39;</span>  <span class="c1"># 请根据项目的工作目录修改</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(cd ./01-train &amp;&amp; nohup ai2-kit workflow cll-mlp-training *.yml --executor ikkem --path-prefix </span><span class="si">{</span><span class="n">project_prefix</span><span class="si">}</span><span class="s2"> --checkpoint </span><span class="si">{</span><span class="n">project_prefix</span><span class="si">}</span><span class="s2">.pickle &amp;&gt; nohup.out&amp;)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 查看日志输出以确定执行是否正常, 注意该命令需要手动退出</span>
+<span class="o">!</span><span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>./01-train/nohup.out
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id8">
+<h2>阶段性结果检查<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h2>
+<p>在很多情况下，尤其是针对复杂体系，势函数的训练往往不是一蹴而就。因此，一种比较稳健的策略阶段性地执行工作流，即在训练开始时指定较小的 <code class="docutils literal notranslate"><span class="pre">max_iter</span></code>, 在训练完成后对输出进行检查，并根据结果对配置进行必要的调整 (手动打开配置文件进行更新) 再次执行相同的训练命令，此时工作流会继承先前的状态，继续执行后续的迭代，直到势函数的训练结果满足要求。</p>
+<p>以下使用 <code class="docutils literal notranslate"><span class="pre">ai2-cat</span></code> 工具包中提供的工具对结果进行检查。</p>
+<section id="deepmd">
+<h3>检查 DeepMD 输出<a class="headerlink" href="#deepmd" title="Permalink to this heading">#</a></h3>
+<p>检查势函数训练的力误差与能量误差随训练步数的演化关系，误差的演化应为指数下降的趋势最后在一个相对较小的值附近震荡</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ui_helper</span><span class="o">.</span><span class="n">inspect_deepmd_output</span><span class="p">(</span><span class="s1">&#39;./01-train/work_dir&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="lammps">
+<h3>检查 LAMMPS 输出<a class="headerlink" href="#lammps" title="Permalink to this heading">#</a></h3>
+<p>检查模拟采样过程中，模型最大力偏差随模拟时间的变化关系，在初期几轮采样过程中该模型偏差会较大属于正常现象，迭代到后期模型偏差应大部分落在精确区间内，检查反应坐标随时间的变化关系，当模拟时间较短，反应坐标变化不会太大应在某个特定值（如反应始态或者终态反应坐标所对应的值）附近震荡，当模拟时间较长，反应坐标会出现较大变化（应在反应始态和终态反应坐标所对应的值之间来回震荡）</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ui_helper</span><span class="o">.</span><span class="n">inspect_lammps_output</span><span class="p">(</span><span class="s1">&#39;./01-train/work_dir&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="id9">
+<h1>基于势函数进行动态催化模拟<a class="headerlink" href="#id9" title="Permalink to this heading">#</a></h1>
+<p>在得到满足要求的势函数后，即可使用势函数进行动态催化模拟以得到相关性质，并对输出结果进行分析得到报告。</p>
+<section id="id10">
+<h2>配置生成<a class="headerlink" href="#id10" title="Permalink to this heading">#</a></h2>
+<p>生成模拟所需lammps以及plumed配置文件，依据反应坐标配置plumed输入文件</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">plumed.dat</span></code>, plumed 的配置, 需要由用户定义增强采样的反应坐标, 以及其它所需的命令</p>
+<ul>
+<li><p>例如增加 <code class="docutils literal notranslate"><span class="pre">CV1:</span> <span class="pre">DISTANCE</span> <span class="pre">ATOMS=14,15</span></code>，根据具体的研究目标进行配置</p></li>
+</ul>
+</li>
+</ul>
+<p>以下命令可以在 生成基本的作业模板，模板生成后可进入 <code class="docutils literal notranslate"><span class="pre">./02-simluation</span></code> 目录对其进行检查和编辑</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ui_helper</span><span class="o">.</span><span class="n">gen_lammps_config</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;./02-simulation&#39;</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="s1">&#39;./01-train/work_dir/&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id11">
+<h2>提交作业<a class="headerlink" href="#id11" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 复制作业提交脚本到工作目录</span>
+<span class="o">!</span><span class="w"> </span>cp<span class="w"> </span><span class="o">{</span>LAMMPS_BATCH_TEMPLATE<span class="o">}</span><span class="w"> </span>./02-simulation/lammps.sbatch
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 提交作业</span>
+<span class="o">!</span><span class="w"> </span><span class="o">(</span><span class="nb">cd</span><span class="w"> </span>./02-simulation/<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sbatch<span class="w"> </span>lammps.sbatch<span class="o">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 检查任务队列</span>
+<span class="o">!</span><span class="w"> </span>squeue<span class="w"> </span>-u<span class="w"> </span><span class="nv">$USER</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 检查实时日志，该命令需要手动停止</span>
+<span class="o">!</span><span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>./02-simulation/lammps.log
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id12">
+<h2>生成报告<a class="headerlink" href="#id12" title="Permalink to this heading">#</a></h2>
+<p>上述计算完成后，会在目录下生成一个名为 <code class="docutils literal notranslate"><span class="pre">fes.dat</span></code> 的文件，通过以下代码可将其可视化。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">fes_data_path</span> <span class="o">=</span> <span class="s1">&#39;./02-simulation/fes.dat&#39;</span>
+
+<span class="n">cv_fes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fes_data_path</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cv_fes</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">cv_fes</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$CV$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$Free \ energy \ (kJ/mol)$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$Free \ energy \ curve$&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebook"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../doc/manual/tips.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tips</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../doc/manual/cll-workflow.zh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">CLL 势函数训练工作流</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">AI2-Cat Calculation Notebook</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">准备工作</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">查看初始结构（可选）</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#aimd">AIMD生成初始数据集 (可选)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">生成 AIMD 配置</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">提交 AIMD 作业</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deepmd-lammps">生成 DeepMD 数据集和 LAMMPS 初始文件</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">训练势函数</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ai2-kit">生成 ai2-kit 势函数训练工作流配置</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">编辑 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 势函数训练工作流配置</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">执行 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 势函数训练工作流</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">阶段性结果检查</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deepmd">检查 DeepMD 输出</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lammps">检查 LAMMPS 输出</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">基于势函数进行动态催化模拟</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">配置生成</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">提交作业</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">生成报告</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By weihong.xu
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

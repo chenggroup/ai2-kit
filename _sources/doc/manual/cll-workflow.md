@@ -366,3 +366,10 @@ In the above parameters,
 * `--executor hpc-cluster01` is used to specify the HPC executor to use. Here, the `hpc-cluster01` executor configured in the previous section is used;
 * `--path-prefix h2o_64-run-01` specifies the remote working directory, which will create a `h2o_64-run-01` directory under `work_dir` to store the execution results of the workflow;
 * `--checkpoint run-01.cpkt` will generate a checkpoint file locally to save the execution status of the workflow, so as to resume execution after the execution is interrupted.
+
+
+## Citation
+If you use this workflow with LASP in your research, please cite the following papers: 
+> Yu-Xin Guo, Yong-Bin Zhuang, Jueli Shi, Jun Cheng; ChecMatE: A workflow package to automatically generate machine learning potentials and phase diagrams for semiconductor alloys. J. Chem. Phys. 7 September 2023; 159 (9): 094801. https://doi.org/10.1063/5.0166858
+> Huang, S., Shang, C., Kang, P., Zhang, X. & Liu, Z. LASP: Fast global potential energy surface exploration. Wiley Interdiscip Rev Comput Mol Sci 9, (2019). https://doi.org/10.1002/wcms.1415
+  

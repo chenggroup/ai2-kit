@@ -361,3 +361,8 @@ ai2-kit workflow cll-mlp-training *.yml --executor hpc-cluster01 --path-prefix h
 * `--executor hpc-cluster01` 用于指定要使用的 HPC 执行器，此处使用了上一节中配置的 `hpc-cluster01` 执行器;
 * `--path-prefix h2o_64-run-01` 指定远程工作目录，它会在 `work_dir` 下创建一个 `h2o_64-run-01` 的目录用于存放工作流的执行结果; 
 * `--checkpoint run-01.cpkt` 会在本地生成一个checkpoint文件，用于保存工作流的执行状态，以便在执行中断后恢复执行。
+
+## 引用
+如果您使用了本工作流中的LASP，请引用以下文章： 
+> Yu-Xin Guo, Yong-Bin Zhuang, Jueli Shi, Jun Cheng; ChecMatE: A workflow package to automatically generate machine learning potentials and phase diagrams for semiconductor alloys. J. Chem. Phys. 7 September 2023; 159 (9): 094801. https://doi.org/10.1063/5.0166858
+> Huang, S., Shang, C., Kang, P., Zhang, X. & Liu, Z. LASP: Fast global potential energy surface exploration. Wiley Interdiscip Rev Comput Mol Sci 9, (2019). https://doi.org/10.1002/wcms.1415

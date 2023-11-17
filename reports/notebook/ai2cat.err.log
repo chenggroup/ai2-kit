@@ -1,0 +1,70 @@
+Traceback (most recent call last):
+  File "/home/runner/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/runner/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/nbclient/client.py", line 1305, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/home/runner/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/jupyter_core/utils/__init__.py", line 173, in wrapped
+    return loop.run_until_complete(inner)
+  File "/opt/hostedtoolcache/Python/3.9.18/x64/lib/python3.9/asyncio/base_events.py", line 647, in run_until_complete
+    return future.result()
+  File "/home/runner/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/nbclient/client.py", line 705, in async_execute
+    await self.async_execute_cell(
+  File "/home/runner/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/nbclient/client.py", line 1058, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/runner/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/nbclient/client.py", line 914, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+from ase.visualize import view
+from ase.io import read
+from IPython.display import Code, display, Markdown
+
+atoms = read('./POSCAR')  # 可更改此路径以改变要显示的文件
+v = view(atoms, viewer='ngl')
+v.view.add_ball_and_stick()
+display(v)
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mFileNotFoundError[0m                         Traceback (most recent call last)
+Cell [0;32mIn[2], line 5[0m
+[1;32m      2[0m [38;5;28;01mfrom[39;00m [38;5;21;01mase[39;00m[38;5;21;01m.[39;00m[38;5;21;01mio[39;00m [38;5;28;01mimport[39;00m read
+[1;32m      3[0m [38;5;28;01mfrom[39;00m [38;5;21;01mIPython[39;00m[38;5;21;01m.[39;00m[38;5;21;01mdisplay[39;00m [38;5;28;01mimport[39;00m Code, display, Markdown
+[0;32m----> 5[0m atoms [38;5;241m=[39m [43mread[49m[43m([49m[38;5;124;43m'[39;49m[38;5;124;43m./POSCAR[39;49m[38;5;124;43m'[39;49m[43m)[49m  [38;5;66;03m# 可更改此路径以改变要显示的文件[39;00m
+[1;32m      6[0m v [38;5;241m=[39m view(atoms, viewer[38;5;241m=[39m[38;5;124m'[39m[38;5;124mngl[39m[38;5;124m'[39m)
+[1;32m      7[0m v[38;5;241m.[39mview[38;5;241m.[39madd_ball_and_stick()
+
+File [0;32m~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/ase/io/formats.py:736[0m, in [0;36mread[0;34m(filename, index, format, parallel, do_not_split_by_at_sign, **kwargs)[0m
+[1;32m    733[0m     [38;5;28;01mreturn[39;00m [38;5;28mlist[39m(_iread(filename, index, [38;5;28mformat[39m, io, parallel[38;5;241m=[39mparallel,
+[1;32m    734[0m                        [38;5;241m*[39m[38;5;241m*[39mkwargs))
+[1;32m    735[0m [38;5;28;01melse[39;00m:
+[0;32m--> 736[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mnext[39;49m[43m([49m[43m_iread[49m[43m([49m[43mfilename[49m[43m,[49m[43m [49m[38;5;28;43mslice[39;49m[43m([49m[43mindex[49m[43m,[49m[43m [49m[38;5;28;43;01mNone[39;49;00m[43m)[49m[43m,[49m[43m [49m[38;5;28;43mformat[39;49m[43m,[49m[43m [49m[43mio[49m[43m,[49m
+[1;32m    737[0m [43m                       [49m[43mparallel[49m[38;5;241;43m=[39;49m[43mparallel[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m[43m)[49m
+
+File [0;32m~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/ase/parallel.py:275[0m, in [0;36mparallel_generator.<locals>.new_generator[0;34m(*args, **kwargs)[0m
+[1;32m    269[0m [38;5;129m@functools[39m[38;5;241m.[39mwraps(generator)
+[1;32m    270[0m [38;5;28;01mdef[39;00m [38;5;21mnew_generator[39m([38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs):
+[1;32m    271[0m     [38;5;28;01mif[39;00m (world[38;5;241m.[39msize [38;5;241m==[39m [38;5;241m1[39m [38;5;129;01mor[39;00m
+[1;32m    272[0m         args [38;5;129;01mand[39;00m [38;5;28mgetattr[39m(args[[38;5;241m0[39m], [38;5;124m'[39m[38;5;124mserial[39m[38;5;124m'[39m, [38;5;28;01mFalse[39;00m) [38;5;129;01mor[39;00m
+[1;32m    273[0m         [38;5;129;01mnot[39;00m kwargs[38;5;241m.[39mpop([38;5;124m'[39m[38;5;124mparallel[39m[38;5;124m'[39m, [38;5;28;01mTrue[39;00m)):
+[1;32m    274[0m         [38;5;66;03m# Disable:[39;00m
+[0;32m--> 275[0m         [38;5;28;01mfor[39;00m result [38;5;129;01min[39;00m generator([38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs):
+[1;32m    276[0m             [38;5;28;01myield[39;00m result
+[1;32m    277[0m         [38;5;28;01mreturn[39;00m
+
+File [0;32m~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/ase/io/formats.py:793[0m, in [0;36m_iread[0;34m(filename, index, format, io, parallel, full_output, **kwargs)[0m
+[1;32m    791[0m [38;5;28;01mif[39;00m io[38;5;241m.[39macceptsfd:
+[1;32m    792[0m     mode [38;5;241m=[39m [38;5;124m'[39m[38;5;124mrb[39m[38;5;124m'[39m [38;5;28;01mif[39;00m io[38;5;241m.[39misbinary [38;5;28;01melse[39;00m [38;5;124m'[39m[38;5;124mr[39m[38;5;124m'[39m
+[0;32m--> 793[0m     fd [38;5;241m=[39m [43mopen_with_compression[49m[43m([49m[43mfilename[49m[43m,[49m[43m [49m[43mmode[49m[43m)[49m
+[1;32m    794[0m     must_close_fd [38;5;241m=[39m [38;5;28;01mTrue[39;00m
+[1;32m    795[0m [38;5;28;01melse[39;00m:
+
+File [0;32m~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/ase/io/formats.py:551[0m, in [0;36mopen_with_compression[0;34m(filename, mode)[0m
+[1;32m    548[0m     [38;5;28;01mreturn[39;00m lzma[38;5;241m.[39mopen(filename, mode)
+[1;32m    549[0m [38;5;28;01melse[39;00m:
+[1;32m    550[0m     [38;5;66;03m# Either None or unknown string[39;00m
+[0;32m--> 551[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mopen[39;49m[43m([49m[43mfilename[49m[43m,[49m[43m [49m[43mmode[49m[43m)[49m
+
+[0;31mFileNotFoundError[0m: [Errno 2] No such file or directory: './POSCAR'
+

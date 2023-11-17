@@ -18,12 +18,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
 
   
-  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -37,8 +37,9 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" />
+  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
@@ -73,6 +74,15 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -134,6 +144,7 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   
+  
     <p class="title logo__title">ai2-kit Reference</p>
   
 </a></div>
@@ -147,17 +158,34 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Featuring Tools</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/ai2cat.html">ai2-cat Toolkit</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Workflows</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/cll-workflow.html">CLL Machine Learning Potential Training Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/fep-workflow.html">FEP MLP Training Workflow</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/aos-analysis.html">Amorphous Oxides Structure Analysis</a></li>
+</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Build-in Functionalities</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/ase.html">ASE Toolkit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/checkpoint.html">Checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/hpc-executor.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/ase.html">ASE Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/dpdata.html">Dpdata Toolkit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/tips.html">Tips</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebooks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../notebook/ai2cat.html">AI2-Cat Calculation Notebook</a></li>
+
+
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">中文文档</span></p>
 <ul class="nav bd-sidenav">
@@ -169,6 +197,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 </ul>
 </li>
@@ -212,7 +241,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.workflow.html">ai2_kit.workflow package</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -332,10 +361,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -343,7 +372,7 @@ document.write(`
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -378,8 +407,11 @@ document.write(`
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
+<span class="kn">from</span> <span class="nn">ruamel.yaml</span> <span class="kn">import</span> <span class="n">YAML</span>
+<span class="kn">from</span> <span class="nn">ruamel.yaml.comments</span> <span class="kn">import</span> <span class="n">TaggedScalar</span>
+
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">merge_dict</span><span class="p">,</span> <span class="n">wait_for_change</span><span class="p">,</span> <span class="n">parse_path_list</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">parse_path_list</span><span class="p">,</span> <span class="n">nested_set</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.domain.cp2k</span> <span class="kn">import</span> <span class="n">dump_coord_n_cell</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.domain.lammps</span> <span class="kn">import</span> <span class="n">get_ensemble</span>
 <span class="kn">from</span> <span class="nn">ai2_kit</span> <span class="kn">import</span> <span class="n">res</span>
@@ -387,10 +419,11 @@ document.write(`
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span><span class="p">,</span> <span class="n">Atom</span>
 <span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">Template</span>
-<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">io</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -499,6 +532,7 @@ document.write(`
     <span class="s1">&#39;low&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;cutoff&#39;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span> <span class="s1">&#39;rel_cutoff&#39;</span><span class="p">:</span> <span class="mi">50</span> <span class="p">},</span>
 <span class="p">}</span>
 
+
 <div class="viewcode-block" id="ConfigBuilder"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder">[docs]</a><span class="k">class</span> <span class="nc">ConfigBuilder</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -515,7 +549,14 @@ document.write(`
 
 <div class="viewcode-block" id="ConfigBuilder.gen_mlp_training_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_mlp_training_input">[docs]</a>    <span class="k">def</span> <span class="nf">gen_mlp_training_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span><span class="p">,</span>
+                               <span class="n">train_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                               <span class="n">explore_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                               <span class="n">artifacts</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                                <span class="n">template_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">MLP_TRAINING_TEMPLATE</span><span class="p">):</span>
+        <span class="n">train_data</span> <span class="o">=</span> <span class="n">train_data</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="n">explore_data</span> <span class="o">=</span> <span class="n">explore_data</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="n">artifacts</span> <span class="o">=</span> <span class="n">artifacts</span> <span class="ow">or</span> <span class="p">[]</span>
+
         <span class="c1"># Read yaml file as text so that the comments are preserved</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">template_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">text</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -526,6 +567,9 @@ document.write(`
         <span class="n">out_data</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
             <span class="n">type_map</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">type_map</span><span class="p">),</span>
             <span class="n">mass_map</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">mass_map</span><span class="p">),</span>
+            <span class="n">train_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">train_data</span><span class="p">),</span>
+            <span class="n">explore_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">explore_data</span><span class="p">),</span>
+            <span class="n">artifacts</span><span class="o">=</span><span class="n">dump_artifacts</span><span class="p">(</span><span class="n">artifacts</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">mlp_training_input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;training.yml&#39;</span><span class="p">)</span>
@@ -549,7 +593,7 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate Plumed input files</span>
 <span class="sd">        Args:</span>
-<span class="sd">            out_dir: output directory, plumed.dat will be generated in this directory</span>
+<span class="sd">            out_dir: output directory, plumed.inp will be generated in this directory</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;atoms must be loaded first&#39;</span>
         <span class="n">plumed_input</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;UNITS LENGTH=A&#39;</span> <span class="p">]</span>
@@ -578,17 +622,17 @@ document.write(`
             <span class="s1">&#39;PRINT STRIDE=10 ARG=CV1,metad.bias FILE=COLVAR&#39;</span><span class="p">,</span>
         <span class="p">])</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">plumed_input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;plumed.dat&#39;</span><span class="p">)</span>
+        <span class="n">plumed_input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;plumed.inp&#39;</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">plumed_input_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plumed_input</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ConfigBuilder.gen_lammps_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_lammps_input">[docs]</a>    <span class="k">def</span> <span class="nf">gen_lammps_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;./out&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;atoms must be loaded first&#39;</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;nsteps&#39;</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
-            <span class="s1">&#39;stepsize&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s1">&#39;nsteps&#39;</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
+            <span class="s1">&#39;stepsize&#39;</span><span class="p">:</span> <span class="mf">0.0005</span><span class="p">,</span>
             <span class="s1">&#39;temp&#39;</span><span class="p">:</span> <span class="mi">330</span><span class="p">,</span>
-            <span class="s1">&#39;sample_freq&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s1">&#39;sample_freq&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
             <span class="s1">&#39;pres&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
             <span class="s1">&#39;tau_t&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
             <span class="s1">&#39;tau_p&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
@@ -598,7 +642,7 @@ document.write(`
             <span class="s1">&#39;energy_out&#39;</span><span class="p">:</span> <span class="s1">&#39;energy.log&#39;</span><span class="p">,</span>
             <span class="s1">&#39;data_file&#39;</span><span class="p">:</span> <span class="s1">&#39;lammps.dat&#39;</span><span class="p">,</span>
             <span class="s1">&#39;lammps_file&#39;</span><span class="p">:</span> <span class="s1">&#39;lammps.inp&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;plumed_file&#39;</span><span class="p">:</span> <span class="s1">&#39;plumed.dat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;plumed_file&#39;</span><span class="p">:</span> <span class="s1">&#39;plumed.inp&#39;</span><span class="p">,</span>
             <span class="s1">&#39;plumed_out&#39;</span><span class="p">:</span> <span class="s1">&#39;plumed.out&#39;</span><span class="p">,</span>
             <span class="o">**</span> <span class="n">kwargs</span><span class="p">,</span>
         <span class="p">}</span>
@@ -608,7 +652,10 @@ document.write(`
         <span class="n">ensemble</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ensemble&#39;</span><span class="p">)</span>
 
         <span class="n">type_map</span><span class="p">,</span> <span class="n">mass_map</span> <span class="o">=</span> <span class="n">get_type_map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span><span class="p">)</span>
-        <span class="n">ensemble_config</span> <span class="o">=</span> <span class="n">get_ensemble</span><span class="p">(</span><span class="n">ensemble</span><span class="p">)</span>
+        <span class="n">ensemble_config</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+<span class="w">            </span><span class="sd">&#39;&#39;&#39;velocity all create ${TEMP} %d&#39;&#39;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">10</span><span class="o">^</span><span class="mi">6</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">get_ensemble</span><span class="p">(</span><span class="n">ensemble</span><span class="p">),</span>
+        <span class="p">])</span>
 
         <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
@@ -635,9 +682,9 @@ document.write(`
 
 
 <div class="viewcode-block" id="ConfigBuilder.gen_cp2k_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_cp2k_input">[docs]</a>    <span class="k">def</span> <span class="nf">gen_cp2k_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                       <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span><span class="p">,</span>
                        <span class="n">basic_set_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;BASIS_MOLOPT&#39;</span><span class="p">,</span>
                        <span class="n">potential_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;GTH_POTENTIALS&#39;</span><span class="p">,</span>
-                       <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span><span class="p">,</span>
                        <span class="n">style</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;metal&#39;</span><span class="p">,</span> <span class="s1">&#39;semi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;metal&#39;</span><span class="p">,</span>
                        <span class="n">accuracy</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;high&#39;</span><span class="p">,</span> <span class="s1">&#39;medium&#39;</span><span class="p">,</span> <span class="s1">&#39;low&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;medium&#39;</span><span class="p">,</span>
                        <span class="n">aimd</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -738,7 +785,23 @@ document.write(`
         <span class="n">coord_n_cell_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;coord_n_cell.inc&#39;</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">coord_n_cell_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">dump_coord_n_cell</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;coord_n_cell.inc is generated at </span><span class="si">{</span><span class="n">coord_n_cell_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;coord_n_cell.inc is generated at </span><span class="si">{</span><span class="n">coord_n_cell_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConfigBuilder.get_plumed_group"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.get_plumed_group">[docs]</a>    <span class="k">def</span> <span class="nf">get_plumed_group</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get auto generated plumed group</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;atoms must be loaded first&#39;</span>
+        <span class="n">plumed_input</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># define atoms groups by element, e.g:</span>
+        <span class="c1"># Ag: GROUP ATOMS=1,2,3,4,5,6,7,8,9,10</span>
+        <span class="c1"># O: GROUP ATOMS=11,12,13,14,15,16,17,18,19,20</span>
+        <span class="n">element2ids</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span><span class="o">.</span><span class="n">get_chemical_symbols</span><span class="p">(),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">element2ids</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">element</span><span class="p">,</span> <span class="n">ids</span> <span class="ow">in</span> <span class="n">element2ids</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">plumed_input</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s1">: GROUP ATOMS=</span><span class="si">{</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">ids</span><span class="p">))</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plumed_input</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="get_type_map"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.get_type_map">[docs]</a><span class="k">def</span> <span class="nf">get_type_map</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">):</span>
@@ -778,7 +841,30 @@ document.write(`
     <span class="k">return</span> <span class="n">parsed</span></div>
 
 
-<div class="viewcode-block" id="inspect_explore_result"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.inspect_explore_result">[docs]</a><span class="k">def</span> <span class="nf">inspect_explore_result</span><span class="p">(</span><span class="n">lammps_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">save_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="dump_artifacts"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.dump_artifacts">[docs]</a><span class="k">def</span> <span class="nf">dump_artifacts</span><span class="p">(</span><span class="n">artifacts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">artifact</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">artifact</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">artifact</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attrs</span>
+
+        <span class="k">if</span> <span class="s1">&#39;cp2k_file&#39;</span> <span class="ow">in</span> <span class="n">artifact</span><span class="p">:</span>
+            <span class="n">cp2k_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">artifact</span><span class="p">[</span><span class="s1">&#39;cp2k_file&#39;</span><span class="p">])</span>
+            <span class="n">nested_set</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;cp2k&#39;</span><span class="p">,</span> <span class="s1">&#39;input_template&#39;</span><span class="p">],</span> <span class="n">TaggedScalar</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">cp2k_file</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;!load_text&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;plumed_file&#39;</span> <span class="ow">in</span> <span class="n">artifact</span><span class="p">:</span>
+            <span class="n">plumed_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">artifact</span><span class="p">[</span><span class="s1">&#39;plumed_file&#39;</span><span class="p">])</span>
+            <span class="n">nested_set</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;lammps&#39;</span><span class="p">,</span> <span class="s1">&#39;plumed_config&#39;</span><span class="p">,</span> <span class="p">],</span> <span class="n">TaggedScalar</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">plumed_file</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s1">&#39;!load_text&#39;</span><span class="p">))</span>
+
+    <span class="n">yaml</span> <span class="o">=</span> <span class="n">YAML</span><span class="p">()</span>
+    <span class="n">yaml</span><span class="o">.</span><span class="n">default_flow_style</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+    <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s1">&#39;artifacts&#39;</span><span class="p">:</span> <span class="n">out</span><span class="p">},</span> <span class="n">buf</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="inspect_lammps_output"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.inspect_lammps_output">[docs]</a><span class="k">def</span> <span class="nf">inspect_lammps_output</span><span class="p">(</span><span class="n">lammps_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">save_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fig_ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="n">model_devi_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lammps_dir</span><span class="p">,</span> <span class="s1">&#39;model_devi.out&#39;</span><span class="p">)</span>
     <span class="n">colvar_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lammps_dir</span><span class="p">,</span> <span class="s1">&#39;COLVAR&#39;</span><span class="p">)</span>
     <span class="n">lammps_input_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lammps_dir</span><span class="p">,</span> <span class="s1">&#39;lammps.input&#39;</span><span class="p">)</span>
@@ -798,7 +884,10 @@ document.write(`
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">colvar_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
         <span class="n">col_names</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">:]</span>
     <span class="c1"># x axis is the first column, and y axis is the rest columns</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">fig_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">fig_ax</span>
     <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;COLVAR @ TEMP </span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s1">K&#39;</span><span class="p">)</span>
     <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$time / s$&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">col_names</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
@@ -815,7 +904,8 @@ document.write(`
     <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">save_to</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">flush_events</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_to</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
 
@@ -843,16 +933,12 @@ document.write(`
 
               
               
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
 <div class="prev-next-area">
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -901,8 +987,8 @@ By weihong.xu
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="../../../_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
 
   <footer class="bd-footer">
   </footer>

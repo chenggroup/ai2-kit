@@ -18,12 +18,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -37,8 +37,9 @@
     <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -73,6 +74,15 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -134,6 +144,7 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   
+  
     <p class="title logo__title">ai2-kit Reference</p>
   
 </a></div>
@@ -147,17 +158,34 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Featuring Tools</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="doc/manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/manual/ai2cat.html">ai2-cat Toolkit</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Workflows</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="doc/manual/cll-workflow.html">CLL Machine Learning Potential Training Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="doc/manual/fep-workflow.html">FEP MLP Training Workflow</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="doc/manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/manual/aos-analysis.html">Amorphous Oxides Structure Analysis</a></li>
+</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Build-in Functionalities</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="doc/manual/ase.html">ASE Toolkit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="doc/manual/checkpoint.html">Checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/manual/hpc-executor.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/manual/ase.html">ASE Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/manual/dpdata.html">Dpdata Toolkit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="doc/manual/tips.html">Tips</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebooks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="notebook/ai2cat.html">AI2-Cat Calculation Notebook</a></li>
+
+
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">中文文档</span></p>
 <ul class="nav bd-sidenav">
@@ -169,6 +197,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="_api/modules.html">ai2_kit</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="_api/ai2_kit.html">ai2_kit package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 </ul>
 </li>
@@ -212,7 +241,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="_api/ai2_kit.workflow.html">ai2_kit.workflow package</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -332,10 +361,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -343,7 +372,7 @@ document.write(`
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -419,6 +448,13 @@ document.write(`
 
       <ul>
         <li><a href="_api/ai2_kit.algorithm.html#module-ai2_kit.algorithm">module</a>
+</li>
+      </ul></li>
+      <li>
+    ai2_kit.algorithm.aos_analysis
+
+      <ul>
+        <li><a href="_api/ai2_kit.algorithm.aos_analysis.html#module-ai2_kit.algorithm.aos_analysis">module</a>
 </li>
       </ul></li>
       <li>
@@ -582,8 +618,6 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.lammps.html#module-ai2_kit.domain.lammps">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     ai2_kit.domain.lasp
 
@@ -591,6 +625,8 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.lasp.html#module-ai2_kit.domain.lasp">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     ai2_kit.domain.selector
 
@@ -631,6 +667,13 @@ document.write(`
 
       <ul>
         <li><a href="_api/ai2_kit.feat.catalysis.html#module-ai2_kit.feat.catalysis">module</a>
+</li>
+      </ul></li>
+      <li>
+    ai2_kit.feat.catalysis.ui
+
+      <ul>
+        <li><a href="_api/ai2_kit.feat.catalysis.ui.html#module-ai2_kit.feat.catalysis.ui">module</a>
 </li>
       </ul></li>
       <li>
@@ -676,10 +719,10 @@ document.write(`
 </li>
       </ul></li>
       <li>
-    ai2_kit.tool.misc
+    ai2_kit.tool.yaml
 
       <ul>
-        <li><a href="_api/ai2_kit.tool.misc.html#module-ai2_kit.tool.misc">module</a>
+        <li><a href="_api/ai2_kit.tool.yaml.html#module-ai2_kit.tool.yaml">module</a>
 </li>
       </ul></li>
       <li>
@@ -703,6 +746,8 @@ document.write(`
         <li><a href="_api/ai2_kit.workflow.fep_mlp.html#module-ai2_kit.workflow.fep_mlp">module</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.main.html#ai2_kit.main.AlgorithmGroup">AlgorithmGroup (class in ai2_kit.main)</a>
+</li>
       <li><a href="_api/ai2_kit.algorithm.proton_transfer.html#ai2_kit.algorithm.proton_transfer.AlgorithmParameter">AlgorithmParameter (class in ai2_kit.algorithm.proton_transfer)</a>
 </li>
       <li><a href="_api/ai2_kit.algorithm.proton_transfer.html#ai2_kit.algorithm.proton_transfer.System.analysis">analysis() (ai2_kit.algorithm.proton_transfer.System method)</a>
@@ -711,7 +756,7 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.algorithm.proton_transfer.html#ai2_kit.algorithm.proton_transfer.AnalysisResult">AnalysisResult (class in ai2_kit.algorithm.proton_transfer)</a>
 </li>
-      <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ProtonTransferGroup.analyze">analyze (ai2_kit.main.ProtonTransferGroup property)</a>
+      <li><a href="_api/ai2_kit.main.html#ai2_kit.main.AlgorithmGroup.aosa">aosa() (ai2_kit.main.AlgorithmGroup method)</a>
 </li>
       <li><a href="_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.apply_checkpoint">apply_checkpoint() (in module ai2_kit.core.checkpoint)</a>
 </li>
@@ -783,8 +828,6 @@ document.write(`
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ProtonTransferGroup.calculate_distances">calculate_distances (ai2_kit.main.ProtonTransferGroup property)</a>
-</li>
       <li><a href="_api/ai2_kit.algorithm.proton_transfer.html#ai2_kit.algorithm.proton_transfer.calculate_distances">calculate_distances() (in module ai2_kit.algorithm.proton_transfer)</a>
 </li>
       <li><a href="_api/ai2_kit.algorithm.proton_transfer.html#ai2_kit.algorithm.proton_transfer.System.calculate_g">calculate_g() (ai2_kit.algorithm.proton_transfer.System method)</a>
@@ -889,10 +932,10 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions">CllModelDeviSelectorInputConfig.AsapOptions (class in ai2_kit.domain.selector)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorOutput">CllModelDeviSelectorOutput (class in ai2_kit.domain.selector)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDevSelectorContext">CllModelDevSelectorContext (class in ai2_kit.domain.selector)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspContext">CllVaspContext (class in ai2_kit.domain.vasp)</a>
@@ -979,6 +1022,8 @@ document.write(`
       </ul></li>
       <li><a href="_api/ai2_kit.domain.data.html#ai2_kit.domain.data.convert_to_lammps_input_data">convert_to_lammps_input_data() (in module ai2_kit.domain.data)</a>
 </li>
+      <li><a href="_api/ai2_kit.algorithm.aos_analysis.html#ai2_kit.algorithm.aos_analysis.count_shared_polyhedra">count_shared_polyhedra() (in module ai2_kit.algorithm.aos_analysis)</a>
+</li>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context.Label.cp2k">cp2k (ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context.Label attribute)</a>
 
       <ul>
@@ -1051,14 +1096,14 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.tool.deepmd.html#ai2_kit.tool.deepmd.display_lcurve">display_lcurve() (in module ai2_kit.tool.deepmd)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.future.html#ai2_kit.core.future.IFuture.done">done() (ai2_kit.core.future.IFuture method)</a>
 
       <ul>
         <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.QueueJobFuture.done">(ai2_kit.core.queue_system.QueueJobFuture method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.BaseConnector.download">download() (ai2_kit.core.connector.BaseConnector method)</a>
 
       <ul>
@@ -1078,6 +1123,10 @@ document.write(`
       <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ToolGroup.dpdata">dpdata (ai2_kit.main.ToolGroup property)</a>
 </li>
       <li><a href="_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper">DpdataHelper (class in ai2_kit.tool.dpdata)</a>
+</li>
+      <li><a href="_api/ai2_kit.tool.yaml.html#ai2_kit.tool.yaml.Yaml.dump">dump() (ai2_kit.tool.yaml.Yaml method)</a>
+</li>
+      <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.dump_artifacts">dump_artifacts() (in module ai2_kit.feat.catalysis)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.dump_coord_n_cell">dump_coord_n_cell() (in module ai2_kit.domain.cp2k)</a>
 </li>
@@ -1107,6 +1156,8 @@ document.write(`
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="_api/ai2_kit.algorithm.aos_analysis.html#ai2_kit.algorithm.aos_analysis.ecn_analysis">ecn_analysis() (in module ai2_kit.algorithm.aos_analysis)</a>
+</li>
       <li><a href="_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig.ensemble">ensemble (ai2_kit.domain.lammps.CllLammpsInputConfig attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.ensure_dir">ensure_dir() (in module ai2_kit.core.util)</a>
@@ -1123,14 +1174,14 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.ExecutorManager">ExecutorManager (class in ai2_kit.core.executor)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowConfig.executors">executors (ai2_kit.workflow.cll_mlp.CllWorkflowConfig attribute)</a>
 
       <ul>
         <li><a href="_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.FepWorkflowConfig.executors">(ai2_kit.workflow.fep_mlp.FepWorkflowConfig attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.script.html#ai2_kit.core.script.BashStep.exit_on_error">exit_on_error (ai2_kit.core.script.BashStep attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.core.script.html#ai2_kit.core.script.exit_on_error_statment">exit_on_error_statment() (in module ai2_kit.core.script)</a>
@@ -1173,14 +1224,16 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.find_cp2k_data_file">find_cp2k_data_file() (in module ai2_kit.feat.catalysis)</a>
 </li>
+      <li><a href="_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig.fix_statement">fix_statement (ai2_kit.domain.lammps.CllLammpsInputConfig attribute)</a>
+</li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.fixture_models">fixture_models (ai2_kit.domain.deepmd.CllDeepmdInputConfig attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.flat_evenly">flat_evenly() (in module ai2_kit.core.util)</a>
 </li>
-      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.flatten">flatten() (in module ai2_kit.core.util)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.flatten">flatten() (in module ai2_kit.core.util)</a>
+</li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.flush_stdio">flush_stdio() (in module ai2_kit.core.util)</a>
 </li>
       <li><a href="_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.FnInfo.fn_name">fn_name (ai2_kit.core.checkpoint.FnInfo attribute)</a>
@@ -1225,15 +1278,23 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.core.job.html#ai2_kit.core.job.gather_jobs">gather_jobs() (in module ai2_kit.core.job)</a>
 </li>
+      <li><a href="_api/ai2_kit.feat.catalysis.ui.html#ai2_kit.feat.catalysis.ui.UiHelper.gen_aimd_config">gen_aimd_config() (ai2_kit.feat.catalysis.ui.UiHelper method)</a>
+</li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_cp2k_input">gen_cp2k_input() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_deepmd_input">gen_deepmd_input() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
+</li>
+      <li><a href="_api/ai2_kit.feat.catalysis.ui.html#ai2_kit.feat.catalysis.ui.UiHelper.gen_lammps_config">gen_lammps_config() (ai2_kit.feat.catalysis.ui.UiHelper method)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_lammps_input">gen_lammps_input() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_mlp_training_input">gen_mlp_training_input() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_plumed_input">gen_plumed_input() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
+</li>
+      <li><a href="_api/ai2_kit.feat.catalysis.ui.html#ai2_kit.feat.catalysis.ui.UiHelper.gen_train_config">gen_train_config() (ai2_kit.feat.catalysis.ui.UiHelper method)</a>
+</li>
+      <li><a href="_api/ai2_kit.feat.catalysis.ui.html#ai2_kit.feat.catalysis.ui.UiHelper.gen_train_vendors_config">gen_train_vendors_config() (ai2_kit.feat.catalysis.ui.UiHelper method)</a>
 </li>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.general">general (ai2_kit.workflow.cll_mlp.WorkflowConfig attribute)</a>
 
@@ -1299,6 +1360,8 @@ document.write(`
         <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Slurm.get_job_state">(ai2_kit.core.queue_system.Slurm method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.GenericCp2kOutput.get_labeled_system_dataset">get_labeled_system_dataset() (ai2_kit.domain.cp2k.GenericCp2kOutput method)</a>
 
       <ul>
@@ -1307,8 +1370,6 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.GenericVaspOutput.get_labeled_system_dataset">(ai2_kit.domain.vasp.GenericVaspOutput method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.get_ln_cmd">get_ln_cmd() (in module ai2_kit.core.connector)</a>
 </li>
       <li><a href="_api/ai2_kit.core.log.html#ai2_kit.core.log.get_logger">get_logger() (in module ai2_kit.core.log)</a>
@@ -1343,6 +1404,8 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorOutput.get_passing_rate">(ai2_kit.domain.selector.CllModelDeviSelectorOutput method)</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.get_plumed_group">get_plumed_group() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
+</li>
       <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem.get_polling_interval">get_polling_interval() (ai2_kit.core.queue_system.BaseQueueSystem method)</a>
 
       <ul>
@@ -1369,6 +1432,8 @@ document.write(`
         <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Slurm.get_submit_cmd">(ai2_kit.core.queue_system.Slurm method)</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.feat.catalysis.ui.html#ai2_kit.feat.catalysis.ui.get_the_ui_helper">get_the_ui_helper() (in module ai2_kit.feat.catalysis.ui)</a>
+</li>
       <li><a href="_api/ai2_kit.domain.asap.html#ai2_kit.domain.asap.get_trainer">get_trainer() (in module ai2_kit.domain.asap)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.get_training_dataset">get_training_dataset() (ai2_kit.domain.deepmd.GenericDeepmdOutput method)</a>
@@ -1455,10 +1520,10 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspInputConfig.init_system_files">(ai2_kit.domain.vasp.CllVaspInputConfig attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.algorithm.proton_transfer.html#ai2_kit.algorithm.proton_transfer.SystemInfo.initial_donor">initial_donor (ai2_kit.algorithm.proton_transfer.SystemInfo attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kInput.initiated">initiated (ai2_kit.domain.cp2k.CllCp2kInput attribute)</a>
 
       <ul>
@@ -1481,8 +1546,14 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspInputConfig.input_template">(ai2_kit.domain.vasp.CllVaspInputConfig attribute)</a>
 </li>
       </ul></li>
-      <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.inspect_explore_result">inspect_explore_result() (in module ai2_kit.feat.catalysis)</a>
+      <li><a href="_api/ai2_kit.feat.catalysis.ui.html#ai2_kit.feat.catalysis.ui.UiHelper.inspect_deepmd_output">inspect_deepmd_output() (ai2_kit.feat.catalysis.ui.UiHelper method)</a>
 </li>
+      <li><a href="_api/ai2_kit.feat.catalysis.ui.html#ai2_kit.feat.catalysis.ui.UiHelper.inspect_lammps_output">inspect_lammps_output() (ai2_kit.feat.catalysis.ui.UiHelper method)</a>
+
+      <ul>
+        <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.inspect_lammps_output">(in module ai2_kit.feat.catalysis)</a>
+</li>
+      </ul></li>
       <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.HpcExecutor.is_local">is_local (ai2_kit.core.executor.HpcExecutor property)</a>
 </li>
       <li><a href="_api/ai2_kit.core.job.html#ai2_kit.core.job.JobFuture.is_success">is_success() (ai2_kit.core.job.JobFuture method)</a>
@@ -1581,10 +1652,10 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspInputConfig.limit_method">(ai2_kit.domain.vasp.CllVaspInputConfig attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.limit_per_cluster">limit_per_cluster (ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.list_even_sample">list_even_sample() (in module ai2_kit.core.util)</a>
 </li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.list_random_sample">list_random_sample() (in module ai2_kit.core.util)</a>
@@ -1594,8 +1665,14 @@ document.write(`
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.list_split">list_split() (in module ai2_kit.core.util)</a>
 </li>
       <li><a href="_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.CheckpointCmd.load">load() (ai2_kit.core.checkpoint.CheckpointCmd method)</a>
+
+      <ul>
+        <li><a href="_api/ai2_kit.tool.yaml.html#ai2_kit.tool.yaml.Yaml.load">(ai2_kit.tool.yaml.Yaml method)</a>
 </li>
+      </ul></li>
       <li><a href="_api/ai2_kit.domain.util.html#ai2_kit.domain.util.load_cp2k_input">load_cp2k_input() (in module ai2_kit.domain.util)</a>
+</li>
+      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.load_json">load_json() (in module ai2_kit.core.util)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.load_system">load_system() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
 </li>
@@ -1603,6 +1680,8 @@ document.write(`
 
       <ul>
         <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.HpcExecutor.load_text">(ai2_kit.core.executor.HpcExecutor method)</a>
+</li>
+        <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.load_text">(in module ai2_kit.core.util)</a>
 </li>
       </ul></li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.load_yaml_file">load_yaml_file() (in module ai2_kit.core.util)</a>
@@ -1697,6 +1776,8 @@ document.write(`
 </li>
         <li><a href="_api/ai2_kit.algorithm.html#module-ai2_kit.algorithm">ai2_kit.algorithm</a>
 </li>
+        <li><a href="_api/ai2_kit.algorithm.aos_analysis.html#module-ai2_kit.algorithm.aos_analysis">ai2_kit.algorithm.aos_analysis</a>
+</li>
         <li><a href="_api/ai2_kit.algorithm.proton_transfer.html#module-ai2_kit.algorithm.proton_transfer">ai2_kit.algorithm.proton_transfer</a>
 </li>
         <li><a href="_api/ai2_kit.core.html#module-ai2_kit.core">ai2_kit.core</a>
@@ -1757,6 +1838,8 @@ document.write(`
 </li>
         <li><a href="_api/ai2_kit.feat.catalysis.html#module-ai2_kit.feat.catalysis">ai2_kit.feat.catalysis</a>
 </li>
+        <li><a href="_api/ai2_kit.feat.catalysis.ui.html#module-ai2_kit.feat.catalysis.ui">ai2_kit.feat.catalysis.ui</a>
+</li>
         <li><a href="_api/ai2_kit.main.html#module-ai2_kit.main">ai2_kit.main</a>
 </li>
         <li><a href="_api/ai2_kit.res.html#module-ai2_kit.res">ai2_kit.res</a>
@@ -1769,7 +1852,7 @@ document.write(`
 </li>
         <li><a href="_api/ai2_kit.tool.dpdata.html#module-ai2_kit.tool.dpdata">ai2_kit.tool.dpdata</a>
 </li>
-        <li><a href="_api/ai2_kit.tool.misc.html#module-ai2_kit.tool.misc">ai2_kit.tool.misc</a>
+        <li><a href="_api/ai2_kit.tool.yaml.html#module-ai2_kit.tool.yaml">ai2_kit.tool.yaml</a>
 </li>
         <li><a href="_api/ai2_kit.workflow.html#module-ai2_kit.workflow">ai2_kit.workflow</a>
 </li>
@@ -1792,6 +1875,8 @@ document.write(`
         <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.HpcExecutor.name">(ai2_kit.core.executor.HpcExecutor attribute)</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.nested_set">nested_set() (in module ai2_kit.core.util)</a>
+</li>
       <li><a href="_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.neu">neu (ai2_kit.workflow.fep_mlp.WorkflowConfig attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInput.new_dataset">new_dataset (ai2_kit.domain.deepmd.CllDeepmdInput attribute)</a>
@@ -1878,9 +1963,9 @@ document.write(`
       </ul></li>
       <li><a href="_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.process_lasp_outputs">process_lasp_outputs() (in module ai2_kit.domain.lasp)</a>
 </li>
-      <li><a href="_api/ai2_kit.algorithm.proton_transfer.html#ai2_kit.algorithm.proton_transfer.proton_transfer_detection">proton_transfer_detection() (in module ai2_kit.algorithm.proton_transfer)</a>
+      <li><a href="_api/ai2_kit.main.html#ai2_kit.main.AlgorithmGroup.proton_transfer">proton_transfer() (ai2_kit.main.AlgorithmGroup method)</a>
 </li>
-      <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ProtonTransferGroup">ProtonTransferGroup (class in ai2_kit.main)</a>
+      <li><a href="_api/ai2_kit.algorithm.proton_transfer.html#ai2_kit.algorithm.proton_transfer.proton_transfer_detection">proton_transfer_detection() (in module ai2_kit.algorithm.proton_transfer)</a>
 </li>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.SshConnector.put">put() (ai2_kit.core.connector.SshConnector method)</a>
 </li>
@@ -2064,6 +2149,8 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.tool.ase.html#ai2_kit.tool.ase.AseHelper.set_pbc">set_pbc() (ai2_kit.tool.ase.AseHelper method)</a>
 </li>
+      <li><a href="_api/ai2_kit.tool.yaml.html#ai2_kit.tool.yaml.Yaml.set_value">set_value() (ai2_kit.tool.yaml.Yaml method)</a>
+</li>
       <li><a href="_api/ai2_kit.core.script.html#ai2_kit.core.script.BashTemplate.setup">setup (ai2_kit.core.script.BashTemplate attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.Executor.setup_workspace">setup_workspace() (ai2_kit.core.executor.Executor method)</a>
@@ -2072,16 +2159,10 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.short_hash">short_hash() (in module ai2_kit.core.util)</a>
 </li>
-      <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ProtonTransferGroup.show_distance_change">show_distance_change (ai2_kit.main.ProtonTransferGroup property)</a>
-</li>
       <li><a href="_api/ai2_kit.algorithm.proton_transfer.html#ai2_kit.algorithm.proton_transfer.show_distance_change">show_distance_change() (in module ai2_kit.algorithm.proton_transfer)</a>
-</li>
-      <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ProtonTransferGroup.show_transfer_paths">show_transfer_paths (ai2_kit.main.ProtonTransferGroup property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ProtonTransferGroup.show_type_change">show_type_change (ai2_kit.main.ProtonTransferGroup property)</a>
-</li>
       <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.QueueSystemConfig.slurm">slurm (ai2_kit.core.queue_system.QueueSystemConfig attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Slurm">Slurm (class in ai2_kit.core.queue_system)</a>
@@ -2218,6 +2299,8 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.algorithm.proton_transfer.html#ai2_kit.algorithm.proton_transfer.SystemInfo.u">u (ai2_kit.algorithm.proton_transfer.SystemInfo attribute)</a>
 </li>
+      <li><a href="_api/ai2_kit.feat.catalysis.ui.html#ai2_kit.feat.catalysis.ui.UiHelper">UiHelper (class in ai2_kit.feat.catalysis.ui)</a>
+</li>
       <li><a href="_api/ai2_kit.core.job.html#ai2_kit.core.job.JobState.UNKNOWN">UNKNOWN (ai2_kit.core.job.JobState attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.update">update (ai2_kit.workflow.cll_mlp.WorkflowConfig attribute)</a>
@@ -2228,6 +2311,8 @@ document.write(`
       </ul></li>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.General.update_explore_systems">update_explore_systems (ai2_kit.workflow.cll_mlp.WorkflowConfig.General attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.BaseConnector.upload">upload() (ai2_kit.core.connector.BaseConnector method)</a>
 
       <ul>
@@ -2240,8 +2325,6 @@ document.write(`
         <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.HpcExecutor.upload">(ai2_kit.core.executor.HpcExecutor method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact.url">url (ai2_kit.core.artifact.Artifact attribute)</a>
 
       <ul>
@@ -2266,10 +2349,10 @@ document.write(`
         <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.Label.vasp">(ai2_kit.workflow.cll_mlp.WorkflowConfig.Label attribute)</a>
 </li>
       </ul></li>
-      <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspContextConfig.vasp_cmd">vasp_cmd (ai2_kit.domain.vasp.CllVaspContextConfig attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.CllVaspContextConfig.vasp_cmd">vasp_cmd (ai2_kit.domain.vasp.CllVaspContextConfig attribute)</a>
+</li>
       <li><a href="_api/ai2_kit.domain.data.html#ai2_kit.domain.data.DataFormat.VASP_OUTPUT_DIR">VASP_OUTPUT_DIR (ai2_kit.domain.data.DataFormat attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.GenericVaspOutput.vasp_outputs">vasp_outputs (ai2_kit.domain.vasp.GenericVaspOutput attribute)</a>
@@ -2277,8 +2360,6 @@ document.write(`
       <li><a href="_api/ai2_kit.domain.data.html#ai2_kit.domain.data.DataFormat.VASP_POSCAR">VASP_POSCAR (ai2_kit.domain.data.DataFormat attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.data.html#ai2_kit.domain.data.DataFormat.VASP_XML">VASP_XML (ai2_kit.domain.data.DataFormat attribute)</a>
-</li>
-      <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ProtonTransferGroup.visualize">visualize (ai2_kit.main.ProtonTransferGroup property)</a>
 </li>
       <li><a href="_api/ai2_kit.algorithm.proton_transfer.html#ai2_kit.algorithm.proton_transfer.visualize_transfer">visualize_transfer() (in module ai2_kit.algorithm.proton_transfer)</a>
 </li>
@@ -2358,6 +2439,12 @@ document.write(`
 <h2 id="Y">Y</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ToolGroup.yaml">yaml (ai2_kit.main.ToolGroup property)</a>
+</li>
+      <li><a href="_api/ai2_kit.tool.yaml.html#ai2_kit.tool.yaml.Yaml">Yaml (class in ai2_kit.tool.yaml)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag.yaml_tag">yaml_tag (ai2_kit.core.util.JoinTag attribute)</a>
 
       <ul>
@@ -2376,16 +2463,12 @@ document.write(`
 
               
               
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
 <div class="prev-next-area">
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -2434,8 +2517,8 @@ By weihong.xu
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
 
   <footer class="bd-footer">
   </footer>

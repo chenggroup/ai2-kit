@@ -29,6 +29,9 @@ parts:
     chapters:
       - file: doc/manual/cll-workflow.zh
       - file: doc/manual/hpc-executor.zh
+  - caption: References
+    chapters:
+      - file: doc/manual/references
   - caption: API Reference
     maxdepth: 1
     chapters:

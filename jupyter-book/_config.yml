@@ -40,3 +40,4 @@ sphinx:
   - 'sphinx.ext.autosummary'
   config:
     autosummary_generate: True
+    bibtex_reference_style: author_year

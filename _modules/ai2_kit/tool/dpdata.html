@@ -430,9 +430,7 @@ document.write(`
 
 <div class="viewcode-block" id="DpdataHelper.filter"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lambda_expr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">fn</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">lambda_expr</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">_fn</span><span class="p">(</span><span class="n">system</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">_fn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span> <span class="o">=</span> <span class="p">[</span> <span class="n">system</span> <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span> <span class="k">if</span> <span class="n">fn</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">data</span><span class="p">)]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
     <span class="nd">@property</span>
@@ -467,9 +465,9 @@ document.write(`
 
     <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dpdata</span><span class="o">.</span><span class="n">System</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dpdata</span><span class="o">.</span><span class="n">System</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
 </pre></div>
 
                 </article>

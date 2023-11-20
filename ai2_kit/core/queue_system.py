@@ -8,6 +8,7 @@ import os
 import re
 import time
 import asyncio
+import json
 
 
 from .connector import BaseConnector
@@ -31,6 +32,11 @@ class QueueSystemConfig(BaseModel):
         bjobs_bin: str = 'bjobs'
         polling_interval: int = 10
 
+    class PBS(BaseModel):
+        qsub_bin: str = 'qsub'
+        qstat_bin: str = 'qstat'
+        qdel_bin: str = 'qdel'
+
     slurm: Optional[Slurm]
     lsf: Optional[LSF]
 
@@ -39,9 +45,8 @@ class BaseQueueSystem(ABC):
 
     connector: BaseConnector
 
-    @abstractmethod
     def get_polling_interval(self) -> int:
-        ...
+        return 10
 
     @abstractmethod
     def get_script_suffix(self) -> str:
@@ -194,11 +199,12 @@ class Slurm(BaseQueueSystem):
             return state
 
     def cancel(self, job_id: str):
-        cmd = '{} {}'.format(self.config.scancel_bin, job_id)
+        cmd = f'{self.config.scancel_bin} {job_id}'
         self.connector.run(cmd)
 
     def _post_submit(self, job: 'QueueJobFuture'):
         self._last_states = None
+        self._last_update_at = 0
 
     def _translate_state(self, slurm_state: str) -> JobState:
         return self.translate_table.get(slurm_state, JobState.UNKNOWN)
@@ -256,6 +262,80 @@ class Lsf(BaseQueueSystem):
     # TODO
     def cancel(self, job_id: str):
         ...
+
+    def _get_all_states(self) -> Dict[str, JobState]:
+        ...
+
+
+class PBS(BaseQueueSystem):
+    config: QueueSystemConfig.PBS
+    translate_table = {
+        'B': JobState.RUNNING,  # This state is returned for running array jobs
+        'R': JobState.RUNNING,
+        'C': JobState.COMPLETED,  # Completed after having run
+        'E': JobState.COMPLETED,  # Exiting after having run
+        'H': JobState.HELD,  # Held
+        'Q': JobState.PENDING,  # Queued, and eligible to run
+        'W': JobState.PENDING,  # Job is waiting for it's execution time (-a option) to be reached
+        'S': JobState.HELD  # Suspended
+    }
+
+    _last_states = defaultdict(lambda: JobState.UNKNOWN)
+    _last_update_at: float = 0
+
+    def get_script_suffix(self) -> str:
+        return '.pbs'
+
+    def get_submit_cmd(self) -> str:
+        return self.config.qsub_bin
+
+    def get_job_id_pattern(self) -> str:
+        return r"(.+)"
+
+    def get_job_id_envvar(self) -> str:
+        return 'PBS_JOBID'
+
+    def cancel(self, job_id: str):
+        cmd = f'{self.config.qdel_bin} {job_id}'
+        self.connector.run(cmd)
+
+    def _post_submit(self, job: 'QueueJobFuture'):
+        self._last_update_at = 0  # force update stats
+
+    def get_job_state(self, job_id: str, success_indicator_path: str) -> JobState:
+        state = self._get_all_states().get(job_id)
+        if state is None:
+            cmd = 'test -f {}'.format(shlex.quote(success_indicator_path))
+            ret = self.connector.run(cmd, warn=True)
+            if ret.return_code:
+                return JobState.FAILED
+            else:
+                return JobState.COMPLETED
+        else:
+            return state
+
+    def _get_all_states(self) -> Dict[str, JobState]:
+        current_ts = time.time()
+        if (current_ts - self._last_update_at) < self.get_polling_interval():
+            return self._last_states
+
+        cmd = f"{self.config.qstat_bin} -f -F json"
+        try:
+            r = self.connector.run(cmd, hide=True)
+        except invoke.exceptions.UnexpectedExit as e:
+            logger.warning(f'Error when calling qstat: {e}')
+            return self._last_states
+
+        states: Dict[str, JobState] = dict()
+        qstat_json = json.loads(r.stdout)
+        for job in qstat_json['Jobs']:
+            states[job['Job_Id']] = self._translate_state(job['job_state'])
+        self._last_states = states
+        self._last_update_at = current_ts
+        return states
+
+    def _translate_state(self, slurm_state: str) -> JobState:
+        return self.translate_table.get(slurm_state, JobState.UNKNOWN)
 
 
 class QueueJobFuture(JobFuture):

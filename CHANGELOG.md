@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.10.10
+* fix: dpdata filter
+
 ## v0.10.9
 * refactor: aos-analysis options
 

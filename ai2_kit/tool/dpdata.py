@@ -26,9 +26,7 @@ class DpdataHelper:
 
     def filter(self, lambda_expr: str):
         fn = eval(lambda_expr)
-        def _fn(system):
-            return fn(system.data)
-        self._systems = list(filter(_fn, self._systems))
+        self._systems = [ system for system in self._systems if fn(system.data)]
         return self
 
     @property
@@ -63,6 +61,6 @@ class DpdataHelper:
 
     def _read(self, file: str, **kwargs):
         if self._label:
-            self._systems.append(dpdata.LabeledSystem(file, **kwargs))
+            self._systems.extend(dpdata.LabeledSystem(file, **kwargs))
         else:
-            self._systems.append(dpdata.System(file, **kwargs))
+            self._systems.extend(dpdata.System(file, **kwargs))

@@ -412,6 +412,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
 
 <span class="kn">from</span> <span class="nn">.connector</span> <span class="kn">import</span> <span class="n">BaseConnector</span>
@@ -435,17 +436,22 @@ document.write(`
         <span class="n">bjobs_bin</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;bjobs&#39;</span>
         <span class="n">polling_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span></div>
 
+<div class="viewcode-block" id="QueueSystemConfig.PBS"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.QueueSystemConfig.PBS">[docs]</a>    <span class="k">class</span> <span class="nc">PBS</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+        <span class="n">qsub_bin</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;qsub&#39;</span>
+        <span class="n">qstat_bin</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;qstat&#39;</span>
+        <span class="n">qdel_bin</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;qdel&#39;</span></div>
+
     <span class="n">slurm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Slurm</span><span class="p">]</span>
-    <span class="n">lsf</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LSF</span><span class="p">]</span></div>
+    <span class="n">lsf</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LSF</span><span class="p">]</span>
+    <span class="n">pbs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PBS</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="BaseQueueSystem"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem">[docs]</a><span class="k">class</span> <span class="nc">BaseQueueSystem</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 
     <span class="n">connector</span><span class="p">:</span> <span class="n">BaseConnector</span>
 
-<div class="viewcode-block" id="BaseQueueSystem.get_polling_interval"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem.get_polling_interval">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_polling_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="o">...</span></div>
+<div class="viewcode-block" id="BaseQueueSystem.get_polling_interval"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem.get_polling_interval">[docs]</a>    <span class="k">def</span> <span class="nf">get_polling_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">10</span></div>
 
 <div class="viewcode-block" id="BaseQueueSystem.get_script_suffix"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem.get_script_suffix">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_script_suffix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -492,7 +498,11 @@ document.write(`
         <span class="n">running_indicator</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.running&#39;</span>
 
         <span class="c1"># TODO: maybe there are better way to inject running indicator</span>
-        <span class="n">script</span> <span class="o">=</span> <span class="n">inject_cmd_to_script</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;echo $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_job_id_envvar</span><span class="p">()</span><span class="si">}</span><span class="s1"> &gt; </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">running_indicator</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">inject_cmds</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+            <span class="sa">f</span><span class="s1">&#39;cd </span><span class="si">{</span><span class="n">quoted_cwd</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;echo $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_job_id_envvar</span><span class="p">()</span><span class="si">}</span><span class="s1"> &gt; </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">running_indicator</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="p">])</span>
+        <span class="n">script</span> <span class="o">=</span> <span class="n">inject_cmd_to_script</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">inject_cmds</span><span class="p">)</span>
 
         <span class="c1"># create script and add a command to write job id to success indicator</span>
         <span class="n">script</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
@@ -552,7 +562,7 @@ document.write(`
 <div class="viewcode-block" id="Slurm"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Slurm">[docs]</a><span class="k">class</span> <span class="nc">Slurm</span><span class="p">(</span><span class="n">BaseQueueSystem</span><span class="p">):</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">QueueSystemConfig</span><span class="o">.</span><span class="n">Slurm</span>
 
-    <span class="n">_last_states</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JobState</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_last_states</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">)</span>
     <span class="n">_last_update_at</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="n">translate_table</span> <span class="o">=</span> <span class="p">{</span>
@@ -598,27 +608,27 @@ document.write(`
             <span class="k">return</span> <span class="n">state</span></div>
 
 <div class="viewcode-block" id="Slurm.cancel"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Slurm.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">scancel_bin</span><span class="p">,</span> <span class="n">job_id</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">scancel_bin</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_post_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="s1">&#39;QueueJobFuture&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_update_at</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">_translate_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slurm_state</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JobState</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">translate_table</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">slurm_state</span><span class="p">,</span> <span class="n">JobState</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_all_states</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JobState</span><span class="p">]:</span>
         <span class="n">current_ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="c1"># cache the states for 10 seconds to reduce the number of squeue calls</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">current_ts</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_update_at</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">polling_interval</span><span class="p">:</span>
+        <span class="k">if</span>  <span class="p">(</span><span class="n">current_ts</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_update_at</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_polling_interval</span><span class="p">():</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span>
+
         <span class="c1"># call squeue to get all states</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">squeue_bin</span><span class="si">}</span><span class="s2"> --noheader --format=&#39;%i %t&#39; -u $USER&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">hide</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">invoke</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">UnexpectedExit</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error when calling squeue: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span>
 
         <span class="n">states</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JobState</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
@@ -659,7 +669,81 @@ document.write(`
 
     <span class="c1"># TODO</span>
 <div class="viewcode-block" id="Lsf.cancel"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Lsf.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="o">...</span></div></div>
+        <span class="o">...</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_all_states</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JobState</span><span class="p">]:</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="PBS"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.PBS">[docs]</a><span class="k">class</span> <span class="nc">PBS</span><span class="p">(</span><span class="n">BaseQueueSystem</span><span class="p">):</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">QueueSystemConfig</span><span class="o">.</span><span class="n">PBS</span>
+    <span class="n">translate_table</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>  <span class="c1"># This state is returned for running array jobs</span>
+        <span class="s1">&#39;R&#39;</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
+        <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">COMPLETED</span><span class="p">,</span>  <span class="c1"># Completed after having run</span>
+        <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">COMPLETED</span><span class="p">,</span>  <span class="c1"># Exiting after having run</span>
+        <span class="s1">&#39;H&#39;</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">HELD</span><span class="p">,</span>  <span class="c1"># Held</span>
+        <span class="s1">&#39;Q&#39;</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span>  <span class="c1"># Queued, and eligible to run</span>
+        <span class="s1">&#39;W&#39;</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span>  <span class="c1"># Job is waiting for it&#39;s execution time (-a option) to be reached</span>
+        <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">HELD</span>  <span class="c1"># Suspended</span>
+    <span class="p">}</span>
+
+    <span class="n">_last_states</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">)</span>
+    <span class="n">_last_update_at</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="PBS.get_script_suffix"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.PBS.get_script_suffix">[docs]</a>    <span class="k">def</span> <span class="nf">get_script_suffix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;.pbs&#39;</span></div>
+
+<div class="viewcode-block" id="PBS.get_submit_cmd"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.PBS.get_submit_cmd">[docs]</a>    <span class="k">def</span> <span class="nf">get_submit_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">qsub_bin</span></div>
+
+<div class="viewcode-block" id="PBS.get_job_id_pattern"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.PBS.get_job_id_pattern">[docs]</a>    <span class="k">def</span> <span class="nf">get_job_id_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">r</span><span class="s2">&quot;(.+)&quot;</span></div>
+
+<div class="viewcode-block" id="PBS.get_job_id_envvar"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.PBS.get_job_id_envvar">[docs]</a>    <span class="k">def</span> <span class="nf">get_job_id_envvar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;PBS_JOBID&#39;</span></div>
+
+<div class="viewcode-block" id="PBS.cancel"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.PBS.cancel">[docs]</a>    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">qdel_bin</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_post_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="s1">&#39;QueueJobFuture&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_update_at</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># force update stats</span>
+
+<div class="viewcode-block" id="PBS.get_job_state"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.PBS.get_job_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_job_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">success_indicator_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JobState</span><span class="p">:</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_all_states</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;test -f </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">success_indicator_path</span><span class="p">))</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ret</span><span class="o">.</span><span class="n">return_code</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">JobState</span><span class="o">.</span><span class="n">FAILED</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">JobState</span><span class="o">.</span><span class="n">COMPLETED</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">state</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_all_states</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JobState</span><span class="p">]:</span>
+        <span class="n">current_ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">current_ts</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_update_at</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_polling_interval</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">qstat_bin</span><span class="si">}</span><span class="s2"> -f -F json&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">hide</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">invoke</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">UnexpectedExit</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error when calling qstat: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span>
+
+        <span class="n">states</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JobState</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">qstat_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">job_id</span><span class="p">,</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">qstat_json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Jobs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">states</span><span class="p">[</span><span class="n">job_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_translate_state</span><span class="p">(</span><span class="n">job</span><span class="p">[</span><span class="s1">&#39;job_state&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_states</span> <span class="o">=</span> <span class="n">states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_update_at</span> <span class="o">=</span> <span class="n">current_ts</span>
+        <span class="k">return</span> <span class="n">states</span>
+
+    <span class="k">def</span> <span class="nf">_translate_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slurm_state</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JobState</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">translate_table</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">slurm_state</span><span class="p">,</span> <span class="n">JobState</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="QueueJobFuture"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.QueueJobFuture">[docs]</a><span class="k">class</span> <span class="nc">QueueJobFuture</span><span class="p">(</span><span class="n">JobFuture</span><span class="p">):</span>

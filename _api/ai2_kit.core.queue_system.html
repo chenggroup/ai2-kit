@@ -485,7 +485,7 @@ document.write(`
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ai2_kit.core.queue_system.BaseQueueSystem.get_polling_interval">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_polling_interval</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#BaseQueueSystem.get_polling_interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.BaseQueueSystem.get_polling_interval" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_polling_interval</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#BaseQueueSystem.get_polling_interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.BaseQueueSystem.get_polling_interval" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -552,6 +552,52 @@ document.write(`
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.PBS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.core.queue_system.</span></span><span class="sig-name descname"><span class="pre">PBS</span></span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#PBS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.PBS" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ai2_kit.core.queue_system.BaseQueueSystem" title="ai2_kit.core.queue_system.BaseQueueSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseQueueSystem</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.PBS.cancel">
+<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#PBS.cancel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.PBS.cancel" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.PBS.config">
+<span class="sig-name descname"><span class="pre">config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#ai2_kit.core.queue_system.QueueSystemConfig.PBS" title="ai2_kit.core.queue_system.QueueSystemConfig.PBS"><span class="pre">PBS</span></a></em><a class="headerlink" href="#ai2_kit.core.queue_system.PBS.config" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.PBS.get_job_id_envvar">
+<span class="sig-name descname"><span class="pre">get_job_id_envvar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#PBS.get_job_id_envvar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.PBS.get_job_id_envvar" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.PBS.get_job_id_pattern">
+<span class="sig-name descname"><span class="pre">get_job_id_pattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#PBS.get_job_id_pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.PBS.get_job_id_pattern" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.PBS.get_job_state">
+<span class="sig-name descname"><span class="pre">get_job_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">success_indicator_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="ai2_kit.core.job.html#ai2_kit.core.job.JobState" title="ai2_kit.core.job.JobState"><span class="pre">JobState</span></a></span></span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#PBS.get_job_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.PBS.get_job_state" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.PBS.get_script_suffix">
+<span class="sig-name descname"><span class="pre">get_script_suffix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#PBS.get_script_suffix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.PBS.get_script_suffix" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.PBS.get_submit_cmd">
+<span class="sig-name descname"><span class="pre">get_submit_cmd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#PBS.get_submit_cmd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.PBS.get_submit_cmd" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.PBS.translate_table">
+<span class="sig-name descname"><span class="pre">translate_table</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'B':</span> <span class="pre">JobState.RUNNING,</span> <span class="pre">'C':</span> <span class="pre">JobState.COMPLETED,</span> <span class="pre">'E':</span> <span class="pre">JobState.COMPLETED,</span> <span class="pre">'H':</span> <span class="pre">JobState.HELD,</span> <span class="pre">'Q':</span> <span class="pre">JobState.PENDING,</span> <span class="pre">'R':</span> <span class="pre">JobState.RUNNING,</span> <span class="pre">'S':</span> <span class="pre">JobState.HELD,</span> <span class="pre">'W':</span> <span class="pre">JobState.PENDING}</span></em><a class="headerlink" href="#ai2_kit.core.queue_system.PBS.translate_table" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="ai2_kit.core.queue_system.QueueJobFuture">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.core.queue_system.</span></span><span class="sig-name descname"><span class="pre">QueueJobFuture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queue_system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ai2_kit.core.queue_system.BaseQueueSystem" title="ai2_kit.core.queue_system.BaseQueueSystem"><span class="pre">BaseQueueSystem</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">script</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cwd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">success_indicator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polling_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#QueueJobFuture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.QueueJobFuture" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ai2_kit.core.job.html#ai2_kit.core.job.JobFuture" title="ai2_kit.core.job.JobFuture"><code class="xref py py-class docutils literal notranslate"><span class="pre">JobFuture</span></code></a></p>
@@ -601,7 +647,7 @@ but it is already good enough to handle thousands of jobs (I guess).</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ai2_kit.core.queue_system.QueueSystemConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.core.queue_system.</span></span><span class="sig-name descname"><span class="pre">QueueSystemConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slurm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ai2_kit.core.queue_system.QueueSystemConfig.Slurm" title="ai2_kit.core.queue_system.QueueSystemConfig.Slurm"><span class="pre">Slurm</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lsf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ai2_kit.core.queue_system.QueueSystemConfig.LSF" title="ai2_kit.core.queue_system.QueueSystemConfig.LSF"><span class="pre">LSF</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#QueueSystemConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.QueueSystemConfig" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.core.queue_system.</span></span><span class="sig-name descname"><span class="pre">QueueSystemConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slurm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ai2_kit.core.queue_system.QueueSystemConfig.Slurm" title="ai2_kit.core.queue_system.QueueSystemConfig.Slurm"><span class="pre">Slurm</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lsf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ai2_kit.core.queue_system.QueueSystemConfig.LSF" title="ai2_kit.core.queue_system.QueueSystemConfig.LSF"><span class="pre">LSF</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pbs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ai2_kit.core.queue_system.QueueSystemConfig.PBS" title="ai2_kit.core.queue_system.QueueSystemConfig.PBS"><span class="pre">PBS</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#QueueSystemConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.QueueSystemConfig" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ai2_kit.core.queue_system.QueueSystemConfig.LSF">
@@ -620,6 +666,27 @@ but it is already good enough to handle thousands of jobs (I guess).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ai2_kit.core.queue_system.QueueSystemConfig.LSF.polling_interval">
 <span class="sig-name descname"><span class="pre">polling_interval</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ai2_kit.core.queue_system.QueueSystemConfig.LSF.polling_interval" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.QueueSystemConfig.PBS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PBS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qsub_bin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'qsub'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qstat_bin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'qstat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qdel_bin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'qdel'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/core/queue_system.html#QueueSystemConfig.PBS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.core.queue_system.QueueSystemConfig.PBS" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.QueueSystemConfig.PBS.qdel_bin">
+<span class="sig-name descname"><span class="pre">qdel_bin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ai2_kit.core.queue_system.QueueSystemConfig.PBS.qdel_bin" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.QueueSystemConfig.PBS.qstat_bin">
+<span class="sig-name descname"><span class="pre">qstat_bin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ai2_kit.core.queue_system.QueueSystemConfig.PBS.qstat_bin" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.QueueSystemConfig.PBS.qsub_bin">
+<span class="sig-name descname"><span class="pre">qsub_bin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ai2_kit.core.queue_system.QueueSystemConfig.PBS.qsub_bin" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -653,6 +720,11 @@ but it is already good enough to handle thousands of jobs (I guess).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ai2_kit.core.queue_system.QueueSystemConfig.lsf">
 <span class="sig-name descname"><span class="pre">lsf</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ai2_kit.core.queue_system.QueueSystemConfig.LSF" title="ai2_kit.core.queue_system.QueueSystemConfig.LSF"><span class="pre">LSF</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.core.queue_system.QueueSystemConfig.lsf" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.core.queue_system.QueueSystemConfig.pbs">
+<span class="sig-name descname"><span class="pre">pbs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ai2_kit.core.queue_system.QueueSystemConfig.PBS" title="ai2_kit.core.queue_system.QueueSystemConfig.PBS"><span class="pre">PBS</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.core.queue_system.QueueSystemConfig.pbs" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">

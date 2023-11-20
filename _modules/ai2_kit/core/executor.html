@@ -402,7 +402,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for ai2_kit.core.executor</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">.queue_system</span> <span class="kn">import</span> <span class="n">QueueSystemConfig</span><span class="p">,</span> <span class="n">BaseQueueSystem</span><span class="p">,</span> <span class="n">Slurm</span><span class="p">,</span> <span class="n">Lsf</span>
+<span></span><span class="kn">from</span> <span class="nn">.queue_system</span> <span class="kn">import</span> <span class="n">QueueSystemConfig</span><span class="p">,</span> <span class="n">BaseQueueSystem</span><span class="p">,</span> <span class="n">Slurm</span><span class="p">,</span> <span class="n">Lsf</span><span class="p">,</span> <span class="n">PBS</span>
 <span class="kn">from</span> <span class="nn">.job</span> <span class="kn">import</span> <span class="n">JobFuture</span>
 <span class="kn">from</span> <span class="nn">.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span>
 <span class="kn">from</span> <span class="nn">.connector</span> <span class="kn">import</span> <span class="n">SshConfig</span><span class="p">,</span> <span class="n">BaseConnector</span><span class="p">,</span> <span class="n">SshConnector</span><span class="p">,</span> <span class="n">LocalConnector</span>
@@ -500,7 +500,6 @@ document.write(`
     <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="n">BaseExecutorConfig</span><span class="p">],</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">BaseExecutorConfig</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">ssh</span><span class="p">:</span>
             <span class="n">connector</span> <span class="o">=</span> <span class="n">SshConnector</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">ssh</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -512,6 +511,9 @@ document.write(`
         <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">queue_system</span><span class="o">.</span><span class="n">lsf</span><span class="p">:</span>
             <span class="n">queue_system</span> <span class="o">=</span> <span class="n">Lsf</span><span class="p">()</span>
             <span class="n">queue_system</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">queue_system</span><span class="o">.</span><span class="n">lsf</span>
+        <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">queue_system</span><span class="o">.</span><span class="n">pbs</span><span class="p">:</span>
+            <span class="n">queue_system</span> <span class="o">=</span> <span class="n">PBS</span><span class="p">()</span>
+            <span class="n">queue_system</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">queue_system</span><span class="o">.</span><span class="n">pbs</span>
         <span class="k">if</span> <span class="n">queue_system</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Queue system config is missing!&#39;</span><span class="p">)</span>
         <span class="n">queue_system</span><span class="o">.</span><span class="n">connector</span> <span class="o">=</span> <span class="n">connector</span>

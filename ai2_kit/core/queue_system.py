@@ -153,7 +153,7 @@ class BaseQueueSystem(ABC):
 class Slurm(BaseQueueSystem):
     config: QueueSystemConfig.Slurm
 
-    _last_states: Optional[Dict[str, JobState]] = None
+    _last_states = defaultdict(lambda: JobState.UNKNOWN)
     _last_update_at: float = 0
 
     translate_table = {
@@ -203,7 +203,6 @@ class Slurm(BaseQueueSystem):
         self.connector.run(cmd)
 
     def _post_submit(self, job: 'QueueJobFuture'):
-        self._last_states = None
         self._last_update_at = 0
 
     def _translate_state(self, slurm_state: str) -> JobState:
@@ -211,16 +210,16 @@ class Slurm(BaseQueueSystem):
 
     def _get_all_states(self) -> Dict[str, JobState]:
         current_ts = time.time()
-        # cache the states for 10 seconds to reduce the number of squeue calls
-        if self._last_states is not None and (current_ts - self._last_update_at) < self.config.polling_interval:
+        if  (current_ts - self._last_update_at) < self.get_polling_interval():
             return self._last_states
+
         # call squeue to get all states
         cmd = f"{self.config.squeue_bin} --noheader --format='%i %t' -u $USER"
         try:
             r = self.connector.run(cmd, hide=True)
         except invoke.exceptions.UnexpectedExit as e:
             logger.warning(f'Error when calling squeue: {e}')
-            return defaultdict(lambda: JobState.UNKNOWN) if self._last_states is None else self._last_states
+            return self._last_states
 
         states: Dict[str, JobState] = dict()
         for line in r.stdout.splitlines():

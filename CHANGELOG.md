@@ -1,4 +1,6 @@
 # Change Logs
+## v0.10.11
+* feat: support pbs job scheduler
 
 ## v0.10.10
 * fix: dpdata filter

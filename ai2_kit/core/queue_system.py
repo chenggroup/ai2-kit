@@ -39,6 +39,7 @@ class QueueSystemConfig(BaseModel):
 
     slurm: Optional[Slurm]
     lsf: Optional[LSF]
+    pbs: Optional[PBS]
 
 
 class BaseQueueSystem(ABC):
@@ -93,7 +94,11 @@ class BaseQueueSystem(ABC):
         running_indicator = name + '.running'
 
         # TODO: maybe there are better way to inject running indicator
-        script = inject_cmd_to_script(script, f'echo ${self.get_job_id_envvar()} > {shlex.quote(running_indicator)}')
+        inject_cmds = '\n'.join([
+            f'cd {quoted_cwd}',
+            f'echo ${self.get_job_id_envvar()} > {shlex.quote(running_indicator)}',
+        ])
+        script = inject_cmd_to_script(script, inject_cmds)
 
         # create script and add a command to write job id to success indicator
         script = '\n'.join([
@@ -327,8 +332,8 @@ class PBS(BaseQueueSystem):
 
         states: Dict[str, JobState] = dict()
         qstat_json = json.loads(r.stdout)
-        for job in qstat_json['Jobs']:
-            states[job['Job_Id']] = self._translate_state(job['job_state'])
+        for job_id, job in qstat_json.get('Jobs', dict()).items():
+            states[job_id] = self._translate_state(job['job_state'])
         self._last_states = states
         self._last_update_at = current_ts
         return states

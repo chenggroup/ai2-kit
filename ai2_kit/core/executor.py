@@ -1,4 +1,4 @@
-from .queue_system import QueueSystemConfig, BaseQueueSystem, Slurm, Lsf
+from .queue_system import QueueSystemConfig, BaseQueueSystem, Slurm, Lsf, PBS
 from .job import JobFuture
 from .artifact import Artifact
 from .connector import SshConfig, BaseConnector, SshConnector, LocalConnector
@@ -96,7 +96,6 @@ class HpcExecutor(Executor):
     def from_config(cls, config: Union[dict, BaseExecutorConfig], name: str = ''):
         if isinstance(config, dict):
             config = BaseExecutorConfig.parse_obj(config)
-
         if config.ssh:
             connector = SshConnector.from_config(config.ssh)
         else:
@@ -108,6 +107,9 @@ class HpcExecutor(Executor):
         elif config.queue_system.lsf:
             queue_system = Lsf()
             queue_system.config = config.queue_system.lsf
+        elif config.queue_system.pbs:
+            queue_system = PBS()
+            queue_system.config = config.queue_system.pbs
         if queue_system is None:
             raise ValueError('Queue system config is missing!')
         queue_system.connector = connector

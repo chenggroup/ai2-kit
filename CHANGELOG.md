@@ -1,4 +1,7 @@
 # Change Logs
+## v0.10.12
+* fix: openpbs workdir
+
 ## v0.10.11
 * feat: support pbs job scheduler
 

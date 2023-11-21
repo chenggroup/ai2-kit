@@ -98,8 +98,8 @@ class BaseQueueSystem(ABC):
 
         # TODO: maybe there are better way to inject running indicator
         inject_cmds = '\n'.join([
-            f'echo ${self.get_job_id_envvar()} > {shlex.quote(running_indicator)}',
             self.get_setup_script(),
+            f'echo ${self.get_job_id_envvar()} > {shlex.quote(running_indicator)}',
             '',
         ])
         script = inject_cmd_to_script(script, inject_cmds)

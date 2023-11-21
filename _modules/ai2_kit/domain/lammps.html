@@ -761,7 +761,8 @@ document.write(`
 
             <span class="k">for</span> <span class="n">origin_type</span><span class="p">,</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">type_alias</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">alias</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="s1">&#39;ghost&#39;</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>  <span class="c1"># atom type with &#39;ghost&#39; in its name is considered as ghost atom type</span>
+                    <span class="c1"># atom type with &#39;ghost&#39; in its name is considered as ghost atom type</span>
+                    <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;ghost&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">t</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;null&#39;</span><span class="p">):</span>
                         <span class="n">ghost_loc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DP_GHOST</span><span class="p">)</span>
                     <span class="n">ext_type_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
                     <span class="n">ext_type_map_to_origin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">origin_type</span><span class="p">)</span>

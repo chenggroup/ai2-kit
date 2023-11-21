@@ -49,6 +49,9 @@ class BaseQueueSystem(ABC):
     def get_polling_interval(self) -> int:
         return 10
 
+    def get_setup_script(self) -> str:
+        return ''
+
     @abstractmethod
     def get_script_suffix(self) -> str:
         ...
@@ -95,8 +98,9 @@ class BaseQueueSystem(ABC):
 
         # TODO: maybe there are better way to inject running indicator
         inject_cmds = '\n'.join([
-            f'cd {quoted_cwd}',
             f'echo ${self.get_job_id_envvar()} > {shlex.quote(running_indicator)}',
+            self.get_setup_script(),
+            '',
         ])
         script = inject_cmd_to_script(script, inject_cmds)
 
@@ -286,6 +290,9 @@ class PBS(BaseQueueSystem):
 
     _last_states = defaultdict(lambda: JobState.UNKNOWN)
     _last_update_at: float = 0
+
+    def get_setup_script(self) -> str:
+        return 'cd $PBS_O_WORKDIR'
 
     def get_script_suffix(self) -> str:
         return '.pbs'

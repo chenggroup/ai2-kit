@@ -453,6 +453,9 @@ document.write(`
 <div class="viewcode-block" id="BaseQueueSystem.get_polling_interval"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem.get_polling_interval">[docs]</a>    <span class="k">def</span> <span class="nf">get_polling_interval</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">10</span></div>
 
+<div class="viewcode-block" id="BaseQueueSystem.get_setup_script"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem.get_setup_script">[docs]</a>    <span class="k">def</span> <span class="nf">get_setup_script</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
+
 <div class="viewcode-block" id="BaseQueueSystem.get_script_suffix"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem.get_script_suffix">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_script_suffix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="o">...</span></div>
@@ -499,8 +502,9 @@ document.write(`
 
         <span class="c1"># TODO: maybe there are better way to inject running indicator</span>
         <span class="n">inject_cmds</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-            <span class="sa">f</span><span class="s1">&#39;cd </span><span class="si">{</span><span class="n">quoted_cwd</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_setup_script</span><span class="p">(),</span>
             <span class="sa">f</span><span class="s1">&#39;echo $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_job_id_envvar</span><span class="p">()</span><span class="si">}</span><span class="s1"> &gt; </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">running_indicator</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;&#39;</span><span class="p">,</span>
         <span class="p">])</span>
         <span class="n">script</span> <span class="o">=</span> <span class="n">inject_cmd_to_script</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">inject_cmds</span><span class="p">)</span>
 
@@ -690,6 +694,9 @@ document.write(`
 
     <span class="n">_last_states</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">)</span>
     <span class="n">_last_update_at</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="PBS.get_setup_script"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.PBS.get_setup_script">[docs]</a>    <span class="k">def</span> <span class="nf">get_setup_script</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;cd $PBS_O_WORKDIR&#39;</span></div>
 
 <div class="viewcode-block" id="PBS.get_script_suffix"><a class="viewcode-back" href="../../../_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.PBS.get_script_suffix">[docs]</a>    <span class="k">def</span> <span class="nf">get_script_suffix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;.pbs&#39;</span></div>

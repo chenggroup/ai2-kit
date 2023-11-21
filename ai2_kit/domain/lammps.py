@@ -357,7 +357,8 @@ def __export_remote_functions():
 
             for origin_type, alias in type_alias.items():
                 for t in alias:
-                    if 'ghost' in t:  # atom type with 'ghost' in its name is considered as ghost atom type
+                    # atom type with 'ghost' in its name is considered as ghost atom type
+                    if t.endswith('ghost') or t.endswith('null'):
                         ghost_loc.append(DP_GHOST)
                     ext_type_map.append(t)
                     ext_type_map_to_origin.append(origin_type)

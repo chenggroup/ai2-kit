@@ -42,10 +42,7 @@ class DpdataHelper:
         if merge:
             systems = dpdata.MultiSystems(self._systems[0])
         else:
-            if self._label:
-                systems = dpdata.LabeledSystem(self._systems[0])
-            else:
-                systems = dpdata.System(self._systems[0])
+            systems = self._systems[0]
 
         for system in self._systems[1:]:
             systems.append(system)

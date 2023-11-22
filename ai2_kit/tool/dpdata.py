@@ -96,20 +96,26 @@ class DpdataHelper:
             self._systems.extend(dpdata.System(file, **kwargs))
 
 
-def write_fparams(*file_path_or_glob: str, fparams):
-    # search for box.npy files
-    paths = _expand_paths(*[os.path.join(path, '**/box.npy')
-                            for path in file_path_or_glob])
-    if len(paths) == 0:
-        raise FileNotFoundError(f'No deepmd/npy datasets found in {file_path_or_glob}')
+def __export_remote_fn():
 
-    for path in paths:
-        box_arr = np.load(path)
-        logger.debug(f'box.npy shape: {box_arr.shape}')
-        fparam_arr = np.tile(fparams, (len(box_arr), 1))
-        logger.debug(f'fparam.npy shape: {fparam_arr.shape}')
-        fparam_file = os.path.join(os.path.dirname(path), 'fparam.npy')
-        np.save(fparam_file, fparam_arr)
+    def write_fparams(*file_path_or_glob: str, fparams):
+        # search for box.npy files
+        paths = _expand_paths(*[os.path.join(path, '**/box.npy')
+                                for path in file_path_or_glob])
+        if len(paths) == 0:
+            raise FileNotFoundError(f'No deepmd/npy datasets found in {file_path_or_glob}')
+
+        for path in paths:
+            box_arr = np.load(path)
+            logger.debug(f'box.npy shape: {box_arr.shape}')
+            fparam_arr = np.tile(fparams, (len(box_arr), 1))
+            logger.debug(f'fparam.npy shape: {fparam_arr.shape}')
+            fparam_file = os.path.join(os.path.dirname(path), 'fparam.npy')
+            np.save(fparam_file, fparam_arr)
+
+    return (write_fparams, )
+
+(write_fparams, ) = __export_remote_fn()
 
 
 def _expand_paths(*file_path_or_glob: str):

@@ -19,6 +19,13 @@ class DpdataHelper:
         self._label = label
 
     def read(self, *file_path_or_glob: str, **kwargs):
+        """
+        read data from multiple paths, support glob pattern
+        default format is deepmd/npy
+
+        :param file_path_or_glob: path or glob pattern to find data files
+        :param kwargs: arguments to pass to dpdata.System / dpdata.LabeledSystem
+        """
         kwargs.setdefault('fmt', 'deepmd/npy')
         files = _expand_paths(*file_path_or_glob)
         if len(files) == 0:
@@ -28,6 +35,11 @@ class DpdataHelper:
         return self
 
     def filter(self, lambda_expr: str):
+        """
+        filter data with lambda expression
+
+        :param lambda_expr: lambda expression to filter data
+        """
         fn = eval(lambda_expr)
         self._systems = [ system for system in self._systems if fn(system.data)]
         return self
@@ -38,6 +50,12 @@ class DpdataHelper:
         return self.write
 
     def write(self, out_path: str, fmt='deepmd/npy', merge: bool = True):
+        """
+        write data to specific path, support deepmd/npy, deepmd/raw, deepmd/hdf5 formats
+        :param out_path: path to write data
+        :param fmt: format to write, default is deepmd/npy
+        :param merge: if True, merge all data use dpdata.MultiSystems, else write data without merging
+        """
         ensure_dir(out_path)
         if len(self._systems) == 0:
             raise ValueError('No data to merge')

@@ -1,6 +1,6 @@
 from ruamel.yaml import YAML, ScalarNode, SequenceNode
 from pathlib import Path
-from typing import Tuple, List, TypeVar, Union
+from typing import Tuple, List, TypeVar, Union, Iterable
 from dataclasses import field
 from itertools import zip_longest
 import asyncio
@@ -48,22 +48,6 @@ def parse_path_list(path_list_str: Union[str, List[str]], to_abs: bool = False):
     if to_abs:
         path_list = [parse_path(path) for path in path_list]
     return path_list
-
-
-def expand_paths(*file_path_or_glob: str):
-    """
-    Expand file path or glob pattern to a list of files
-
-    :param file_path_or_glob: file path or glob pattern
-    :return: a list of unique and sorted files
-    """
-    files = set()
-    for file_path in file_path_or_glob:
-        if '*' in file_path:
-            files.update(glob.glob(file_path, recursive=True))
-        else:
-            files.add(file_path)
-    return sorted(files)
 
 
 def wait_for_change(widget, attribute):
@@ -119,7 +103,7 @@ def s_uuid():
 
 def sort_unique_str_list(l: List[str]) -> List[str]:
     """remove duplicate str and sort"""
-    return list(sorted(set(l)))
+    return sorted(set(l))
 
 
 T = TypeVar('T')
@@ -315,8 +299,14 @@ def __export_remote_functions():
             os.makedirs(dirname, exist_ok=True)
 
 
-    def expand_globs(paths: List[str]) -> List[str]:
-        paths = flatten([glob.glob(path) for path in paths])
+    def expand_globs(paths: Iterable[str]) -> List[str]:
+        """
+        Expand glob patterns in paths
+
+        :param paths: list of paths or glob patterns
+        :return: list of expanded paths
+        """
+        paths = flatten([glob.glob(path, recursive=True) for path in paths])
         return sort_unique_str_list(paths)
 
 

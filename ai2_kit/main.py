@@ -67,6 +67,11 @@ class ToolGroup:
         from ai2_kit.core.checkpoint import CheckpointCmd
         return CheckpointCmd
 
+    @property
+    def batch(self):
+        from ai2_kit.tool.batch import BatchHelper
+        return BatchHelper
+
 class FeatureGroup:
     """
     Featuring tools for specific domains.

@@ -45,6 +45,7 @@ class BatchHelper:
                 source = os.path.abspath(source)
                 os.symlink(source, target_path)
                 logger.info(f'Link {source} to {target_path}')
+        return self
 
     def map_path(self, *sources: str, target: str, copy = False):
         """

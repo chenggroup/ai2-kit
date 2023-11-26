@@ -451,7 +451,12 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-batch-scripts-to-run-cp2k-tasks">Generate batch scripts to run CP2K tasks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-batch-scripts-to-run-cp2k-tasks">Generate batch scripts to run CP2K tasks</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#create-new-tasks-directories-by-linking-to-or-copying-the-old-ones">1. Create new tasks directories by linking to (or copying) the old ones</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-batch-scripts">2. Generate batch scripts</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#submit-batch-scripts-to-your-job-scheduler">3. Submit batch scripts to your job scheduler</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tips">Tips</a></li>
@@ -485,16 +490,15 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>batch<span class="w">
 <section id="generate-batch-scripts-to-run-cp2k-tasks">
 <h3>Generate batch scripts to run CP2K tasks<a class="headerlink" href="#generate-batch-scripts-to-run-cp2k-tasks" title="Permalink to this heading">#</a></h3>
 <p>Suppose you want to run new CP2K tasks based on the previous runs, whose work directories can be found with <code class="docutils literal notranslate"><span class="pre">./old/iters*/label-cp2k/tasks/*</span></code>, and the new CP2K config file is in <code class="docutils literal notranslate"><span class="pre">./new/cp2k.inp</span></code>, then you can do the following steps:</p>
-<ol class="arabic simple">
-<li><p>Create new tasks directories by linking to (or copying) the old ones</p></li>
-</ol>
+<section id="create-new-tasks-directories-by-linking-to-or-copying-the-old-ones">
+<h4>1. Create new tasks directories by linking to (or copying) the old ones<a class="headerlink" href="#create-new-tasks-directories-by-linking-to-or-copying-the-old-ones" title="Permalink to this heading">#</a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>batch<span class="w"> </span>map_path<span class="w"> </span>./old/iters*/label-cp2k/tasks/*<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;new/task-{i:04d}&quot;</span>
 </pre></div>
 </div>
 <p>The command above will create new directories <code class="docutils literal notranslate"><span class="pre">new/task-0000</span></code>, <code class="docutils literal notranslate"><span class="pre">new/task-0001</span></code>, etc. and link the old tasks directories to them. If you want to copy the old tasks directories instead of linking them, you can use <code class="docutils literal notranslate"><span class="pre">--copy</span></code> option.</p>
-<ol class="arabic simple" start="2">
-<li><p>Generate batch scripts</p></li>
-</ol>
+</section>
+<section id="generate-batch-scripts">
+<h4>2. Generate batch scripts<a class="headerlink" href="#generate-batch-scripts" title="Permalink to this heading">#</a></h4>
 <p>Suppose you are using SLURM as your job scheduler, then you need to prepare a header file for your batch scripts. For example, you can create a file named <code class="docutils literal notranslate"><span class="pre">header.sh</span></code> with the following content:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 <span class="c1">#SBATCH --job-name=cp2k</span>
@@ -513,13 +517,14 @@ then you can generate batch scripts with the following command:</p>
 </pre></div>
 </div>
 <p>The above command will generate 5 batch scripts named <code class="docutils literal notranslate"><span class="pre">new/cp2k-0.sbatch</span></code>, <code class="docutils literal notranslate"><span class="pre">new/cp2k-1.sbatch</span></code>, etc. and each batch script will run part of the tasks in <code class="docutils literal notranslate"><span class="pre">new/task-*</span></code> directory.</p>
-<ol class="arabic simple" start="3">
-<li><p>Submit batch scripts to your job scheduler
-You can submit the batch scripts to your job scheduler with <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> and <code class="docutils literal notranslate"><span class="pre">xargs</span></code> commands.</p></li>
-</ol>
+</section>
+<section id="submit-batch-scripts-to-your-job-scheduler">
+<h4>3. Submit batch scripts to your job scheduler<a class="headerlink" href="#submit-batch-scripts-to-your-job-scheduler" title="Permalink to this heading">#</a></h4>
+<p>You can submit the batch scripts to your job scheduler with <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> and <code class="docutils literal notranslate"><span class="pre">xargs</span></code> commands.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls<span class="w"> </span>-1<span class="w"> </span>new/cp2k-*.sbatch<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="w"> </span><span class="o">{}</span><span class="w"> </span>sbatch<span class="w"> </span><span class="o">{}</span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 <section id="tips">
@@ -577,7 +582,12 @@ You can submit the batch scripts to your job scheduler with <code class="docutil
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-batch-scripts-to-run-cp2k-tasks">Generate batch scripts to run CP2K tasks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-batch-scripts-to-run-cp2k-tasks">Generate batch scripts to run CP2K tasks</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#create-new-tasks-directories-by-linking-to-or-copying-the-old-ones">1. Create new tasks directories by linking to (or copying) the old ones</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-batch-scripts">2. Generate batch scripts</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#submit-batch-scripts-to-your-job-scheduler">3. Submit batch scripts to your job scheduler</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tips">Tips</a></li>

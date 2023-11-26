@@ -1,4 +1,12 @@
 # Tips
+## Change logging level
+
+You can change the logging level by setting the `LOG_LEVEL` environment variable. For example,
+
+```bash
+export LOG_LEVEL=DEBUG 
+ai2-kit ...
+```
 
 ## Use custom tags to simplify YAML configuration
 

@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>AI2-Kit HPC Executor &#8212; ai2-kit Reference</title>
+    <title>Batch Script Helper &#8212; ai2-kit Reference</title>
   
   
   
@@ -62,11 +62,9 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'doc/manual/hpc-executor';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'doc/manual/batch';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="ASE Toolkit" href="ase.html" />
-    <link rel="prev" title="Checkpoint" href="checkpoint.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -176,9 +174,9 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="aos-analysis.html">Amorphous Oxides Structure Analysis</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Build-in Functionalities</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="checkpoint.html">Checkpoint</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">AI<sup>2</sup>-Kit HPC Executor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hpc-executor.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ase.html">ASE Toolkit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dpdata.html">Dpdata Toolkit</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
@@ -329,7 +327,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fdoc/manual/hpc-executor.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fdoc/manual/batch.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -359,7 +357,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../../_sources/doc/manual/hpc-executor.md" target="_blank"
+      <li><a href="../../_sources/doc/manual/batch.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -441,7 +439,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>AI<sup>2</sup>-Kit HPC Executor</h1>
+    <h1>Batch Script Helper</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -451,15 +449,12 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage">Basic Usage</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#remote-execution-of-python-functions">Remote execution of Python functions</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#submit-jobs">Submit jobs</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wait-for-job-completion">Wait for job completion</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implement-simple-workflow">Implement simple workflow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-batch-scripts-to-run-cp2k-tasks">Generate batch scripts to run CP2K tasks</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tips">Tips</a></li>
 </ul>
             </nav>
         </div>
@@ -471,165 +466,67 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="ai-sup-2-sup-kit-hpc-executor">
-<h1>AI<sup>2</sup>-Kit HPC Executor<a class="headerlink" href="#ai-sup-2-sup-kit-hpc-executor" title="Permalink to this heading">#</a></h1>
-<section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> implements a lightweight HPC executor for submitting and managing jobs on HPC clusters. Compared with other HPC schedulers or workflow frameworks that support HPC (such as DpDispatcher, parsl, DFlow, etc.), <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> has the following characteristics:</p>
-<ul class="simple">
-<li><p>SSH remote execution and local execution</p></li>
-<li><p>Connecting to HPC clusters through jump servers</p></li>
-<li><p>Remote execution of Python functions</p></li>
-<li><p>Executing simple commands or functions directly on the login node</p></li>
-<li><p>More efficient and stable job status polling mechanism</p></li>
-<li><p>State recovery mechanism based on Checkpoint</p></li>
-<li><p>Synchronous or asynchronous waiting for job execution</p></li>
-<li><p>Easy to customize or integrate with other frameworks</p></li>
-</ul>
-<p>If you encounter the following problems when using other solutions, you may wish to try <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code>:</p>
-<ul class="simple">
-<li><p>Too high learning cost</p></li>
-<li><p>Unstable connection</p></li>
-<li><p>Need to frequently copy data to the local for processing and then submit it back to the cluster for execution</p></li>
-</ul>
-<p>Currently, <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> only supports the Slurm job system. The support for other job systems depends on actual needs. Welcome to submit Issues or PR.</p>
-<p>If you need a more powerful workflow engine, it is recommended to try <a class="reference external" href="https://github.com/dptech-corp/dflow">DFlow</a>, <a class="reference external" href="https://github.com/AgnostiqHQ/covalent.git">covalent</a>, <a class="reference external" href="https://github.com/Parsl/parsl">parsl</a>, <a class="reference external" href="https://github.com/insitro/redun">redun</a></p>
-</section>
+  <section class="tex2jax_ignore mathjax_ignore" id="batch-script-helper">
+<h1>Batch Script Helper<a class="headerlink" href="#batch-script-helper" title="Permalink to this heading">#</a></h1>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>batch<span class="w"> </span>--help
+</pre></div>
+</div>
+<p>A toolkit to generate batch scripts.</p>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
-<section id="basic-usage">
-<h3>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">#</a></h3>
-<p>There are two ways to initialize <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code>, using a dictionary configuration or a <code class="docutils literal notranslate"><span class="pre">Pydantic</span></code> object. The configuration items of the two methods are exactly the same. The former is more suitable for direct use, and the latter is more suitable for integration with other frameworks. The following is an example of using a dictionary for configuration.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.executor</span> <span class="kn">import</span> <span class="n">HpcExecutor</span>
-
-<span class="n">executor</span> <span class="o">=</span> <span class="n">HpcExecutor</span><span class="o">.</span><span class="n">from_config</span><span class="p">({</span>
-    <span class="s1">&#39;ssh&#39;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># Specify ssh connection information, if omitted, local execution is used</span>
-        <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;user01@hpc-login01&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;gateway&#39;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># If you need to connect through a jump server, you can specify this configuration (optional)</span>
-          <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;user01@jump-host&#39;</span><span class="p">,</span>  
-        <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="s1">&#39;queue_system&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;slurm&#39;</span><span class="p">:</span> <span class="p">{}</span>  <span class="c1"># Specify the job system as Slurm</span>
-    <span class="p">},</span>
-    <span class="s1">&#39;work_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/user01/ai2-kit/work_dir&#39;</span><span class="p">,</span>  <span class="c1"># Specify the working directory</span>
-    <span class="s1">&#39;python_cmd&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/user01/conda/env/py39/bin/python&#39;</span><span class="p">,</span>  <span class="c1"># Specify the Python interpreter</span>
-<span class="p">},</span> <span class="s1">&#39;cheng-lab&#39;</span><span class="p">)</span>  <span class="c1"># Specify the cluster name (optional)</span>
-
-<span class="n">executor</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>  <span class="c1"># Initialize the executor</span>
-<span class="n">executor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;echo &quot;hello world&quot;&#39;</span><span class="p">)</span>  <span class="c1"># Execute command on login node</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>batch<span class="w"> </span>map_path<span class="w"> </span>--help
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>batch<span class="w"> </span>run_cmd<span class="w"> </span>--help
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>batch<span class="w"> </span>gen_batches<span class="w"> </span>--help
 </pre></div>
 </div>
-<p>The above example completes the following tasks:</p>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h2>
+<section id="generate-batch-scripts-to-run-cp2k-tasks">
+<h3>Generate batch scripts to run CP2K tasks<a class="headerlink" href="#generate-batch-scripts-to-run-cp2k-tasks" title="Permalink to this heading">#</a></h3>
+<p>Suppose you want to run new CP2K tasks based on the previous runs, whose work directories can be found with <code class="docutils literal notranslate"><span class="pre">./old/iters*/label-cp2k/tasks/*</span></code>, and the new CP2K config file is in <code class="docutils literal notranslate"><span class="pre">./new/cp2k.inp</span></code>, then you can do the following steps:</p>
 <ol class="arabic simple">
-<li><p>Instantiate a <code class="docutils literal notranslate"><span class="pre">HpcExecutor</span></code> object</p></li>
-<li><p>Initialize the <code class="docutils literal notranslate"><span class="pre">HpcExecutor</span></code> object</p></li>
-<li><p>Execute the command <code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">&quot;hello</span> <span class="pre">world&quot;</span></code> on the login node</p></li>
+<li><p>Create new tasks directories by linking to (or copying) the old ones</p></li>
 </ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>batch<span class="w"> </span>map_path<span class="w"> </span>./old/iters*/label-cp2k/tasks/*<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;new/task-{i:04d}&quot;</span>
+</pre></div>
+</div>
+<p>The command above will create new directories <code class="docutils literal notranslate"><span class="pre">new/task-0000</span></code>, <code class="docutils literal notranslate"><span class="pre">new/task-0001</span></code>, etc. and link the old tasks directories to them. If you want to copy the old tasks directories instead of linking them, you can use <code class="docutils literal notranslate"><span class="pre">--copy</span></code> option.</p>
+<ol class="arabic simple" start="2">
+<li><p>Generate batch scripts</p></li>
+</ol>
+<p>Suppose you are using SLURM as your job scheduler, then you need to prepare a header file for your batch scripts. For example, you can create a file named <code class="docutils literal notranslate"><span class="pre">header.sh</span></code> with the following content:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --job-name=cp2k</span>
+<span class="c1">#SBATCH --nodes=4</span>
+<span class="c1">#SBATCH --ntasks-per-node=32</span>
+
+module<span class="w"> </span>load<span class="w"> </span>intel/2019.5
+module<span class="w"> </span>load<span class="w"> </span>cp2k/7.1
+</pre></div>
+</div>
+<p>Suppose the command you want to run in each task directory is <code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">cp2k.popt</span> <span class="pre">-i</span> <span class="pre">../cp2k.inp</span> <span class="pre">&amp;&gt;</span> <span class="pre">output</span></code>
+(note that the command is run in the task directory, so the input file is at <code class="docutils literal notranslate"><span class="pre">../cp2k.inp</span></code>),
+then you can generate batch scripts with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>batch<span class="w"> </span>gen_batches<span class="w"> </span>new/task-*<span class="w"> </span>--header_file<span class="w"> </span>header.sh<span class="w"> </span>--cmd<span class="w"> </span><span class="s2">&quot;mpirun cp2k.popt -i ../cp2k.inp &amp;&gt; output&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--out_script<span class="w"> </span><span class="s2">&quot;new/cp2k-{i}.sbatch&quot;</span><span class="w"> </span>--concurrency<span class="w"> </span><span class="m">5</span>
+</pre></div>
+</div>
+<p>The above command will generate 5 batch scripts named <code class="docutils literal notranslate"><span class="pre">new/cp2k-0.sbatch</span></code>, <code class="docutils literal notranslate"><span class="pre">new/cp2k-1.sbatch</span></code>, etc. and each batch script will run part of the tasks in <code class="docutils literal notranslate"><span class="pre">new/task-*</span></code> directory.</p>
+<ol class="arabic simple" start="3">
+<li><p>Submit batch scripts to your job scheduler
+You can submit the batch scripts to your job scheduler with <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> and <code class="docutils literal notranslate"><span class="pre">xargs</span></code> commands.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls<span class="w"> </span>-1<span class="w"> </span>new/cp2k-*.sbatch<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>-I<span class="w"> </span><span class="o">{}</span><span class="w"> </span>sbatch<span class="w"> </span><span class="o">{}</span>
+</pre></div>
+</div>
 </section>
-<section id="remote-execution-of-python-functions">
-<h3>Remote execution of Python functions<a class="headerlink" href="#remote-execution-of-python-functions" title="Permalink to this heading">#</a></h3>
-<p>The usual mode of executing complex computing tasks on HPC is:</p>
+</section>
+<section id="tips">
+<h2>Tips<a class="headerlink" href="#tips" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Prepare the input data of the computing task on the login node through the command line or Python</p></li>
-<li><p>Submit the job to the queue and wait</p></li>
-<li><p>After the job is completed, use the command line or Python on the login node to process the output data of the computing task</p></li>
+<li><p>You can use the <code class="docutils literal notranslate"><span class="pre">write_each_frames</span></code> in <code class="docutils literal notranslate"><span class="pre">ase</span> <span class="pre">tool</span></code> to generate multiple input files, then use the above command to generate batch scripts for each input file.</p></li>
 </ul>
-<p>In order to meet the above mode, in addition to providing the <code class="docutils literal notranslate"><span class="pre">run</span></code> interface for executing commands on the login node, <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> also provides the <code class="docutils literal notranslate"><span class="pre">run_python_fn</span></code> interface for directly running Python functions on the login node.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">add</span><span class="p">)(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># run on login node</span>
-</pre></div>
-</div>
-<p>Note that in order to execute local Python functions on remote nodes, the following conditions must be met:</p>
-<ul class="simple">
-<li><p>The main version of the local Python environment and the remote Python environment must be consistent (such as 3.8.x)</p>
-<ul>
-<li><p>The configuration of the remote Python environment can be specified through the <code class="docutils literal notranslate"><span class="pre">python_cmd</span></code> parameter</p></li>
-</ul>
-</li>
-<li><p>The parameters and return values of the function must be serializable (cannot contain unserializable objects such as locks and file handles)</p></li>
-<li><p>The software packages on which the function depends must exist in the Python environment of the login node</p>
-<ul>
-<li><p>For example, suppose the function executed remotely uses the <code class="docutils literal notranslate"><span class="pre">numpy</span></code> package, then the <code class="docutils literal notranslate"><span class="pre">numpy</span></code> package must exist in the Python environment of the login node</p></li>
-</ul>
-</li>
-<li><p>If the function depends on other <strong>locally implemented methods or classes</strong>, these methods and classes need to be defined in a special way, otherwise <code class="docutils literal notranslate"><span class="pre">ModuleNotFoundError</span></code> will appear remotely</p>
-<ul>
-<li><p>This is a limitation of cloudpickle, see: <a class="reference external" href="https://stackoverflow.com/a/75293155/3099733">1</a></p></li>
-</ul>
-</li>
-</ul>
-</section>
-<section id="submit-jobs">
-<h3>Submit jobs<a class="headerlink" href="#submit-jobs" title="Permalink to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> provides the <code class="docutils literal notranslate"><span class="pre">submit</span></code> interface for submitting jobs to HPC clusters. The following is an example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">script</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
-<span class="s1">#! /bin/bash</span>
-<span class="s1">#SBATCH --job-name=demo</span>
-<span class="s1">#SBATCH -N 1</span>
-<span class="s1">#SBATCH --ntasks-per-node=4</span>
-<span class="s1">#SBATCH --partition=cpu-small</span>
-<span class="s1">#SBATCH --mem=1G</span>
-
-<span class="s1">echo &quot;hello world&quot; &gt; output.txt</span>
-<span class="s1">&#39;&#39;&#39;</span>
-
-<span class="n">job</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>  <span class="c1"># submit job</span>
-</pre></div>
-</div>
-<p>Except for the method of directly writing scripts mentioned above, you can also generate scripts through the tool class provided by <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code>, as shown below:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashTemplate</span>
-
-<span class="n">header</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
-<span class="s1">#SBATCH --job-name=demo</span>
-<span class="s1">#SBATCH -N 1</span>
-<span class="s1">#SBATCH --ntasks-per-node=4</span>
-<span class="s1">#SBATCH --partition=cpu-small</span>
-<span class="s1">#SBATCH --mem=1G</span>
-<span class="s1">&#39;&#39;&#39;</span>
-
-<span class="n">script</span> <span class="o">=</span> <span class="n">BashScript</span><span class="p">(</span>
-    <span class="n">template</span><span class="o">=</span><span class="n">BashTemplate</span><span class="p">(</span>
-        <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="n">steps</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">BashStep</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="s1">&#39;echo &quot;hello world&quot;&#39;</span><span class="p">),</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-
-<span class="n">job</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">script</span><span class="o">.</span><span class="n">render</span><span class="p">(),</span> <span class="n">cwd</span><span class="o">=</span><span class="s1">&#39;/path/to/cwd&#39;</span><span class="p">)</span> 
-</pre></div>
-</div>
-<p>Besides, you can specify additional parameters when submitting jobs to meet different needs, such as setting the execution directory and the checkpoint file for error recovery.</p>
-</section>
-<section id="wait-for-job-completion">
-<h3>Wait for job completion<a class="headerlink" href="#wait-for-job-completion" title="Permalink to this heading">#</a></h3>
-<p>There are two ways to wait for the completion of the submitted task, synchronous and asynchronous. The following is an example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
-<span class="n">state</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>  <span class="c1"># wait for job completion synchronously</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="o">...</span>
-    <span class="n">state</span> <span class="o">=</span> <span class="k">await</span> <span class="n">job</span><span class="o">.</span><span class="n">result_async</span><span class="p">()</span>  <span class="c1"># wait for job completion asynchronously</span>
-</pre></div>
-</div>
-<p>Synchronous waiting will block the subsequent code execution, so it is not suitable for scenarios where multiple jobs need to be submitted in parallel. At this time, asynchronous waiting can be used.</p>
-</section>
-<section id="implement-simple-workflow">
-<h3>Implement simple workflow<a class="headerlink" href="#implement-simple-workflow" title="Permalink to this heading">#</a></h3>
-<p>Although <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> does not provide a workflow scheduling engine, for simple tasks, with the support of Python’s asynchronous support and the tool classes provided by <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code>, it is easy to implement a simple workflow. Next, take the following simple task as an example:</p>
-<ul class="simple">
-<li><p>Pre-processing: Implement a Python function to create n working directories and an input file containing a random number</p></li>
-<li><p>Submit n job scripts, each job script reads the number in the input and calculates its square and writes it to the output file</p></li>
-<li><p>Post-processing: Implement a Python function to read the output values of all files and sum them after all jobs are completed</p></li>
-</ul>
-<p>The specific code implementation can be found in <span class="xref download myst">simple-workflow</span>.</p>
-<p>From the code implementation, it can be seen that the workflow implemented through <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> is essentially ordinary Python code, but when it is necessary to execute functions remotely or submit jobs, it will call the interface provided by <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code>. Therefore, it is not difficult for students familiar with Python coding to get started with <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code>.</p>
-<p>More complex workflows are also implemented in the same way, but on this basis, modeling and parsing of configuration files are added, as well as the use of conditional branches and loops for flow control. If you are interested, you can refer to the code in the <code class="docutils literal notranslate"><span class="pre">ai2-kit.workflow</span></code> module.</p>
-</section>
 </section>
 </section>
 
@@ -663,24 +560,6 @@ document.write(`
                 <footer class="prev-next-footer">
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="checkpoint.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Checkpoint</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="ase.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ASE Toolkit</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -696,15 +575,12 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage">Basic Usage</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#remote-execution-of-python-functions">Remote execution of Python functions</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#submit-jobs">Submit jobs</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wait-for-job-completion">Wait for job completion</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implement-simple-workflow">Implement simple workflow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-batch-scripts-to-run-cp2k-tasks">Generate batch scripts to run CP2K tasks</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tips">Tips</a></li>
 </ul>
   </nav></div>
 

@@ -239,6 +239,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="_api/ai2_kit.res.html">ai2_kit.res package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="_api/ai2_kit.tool.html">ai2_kit.tool package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.batch.html">ai2_kit.tool.batch module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -705,6 +706,13 @@ document.write(`
 </li>
       </ul></li>
       <li>
+    ai2_kit.tool.batch
+
+      <ul>
+        <li><a href="_api/ai2_kit.tool.batch.html#module-ai2_kit.tool.batch">module</a>
+</li>
+      </ul></li>
+      <li>
     ai2_kit.tool.deepmd
 
       <ul>
@@ -806,9 +814,13 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.core.script.html#ai2_kit.core.script.BashStep">BashStep (class in ai2_kit.core.script)</a>
 </li>
+      <li><a href="_api/ai2_kit.core.script.html#ai2_kit.core.script.BashTemplate">BashTemplate (class in ai2_kit.core.script)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="_api/ai2_kit.core.script.html#ai2_kit.core.script.BashTemplate">BashTemplate (class in ai2_kit.core.script)</a>
+      <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ToolGroup.batch">batch (ai2_kit.main.ToolGroup property)</a>
+</li>
+      <li><a href="_api/ai2_kit.tool.batch.html#ai2_kit.tool.batch.BatchHelper">BatchHelper (class in ai2_kit.tool.batch)</a>
 </li>
       <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.QueueSystemConfig.LSF.bjobs_bin">bjobs_bin (ai2_kit.core.queue_system.QueueSystemConfig.LSF attribute)</a>
 </li>
@@ -1284,6 +1296,8 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.ui.html#ai2_kit.feat.catalysis.ui.UiHelper.gen_aimd_config">gen_aimd_config() (ai2_kit.feat.catalysis.ui.UiHelper method)</a>
 </li>
+      <li><a href="_api/ai2_kit.tool.batch.html#ai2_kit.tool.batch.BatchHelper.gen_batches">gen_batches() (ai2_kit.tool.batch.BatchHelper method)</a>
+</li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_cp2k_input">gen_cp2k_input() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_deepmd_input">gen_deepmd_input() (ai2_kit.feat.catalysis.ConfigBuilder method)</a>
@@ -1370,6 +1384,8 @@ document.write(`
         <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Slurm.get_job_state">(ai2_kit.core.queue_system.Slurm method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.GenericCp2kOutput.get_labeled_system_dataset">get_labeled_system_dataset() (ai2_kit.domain.cp2k.GenericCp2kOutput method)</a>
 
       <ul>
@@ -1378,8 +1394,6 @@ document.write(`
         <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.GenericVaspOutput.get_labeled_system_dataset">(ai2_kit.domain.vasp.GenericVaspOutput method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.get_ln_cmd">get_ln_cmd() (in module ai2_kit.core.connector)</a>
 </li>
       <li><a href="_api/ai2_kit.core.log.html#ai2_kit.core.log.get_logger">get_logger() (in module ai2_kit.core.log)</a>
@@ -1740,6 +1754,8 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.domain.vasp.html#ai2_kit.domain.vasp.make_vasp_task_dirs">make_vasp_task_dirs() (in module ai2_kit.domain.vasp)</a>
 </li>
+      <li><a href="_api/ai2_kit.tool.batch.html#ai2_kit.tool.batch.BatchHelper.map_path">map_path() (ai2_kit.tool.batch.BatchHelper method)</a>
+</li>
       <li><a href="_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInput.mass_map">mass_map (ai2_kit.domain.lammps.CllLammpsInput attribute)</a>
 
       <ul>
@@ -1867,6 +1883,8 @@ document.write(`
         <li><a href="_api/ai2_kit.tool.html#module-ai2_kit.tool">ai2_kit.tool</a>
 </li>
         <li><a href="_api/ai2_kit.tool.ase.html#module-ai2_kit.tool.ase">ai2_kit.tool.ase</a>
+</li>
+        <li><a href="_api/ai2_kit.tool.batch.html#module-ai2_kit.tool.batch">ai2_kit.tool.batch</a>
 </li>
         <li><a href="_api/ai2_kit.tool.deepmd.html#module-ai2_kit.tool.deepmd">ai2_kit.tool.deepmd</a>
 </li>
@@ -2119,6 +2137,8 @@ document.write(`
         <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.HpcExecutor.run">(ai2_kit.core.executor.HpcExecutor method)</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.tool.batch.html#ai2_kit.tool.batch.BatchHelper.run_cmd">run_cmd() (ai2_kit.tool.batch.BatchHelper method)</a>
+</li>
       <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.Executor.run_python_fn">run_python_fn() (ai2_kit.core.executor.Executor method)</a>
 
       <ul>
@@ -2437,10 +2457,10 @@ document.write(`
       </ul></li>
       <li><a href="_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch">WorkflowConfig.Branch (class in ai2_kit.workflow.fep_mlp)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.Explore">WorkflowConfig.Explore (class in ai2_kit.workflow.cll_mlp)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.General">WorkflowConfig.General (class in ai2_kit.workflow.cll_mlp)</a>
 
       <ul>
@@ -2469,6 +2489,12 @@ document.write(`
       </ul></li>
       <li><a href="_api/ai2_kit.tool.ase.html#ai2_kit.tool.ase.AseHelper.write_each_frame">write_each_frame() (ai2_kit.tool.ase.AseHelper method)</a>
 </li>
+      <li><a href="_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.write_fparams">write_fparams() (ai2_kit.tool.dpdata.DpdataHelper method)</a>
+
+      <ul>
+        <li><a href="_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.write_fparams">(in module ai2_kit.tool.dpdata)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 

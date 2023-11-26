@@ -242,6 +242,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l3"><a class="reference internal" href="../../_api/ai2_kit.res.html">ai2_kit.res package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.tool.html">ai2_kit.tool package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.batch.html">ai2_kit.tool.batch module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -450,6 +451,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#change-logging-level">Change logging level</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-custom-tags-to-simplify-yaml-configuration">Use custom tags to simplify YAML configuration</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-text"><code class="docutils literal notranslate"><span class="pre">!load_text</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-yaml"><code class="docutils literal notranslate"><span class="pre">!load_yaml</span></code></a></li>
@@ -470,6 +472,14 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="tips">
 <h1>Tips<a class="headerlink" href="#tips" title="Permalink to this heading">#</a></h1>
+<section id="change-logging-level">
+<h2>Change logging level<a class="headerlink" href="#change-logging-level" title="Permalink to this heading">#</a></h2>
+<p>You can change the logging level by setting the <code class="docutils literal notranslate"><span class="pre">LOG_LEVEL</span></code> environment variable. For example,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">LOG_LEVEL</span><span class="o">=</span>DEBUG<span class="w"> </span>
+ai2-kit<span class="w"> </span>...
+</pre></div>
+</div>
+</section>
 <section id="use-custom-tags-to-simplify-yaml-configuration">
 <h2>Use custom tags to simplify YAML configuration<a class="headerlink" href="#use-custom-tags-to-simplify-yaml-configuration" title="Permalink to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> implement some customized tags for YAML parser to simplify the configuration.</p>
@@ -590,6 +600,7 @@ jupyter<span class="w"> </span>nbextension<span class="w"> </span><span class="n
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#change-logging-level">Change logging level</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-custom-tags-to-simplify-yaml-configuration">Use custom tags to simplify YAML configuration</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-text"><code class="docutils literal notranslate"><span class="pre">!load_text</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-yaml"><code class="docutils literal notranslate"><span class="pre">!load_yaml</span></code></a></li>

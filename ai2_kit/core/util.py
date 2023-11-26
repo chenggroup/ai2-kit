@@ -50,6 +50,22 @@ def parse_path_list(path_list_str: Union[str, List[str]], to_abs: bool = False):
     return path_list
 
 
+def expand_paths(*file_path_or_glob: str):
+    """
+    Expand file path or glob pattern to a list of files
+
+    :param file_path_or_glob: file path or glob pattern
+    :return: a list of unique and sorted files
+    """
+    files = set()
+    for file_path in file_path_or_glob:
+        if '*' in file_path:
+            files.update(glob.glob(file_path, recursive=True))
+        else:
+            files.add(file_path)
+    return sorted(files)
+
+
 def wait_for_change(widget, attribute):
     """
     Wait for attribute change of a Jupyter widget

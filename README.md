@@ -47,7 +47,7 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 * [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
 * [Amorphous Oxides Structure Analysis Toolkit](doc/manual/aos-analysis.md)
 
-### Build-in Functionalities
+### General Tools
 * [Tips](doc/manual/tips.md): useful tips for using `ai2-kit`
 * [Batch Toolkit](doc/manual/batch.md): a toolkit to generate batch scripts from files or directories
 * [ASE Toolkit](doc/manual/ase.md): commands to process trajectory files with [ASE](https://wiki.fysik.dtu.dk/ase/)

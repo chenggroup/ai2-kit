@@ -48,14 +48,17 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 * [Amorphous Oxides Structure Analysis Toolkit](doc/manual/aos-analysis.md)
 
 ### Build-in Functionalities
-* [Checkpoint Mechanism](doc/manual/checkpoint.md)
-* [HPC Executor Introduction](doc/manual//hpc-executor.md) ([zh](doc/manual/hpc-executor.zh.md))
-* [ASE Toolkit](doc/manual/ase.md)
-* [dpdata Toolkit](doc/manual/dpdata.md)
-* [Tips](doc/manual/tips.md)
+* [Tips](doc/manual/tips.md): useful tips for using `ai2-kit`
+* [Batch Toolkit](doc/manual/batch.md): a toolkit to generate batch scripts from files or directories
+* [ASE Toolkit](doc/manual/ase.md): commands to process trajectory files with [ASE](https://wiki.fysik.dtu.dk/ase/)
+* [dpdata Toolkit](doc/manual/dpdata.md): commands to process system data with [dpdata](https://github.com/deepmodeling/dpdata/)
 
 ### Notebooks
 * [ai2cat](notebook/ai2cat.ipynb)
+
+### Miscellaneous
+* [HPC Executor Introduction](doc/manual//hpc-executor.md) ([zh](doc/manual/hpc-executor.zh.md)): a simple HPC executor for job submission and management
+* [Checkpoint Mechanism](doc/manual/checkpoint.md)
 
 
 ## Acknowledgement

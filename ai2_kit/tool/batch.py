@@ -15,36 +15,21 @@ class BatchHelper:
     A toolkit to help generate batch scripts.
     """
 
-    def broadcast_path(self, *target_dirs: str, source: str, copy = False, target_name: Optional[str] = None):
+    def run_cmd(self, *work_dirs: str, cmd: str):
         """
-        Broadcast source file or directory to target directories, use link by default.
+        Run command in each work directory.
 
-        :param target_dirs: path or glob of target directories
-        :param source: path of source file or directory
-        :param copy: use copy instead of link
-        :param target_name: name of target file or directory, if None, use the basename of source path
+        :param work_dirs: path or glob of work directories
+        :param cmd: command to run, use {work_dir} to represent the work directory
         """
-        paths = expand_globs(target_dirs)
-        for path in paths:
-            assert os.path.isdir(path), f'{path} must be a directory'
 
-        if target_name is None:
-            target_name = os.path.basename(source)
+        paths = expand_globs(work_dirs)
 
         for path in paths:
-            target_path = os.path.join(path, target_name)
-            ensure_dir(target_path)
-            if copy:
-                if os.path.isdir(source):
-                    shutil.copytree(source, target_path)
-                    logger.info(f'Copy directory {source} to {target_path}')
-                else:
-                    shutil.copy(source, target_path)
-                    logger.info(f'Copy file {source} to {target_path}')
-            else:
-                source = os.path.abspath(source)
-                os.symlink(source, target_path)
-                logger.info(f'Link {source} to {target_path}')
+            assert os.path.isdir(path), f'{path} is not a directory'
+            _cmd = f"cd {shlex.quote(path)} && {cmd.format(work_dir=path)}"
+            os.system(_cmd)
+            logger.info(f'Run command: {_cmd}')
         return self
 
     def map_path(self, *sources: str, target: str, copy = False):
@@ -94,7 +79,7 @@ class BatchHelper:
         :param out: path to write batch scripts, use {i} to represent the index of concurrent job
         :param cmd: command to run, if None, will read from stdin, use {word_dir} to represent the word directory,
         use {i} to represent the index of concurrent job
-        :param concurrency: number of concurrent jobs, decide the number of batch scripts to generate
+        :param concurrency: number of concurrent jobs, decide the number of batch scripts to generate, if 0, will generate one batch script for each work directory
         :param header_file: path to header file, will be added to the beginning of each batch script
         :param suppress_error: if True, will add `set -e` to the beginning of each batch script
         :param checkpoint: if True, will add checkpoint to each batch script, and skip the work directory if checkpoint exists
@@ -113,6 +98,9 @@ class BatchHelper:
                 header = f.read()
 
         # generate batch scripts
+        if concurrency <= 0:
+            concurrency = len(_work_dirs)
+
         for i, job_group in enumerate(list_split(_work_dirs, concurrency)):
             batch = [ header ]
             if not suppress_error:

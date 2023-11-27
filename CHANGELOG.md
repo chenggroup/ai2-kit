@@ -1,4 +1,7 @@
 # Change Logs
+## v0.10.15
+* fix: lammps vars should also be template vars
+
 ## v0.10.14
 * improvement: plumed config support lammps template vars, e.g `$$TEMP`
 

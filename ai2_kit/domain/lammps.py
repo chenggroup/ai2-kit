@@ -428,6 +428,7 @@ def __export_remote_functions():
             ]
 
             if plumed_config:
+                plumed_config = LammpsInputTemplate(plumed_config).substitute(defaultdict(str), **template_vars)
                 plumed_config_file = os.path.join(task_dir, 'plumed.input')
                 dump_text(plumed_config, plumed_config_file)
                 simulation.append(f'fix cll_plumed all plumed plumedfile {plumed_config_file} outfile plumed.out')

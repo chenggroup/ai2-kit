@@ -330,6 +330,7 @@ def __export_remote_functions():
         task_dirs = []
         for i, combination in enumerate(combinations):
             template_vars = {
+                **combination_vars,
                 'AI2KIT_CMD': 'ai2-kit',  # TODO: this should be configurable via ctx.config instead of template vars
             }
             lammps_vars = dict(zip(combination_fields, combination))

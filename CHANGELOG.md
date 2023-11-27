@@ -1,4 +1,7 @@
 # Change Logs
+## v0.10.14
+* improvement: plumed config support lammps template vars, e.g `$$TEMP`
+
 ## v0.10.13
 * feat: batch toolkit
 

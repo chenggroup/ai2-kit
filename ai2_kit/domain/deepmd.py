@@ -198,6 +198,17 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
                 else:
                     train_systems.append(a.url)
 
+        # FIXME: there are users reporting duplicated data in dataset
+        # So we need to check and remove duplicated data
+        # TODO: find the root cause of duplicated data and remove this workaround
+        def _unique(l: list):
+            r = sorted(set(l))
+            if len(r) != len(l):
+                logger.warning(f'Found duplicated data in dataset: {l}')
+            return r
+        train_systems = _unique(train_systems)
+        outlier_systems = _unique(outlier_systems)
+        validation_systems = _unique(validation_systems)
 
         auto_prob_str = "prob_sys_size"
         if input.config.isolate_outliers:

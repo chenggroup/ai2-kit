@@ -1,4 +1,7 @@
 # Change Logs
+## v0.10.16
+* fix: ensure no duplicate dataset in deepmd input
+
 ## v0.10.15
 * fix: lammps vars should also be template vars
 

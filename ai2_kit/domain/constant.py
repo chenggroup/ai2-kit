@@ -93,9 +93,11 @@ $$EXTRA_VARS
 
 $$INITIALIZE
 
+# template_vars POST_INIT inject here
 $$POST_INIT
 
 $$READ_DATA
+# template_vars POST_READ_DATA inject here
 $$POST_READ_DATA
 
 $$MASS_MAP
@@ -104,12 +106,15 @@ $$SET_ATOM_TYPE
 '''
 
 _DEFAULT_LAMMPS_BOTTOM = '''\
+# template_vars POST_FORCE_FIELD inject here
 $$POST_FORCE_FIELD
 
 $$SIMULATION
+# template_vars POST_SIMULATION inject here
 $$POST_SIMULATION
 
 $$RUN
+# template_vars POST_RUN inject here
 $$POST_RUN
 '''
 
@@ -157,6 +162,8 @@ shell mkdir traj-{ns}
 $$INITIALIZE
 read_data {in_data}
 $$MASS_MAP_BASE
+
+# template_vars POST_READ_DATA inject here
 $$POST_READ_DATA
 
 pair_style deepmd $$DP_MODELS out_freq 1 out_file model_devi_{ns}.out

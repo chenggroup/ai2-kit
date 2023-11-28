@@ -299,14 +299,20 @@ def __export_remote_functions():
             os.makedirs(dirname, exist_ok=True)
 
 
-    def expand_globs(paths: Iterable[str]) -> List[str]:
+    def expand_globs(patterns: Iterable[str], raise_invalid=False) -> List[str]:
         """
         Expand glob patterns in paths
 
-        :param paths: list of paths or glob patterns
+        :param patterns: list of paths or glob patterns
+        :param raise_invalid: if True, will raise error if no file found for a glob pattern
         :return: list of expanded paths
         """
-        paths = flatten([glob.glob(path, recursive=True) for path in paths])
+        paths = []
+        for pattern in patterns:
+            result = glob.glob(pattern, recursive=True)
+            if len(result) == 0 and raise_invalid:
+                raise FileNotFoundError(f'No file found for {pattern}')
+            paths += result
         return sort_unique_str_list(paths)
 
 

@@ -1,12 +1,40 @@
-from ai2_kit.core.util import ensure_dir
+from ai2_kit.core.util import ensure_dir, expand_globs
 from ai2_kit.core.log import get_logger
 
 import numpy as np
+import functools
+
 import dpdata
-import glob
-import os
+from dpdata.data_type import Axis, DataType
+
+
+def __export_remote():
+    @functools.cache  # ensure only register once
+    def register_data_types():
+        DATA_TYPES = [
+            DataType("fparam", np.ndarray, (Axis.NFRAMES, -1), required=False),
+        ]
+        dpdata.System.register_data_type(*DATA_TYPES)
+        dpdata.LabeledSystem.register_data_type(*DATA_TYPES)
+
+    def set_fparam(system, fparam):
+        nframes = system.get_nframes()
+        system.data['fparam'] = np.tile(fparam, (nframes, 1))
+        return system
+
+    return (
+        register_data_types,
+        set_fparam,
+    )
+(
+    register_data_types,
+    set_fparam,
+) = __export_remote()
+
 
 logger = get_logger(__name__)
+register_data_types()
+
 
 class DpdataHelper:
 
@@ -27,7 +55,7 @@ class DpdataHelper:
         :param kwargs: arguments to pass to dpdata.System / dpdata.LabeledSystem
         """
         kwargs.setdefault('fmt', 'deepmd/npy')
-        files = _expand_paths(*file_path_or_glob)
+        files = expand_globs(file_path_or_glob)
         if len(files) == 0:
             raise FileNotFoundError(f'No file found for {file_path_or_glob}')
         for file in files:
@@ -76,18 +104,15 @@ class DpdataHelper:
         else:
             raise ValueError(f'Unknown fmt {fmt}')
 
-    def write_fparams(self, *file_path_or_glob: str, fparams):
+    def set_fparam(self, fparam):
         """
-        write fparam.npy to dataset, only support deepmd/npy format.
+        Set fparam for all systems
 
-        This command will search all *.npy files under the specific path
-        and create a fparam.npy file next to it.
-
-        :param file_path_or_glob: path or glob pattern to find *.npy files
-        :param fparams: fparams to write, can be a single value or a list of values
+        :param fparam: fparam to set, should be a scalar or vector
         """
-        write_fparams(*file_path_or_glob, fparams=fparams)
-
+        for system in self._systems:
+            set_fparam(system, fparam)
+        return self
 
     def _read(self, file: str, **kwargs):
         if self._label:
@@ -95,31 +120,3 @@ class DpdataHelper:
         else:
             self._systems.extend(dpdata.System(file, **kwargs))
 
-
-def __export_remote_fn():
-
-    def write_fparams(*file_path_or_glob: str, fparams):
-        # search for box.npy files
-        paths = _expand_paths(*[os.path.join(path, '**/box.npy')
-                                for path in file_path_or_glob])
-        if len(paths) == 0:
-            raise FileNotFoundError(f'No deepmd/npy datasets found in {file_path_or_glob}')
-
-        for path in paths:
-            box_arr = np.load(path)
-            logger.debug(f'box.npy shape: {box_arr.shape}')
-            fparam_arr = np.tile(fparams, (len(box_arr), 1))
-            logger.debug(f'fparam.npy shape: {fparam_arr.shape}')
-            fparam_file = os.path.join(os.path.dirname(path), 'fparam.npy')
-            np.save(fparam_file, fparam_arr)
-
-    return (write_fparams, )
-
-(write_fparams, ) = __export_remote_fn()
-
-
-def _expand_paths(*file_path_or_glob: str):
-    files = []
-    for file_path in file_path_or_glob:
-        files += sorted(glob.glob(file_path, recursive=True)) if '*' in file_path else [file_path]
-    return files

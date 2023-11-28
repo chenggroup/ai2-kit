@@ -41,7 +41,6 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 
 ### Workflows
 * [CLL MLP Training Workflow](doc/manual/cll-workflow.md) ([zh](doc/manual/cll-workflow.zh.md))
-* [FEP MLP Training Workflow](doc/manual/fep-workflow.md)
 
 ### Domain Specific Tools
 * [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)

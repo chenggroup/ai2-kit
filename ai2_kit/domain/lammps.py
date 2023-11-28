@@ -66,7 +66,6 @@ class CllLammpsInputConfig(BaseModel):
     LAMBDA_f: [0.0, 0.25, 0.5, 0.75, 1.0]
     ```
     """
-
     preset_template: Optional[str] = None
     """
     Name of the preset template.
@@ -97,7 +96,7 @@ class CllLammpsInputConfig(BaseModel):
     nsteps: int
     timestep: float = 0.0005
     sample_freq: int = 100
-    mode: Literal['default', 'fep'] = 'default'
+    mode: Literal['default', 'fep', 'fep-pka', 'fep-redox'] = 'default'
 
     type_alias: Mapping[str, List[str]] = dict()
     '''
@@ -187,6 +186,15 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
 
     assert len(data_files) > 0, 'no data files found'
 
+    preset_template = input.config.preset_template
+    if preset_template is None:
+        if input.config.mode in ('fep', 'fep-pka'):
+            preset_template = 'fep-pka'
+        elif input.config.mode in ('fep-redox',):
+            preset_template = 'fep-redox'
+        else:
+            preset_template = 'default'
+
     tasks_dir, task_dirs = executor.run_python_fn(make_lammps_task_dirs)(
         combination_vars=input.config.explore_vars,
         broadcast_vars=input.config.broadcast_vars,
@@ -199,7 +207,7 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
         n_wise=input.config.n_wise,
         ensemble=input.config.ensemble,
         fix_statement=input.config.fix_statement,
-        preset_template=input.config.preset_template or input.preset_template,
+        preset_template=preset_template,
         input_template=input.config.input_template,
         plumed_config=input.config.plumed_config,
         extra_template_vars=input.config.template_vars,
@@ -237,8 +245,10 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
     outputs = []
     for task_dir in task_dirs:
         common = dict(url=task_dir['url'], executor=executor.name, format=DataFormat.LAMMPS_OUTPUT_DIR)
-        # TODO: a more generic way to dealing multiple model_devi outputs
-        if input.config.mode == 'fep':
+        if input.config.mode in ('fep', 'fep-pka'):
+            # in fep-pka mode,
+            # ini and fin states have different structures, so their lammps_dump_dir is different
+            # their label method is different too, so we need to unpack `fep-ini` and `fep-fin` accordingly
             outputs += [
                 Artifact.of(**common, attrs={
                     **task_dir['attrs'], 'model_devi_file': 'model_devi_ini.out', 'lammps_dump_dir': 'traj-ini',
@@ -246,6 +256,21 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
                 }),
                 Artifact.of(**common, attrs={
                     **task_dir['attrs'], 'model_devi_file': 'model_devi_fin.out', 'lammps_dump_dir': 'traj-fin',
+                    **task_dir['attrs']['fep-fin'],
+                    'ancestor': task_dir['attrs']['ancestor'] + '-fin',  # only fin needs
+                }),
+            ]
+        elif input.config.mode in ('fep-redox',):
+            # in fep-redox mode,
+            # ini and fin states have the same structure, so just use the default one,
+            # but their label method is different, so we need to unpack `fep-ini` and `fep-fin` accordingly
+            outputs += [
+                Artifact.of(**common, attrs={
+                    **task_dir['attrs'], 'model_devi_file': 'model_devi_ini.out',
+                    **task_dir['attrs']['fep-ini'],
+                }),
+                Artifact.of(**common, attrs={
+                    **task_dir['attrs'], 'model_devi_file': 'model_devi_fin.out',
                     **task_dir['attrs']['fep-fin'],
                     'ancestor': task_dir['attrs']['ancestor'] + '-fin',  # only fin needs
                 }),
@@ -316,7 +341,7 @@ def __export_remote_functions():
 
         combinations = list(map(list, combinations))
 
-        # broadcast vars to all combinations
+        # broadcast broadcast_vars to all combinations
         for k in broadcast_vars.keys():
             # TODO: moving this check to pydatnic validator
             assert k not in combination_fields, f'broadcast_vars {k} is already in explore_vars'
@@ -453,11 +478,11 @@ def __export_remote_functions():
             ])
 
             dp_models_vars = _get_dp_models_variables(dp_models)
-
             template_vars = {**template_vars, **dp_models_vars, **extra_template_vars}
             dump_json(template_vars, os.path.join(task_dir, 'debug.template_vars.json'))  # for debug
 
-            input_template = PRESET_LAMMPS_INPUT_TEMPLATE[preset_template] if input_template is None else input_template
+            if input_template is None:
+                input_template = PRESET_LAMMPS_INPUT_TEMPLATE[preset_template]
             dump_text(input_template, os.path.join(task_dir, 'debug.input_template.txt'))  # for debug
             lammps_input = LammpsInputTemplate(input_template).substitute(defaultdict(str),**template_vars)
             dump_text(lammps_input, os.path.join(task_dir, 'lammps.input'))

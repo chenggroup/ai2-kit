@@ -4,6 +4,7 @@ from ai2_kit.core.script import BashScript, BashStep
 from ai2_kit.core.job import JobFuture, gather_jobs
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import dict_nested_get, expand_globs
+from ai2_kit.tool.dpdata import set_fparam
 
 from pydantic import BaseModel
 from typing import List, Tuple
@@ -328,6 +329,11 @@ def __export_remote_functions():
             # one case of len(dp_system) == 0 is when the system is not converged
             if dp_system is None or 0 == len(dp_system):
                 continue  # skip invalid data
+
+            # set fparam if existed
+            fparam = raw_data['attrs'].get('dp_fparam', None)
+            if fparam is not None:
+                set_fparam(dp_system, fparam)
 
             if isolate_outliers and dp_system.data['forces'].max() > outlier_f_cutoff:
                 outlier_collection.append((raw_data, dp_system))

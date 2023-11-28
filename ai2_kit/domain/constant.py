@@ -119,16 +119,19 @@ $$POST_RUN
 '''
 
 _DP_FORCE_FIELD = '''\
-pair_style deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi.out
+pair_style deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi.out $$DP_OPT
 pair_coeff * *
 '''
 
-_DP_FEP_DUAL_FORCE_FIELD = '''\
+_DP_FEP_REDOX_FORCE_FIELD = '''\
 variable LAMBDA_i equal 1-v_LAMBDA_f
 
 pair_style  hybrid/overlay &
-            deepmd $$DP_NEU_MODELS out_freq ${THERMO_FREQ} out_file model_devi_neu.out &
-            deepmd $$DP_RED_MODELS out_freq ${THERMO_FREQ} out_file model_devi_red.out
+            $$PAIR_STYLE_EXT &
+            deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi_ini.out $$FEP_INI_DP_OPT &
+            deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi_fin.out $$FEP_FIN_DP_OPT
+# template_vars PAIR_COEFF_EXT inject here
+$$PAIR_COEFF_EXT
 pair_coeff  * * deepmd 1 *
 pair_coeff  * * deepmd 2 *
 
@@ -137,17 +140,17 @@ fix PES_Sampling all adapt 0 &
     pair deepmd:2 scale * * v_LAMBDA_f
 '''
 
-_DP_FEP_UNI_FORCE_FIELD = '''\
+_DP_FEP_PKA_FORCE_FIELD = '''\
 variable LAMBDA_i equal 1-v_LAMBDA_f
 
 pair_style  hybrid/overlay &
             $$PAIR_STYLE_EXT &
-            deepmd $$DP_MODELS_0 &
-            deepmd $$DP_MODELS_0
+            deepmd $$DP_MODELS_0 $$FEP_INI_DP_OPT &
+            deepmd $$DP_MODELS_0 $$FEP_FIN_DP_OPT
+# template_vars PAIR_COEFF_EXT inject here
 $$PAIR_COEFF_EXT
 pair_coeff  * * deepmd 1 $$FEP_INI_SPECORDER
 pair_coeff  * * deepmd 2 $$FEP_FIN_SPECORDER
-
 
 fix PES_Sampling all adapt 0 &
     pair deepmd:1 scale * * v_LAMBDA_i &
@@ -181,7 +184,7 @@ rerun {in_traj} first 0 last 1000000000000 every 1 dump x y z box yes
 # e.g """ "$$SPECORDER" """
 # 2. ase read lammps-data format need to set style to "atomic"
 # ref: https://gitlab.com/ase/ase/-/issues/1126
-_FEP_UNI_BOTTOM = '\n'.join(['''\
+_FEP_PKA_BOTTOM = '\n'.join(['''\
 # Run post processing script
 shell env > debug.env.txt
 shell cat traj/*.lammpstrj > traj.lammpstrj
@@ -197,9 +200,7 @@ shell $$AI2KIT_CMD tool ase read traj/0.lammpstrj --format lammps-dump-text --sp
 
 
 PRESET_LAMMPS_INPUT_TEMPLATE = {
-    'default': '\n'.join([ _DEFAULT_LAMMPS_TOP, _DP_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM]),
-    # 2 models fep
-    'fep-2m': '\n'.join([ _DEFAULT_LAMMPS_TOP, _DP_FEP_DUAL_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM]),
-    # 1 model fep
-    'fep': '\n'.join([ _DEFAULT_LAMMPS_TOP, _DP_FEP_UNI_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM, _FEP_UNI_BOTTOM]),
+    'default'  : '\n'.join([ _DEFAULT_LAMMPS_TOP, _DP_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM]),
+    'fep-pka'  : '\n'.join([ _DEFAULT_LAMMPS_TOP, _DP_FEP_PKA_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM, _FEP_PKA_BOTTOM]),
+    'fep-redox': '\n'.join([ _DEFAULT_LAMMPS_TOP, _DP_FEP_REDOX_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM ]),
 }

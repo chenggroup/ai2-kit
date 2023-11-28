@@ -4,7 +4,7 @@ from ai2_kit.core.script import BashScript, BashStep
 from ai2_kit.core.job import JobFuture, gather_jobs
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import dict_nested_get, expand_globs
-from ai2_kit.tool.dpdata import set_fparam
+from ai2_kit.tool.dpdata import set_fparam, register_data_types
 
 from pydantic import BaseModel
 from typing import List, Tuple
@@ -314,6 +314,8 @@ def __export_remote_functions():
         type_map: List[str],
         group_by_formula: bool = False,
     ):
+        register_data_types()
+
         dataset_collection: List[Tuple[ArtifactDict, dpdata.LabeledSystem]] = []
         outlier_collection: List[Tuple[ArtifactDict, dpdata.LabeledSystem]] = []
 

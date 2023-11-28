@@ -211,7 +211,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
         validation_systems = _unique(validation_systems)
 
         auto_prob_str = "prob_sys_size"
-        if input.config.isolate_outliers:
+        if input.config.isolate_outliers and len(outlier_systems) > 0):
             # if isolate_outlier is enabled, then we need to set different weight for outlier data
             # e.g: prob_sys_size;0:57:0.9997;57:60:0.0003
             auto_prob_str += f';0:{len(train_systems)}:{1-input.config.outlier_weight}'

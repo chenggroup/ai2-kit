@@ -169,7 +169,6 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Workflows</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../doc/manual/cll-workflow.html">CLL Machine Learning Potential Training Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../doc/manual/fep-workflow.html">FEP MLP Training Workflow</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
 <ul class="nav bd-sidenav">
@@ -494,6 +493,17 @@ default format is deepmd/npy</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataHelper.set_fparam">
+<span class="sig-name descname"><span class="pre">set_fparam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fparam</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataHelper.set_fparam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataHelper.set_fparam" title="Permalink to this definition">#</a></dt>
+<dd><p>Set fparam for all systems</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fparam</strong> – fparam to set, should be a scalar or vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataHelper.write">
 <span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'deepmd/npy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataHelper.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataHelper.write" title="Permalink to this definition">#</a></dt>
 <dd><p>write data to specific path, support deepmd/npy, deepmd/raw, deepmd/hdf5 formats
@@ -502,27 +512,16 @@ default format is deepmd/npy</p>
 :param merge: if True, merge all data use dpdata.MultiSystems, else write data without merging</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataHelper.write_fparams">
-<span class="sig-name descname"><span class="pre">write_fparams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">file_path_or_glob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fparams</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataHelper.write_fparams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataHelper.write_fparams" title="Permalink to this definition">#</a></dt>
-<dd><p>write fparam.npy to dataset, only support deepmd/npy format.</p>
-<p>This command will search all <a href="#id1"><span class="problematic" id="id2">*</span></a>.npy files under the specific path
-and create a fparam.npy file next to it.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path_or_glob</strong> – path or glob pattern to find <a href="#id3"><span class="problematic" id="id4">*</span></a>.npy files</p></li>
-<li><p><strong>fparams</strong> – fparams to write, can be a single value or a list of values</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.write_fparams">
-<span class="sig-prename descclassname"><span class="pre">ai2_kit.tool.dpdata.</span></span><span class="sig-name descname"><span class="pre">write_fparams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">file_path_or_glob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fparams</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.tool.dpdata.write_fparams" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.register_data_types">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.tool.dpdata.</span></span><span class="sig-name descname"><span class="pre">register_data_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.tool.dpdata.register_data_types" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.set_fparam">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.tool.dpdata.</span></span><span class="sig-name descname"><span class="pre">set_fparam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fparam</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.tool.dpdata.set_fparam" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>

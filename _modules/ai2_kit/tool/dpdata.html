@@ -166,7 +166,6 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Workflows</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/cll-workflow.html">CLL Machine Learning Potential Training Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/fep-workflow.html">FEP MLP Training Workflow</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
 <ul class="nav bd-sidenav">
@@ -406,15 +405,43 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for ai2_kit.tool.dpdata</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">ensure_dir</span>
+<span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">ensure_dir</span><span class="p">,</span> <span class="n">expand_globs</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+
 <span class="kn">import</span> <span class="nn">dpdata</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">dpdata.data_type</span> <span class="kn">import</span> <span class="n">Axis</span><span class="p">,</span> <span class="n">DataType</span>
+
+
+<span class="k">def</span> <span class="nf">__export_remote</span><span class="p">():</span>
+    <span class="nd">@functools</span><span class="o">.</span><span class="n">cache</span>  <span class="c1"># ensure only register once</span>
+    <span class="k">def</span> <span class="nf">register_data_types</span><span class="p">():</span>
+        <span class="n">DATA_TYPES</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">DataType</span><span class="p">(</span><span class="s2">&quot;fparam&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="n">Axis</span><span class="o">.</span><span class="n">NFRAMES</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="p">]</span>
+        <span class="n">dpdata</span><span class="o">.</span><span class="n">System</span><span class="o">.</span><span class="n">register_data_type</span><span class="p">(</span><span class="o">*</span><span class="n">DATA_TYPES</span><span class="p">)</span>
+        <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="o">.</span><span class="n">register_data_type</span><span class="p">(</span><span class="o">*</span><span class="n">DATA_TYPES</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_fparam</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">fparam</span><span class="p">):</span>
+        <span class="n">nframes</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">get_nframes</span><span class="p">()</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;fparam&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">fparam</span><span class="p">,</span> <span class="p">(</span><span class="n">nframes</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">system</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">register_data_types</span><span class="p">,</span>
+        <span class="n">set_fparam</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">(</span>
+    <span class="n">register_data_types</span><span class="p">,</span>
+    <span class="n">set_fparam</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">=</span> <span class="n">__export_remote</span><span class="p">()</span>
+
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">register_data_types</span><span class="p">()</span>
+
 
 <div class="viewcode-block" id="DpdataHelper"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper">[docs]</a><span class="k">class</span> <span class="nc">DpdataHelper</span><span class="p">:</span>
 
@@ -435,7 +462,7 @@ document.write(`
 <span class="sd">        :param kwargs: arguments to pass to dpdata.System / dpdata.LabeledSystem</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;fmt&#39;</span><span class="p">,</span> <span class="s1">&#39;deepmd/npy&#39;</span><span class="p">)</span>
-        <span class="n">files</span> <span class="o">=</span> <span class="n">_expand_paths</span><span class="p">(</span><span class="o">*</span><span class="n">file_path_or_glob</span><span class="p">)</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">expand_globs</span><span class="p">(</span><span class="n">file_path_or_glob</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No file found for </span><span class="si">{</span><span class="n">file_path_or_glob</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
@@ -484,18 +511,15 @@ document.write(`
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown fmt </span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DpdataHelper.write_fparams"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.write_fparams">[docs]</a>    <span class="k">def</span> <span class="nf">write_fparams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">file_path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fparams</span><span class="p">):</span>
+<div class="viewcode-block" id="DpdataHelper.set_fparam"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataHelper.set_fparam">[docs]</a>    <span class="k">def</span> <span class="nf">set_fparam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fparam</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        write fparam.npy to dataset, only support deepmd/npy format.</span>
+<span class="sd">        Set fparam for all systems</span>
 
-<span class="sd">        This command will search all *.npy files under the specific path</span>
-<span class="sd">        and create a fparam.npy file next to it.</span>
-
-<span class="sd">        :param file_path_or_glob: path or glob pattern to find *.npy files</span>
-<span class="sd">        :param fparams: fparams to write, can be a single value or a list of values</span>
+<span class="sd">        :param fparam: fparam to set, should be a scalar or vector</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">write_fparams</span><span class="p">(</span><span class="o">*</span><span class="n">file_path_or_glob</span><span class="p">,</span> <span class="n">fparams</span><span class="o">=</span><span class="n">fparams</span><span class="p">)</span></div>
-
+        <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">:</span>
+            <span class="n">set_fparam</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">fparam</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
     <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">:</span>
@@ -503,34 +527,6 @@ document.write(`
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dpdata</span><span class="o">.</span><span class="n">System</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
 
-
-<span class="k">def</span> <span class="nf">__export_remote_fn</span><span class="p">():</span>
-
-    <span class="k">def</span> <span class="nf">write_fparams</span><span class="p">(</span><span class="o">*</span><span class="n">file_path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fparams</span><span class="p">):</span>
-        <span class="c1"># search for box.npy files</span>
-        <span class="n">paths</span> <span class="o">=</span> <span class="n">_expand_paths</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;**/box.npy&#39;</span><span class="p">)</span>
-                                <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">file_path_or_glob</span><span class="p">])</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No deepmd/npy datasets found in </span><span class="si">{</span><span class="n">file_path_or_glob</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
-            <span class="n">box_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;box.npy shape: </span><span class="si">{</span><span class="n">box_arr</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">fparam_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">fparams</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">box_arr</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;fparam.npy shape: </span><span class="si">{</span><span class="n">fparam_arr</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">fparam_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="s1">&#39;fparam.npy&#39;</span><span class="p">)</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fparam_file</span><span class="p">,</span> <span class="n">fparam_arr</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="p">(</span><span class="n">write_fparams</span><span class="p">,</span> <span class="p">)</span>
-
-<span class="p">(</span><span class="n">write_fparams</span><span class="p">,</span> <span class="p">)</span> <span class="o">=</span> <span class="n">__export_remote_fn</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">_expand_paths</span><span class="p">(</span><span class="o">*</span><span class="n">file_path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">file_path_or_glob</span><span class="p">:</span>
-        <span class="n">files</span> <span class="o">+=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span> <span class="k">if</span> <span class="s1">&#39;*&#39;</span> <span class="ow">in</span> <span class="n">file_path</span> <span class="k">else</span> <span class="p">[</span><span class="n">file_path</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">files</span>
 </pre></div>
 
                 </article>

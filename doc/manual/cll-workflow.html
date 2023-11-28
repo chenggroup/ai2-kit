@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'doc/manual/cll-workflow';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="FEP MLP Training Workflow" href="fep-workflow.html" />
+    <link rel="next" title="Proton Transfer Analysis Toolkit" href="proton-transfer.html" />
     <link rel="prev" title="ai2-cat Toolkit" href="ai2cat.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -169,7 +169,6 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Workflows</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">CLL Machine Learning Potential Training Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fep-workflow.html">FEP MLP Training Workflow</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
 <ul class="nav bd-sidenav">
@@ -461,6 +460,11 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preparation">Data Preparation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-file-preparation">Configuration File Preparation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#execute-workflow">Execute Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#special-use-cases">Special Use Cases</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#train-mlp-model-for-fep-based-redox-potential-calculation">Train MLP model for FEP based Redox Potential Calculation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-mlp-for-fep-based-pka-calculation">Training MLP for FEP based pKa Calculation</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citation">Citation</a></li>
@@ -838,6 +842,61 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 </ul>
 </section>
 </section>
+<section id="special-use-cases">
+<h2>Special Use Cases<a class="headerlink" href="#special-use-cases" title="Permalink to this heading">#</a></h2>
+<section id="train-mlp-model-for-fep-based-redox-potential-calculation">
+<h3>Train MLP model for FEP based Redox Potential Calculation<a class="headerlink" href="#train-mlp-model-for-fep-based-redox-potential-calculation" title="Permalink to this heading">#</a></h3>
+<p>To train MLP model for FEP based Redox Potential Calculation,
+you need to make use of <code class="docutils literal notranslate"><span class="pre">fparam</span></code> feature of <code class="docutils literal notranslate"><span class="pre">deepmd</span></code>
+to fit the PES of initial (ini) and finial (fin) state of the reaction.</p>
+<p>And should also config different label configuration for ini and fin state.</p>
+<p>Here is the key configuration you need to pay attention to:</p>
+<ol class="arabic simple">
+<li><p>Config explore artifacts with <code class="docutils literal notranslate"><span class="pre">fep-ini</span></code> and <code class="docutils literal notranslate"><span class="pre">fep-fin</span></code> attrs</p></li>
+</ol>
+<p>Explore artifacts are used as initial structures for structure explore.  For example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">artifacts</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">explore-h2ox64</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/h2ox64.xyz</span>
+<span class="w">    </span><span class="nt">attrs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">fep-ini</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">dp_fparam</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">        </span><span class="nt">cp2k</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">input_template</span><span class="p">:</span><span class="w"> </span><span class="kt">!load_text</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cp2k-ini.inp</span>
+<span class="w">      </span><span class="nt">fep-fin</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">dp_fparam</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">cp2k</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">input_template</span><span class="p">:</span><span class="w"> </span><span class="kt">!load_text</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cp2k-fin.inp</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Config LAMMPS explore mode with <code class="docutils literal notranslate"><span class="pre">fep-redox</span></code>
+The following example dismiss the common configuration of LAMMPS,
+and only focus on the <code class="docutils literal notranslate"><span class="pre">fep-redox</span></code> specific configuration.</p></li>
+</ol>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">workflow</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">explore</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">lammps</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fep-redox</span>
+<span class="w">      </span><span class="nt">template_vars</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># The fparam option of deepmd pair style</span>
+<span class="w">        </span><span class="c1"># The value of fparam should be consistent with the fparam in the explore artifacts</span>
+<span class="w">        </span><span class="c1"># doc: https://docs.deepmodeling.com/projects/deepmd/en/latest/third-party/lammps-command.html#pair-style-deepmd</span>
+<span class="w">        </span><span class="nt">FEP_INI_DP_OPT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fparam 0</span>
+<span class="w">        </span><span class="nt">FEP_FIN_DP_OPT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fparam 1</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Config <code class="docutils literal notranslate"><span class="pre">numb_fparam</span></code> in <code class="docutils literal notranslate"><span class="pre">deepmd</span></code> input template
+<a class="reference external" href="https://docs.deepmodeling.com/projects/deepmd/en/master/train/train-input.html">https://docs.deepmodeling.com/projects/deepmd/en/master/train/train-input.html</a></p></li>
+</ol>
+<p>TODO: example.</p>
+</section>
+<section id="training-mlp-for-fep-based-pka-calculation">
+<h3>Training MLP for FEP based pKa Calculation<a class="headerlink" href="#training-mlp-for-fep-based-pka-calculation" title="Permalink to this heading">#</a></h3>
+<p>TODO</p>
+</section>
+</section>
 <section id="citation">
 <h2>Citation<a class="headerlink" href="#citation" title="Permalink to this heading">#</a></h2>
 <p>If you use this workflow with LASP in your research, please cite the following papers:</p>
@@ -888,11 +947,11 @@ Huang, S., Shang, C., Kang, P., Zhang, X. &amp; Liu, Z. LASP: Fast global potent
       </div>
     </a>
     <a class="right-next"
-       href="fep-workflow.html"
+       href="proton-transfer.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">FEP MLP Training Workflow</p>
+        <p class="prev-next-title">Proton Transfer Analysis Toolkit</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -918,6 +977,11 @@ Huang, S., Shang, C., Kang, P., Zhang, X. &amp; Liu, Z. LASP: Fast global potent
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preparation">Data Preparation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-file-preparation">Configuration File Preparation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#execute-workflow">Execute Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#special-use-cases">Special Use Cases</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#train-mlp-model-for-fep-based-redox-potential-calculation">Train MLP model for FEP based Redox Potential Calculation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-mlp-for-fep-based-pka-calculation">Training MLP for FEP based pKa Calculation</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#citation">Citation</a></li>

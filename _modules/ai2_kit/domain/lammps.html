@@ -166,7 +166,6 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Workflows</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/cll-workflow.html">CLL Machine Learning Potential Training Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/fep-workflow.html">FEP MLP Training Workflow</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
 <ul class="nav bd-sidenav">
@@ -474,7 +473,6 @@ document.write(`
 <span class="sd">    LAMBDA_f: [0.0, 0.25, 0.5, 0.75, 1.0]</span>
 <span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">preset_template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Name of the preset template.</span>
@@ -505,7 +503,7 @@ document.write(`
     <span class="n">nsteps</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">timestep</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005</span>
     <span class="n">sample_freq</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
-    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="s1">&#39;fep&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="s1">&#39;fep&#39;</span><span class="p">,</span> <span class="s1">&#39;fep-pka&#39;</span><span class="p">,</span> <span class="s1">&#39;fep-redox&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
 
     <span class="n">type_alias</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
@@ -595,6 +593,15 @@ document.write(`
 
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;no data files found&#39;</span>
 
+    <span class="n">preset_template</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">preset_template</span>
+    <span class="k">if</span> <span class="n">preset_template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;fep&#39;</span><span class="p">,</span> <span class="s1">&#39;fep-pka&#39;</span><span class="p">):</span>
+            <span class="n">preset_template</span> <span class="o">=</span> <span class="s1">&#39;fep-pka&#39;</span>
+        <span class="k">elif</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;fep-redox&#39;</span><span class="p">,):</span>
+            <span class="n">preset_template</span> <span class="o">=</span> <span class="s1">&#39;fep-redox&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">preset_template</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+
     <span class="n">tasks_dir</span><span class="p">,</span> <span class="n">task_dirs</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">make_lammps_task_dirs</span><span class="p">)(</span>
         <span class="n">combination_vars</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">explore_vars</span><span class="p">,</span>
         <span class="n">broadcast_vars</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">broadcast_vars</span><span class="p">,</span>
@@ -607,7 +614,7 @@ document.write(`
         <span class="n">n_wise</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">n_wise</span><span class="p">,</span>
         <span class="n">ensemble</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ensemble</span><span class="p">,</span>
         <span class="n">fix_statement</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fix_statement</span><span class="p">,</span>
-        <span class="n">preset_template</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">preset_template</span> <span class="ow">or</span> <span class="nb">input</span><span class="o">.</span><span class="n">preset_template</span><span class="p">,</span>
+        <span class="n">preset_template</span><span class="o">=</span><span class="n">preset_template</span><span class="p">,</span>
         <span class="n">input_template</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">input_template</span><span class="p">,</span>
         <span class="n">plumed_config</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plumed_config</span><span class="p">,</span>
         <span class="n">extra_template_vars</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">template_vars</span><span class="p">,</span>
@@ -645,8 +652,10 @@ document.write(`
     <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">task_dir</span> <span class="ow">in</span> <span class="n">task_dirs</span><span class="p">:</span>
         <span class="n">common</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">executor</span><span class="o">=</span><span class="n">executor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">LAMMPS_OUTPUT_DIR</span><span class="p">)</span>
-        <span class="c1"># TODO: a more generic way to dealing multiple model_devi outputs</span>
-        <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;fep&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;fep&#39;</span><span class="p">,</span> <span class="s1">&#39;fep-pka&#39;</span><span class="p">):</span>
+            <span class="c1"># in fep-pka mode,</span>
+            <span class="c1"># ini and fin states have different structures, so their lammps_dump_dir is different</span>
+            <span class="c1"># their label method is different too, so we need to unpack `fep-ini` and `fep-fin` accordingly</span>
             <span class="n">outputs</span> <span class="o">+=</span> <span class="p">[</span>
                 <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="n">common</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span>
                     <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span> <span class="s1">&#39;model_devi_file&#39;</span><span class="p">:</span> <span class="s1">&#39;model_devi_ini.out&#39;</span><span class="p">,</span> <span class="s1">&#39;lammps_dump_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;traj-ini&#39;</span><span class="p">,</span>
@@ -654,6 +663,21 @@ document.write(`
                 <span class="p">}),</span>
                 <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="n">common</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span>
                     <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span> <span class="s1">&#39;model_devi_file&#39;</span><span class="p">:</span> <span class="s1">&#39;model_devi_fin.out&#39;</span><span class="p">,</span> <span class="s1">&#39;lammps_dump_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;traj-fin&#39;</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;fep-fin&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;ancestor&#39;</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-fin&#39;</span><span class="p">,</span>  <span class="c1"># only fin needs</span>
+                <span class="p">}),</span>
+            <span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;fep-redox&#39;</span><span class="p">,):</span>
+            <span class="c1"># in fep-redox mode,</span>
+            <span class="c1"># ini and fin states have the same structure, so just use the default one,</span>
+            <span class="c1"># but their label method is different, so we need to unpack `fep-ini` and `fep-fin` accordingly</span>
+            <span class="n">outputs</span> <span class="o">+=</span> <span class="p">[</span>
+                <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="n">common</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span>
+                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span> <span class="s1">&#39;model_devi_file&#39;</span><span class="p">:</span> <span class="s1">&#39;model_devi_ini.out&#39;</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;fep-ini&#39;</span><span class="p">],</span>
+                <span class="p">}),</span>
+                <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="n">common</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span>
+                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span> <span class="s1">&#39;model_devi_file&#39;</span><span class="p">:</span> <span class="s1">&#39;model_devi_fin.out&#39;</span><span class="p">,</span>
                     <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;fep-fin&#39;</span><span class="p">],</span>
                     <span class="s1">&#39;ancestor&#39;</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-fin&#39;</span><span class="p">,</span>  <span class="c1"># only fin needs</span>
                 <span class="p">}),</span>
@@ -724,7 +748,7 @@ document.write(`
 
         <span class="n">combinations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">combinations</span><span class="p">))</span>
 
-        <span class="c1"># broadcast vars to all combinations</span>
+        <span class="c1"># broadcast broadcast_vars to all combinations</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">broadcast_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="c1"># TODO: moving this check to pydatnic validator</span>
             <span class="k">assert</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">combination_fields</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;broadcast_vars </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> is already in explore_vars&#39;</span>
@@ -861,11 +885,11 @@ document.write(`
             <span class="p">])</span>
 
             <span class="n">dp_models_vars</span> <span class="o">=</span> <span class="n">_get_dp_models_variables</span><span class="p">(</span><span class="n">dp_models</span><span class="p">)</span>
-
             <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">template_vars</span><span class="p">,</span> <span class="o">**</span><span class="n">dp_models_vars</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_template_vars</span><span class="p">}</span>
             <span class="n">dump_json</span><span class="p">(</span><span class="n">template_vars</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;debug.template_vars.json&#39;</span><span class="p">))</span>  <span class="c1"># for debug</span>
 
-            <span class="n">input_template</span> <span class="o">=</span> <span class="n">PRESET_LAMMPS_INPUT_TEMPLATE</span><span class="p">[</span><span class="n">preset_template</span><span class="p">]</span> <span class="k">if</span> <span class="n">input_template</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">input_template</span>
+            <span class="k">if</span> <span class="n">input_template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">input_template</span> <span class="o">=</span> <span class="n">PRESET_LAMMPS_INPUT_TEMPLATE</span><span class="p">[</span><span class="n">preset_template</span><span class="p">]</span>
             <span class="n">dump_text</span><span class="p">(</span><span class="n">input_template</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;debug.input_template.txt&#39;</span><span class="p">))</span>  <span class="c1"># for debug</span>
             <span class="n">lammps_input</span> <span class="o">=</span> <span class="n">LammpsInputTemplate</span><span class="p">(</span><span class="n">input_template</span><span class="p">)</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span><span class="o">**</span><span class="n">template_vars</span><span class="p">)</span>
             <span class="n">dump_text</span><span class="p">(</span><span class="n">lammps_input</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;lammps.input&#39;</span><span class="p">))</span>

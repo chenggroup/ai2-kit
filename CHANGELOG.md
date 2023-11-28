@@ -1,4 +1,9 @@
 # Change Logs
+## v0.11.0
+* feat: cll-training-workflow support `fep-redox` mode, details [here](./doc/manual/cll-workflow.md#train-mlp-model-for-fep-based-redox-potential-calculation
+)
+* feat: dpdata support `set_fparam`
+
 ## v0.10.16
 * fix: ensure no duplicate dataset in deepmd input
 

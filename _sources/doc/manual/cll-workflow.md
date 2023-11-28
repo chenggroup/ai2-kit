@@ -379,7 +379,7 @@ And should also config different label configuration for ini and fin state.
 
 Here is the key configuration you need to pay attention to:
 
-1. Config explore artifacts with `fep-ini` and `fep-fin` attrs
+#### Config explore artifacts with `fep-ini` and `fep-fin` attrs
 
 Explore artifacts are used as initial structures for structure explore.  For example:
 
@@ -398,7 +398,7 @@ artifacts:
           input_template: !load_text cp2k-fin.inp
 ```
 
-2. Config LAMMPS explore mode with `fep-redox`
+#### Config LAMMPS explore mode with `fep-redox`
 The following example dismiss the common configuration of LAMMPS,
 and only focus on the `fep-redox` specific configuration.
 
@@ -415,7 +415,7 @@ workflow:
         FEP_FIN_DP_OPT: fparam 1
 ```
 
-3.  Config `numb_fparam` in `deepmd` input template
+#### Config `numb_fparam` in `deepmd` input template
 https://docs.deepmodeling.com/projects/deepmd/en/master/train/train-input.html
 
 TODO: example.

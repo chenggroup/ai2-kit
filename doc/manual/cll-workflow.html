@@ -463,7 +463,12 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#special-use-cases">Special Use Cases</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#train-mlp-model-for-fep-based-redox-potential-calculation">Train MLP model for FEP based Redox Potential Calculation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#train-mlp-model-for-fep-based-redox-potential-calculation">Train MLP model for FEP based Redox Potential Calculation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#config-explore-artifacts-with-fep-ini-and-fep-fin-attrs">Config explore artifacts with <code class="docutils literal notranslate"><span class="pre">fep-ini</span></code> and <code class="docutils literal notranslate"><span class="pre">fep-fin</span></code> attrs</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#config-lammps-explore-mode-with-fep-redox">Config LAMMPS explore mode with <code class="docutils literal notranslate"><span class="pre">fep-redox</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#config-numb-fparam-in-deepmd-input-template">Config <code class="docutils literal notranslate"><span class="pre">numb_fparam</span></code> in <code class="docutils literal notranslate"><span class="pre">deepmd</span></code> input template</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-mlp-for-fep-based-pka-calculation">Training MLP for FEP based pKa Calculation</a></li>
 </ul>
 </li>
@@ -851,9 +856,8 @@ you need to make use of <code class="docutils literal notranslate"><span class="
 to fit the PES of initial (ini) and finial (fin) state of the reaction.</p>
 <p>And should also config different label configuration for ini and fin state.</p>
 <p>Here is the key configuration you need to pay attention to:</p>
-<ol class="arabic simple">
-<li><p>Config explore artifacts with <code class="docutils literal notranslate"><span class="pre">fep-ini</span></code> and <code class="docutils literal notranslate"><span class="pre">fep-fin</span></code> attrs</p></li>
-</ol>
+<section id="config-explore-artifacts-with-fep-ini-and-fep-fin-attrs">
+<h4>Config explore artifacts with <code class="docutils literal notranslate"><span class="pre">fep-ini</span></code> and <code class="docutils literal notranslate"><span class="pre">fep-fin</span></code> attrs<a class="headerlink" href="#config-explore-artifacts-with-fep-ini-and-fep-fin-attrs" title="Permalink to this heading">#</a></h4>
 <p>Explore artifacts are used as initial structures for structure explore.  For example:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">artifacts</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">explore-h2ox64</span><span class="p">:</span>
@@ -869,11 +873,11 @@ to fit the PES of initial (ini) and finial (fin) state of the reaction.</p>
 <span class="w">          </span><span class="nt">input_template</span><span class="p">:</span><span class="w"> </span><span class="kt">!load_text</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cp2k-fin.inp</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="2">
-<li><p>Config LAMMPS explore mode with <code class="docutils literal notranslate"><span class="pre">fep-redox</span></code>
-The following example dismiss the common configuration of LAMMPS,
-and only focus on the <code class="docutils literal notranslate"><span class="pre">fep-redox</span></code> specific configuration.</p></li>
-</ol>
+</section>
+<section id="config-lammps-explore-mode-with-fep-redox">
+<h4>Config LAMMPS explore mode with <code class="docutils literal notranslate"><span class="pre">fep-redox</span></code><a class="headerlink" href="#config-lammps-explore-mode-with-fep-redox" title="Permalink to this heading">#</a></h4>
+<p>The following example dismiss the common configuration of LAMMPS,
+and only focus on the <code class="docutils literal notranslate"><span class="pre">fep-redox</span></code> specific configuration.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">workflow</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">explore</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">lammps</span><span class="p">:</span>
@@ -886,11 +890,12 @@ and only focus on the <code class="docutils literal notranslate"><span class="pr
 <span class="w">        </span><span class="nt">FEP_FIN_DP_OPT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fparam 1</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="3">
-<li><p>Config <code class="docutils literal notranslate"><span class="pre">numb_fparam</span></code> in <code class="docutils literal notranslate"><span class="pre">deepmd</span></code> input template
-<a class="reference external" href="https://docs.deepmodeling.com/projects/deepmd/en/master/train/train-input.html">https://docs.deepmodeling.com/projects/deepmd/en/master/train/train-input.html</a></p></li>
-</ol>
+</section>
+<section id="config-numb-fparam-in-deepmd-input-template">
+<h4>Config <code class="docutils literal notranslate"><span class="pre">numb_fparam</span></code> in <code class="docutils literal notranslate"><span class="pre">deepmd</span></code> input template<a class="headerlink" href="#config-numb-fparam-in-deepmd-input-template" title="Permalink to this heading">#</a></h4>
+<p><a class="reference external" href="https://docs.deepmodeling.com/projects/deepmd/en/master/train/train-input.html">https://docs.deepmodeling.com/projects/deepmd/en/master/train/train-input.html</a></p>
 <p>TODO: example.</p>
+</section>
 </section>
 <section id="training-mlp-for-fep-based-pka-calculation">
 <h3>Training MLP for FEP based pKa Calculation<a class="headerlink" href="#training-mlp-for-fep-based-pka-calculation" title="Permalink to this heading">#</a></h3>
@@ -980,7 +985,12 @@ Huang, S., Shang, C., Kang, P., Zhang, X. &amp; Liu, Z. LASP: Fast global potent
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#special-use-cases">Special Use Cases</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#train-mlp-model-for-fep-based-redox-potential-calculation">Train MLP model for FEP based Redox Potential Calculation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#train-mlp-model-for-fep-based-redox-potential-calculation">Train MLP model for FEP based Redox Potential Calculation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#config-explore-artifacts-with-fep-ini-and-fep-fin-attrs">Config explore artifacts with <code class="docutils literal notranslate"><span class="pre">fep-ini</span></code> and <code class="docutils literal notranslate"><span class="pre">fep-fin</span></code> attrs</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#config-lammps-explore-mode-with-fep-redox">Config LAMMPS explore mode with <code class="docutils literal notranslate"><span class="pre">fep-redox</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#config-numb-fparam-in-deepmd-input-template">Config <code class="docutils literal notranslate"><span class="pre">numb_fparam</span></code> in <code class="docutils literal notranslate"><span class="pre">deepmd</span></code> input template</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-mlp-for-fep-based-pka-calculation">Training MLP for FEP based pKa Calculation</a></li>
 </ul>
 </li>

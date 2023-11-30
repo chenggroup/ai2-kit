@@ -2,14 +2,12 @@ from ai2_kit.core.util import ensure_dir, expand_globs
 from ai2_kit.core.log import get_logger
 
 import numpy as np
-import functools
 
 import dpdata
 from dpdata.data_type import Axis, DataType
 
 
 def __export_remote():
-    @functools.cache  # ensure only register once
     def register_data_types():
         DATA_TYPES = [
             DataType("fparam", np.ndarray, (Axis.NFRAMES, -1), required=False),

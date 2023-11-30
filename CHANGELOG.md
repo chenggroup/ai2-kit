@@ -1,4 +1,7 @@
 # Change Logs
+## v0.11.1
+* fix: typo
+
 ## v0.11.0
 * feat: cll-training-workflow support `fep-redox` mode, details [here](./doc/manual/cll-workflow.md#train-mlp-model-for-fep-based-redox-potential-calculation
 )

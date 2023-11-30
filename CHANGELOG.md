@@ -1,4 +1,7 @@
 # Change Logs
+## v0.11.2
+* fix: pickle issue
+
 ## v0.11.1
 * fix: typo
 

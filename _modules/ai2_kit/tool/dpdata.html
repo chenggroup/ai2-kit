@@ -409,14 +409,12 @@ document.write(`
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">functools</span>
 
 <span class="kn">import</span> <span class="nn">dpdata</span>
 <span class="kn">from</span> <span class="nn">dpdata.data_type</span> <span class="kn">import</span> <span class="n">Axis</span><span class="p">,</span> <span class="n">DataType</span>
 
 
 <span class="k">def</span> <span class="nf">__export_remote</span><span class="p">():</span>
-    <span class="nd">@functools</span><span class="o">.</span><span class="n">cache</span>  <span class="c1"># ensure only register once</span>
     <span class="k">def</span> <span class="nf">register_data_types</span><span class="p">():</span>
         <span class="n">DATA_TYPES</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">DataType</span><span class="p">(</span><span class="s2">&quot;fparam&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="n">Axis</span><span class="o">.</span><span class="n">NFRAMES</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>

@@ -1,4 +1,7 @@
 # Change Logs
+## v0.11.3
+* fix: incomplete lammps template_vars
+
 ## v0.11.2
 * fix: pickle issue
 

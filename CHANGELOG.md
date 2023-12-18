@@ -1,4 +1,12 @@
 # Change Logs
+
+## v0.12.0
+* feat: support dpff training mode
+* improvement: strict check of workflow configuration
+* fix: wrong specorder of `fep-pka` mode
+* breaking: `mode` move to general config section
+* breaking: atom id of `DELETE_ATOMS` of `fep` mode now start from 1 instead of 0 (the same as lammps)
+
 ## v0.11.3
 * fix: incomplete lammps template_vars
 

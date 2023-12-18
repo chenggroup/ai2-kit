@@ -4,11 +4,11 @@ from .artifact import Artifact
 from .connector import SshConfig, BaseConnector, SshConnector, LocalConnector
 from .util import s_uuid
 from .log import get_logger
+from .pydantic import BaseModel
 
 logger = get_logger(__name__)
 
 
-from pydantic import BaseModel
 from typing import Optional, Dict, List, TypeVar, Callable, Mapping, Union
 from abc import ABC, abstractmethod
 from invoke import Result

@@ -2,10 +2,10 @@ from asaplib.data.xyz import ASAPXYZ
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import dump_json, flush_stdio
+from ai2_kit.core.pydantic import BaseModel
 
 from typing import List, Optional, Tuple, Dict
 from io import StringIO
-from pydantic import BaseModel
 from dataclasses import dataclass
 import pandas as pd
 from tabulate import tabulate

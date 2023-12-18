@@ -1,4 +1,3 @@
-from pydantic import BaseModel
 from typing import Optional, Dict
 from abc import ABC, abstractmethod
 from collections import defaultdict
@@ -16,6 +15,7 @@ from .log import get_logger
 from .job import JobFuture, JobState
 from .checkpoint import apply_checkpoint, del_checkpoint
 from .util import short_hash
+from .pydantic import BaseModel
 
 logger = get_logger(__name__)
 
@@ -135,7 +135,7 @@ class BaseQueueSystem(ABC):
             pass
 
         if job_id and job_state in (JobState.PENDING, JobState.RUNNING, JobState.COMPLETED):
-            logger.info(f"{script_path} has been submmited ({job_id}) and in {str(job_state)} state, skip submit!")
+            logger.info(f"{script_path} has been submmited ({job_id}) and in {str(job_state)} state, continue!")
         else:
             logger.info(f'Submit batch script: {script_path}')
             job_id = submit_cmd_fn(cmd)

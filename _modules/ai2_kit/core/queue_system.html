@@ -210,6 +210,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.future.html">ai2_kit.core.future module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.job.html">ai2_kit.core.job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.log.html">ai2_kit.core.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.pydantic.html">ai2_kit.core.pydantic module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.queue_system.html">ai2_kit.core.queue_system module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.resource_manager.html">ai2_kit.core.resource_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
@@ -223,6 +224,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.dpff.html">ai2_kit.domain.dpff module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
@@ -405,8 +407,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for ai2_kit.core.queue_system</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">import</span> <span class="nn">invoke</span>
@@ -423,6 +424,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">.job</span> <span class="kn">import</span> <span class="n">JobFuture</span><span class="p">,</span> <span class="n">JobState</span>
 <span class="kn">from</span> <span class="nn">.checkpoint</span> <span class="kn">import</span> <span class="n">apply_checkpoint</span><span class="p">,</span> <span class="n">del_checkpoint</span>
 <span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">short_hash</span>
+<span class="kn">from</span> <span class="nn">.pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -542,7 +544,7 @@ document.write(`
             <span class="k">pass</span>
 
         <span class="k">if</span> <span class="n">job_id</span> <span class="ow">and</span> <span class="n">job_state</span> <span class="ow">in</span> <span class="p">(</span><span class="n">JobState</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span> <span class="n">JobState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span> <span class="n">JobState</span><span class="o">.</span><span class="n">COMPLETED</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s2"> has been submmited (</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">) and in </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">job_state</span><span class="p">)</span><span class="si">}</span><span class="s2"> state, skip submit!&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s2"> has been submmited (</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">) and in </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">job_state</span><span class="p">)</span><span class="si">}</span><span class="s2"> state, continue!&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Submit batch script: </span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">job_id</span> <span class="o">=</span> <span class="n">submit_cmd_fn</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>

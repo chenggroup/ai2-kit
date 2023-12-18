@@ -210,6 +210,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.future.html">ai2_kit.core.future module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.job.html">ai2_kit.core.job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.log.html">ai2_kit.core.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.pydantic.html">ai2_kit.core.pydantic module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.queue_system.html">ai2_kit.core.queue_system module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.resource_manager.html">ai2_kit.core.resource_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
@@ -223,6 +224,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.dpff.html">ai2_kit.domain.dpff module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
@@ -411,6 +413,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">load_yaml_files</span><span class="p">,</span> <span class="n">merge_dict</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.resource_manager</span> <span class="kn">import</span> <span class="n">ResourceManager</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.checkpoint</span> <span class="kn">import</span> <span class="n">set_checkpoint_file</span><span class="p">,</span> <span class="n">apply_checkpoint</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.domain</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">deepmd</span><span class="p">,</span>
     <span class="n">iface</span><span class="p">,</span>
@@ -423,8 +426,8 @@ document.write(`
     <span class="n">updater</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">fire</span> <span class="kn">import</span> <span class="n">Fire</span>
 
 <span class="kn">import</span> <span class="nn">asyncio</span>
@@ -459,7 +462,10 @@ document.write(`
 <div class="viewcode-block" id="WorkflowConfig.General"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.General">[docs]</a>    <span class="k">class</span> <span class="nc">General</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
         <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
         <span class="n">mass_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+        <span class="n">sel_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+
         <span class="n">max_iters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="n">iface</span><span class="o">.</span><span class="n">TRAINING_MODE</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
         <span class="n">update_explore_systems</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="WorkflowConfig.Label"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.Label">[docs]</a>    <span class="k">class</span> <span class="nc">Label</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -548,6 +554,8 @@ document.write(`
 
         <span class="c1"># parse workflow config</span>
         <span class="n">workflow_config</span> <span class="o">=</span> <span class="n">WorkflowConfig</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">raw_workflow_config</span><span class="p">)</span>
+        <span class="n">shared_vars</span> <span class="o">=</span> <span class="n">precondition</span><span class="p">(</span><span class="n">workflow_config</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">max_iters</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iteration </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> exceeds max_iters, stop iteration.&#39;</span><span class="p">)</span>
             <span class="k">break</span>
@@ -565,6 +573,7 @@ document.write(`
         <span class="k">if</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">cp2k</span> <span class="ow">and</span> <span class="n">context_config</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">cp2k</span><span class="p">:</span>
             <span class="n">cp2k_input</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kInput</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">cp2k</span><span class="p">,</span>
+                <span class="n">mode</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
                 <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
                 <span class="n">system_files</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="n">selector_output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">selector_output</span><span class="o">.</span><span class="n">get_model_devi_dataset</span><span class="p">(),</span>
                 <span class="n">initiated</span><span class="o">=</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
@@ -602,9 +611,11 @@ document.write(`
         <span class="k">if</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">deepmd</span><span class="p">:</span>
             <span class="n">deepmd_input</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdInput</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">deepmd</span><span class="p">,</span>
+                <span class="n">mode</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
                 <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
                 <span class="n">old_dataset</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="n">train_output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">train_output</span><span class="o">.</span><span class="n">get_training_dataset</span><span class="p">(),</span>
                 <span class="n">new_dataset</span><span class="o">=</span><span class="n">label_output</span><span class="o">.</span><span class="n">get_labeled_system_dataset</span><span class="p">(),</span>
+                <span class="n">sel_type</span><span class="o">=</span><span class="n">shared_vars</span><span class="o">.</span><span class="n">dp_sel_type</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">deepmd_context</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdContext</span><span class="p">(</span>
                 <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;train-deepmd&#39;</span><span class="p">),</span>
@@ -624,11 +635,14 @@ document.write(`
         <span class="k">if</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lammps</span> <span class="ow">and</span> <span class="n">context_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lammps</span><span class="p">:</span>
             <span class="n">lammps_input</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsInput</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lammps</span><span class="p">,</span>
+                <span class="n">mode</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
                 <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
                 <span class="n">mass_map</span><span class="o">=</span><span class="n">mass_map</span><span class="p">,</span>
                 <span class="n">dp_models</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="n">train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">()},</span>
                 <span class="n">preset_template</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span>
                 <span class="n">new_system_files</span><span class="o">=</span><span class="n">new_explore_system_files</span><span class="p">,</span>
+                <span class="n">dp_modifier</span><span class="o">=</span><span class="n">shared_vars</span><span class="o">.</span><span class="n">dp_modifier</span><span class="p">,</span>
+                <span class="n">dp_sel_type</span><span class="o">=</span><span class="n">shared_vars</span><span class="o">.</span><span class="n">dp_sel_type</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">lammps_context</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsContext</span><span class="p">(</span>
                 <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;explore-lammps&#39;</span><span class="p">),</span>
@@ -668,7 +682,6 @@ document.write(`
                 <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">selector_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/selector-model-devi&#39;</span><span class="p">)(</span><span class="n">selector</span><span class="o">.</span><span class="n">cll_model_devi_selector</span><span class="p">)(</span><span class="n">selector_input</span><span class="p">,</span> <span class="n">selector_context</span><span class="p">)</span>
-
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No select method is specified&#39;</span><span class="p">)</span>
 
@@ -687,6 +700,51 @@ document.write(`
             <span class="n">raw_workflow_config</span> <span class="o">=</span> <span class="n">merge_dict</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">workflow</span><span class="p">),</span> <span class="n">update_config</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="n">update_cursor</span><span class="p">])</span>
             <span class="n">update_cursor</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="SharedVars"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.SharedVars">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">SharedVars</span><span class="p">():</span>
+    <span class="n">dp_modifier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">dp_sel_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="precondition"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.precondition">[docs]</a><span class="k">def</span> <span class="nf">precondition</span><span class="p">(</span><span class="n">workflow_cfg</span><span class="p">:</span> <span class="n">WorkflowConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SharedVars</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    precondition of workflow config to raise error early,</span>
+<span class="sd">    and extra variables that may shared by multiple steps</span>
+
+<span class="sd">    The known shared variables are:</span>
+<span class="sd">      dp_modifier, which include vars sys_charge_map, model_charge_map, ewald_h, ewald_beta</span>
+<span class="sd">      sel_type, which is suppose to be used in dplr/dpff mode</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">shared_vars</span> <span class="o">=</span> <span class="n">SharedVars</span><span class="p">()</span>
+
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">workflow_cfg</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">mode</span>
+    <span class="n">type_map</span> <span class="o">=</span> <span class="n">workflow_cfg</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">type_map</span>
+    <span class="n">sel_type</span> <span class="o">=</span> <span class="n">workflow_cfg</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">sel_type</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;dpff&#39;</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">sel_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;sel_type should be specified in general config for dpff mode&#39;</span>
+        <span class="n">shared_vars</span><span class="o">.</span><span class="n">dp_sel_type</span> <span class="o">=</span> <span class="p">[</span> <span class="n">type_map</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>  <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sel_type</span> <span class="p">]</span>
+
+    <span class="n">deepmd_cfg</span> <span class="o">=</span> <span class="n">workflow_cfg</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">deepmd</span>
+    <span class="k">if</span> <span class="n">deepmd_cfg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;dpff&#39;</span><span class="p">:</span>
+            <span class="n">modifier</span> <span class="o">=</span> <span class="n">deepmd_cfg</span><span class="o">.</span><span class="n">input_template</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;modifier&#39;</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">modifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;modifier should be specified in deepmd input template for dpff mode&#39;</span>
+            <span class="n">shared_vars</span><span class="o">.</span><span class="n">dp_modifier</span> <span class="o">=</span> <span class="n">modifier</span>
+
+    <span class="n">lammps_cfg</span> <span class="o">=</span> <span class="n">workflow_cfg</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lammps</span>
+    <span class="k">if</span> <span class="n">lammps_cfg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;dpff&#39;</span><span class="p">:</span>
+            <span class="n">lammps_cfg</span><span class="o">.</span><span class="n">assert_var</span><span class="p">(</span><span class="s1">&#39;EFIELD&#39;</span><span class="p">)</span>
+            <span class="n">lammps_cfg</span><span class="o">.</span><span class="n">assert_var</span><span class="p">(</span><span class="s1">&#39;KMESH&#39;</span><span class="p">)</span>
+            <span class="n">efield</span> <span class="o">=</span> <span class="n">lammps_cfg</span><span class="o">.</span><span class="n">explore_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;EFIELD&#39;</span><span class="p">,</span> <span class="n">lammps_cfg</span><span class="o">.</span><span class="n">broadcast_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;EFIELD&#39;</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">efield</span> <span class="p">]),</span> <span class="s1">&#39;EFIELD should be a list of vector&#39;</span>  <span class="c1"># type: ignore</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;fep-redox&#39;</span><span class="p">,</span> <span class="s1">&#39;fep-pka&#39;</span><span class="p">]:</span>
+            <span class="n">lammps_cfg</span><span class="o">.</span><span class="n">assert_var</span><span class="p">(</span><span class="s1">&#39;LAMBDA_f&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">shared_vars</span></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

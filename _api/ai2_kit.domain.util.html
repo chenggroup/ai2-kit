@@ -213,6 +213,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.future.html">ai2_kit.core.future module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.job.html">ai2_kit.core.job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.log.html">ai2_kit.core.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.pydantic.html">ai2_kit.core.pydantic module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.queue_system.html">ai2_kit.core.queue_system module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.resource_manager.html">ai2_kit.core.resource_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
@@ -226,6 +227,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.dpff.html">ai2_kit.domain.dpff module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
@@ -457,6 +459,49 @@ document.write(`
                   
   <section id="module-ai2_kit.domain.util">
 <span id="ai2-kit-domain-util-module"></span><h1>ai2_kit.domain.util module<a class="headerlink" href="#module-ai2_kit.domain.util" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.domain.util.LammpsData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.util.</span></span><span class="sig-name descname"><span class="pre">LammpsData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.LammpsData" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>LammpsData is a class to read and write lammps data file.
+from: <a class="reference external" href="https://gitee.com/chiahsinchu/toolbox/blob/dev/toolbox/io/lammps.py">https://gitee.com/chiahsinchu/toolbox/blob/dev/toolbox/io/lammps.py</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.domain.util.LammpsData.set_angles">
+<span class="sig-name descname"><span class="pre">set_angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.LammpsData.set_angles" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.domain.util.LammpsData.set_atype">
+<span class="sig-name descname"><span class="pre">set_atype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atype</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.LammpsData.set_atype" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.domain.util.LammpsData.set_atype_from_specorder">
+<span class="sig-name descname"><span class="pre">set_atype_from_specorder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">specorder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.LammpsData.set_atype_from_specorder" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.domain.util.LammpsData.set_bonds">
+<span class="sig-name descname"><span class="pre">set_bonds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bonds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.LammpsData.set_bonds" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.domain.util.LammpsData.set_dihedral">
+<span class="sig-name descname"><span class="pre">set_dihedral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dihedrals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.LammpsData.set_dihedral" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.domain.util.LammpsData.set_res_id">
+<span class="sig-name descname"><span class="pre">set_res_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.LammpsData.set_res_id" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.domain.util.LammpsData.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.LammpsData.write" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="ai2_kit.domain.util.dump_cp2k_input">
 <span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.util.</span></span><span class="sig-name descname"><span class="pre">dump_cp2k_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ai2_kit.domain.util.dump_cp2k_input" title="Permalink to this definition">#</a></dt>

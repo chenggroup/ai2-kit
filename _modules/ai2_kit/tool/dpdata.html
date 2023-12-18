@@ -210,6 +210,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.future.html">ai2_kit.core.future module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.job.html">ai2_kit.core.job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.log.html">ai2_kit.core.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.pydantic.html">ai2_kit.core.pydantic module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.queue_system.html">ai2_kit.core.queue_system module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.resource_manager.html">ai2_kit.core.resource_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
@@ -223,6 +224,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.dpff.html">ai2_kit.domain.dpff module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
@@ -413,24 +415,30 @@ document.write(`
 <span class="kn">import</span> <span class="nn">dpdata</span>
 <span class="kn">from</span> <span class="nn">dpdata.data_type</span> <span class="kn">import</span> <span class="n">Axis</span><span class="p">,</span> <span class="n">DataType</span>
 
-
 <span class="k">def</span> <span class="nf">__export_remote</span><span class="p">():</span>
     <span class="k">def</span> <span class="nf">register_data_types</span><span class="p">():</span>
         <span class="n">DATA_TYPES</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">DataType</span><span class="p">(</span><span class="s2">&quot;fparam&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="n">Axis</span><span class="o">.</span><span class="n">NFRAMES</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">DataType</span><span class="p">(</span><span class="s2">&quot;aparam&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="n">Axis</span><span class="o">.</span><span class="n">NFRAMES</span><span class="p">,</span> <span class="n">Axis</span><span class="o">.</span><span class="n">NATOMS</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">DataType</span><span class="p">(</span><span class="s2">&quot;efield&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="n">Axis</span><span class="o">.</span><span class="n">NFRAMES</span><span class="p">,</span> <span class="n">Axis</span><span class="o">.</span><span class="n">NATOMS</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">DataType</span><span class="p">(</span><span class="s2">&quot;ext_efield&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="n">Axis</span><span class="o">.</span><span class="n">NFRAMES</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">DataType</span><span class="p">(</span><span class="s2">&quot;atomic_dipole&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="n">Axis</span><span class="o">.</span><span class="n">NFRAMES</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
         <span class="p">]</span>
         <span class="n">dpdata</span><span class="o">.</span><span class="n">System</span><span class="o">.</span><span class="n">register_data_type</span><span class="p">(</span><span class="o">*</span><span class="n">DATA_TYPES</span><span class="p">)</span>
         <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="o">.</span><span class="n">register_data_type</span><span class="p">(</span><span class="o">*</span><span class="n">DATA_TYPES</span><span class="p">)</span>
+
 
     <span class="k">def</span> <span class="nf">set_fparam</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">fparam</span><span class="p">):</span>
         <span class="n">nframes</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">get_nframes</span><span class="p">()</span>
         <span class="n">system</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;fparam&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">fparam</span><span class="p">,</span> <span class="p">(</span><span class="n">nframes</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">system</span>
 
+
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">register_data_types</span><span class="p">,</span>
         <span class="n">set_fparam</span><span class="p">,</span>
     <span class="p">)</span>
+
 <span class="p">(</span>
     <span class="n">register_data_types</span><span class="p">,</span>
     <span class="n">set_fparam</span><span class="p">,</span>
@@ -521,10 +529,9 @@ document.write(`
 
     <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dpdata</span><span class="o">.</span><span class="n">System</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dpdata</span><span class="o">.</span><span class="n">System</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>  <span class="c1"># type: ignore</span></div>
 </pre></div>
 
                 </article>

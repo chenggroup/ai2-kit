@@ -213,6 +213,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.future.html">ai2_kit.core.future module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.job.html">ai2_kit.core.job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.log.html">ai2_kit.core.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.pydantic.html">ai2_kit.core.pydantic module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.queue_system.html">ai2_kit.core.queue_system module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.resource_manager.html">ai2_kit.core.resource_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
@@ -226,6 +227,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.dpff.html">ai2_kit.domain.dpff module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
@@ -463,8 +465,17 @@ document.write(`
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ai2_kit.tool.ase.AseHelper.delete_atoms">
-<span class="sig-name descname"><span class="pre">delete_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/ase.html#AseHelper.delete_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.ase.AseHelper.delete_atoms" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">delete_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/ase.html#AseHelper.delete_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.ase.AseHelper.delete_atoms" title="Permalink to this definition">#</a></dt>
+<dd><p>delete atoms by id or list of id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – id or list of id</p></li>
+<li><p><strong>start_id</strong> – the start id of first item, for example, in LAMMPS the id of first item is 1, in ASE it is 0</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ai2_kit.tool.ase.AseHelper.limit">

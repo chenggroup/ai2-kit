@@ -210,6 +210,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.future.html">ai2_kit.core.future module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.job.html">ai2_kit.core.job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.log.html">ai2_kit.core.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.pydantic.html">ai2_kit.core.pydantic module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.queue_system.html">ai2_kit.core.queue_system module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.resource_manager.html">ai2_kit.core.resource_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
@@ -223,6 +224,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.dpff.html">ai2_kit.domain.dpff module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
@@ -408,20 +410,22 @@ document.write(`
 <span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashTemplate</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.job</span> <span class="kn">import</span> <span class="n">gather_jobs</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">merge_dict</span><span class="p">,</span> <span class="n">dict_nested_get</span><span class="p">,</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">list_sample</span><span class="p">,</span> <span class="n">dump_json</span><span class="p">,</span> <span class="n">dump_text</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">dict_nested_get</span><span class="p">,</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">list_sample</span><span class="p">,</span> <span class="n">dump_json</span><span class="p">,</span> <span class="n">dump_text</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
 
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">DataFormat</span><span class="p">,</span> <span class="n">ase_atoms_to_cp2k_input_data</span><span class="p">,</span> <span class="n">artifacts_to_ase_atoms</span>
-<span class="kn">from</span> <span class="nn">.iface</span> <span class="kn">import</span> <span class="n">ICllLabelOutput</span><span class="p">,</span> <span class="n">BaseCllContext</span>
+<span class="kn">from</span> <span class="nn">.iface</span> <span class="kn">import</span> <span class="n">ICllLabelOutput</span><span class="p">,</span> <span class="n">BaseCllContext</span><span class="p">,</span> <span class="n">TRAINING_MODE</span>
 <span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">dump_cp2k_input</span>
+
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -438,6 +442,14 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Input template for cp2k. Could be a dict or content of a cp2k input file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">template_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Template variables for input_template and wfn_warmup_template.</span>
+
+<span class="sd">    Those vars can be referenced in the LAMMPS input template as $$VAR_NAME.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Limit of the number of systems to be labeled.</span>
@@ -455,6 +467,7 @@ document.write(`
 <div class="viewcode-block" id="CllCp2kInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kInput">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">CllCp2kInput</span><span class="p">:</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">CllCp2kInputConfig</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">TRAINING_MODE</span>
     <span class="n">system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">initiated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># FIXME: this seems to be a bad design idea</span></div>
@@ -493,7 +506,9 @@ document.write(`
         <span class="n">system_files</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">system_files</span><span class="p">],</span>
         <span class="n">type_map</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span>
         <span class="n">base_dir</span><span class="o">=</span><span class="n">tasks_dir</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
         <span class="n">input_template</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">input_template</span><span class="p">,</span>
+        <span class="n">template_vars</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">template_vars</span><span class="p">,</span>
         <span class="c1"># initialize all data if not initiated</span>
         <span class="n">limit</span><span class="o">=</span><span class="mi">0</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">input</span><span class="o">.</span><span class="n">initiated</span> <span class="k">else</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">limit</span><span class="p">,</span>
         <span class="n">limit_method</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">limit_method</span><span class="p">,</span>
@@ -540,10 +555,16 @@ document.write(`
 
 <span class="k">def</span> <span class="nf">__export_remote_functions</span><span class="p">():</span>
 
+    <span class="k">class</span> <span class="nc">Cp2kInputTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
+        <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;$$&#39;</span>
+
+
     <span class="k">def</span> <span class="nf">make_cp2k_task_dirs</span><span class="p">(</span><span class="n">system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
                             <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                             <span class="n">input_template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                            <span class="n">template_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
                             <span class="n">base_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                            <span class="n">mode</span><span class="p">:</span> <span class="n">TRAINING_MODE</span><span class="p">,</span>
                             <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                             <span class="n">wfn_warmup_template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                             <span class="n">limit_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="s2">&quot;truncate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;even&quot;</span><span class="p">,</span>
@@ -570,10 +591,25 @@ document.write(`
             <span class="n">warmup_input</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;wfn_warmup_template&#39;</span><span class="p">,</span> <span class="n">wfn_warmup_template</span><span class="p">)</span>
             <span class="n">normal_input</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input_template&#39;</span><span class="p">,</span> <span class="n">input_template</span><span class="p">)</span>
 
+            <span class="c1"># be careful to override template_vars without changing the original dict</span>
+            <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">template_vars</span><span class="p">,</span> <span class="o">**</span><span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;template_vars&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())}</span>
+
+            <span class="c1"># inject INTENSITY and POLARIZATION if efield is provided</span>
+            <span class="n">efield</span> <span class="o">=</span> <span class="n">data_file</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;efield&#39;</span><span class="p">)</span>  <span class="c1"># set by upstream task, lammps, for example</span>
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;dpff&#39;</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">efield</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;efield is required for dpff mode&#39;</span>
+
+            <span class="k">if</span> <span class="n">efield</span><span class="p">:</span>
+                <span class="n">intensity</span><span class="p">,</span> <span class="n">polarisation</span> <span class="o">=</span> <span class="n">lammps_efield_to_cp2k</span><span class="p">(</span><span class="n">efield</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+                <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;INTENSITY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">intensity</span>
+                <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;POLARISATION&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">polarisation</span><span class="p">))</span>
+
             <span class="k">if</span> <span class="n">warmup_input</span><span class="p">:</span>
+                <span class="n">warmup_input</span> <span class="o">=</span> <span class="n">Cp2kInputTemplate</span><span class="p">(</span><span class="n">warmup_input</span><span class="p">)</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">template_vars</span><span class="p">)</span>
                 <span class="n">dump_text</span><span class="p">(</span><span class="n">warmup_input</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="n">warmup_file_name</span><span class="p">))</span>
 
             <span class="k">assert</span> <span class="n">normal_input</span><span class="p">,</span> <span class="s1">&#39;normal_input must be provided&#39;</span>
+            <span class="n">normal_input</span> <span class="o">=</span> <span class="n">Cp2kInputTemplate</span><span class="p">(</span><span class="n">normal_input</span><span class="p">)</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">template_vars</span><span class="p">)</span>
             <span class="n">dump_text</span><span class="p">(</span><span class="n">normal_input</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="n">input_file_name</span><span class="p">))</span>
 
             <span class="c1"># create coord_n_cell.inp</span>
@@ -584,9 +620,7 @@ document.write(`
                 <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">,</span>
                 <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="n">data_file</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span>
             <span class="p">})</span>
-
         <span class="k">return</span> <span class="n">task_dirs</span>
-
 
     <span class="k">def</span> <span class="nf">dump_coord_n_cell</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">):</span>
         <span class="n">coords</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">ase_atoms_to_cp2k_input_data</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
@@ -598,6 +632,24 @@ document.write(`
                 <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">])),</span>
             <span class="p">}</span>
         <span class="p">},</span> <span class="n">fp</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">lammps_efield_to_cp2k</span><span class="p">(</span><span class="n">efield</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        IN CP2K, the efield is defined as</span>
+<span class="sd">        INTENSITY and POLARIZATION (direction of the electric field)</span>
+
+<span class="sd">        :param efield: list of 3 floats, the electric field in lammps unit</span>
+<span class="sd">        :return: intensity, polarization</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+        <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">constants</span>
+
+        <span class="n">efield</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">efield</span><span class="p">)</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">physical_constants</span><span class="p">[</span><span class="s2">&quot;atomic unit of electric field&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">angstrom</span>
+        <span class="n">intensity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">efield</span><span class="p">)</span>
+        <span class="n">polarization</span> <span class="o">=</span> <span class="n">efield</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">efield</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">intensity</span> <span class="o">/</span> <span class="n">factor</span><span class="p">,</span> <span class="n">polarization</span>  <span class="c1"># type: ignore</span>
 
 
     <span class="k">return</span> <span class="p">(</span>

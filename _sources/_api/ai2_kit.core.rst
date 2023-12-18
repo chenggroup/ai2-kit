@@ -15,6 +15,7 @@ Submodules
    ai2_kit.core.future
    ai2_kit.core.job
    ai2_kit.core.log
+   ai2_kit.core.pydantic
    ai2_kit.core.queue_system
    ai2_kit.core.resource_manager
    ai2_kit.core.script

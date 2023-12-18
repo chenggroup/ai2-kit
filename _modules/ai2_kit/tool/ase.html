@@ -210,6 +210,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.future.html">ai2_kit.core.future module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.job.html">ai2_kit.core.job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.log.html">ai2_kit.core.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.pydantic.html">ai2_kit.core.pydantic module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.queue_system.html">ai2_kit.core.queue_system module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.resource_manager.html">ai2_kit.core.resource_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
@@ -223,6 +224,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.dpff.html">ai2_kit.domain.dpff module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
@@ -458,11 +460,19 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">_atoms_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms_list</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="AseHelper.delete_atoms"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.ase.html#ai2_kit.tool.ase.AseHelper.delete_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">delete_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]):</span>
+<div class="viewcode-block" id="AseHelper.delete_atoms"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.ase.html#ai2_kit.tool.ase.AseHelper.delete_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">delete_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">start_id</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        delete atoms by id or list of id</span>
+
+<span class="sd">        :param id: id or list of id</span>
+<span class="sd">        :param start_id: the start id of first item, for example, in LAMMPS the id of first item is 1, in ASE it is 0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">else</span> <span class="nb">id</span>
         <span class="k">for</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms_list</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-                <span class="k">del</span> <span class="n">atoms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">assert</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">start_id</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Invalid id </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="k">del</span> <span class="n">atoms</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">start_id</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="AseHelper.write_each_frame"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.ase.html#ai2_kit.tool.ase.AseHelper.write_each_frame">[docs]</a>    <span class="k">def</span> <span class="nf">write_each_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

@@ -3,14 +3,13 @@ from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
 from ai2_kit.core.util import dict_nested_get, list_split, list_sample
 from ai2_kit.core.log import get_logger
+from ai2_kit.core.pydantic import BaseModel
 
 from typing import List, Union, Literal
-from pydantic import BaseModel
 from dataclasses import dataclass
 
 from typing import List, Union, Optional, Tuple
 from pymatgen.io.vasp.inputs import Incar, Kpoints
-from pydantic import BaseModel
 from dataclasses import dataclass
 
 import copy

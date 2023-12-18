@@ -89,33 +89,57 @@ DEFAULT_ASAP_PCA_REDUCER = {
 
 _DEFAULT_LAMMPS_TOP = '''\
 $$VARIABLES
+# >>>>> EXTRA_VARS
 $$EXTRA_VARS
+# <<<<< EXTRA_VARS
 
+# >>>>> INITIALIZE
 $$INITIALIZE
+# <<<<< INITIALIZE
 
-# template_vars POST_INIT inject here
+# >>>>> POST_INIT
 $$POST_INIT
+# <<<<< POST_INIT
 
+# >>>>> READ_DATA
 $$READ_DATA
-# template_vars POST_READ_DATA inject here
-$$POST_READ_DATA
+# <<<<< READ_DATA
 
+# >>>>> MASS_MAP
 $$MASS_MAP
+# <<<<< MASS_MAP
 
+
+# >>>>> POST_READ_DATA
+$$POST_READ_DATA
+# <<<<< POST_READ_DATA
+
+# >>>>> SET_ATOM_TYPE
 $$SET_ATOM_TYPE
+# <<<<< SET_ATOM_TYPE
+
+# >>>>> DPFF_GROUPS
+$$DEF_GROUPS
+# <<<<< DPFF_GROUPS
 '''
 
 _DEFAULT_LAMMPS_BOTTOM = '''\
-# template_vars POST_FORCE_FIELD inject here
+
+# >>>>> POST_FORCE_FIELD
 $$POST_FORCE_FIELD
+# <<<<< POST_FORCE_FIELD
 
 $$SIMULATION
-# template_vars POST_SIMULATION inject here
+
+# >>>>> POST_SIMULATION
 $$POST_SIMULATION
+# <<<<< POST_SIMULATION
 
 $$RUN
-# template_vars POST_RUN inject here
+
+# >>>>> POST_RUN
 $$POST_RUN
+# <<<<< POST_RUN
 '''
 
 _DP_FORCE_FIELD = '''\
@@ -130,12 +154,15 @@ pair_style  hybrid/overlay &
             $$PAIR_STYLE_EXT &
             deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi_ini.out $$FEP_INI_DP_OPT &
             deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi_fin.out $$FEP_FIN_DP_OPT
-# template_vars PAIR_COEFF_EXT inject here
-$$PAIR_COEFF_EXT
-pair_coeff  * * deepmd 1 *
-pair_coeff  * * deepmd 2 *
 
-fix PES_Sampling all adapt 0 &
+# >>>>> PAIR_COEFF_EXT
+$$PAIR_COEFF_EXT
+# <<<<< PAIR_COEFF_EXT
+
+pair_coeff  * * deepmd 1
+pair_coeff  * * deepmd 2
+
+fix PES_Sampling {DEFAULT_GROUP} adapt 0 &
     pair deepmd:1 scale * * v_LAMBDA_i &
     pair deepmd:2 scale * * v_LAMBDA_f
 '''
@@ -147,12 +174,15 @@ pair_style  hybrid/overlay &
             $$PAIR_STYLE_EXT &
             deepmd $$DP_MODELS_0 $$FEP_INI_DP_OPT &
             deepmd $$DP_MODELS_0 $$FEP_FIN_DP_OPT
-# template_vars PAIR_COEFF_EXT inject here
+
+# >>>>> PAIR_COEFF_EXT
 $$PAIR_COEFF_EXT
+# <<<<< PAIR_COEFF_EXT
+
 pair_coeff  * * deepmd 1 $$FEP_INI_SPECORDER
 pair_coeff  * * deepmd 2 $$FEP_FIN_SPECORDER
 
-fix PES_Sampling all adapt 0 &
+fix PES_Sampling {DEFAULT_GROUP} adapt 0 &
     pair deepmd:1 scale * * v_LAMBDA_i &
     pair deepmd:2 scale * * v_LAMBDA_f
 '''
@@ -166,8 +196,9 @@ $$INITIALIZE
 read_data {in_data}
 $$MASS_MAP_BASE
 
-# template_vars POST_READ_DATA inject here
+# >>>>> POST_READ_DATA
 $$POST_READ_DATA
+# <<<<< POST_READ_DATA
 
 pair_style deepmd $$DP_MODELS out_freq 1 out_file model_devi_{ns}.out
 pair_coeff * * $$SPECORDER_BASE
@@ -175,7 +206,7 @@ pair_coeff * * $$SPECORDER_BASE
 thermo 1
 thermo_style custom step temp pe ke etotal
 thermo_modify format float %15.7f
-dump 1 all custom 1 traj-{ns}/*.lammpstrj id type x y z
+dump 1 {{DEFAULT_GROUP}} custom 1 traj-{ns}/*.lammpstrj id type x y z
 rerun {in_traj} first 0 last 1000000000000 every 1 dump x y z box yes
 '''
 
@@ -190,17 +221,30 @@ shell env > debug.env.txt
 shell cat traj/*.lammpstrj > traj.lammpstrj
 shell cp ${DATA_FILE} ini.data
 clear
-shell $$AI2KIT_CMD tool ase read traj.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - write ini.lammpstrj --format lammps-dump-text  --type_map """ "$$SPECORDER_BASE_LIST" """
-shell $$AI2KIT_CMD tool ase read traj.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - delete_atoms """ "$$DELETE_ATOMS" """ - write fin.lammpstrj --format lammps-dump-text --type_map """ "$$SPECORDER_BASE_LIST" """
-shell $$AI2KIT_CMD tool ase read traj/0.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - delete_atoms """ "$$DELETE_ATOMS" """ - write fin.data --format lammps-data --specorder """ "$$SPECORDER_BASE_LIST" """
+shell $$AI2KIT_CMD tool ase read traj.lammpstrj   --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - write ini.lammpstrj --format lammps-dump-text  --type_map """ "$$SPECORDER_BASE_LIST" """
+shell $$AI2KIT_CMD tool ase read traj.lammpstrj   --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - delete_atoms """ "$$DELETE_ATOMS" --start_id 1 """ - write fin.lammpstrj --format lammps-dump-text --type_map """ "$$SPECORDER_BASE_LIST" """
+shell $$AI2KIT_CMD tool ase read traj/0.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - delete_atoms """ "$$DELETE_ATOMS" --start_id 1 """ - write fin.data --format lammps-data --specorder """ "$$SPECORDER_BASE_LIST" """
 ''',
     _get_fep_rerun_setting('ini', 'ini.data', 'ini.lammpstrj'),
     _get_fep_rerun_setting('fin', 'fin.data', 'fin.lammpstrj'),
 ])
 
+_DPFF_CONFIG = '''\
+bond_style    zero
+bond_coeff    *
+special_bonds lj/coul 1 1 1 angle no
+
+# EWARD_BETA is `ewald_beta` in the training setup
+# KMESH should be set by the user
+kspace_style    pppm/dplr 1e-5
+kspace_modify   gewald ${EWALD_BETA} diff ik mesh ${KMESH} ${KMESH} ${KMESH}
+
+fix dplr all dplr $$DP_MODELS_0 type_associate $$DPLR_TYPE_ASSOCIATION bond_type 1 max_iter 10 efield ${EFIELD}
+'''
 
 PRESET_LAMMPS_INPUT_TEMPLATE = {
-    'default'  : '\n'.join([ _DEFAULT_LAMMPS_TOP, _DP_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM]),
-    'fep-pka'  : '\n'.join([ _DEFAULT_LAMMPS_TOP, _DP_FEP_PKA_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM, _FEP_PKA_BOTTOM]),
-    'fep-redox': '\n'.join([ _DEFAULT_LAMMPS_TOP, _DP_FEP_REDOX_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM ]),
+    'default'  : '\n'.join([_DEFAULT_LAMMPS_TOP, _DP_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM]),
+    'fep-pka'  : '\n'.join([_DEFAULT_LAMMPS_TOP, _DP_FEP_PKA_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM, _FEP_PKA_BOTTOM]),
+    'fep-redox': '\n'.join([_DEFAULT_LAMMPS_TOP, _DP_FEP_REDOX_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM ]),
+    'dpff'     : '\n'.join([_DEFAULT_LAMMPS_TOP, _DP_FORCE_FIELD, _DPFF_CONFIG, _DEFAULT_LAMMPS_BOTTOM]),
 }

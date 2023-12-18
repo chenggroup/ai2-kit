@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from .pydantic import BaseModel
 from typing import Optional, Mapping, TypedDict
 import os
 import copy

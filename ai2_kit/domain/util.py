@@ -1,5 +1,6 @@
 import io
 import re
+import numpy as np
 
 def __export_remote_functions():
 
@@ -112,14 +113,17 @@ def __export_remote_functions():
             current_section[value_name] = value
         return output
 
+
     # TODO: handle coords
     def load_cp2k_input(fp):
         variables, processed_text = process_cp2k_macro(fp)
         substituted_text = substitute_vars(processed_text, variables)
         return parse_cp2k_input(io.StringIO(substituted_text))
 
+
     def loads_cp2k_input(text):
         return load_cp2k_input(io.StringIO(text))
+
 
     # TODO: handle coords
     def dumps_cp2k_input(input_dict):
@@ -145,13 +149,128 @@ def __export_remote_functions():
         # Return the output list as a single string with newline characters
         return "\n".join(output_lines)
 
+
     def dump_cp2k_input(input_dict, fp):
         fp.write(dumps_cp2k_input(input_dict))
 
-    return dump_cp2k_input, dumps_cp2k_input, load_cp2k_input, loads_cp2k_input,
 
+    class LammpsData:
+        """
+        LammpsData is a class to read and write lammps data file.
+        from: https://gitee.com/chiahsinchu/toolbox/blob/dev/toolbox/io/lammps.py
+        """
+
+        def __init__(self, atoms) -> None:
+            self.atoms = atoms
+            self._setup()
+
+            self.angles = None
+            self.bonds = None
+            self.dihedrals = None
+
+        def write(self, fp, **kwargs):
+            specorder = kwargs.get("specorder", None)
+            if specorder is not None:
+                self.set_atype_from_specorder(specorder)
+            atom_style = kwargs.get("atom_style", "full")
+
+            header = self._make_header(fp.name)
+            fp.write(header)
+            body = self._make_atoms(atom_style)
+            fp.write(body)
+            if self.bonds is not None:
+                fp.write("\nBonds\n\n")
+                np.savetxt(fp, self.bonds, fmt="%d")
+            if self.angles is not None:
+                fp.write("\nAngles\n\n")
+                np.savetxt(fp, self.angles, fmt="%d")
+            if self.dihedrals is not None:
+                fp.write("\nDihedrals\n\n")
+                np.savetxt(fp, self.dihedrals, fmt="%d")
+
+        def _make_header(self, out_file):
+            cell = self.atoms.cell.cellpar()
+            nat = len(self.atoms)
+            s = "%s (written by toolbox by Jia-Xin Zhu)\n\n" % out_file
+            s += "%d atoms\n" % nat
+            s += "%d atom types\n" % len(np.unique(self.atoms.numbers))
+            if self.bonds is not None:
+                s += "%d bonds\n" % len(self.bonds)
+                s += "%d bond types\n" % len(np.unique(self.bonds[:, 1]))
+            if self.angles is not None:
+                s += "%d angles\n" % len(self.angles)
+                s += "%d angle types\n" % len(np.unique(self.angles[:, 1]))
+            if self.dihedrals is not None:
+                s += "%d dihedrals\n" % len(self.dihedrals)
+                s += "%d dihedral types\n" % len(np.unique(self.dihedrals[:, 1]))
+            s += "%.4f %.4f xlo xhi\n%.4f %.4f ylo yhi\n%.4f %.4f zlo zhi\n\n\n" % (
+                0.0, cell[0], 0.0, cell[1], 0.0, cell[2])
+            return s
+
+        def _make_atoms(self, atom_style):
+            """
+            full atom_id res_id type q x y z
+            atomic ...
+            """
+            return getattr(self, "_make_atoms_%s" % atom_style)()
+
+        def _make_atoms_full(self):
+            """
+            full atom_id res_id type q x y z
+            """
+            s = "Atoms\n\n"
+            for atom in self.atoms:
+                ii = atom.index
+                s += "%d %d %d %.6f %.6f %.6f %.6f\n" % (
+                    ii + 1, self.res_id[ii], self.atype[ii], self.charges[ii],
+                    self.positions[ii][0], self.positions[ii][1],
+                    self.positions[ii][2])
+            return s
+
+        def _make_atoms_atomic(self):
+            pass
+
+        def set_res_id(self, res_id):
+            self.res_id = np.reshape(res_id, (-1))
+
+        def set_atype(self, atype):
+            self.atype = np.reshape(atype, (-1))
+
+        def set_atype_from_specorder(self, specorder):
+            atype = []
+            for ii in self.atoms.get_chemical_symbols():
+                atype.append(specorder.index(ii))
+            self.atype = np.array(atype, dtype=np.int32) + 1
+
+        def set_bonds(self, bonds):
+            self.bonds = np.reshape(bonds, (-1, 4))
+
+        def set_angles(self, angles):
+            self.angles = np.reshape(angles, (-1, 5))
+
+        def set_dihedral(self, dihedrals):
+            self.dihedrals = np.reshape(dihedrals, (-1, 6))
+
+        def _setup(self):
+            self.positions = self.atoms.get_positions()
+            if len(self.atoms.get_initial_charges()) > 0:
+                self.charges = self.atoms.get_initial_charges().reshape(-1)
+            else:
+                self.charges = np.zeros(len(self.atoms))
+
+            if hasattr(self, "res_id"):
+                assert len(self.res_id) == len(self.atoms)
+            else:
+                self.res_id = np.zeros(len(self.atoms), dtype=np.int32)
+
+
+    return (dump_cp2k_input, dumps_cp2k_input,
+            load_cp2k_input, loads_cp2k_input,
+            LammpsData,
+            )
 
 (
     dump_cp2k_input, dumps_cp2k_input,
     load_cp2k_input, loads_cp2k_input,
+    LammpsData,
 ) = __export_remote_functions()

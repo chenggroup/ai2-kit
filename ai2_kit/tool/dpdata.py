@@ -6,24 +6,30 @@ import numpy as np
 import dpdata
 from dpdata.data_type import Axis, DataType
 
-
 def __export_remote():
     def register_data_types():
         DATA_TYPES = [
             DataType("fparam", np.ndarray, (Axis.NFRAMES, -1), required=False),
+            DataType("aparam", np.ndarray, (Axis.NFRAMES, Axis.NATOMS, -1), required=False),
+            DataType("efield", np.ndarray, (Axis.NFRAMES, Axis.NATOMS, 3), required=False),
+            DataType("ext_efield", np.ndarray, (Axis.NFRAMES, 3), required=False),
+            DataType("atomic_dipole", np.ndarray, (Axis.NFRAMES, -1), required=False),
         ]
         dpdata.System.register_data_type(*DATA_TYPES)
         dpdata.LabeledSystem.register_data_type(*DATA_TYPES)
+
 
     def set_fparam(system, fparam):
         nframes = system.get_nframes()
         system.data['fparam'] = np.tile(fparam, (nframes, 1))
         return system
 
+
     return (
         register_data_types,
         set_fparam,
     )
+
 (
     register_data_types,
     set_fparam,
@@ -114,7 +120,6 @@ class DpdataHelper:
 
     def _read(self, file: str, **kwargs):
         if self._label:
-            self._systems.extend(dpdata.LabeledSystem(file, **kwargs))
+            self._systems.extend(dpdata.LabeledSystem(file, **kwargs))  # type: ignore
         else:
-            self._systems.extend(dpdata.System(file, **kwargs))
-
+            self._systems.extend(dpdata.System(file, **kwargs))  # type: ignore

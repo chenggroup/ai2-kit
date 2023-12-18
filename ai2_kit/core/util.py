@@ -309,8 +309,8 @@ def __export_remote_functions():
         """
         paths = []
         for pattern in patterns:
-            result = glob.glob(pattern, recursive=True)
-            if len(result) == 0 and raise_invalid:
+            result = glob.glob(pattern, recursive=True) if '*' in pattern else [pattern]
+            if raise_invalid and len(result) == 0:
                 raise FileNotFoundError(f'No file found for {pattern}')
             paths += result
         return sort_unique_str_list(paths)

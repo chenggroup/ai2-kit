@@ -51,11 +51,19 @@ class AseHelper:
         self._atoms_list = self._atoms_list[:n]
         return self
 
-    def delete_atoms(self, id: Union[int, List[int]]):
+    def delete_atoms(self, id: Union[int, List[int]], start_id=0):
+        """
+        delete atoms by id or list of id
+
+        :param id: id or list of id
+        :param start_id: the start id of first item, for example, in LAMMPS the id of first item is 1, in ASE it is 0
+        """
+
         ids = [id] if isinstance(id, int) else id
         for atoms in self._atoms_list:
             for i in sorted(ids, reverse=True):
-                del atoms[i]
+                assert i >= start_id, f'Invalid id {i}'
+                del atoms[i - start_id]
         return self
 
     def write_each_frame(self, filename: str, **kwargs):

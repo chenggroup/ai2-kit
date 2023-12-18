@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from ai2_kit.core.pydantic import BaseModel
 from typing import Optional, List, Any
 
 

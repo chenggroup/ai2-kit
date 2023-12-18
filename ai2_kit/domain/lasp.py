@@ -3,9 +3,9 @@ from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.job import gather_jobs
 from ai2_kit.core.util import list_split, merge_dict
+from ai2_kit.core.pydantic import BaseModel
 
 from typing import List, Optional
-from pydantic import BaseModel
 from dataclasses import dataclass
 
 import numpy as np

@@ -1,4 +1,5 @@
 from ai2_kit.core.queue_system import inject_cmd_to_script
+from ai2_kit.core.util import dict_remove_dot_keys
 from ai2_kit.domain.dpff import dump_dplr_lammps_data
 from ai2_kit.domain.lammps import get_types_template_vars, get_ensemble
 from unittest import TestCase
@@ -37,6 +38,24 @@ neigh_modify    every 10 delay 0 check no exclude group real_atom virtual_atom
 
 
 class TestUtil(TestCase):
+    def test_dict_remove_dot_keys(self):
+        d = {
+            'a': 1,
+            '.b': 2,
+            'c': {
+                '.d': 4,
+                'e': 5,
+
+            }
+        }
+        expect = {
+            'a': 1,
+            'c': {
+                'e': 5,
+            }
+        }
+        dict_remove_dot_keys(d)
+        self.assertEqual(d, expect)
 
     def test_inject_cmd_to_script(self):
         cmd = "echo $SLUMR_JOB_ID > hello.running"

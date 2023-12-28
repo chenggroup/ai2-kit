@@ -82,11 +82,13 @@ def load_yaml_file(path: Union[Path, str]):
     return yaml.load(path)
 
 
-def load_yaml_files(*paths: Tuple[Path], quiet: bool = False):
+def load_yaml_files(*paths: Tuple[Path], quiet: bool = False, purge_anonymous = True):
     d = {}
     for path in paths:
         print('load yaml file: ', path)
         d = merge_dict(d, load_yaml_file(Path(path)), quiet=quiet)  # type: ignore
+    if purge_anonymous:
+        dict_remove_dot_keys(d)
     return d
 
 
@@ -202,6 +204,14 @@ def _yaml_get_path_node(node, constructor):
         return os.path.join(*seq)
     else:
         raise ValueError(f'Unknown node type {type(node)}')
+
+
+def dict_remove_dot_keys(d):
+    for k in list(d.keys()):
+        if k.startswith('.'):
+            del d[k]
+        elif isinstance(d[k], dict):
+            dict_remove_dot_keys(d[k])
 
 
 def __export_remote_functions():

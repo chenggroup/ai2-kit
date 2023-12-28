@@ -387,7 +387,7 @@ def __export_remote_functions():
         for i, combination in enumerate(combinations):
             lammps_vars = dict(zip(combination_fields, combination))
             template_vars = {
-                **combination_vars,
+                **lammps_vars,
                 'AI2KIT_CMD': ai2_kit_cmd,
             }
 

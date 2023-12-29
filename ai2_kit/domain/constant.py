@@ -119,7 +119,7 @@ $$SET_ATOM_TYPE
 # <<<<< SET_ATOM_TYPE
 
 # >>>>> DPFF_GROUPS
-$$DEF_GROUPS
+$$DPFF_GROUPS
 # <<<<< DPFF_GROUPS
 '''
 

@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.12.2
+* fix: wrong lammps template_vars
+
 ## v0.12.1
 * fix: fail to load config when it contains key starts with 
 * fix: wrong lammps template_vars

@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.12.3
+* improvement: create softlink for dw_model
+
 ## v0.12.2
 * fix: wrong lammps template_vars
 

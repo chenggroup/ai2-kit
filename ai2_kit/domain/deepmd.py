@@ -404,8 +404,18 @@ def __export_remote_functions():
 
         # other params
         dp_input['model']['type_map'] = type_map
-        return dp_input
 
+        # If dw_model is set in dp_input,
+        # it will create a softlink named dw_model.pb to the current dir,
+        # and then modify the value in dw_model to dw_model.pb.
+        dw_model = dict_nested_get(dp_input, ['model', 'modifier', 'model_name'], None)
+        if dw_model is not None:
+            # Create a soft link named 'dw_model.pb' to the file specified by dw_model
+            os.symlink(dw_model, 'dw_model.pb')  # type: ignore
+            # Modify the value in dw_model to 'dw_model.pb'
+            dp_input['model']['modifier']['model_name'] = 'dw_model.pb'
+
+        return dp_input
 
     def make_deepmd_dataset(
         dataset_dir: str,

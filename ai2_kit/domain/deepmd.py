@@ -317,6 +317,18 @@ def __export_remote_functions():
                 isolate_outliers=isolate_outliers,
                 outlier_weight=outlier_weight,
             )
+
+            # If dw_model is set in dp_input,
+            # it will create a softlink named dw_model.pb to the current dir,
+            # and then modify the value in dw_model to dw_model.pb.
+            dw_model = dict_nested_get(dp_input, ['model', 'modifier', 'model_name'], None)
+            if dw_model is not None:
+                # Create a soft link named 'dw_model.pb' to the file specified by dw_model
+                link_target = os.path.join(task_dir, 'dw_model.pb')
+                os.system(f'ln -sf {dw_model} {link_target}')
+                # Modify the value in dw_model to 'dw_model.pb'
+                dp_input['model']['modifier']['model_name'] = 'dw_model.pb'
+
             dp_input_path = os.path.join(task_dir, DP_INPUT_FILE)
             dump_json(dp_input, dp_input_path)
 
@@ -404,16 +416,6 @@ def __export_remote_functions():
 
         # other params
         dp_input['model']['type_map'] = type_map
-
-        # If dw_model is set in dp_input,
-        # it will create a softlink named dw_model.pb to the current dir,
-        # and then modify the value in dw_model to dw_model.pb.
-        dw_model = dict_nested_get(dp_input, ['model', 'modifier', 'model_name'], None)
-        if dw_model is not None:
-            # Create a soft link named 'dw_model.pb' to the file specified by dw_model
-            os.symlink(dw_model, 'dw_model.pb')  # type: ignore
-            # Modify the value in dw_model to 'dw_model.pb'
-            dp_input['model']['modifier']['model_name'] = 'dw_model.pb'
 
         return dp_input
 

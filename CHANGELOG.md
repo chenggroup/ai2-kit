@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.12.4
+* fix: wrong softlink path
+
 ## v0.12.3
 * improvement: create softlink for dw_model
 

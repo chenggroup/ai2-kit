@@ -1,4 +1,6 @@
 # Change Logs
+## v0.12.5
+* feat: support max_decent_per_traj
 
 ## v0.12.4
 * fix: wrong softlink path

@@ -400,6 +400,8 @@ def __export_remote_functions():
             # override default values with data file attrs
             overridable_params: dict = dict_nested_get(data_file, ['attrs', 'lammps'], dict())  # type: ignore
             plumed_config = overridable_params.get('plumed_config', plumed_config)
+            fix_statement = overridable_params.get('fix_statement', fix_statement)
+            ensemble = overridable_params.get('ensemble', ensemble)
             type_alias = overridable_params.get('type_alias', type_alias)
 
             # be careful to override template_vars without changing the original dict

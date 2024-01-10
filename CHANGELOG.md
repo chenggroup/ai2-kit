@@ -1,6 +1,10 @@
 # Change Logs
+## v0.12.7
+* improve: allow to override fix_statement and ensemble in artifact
+
 ## v0.12.6
 * fix: rsplit max should be 1
+* improve: don't keep good and poor structures to save storage
 
 ## v0.12.5
 * feat: support max_decent_per_traj

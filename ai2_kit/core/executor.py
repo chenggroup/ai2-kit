@@ -173,7 +173,7 @@ class HpcExecutor(Executor):
         def remote_fn(*args, **kwargs):
             script = fn_to_script(lambda: fn(*args, **kwargs), delimiter='@')
             ret = self.run_python_script(script=script, python_cmd=python_cmd, cwd=None)
-            _, r = ret.stdout.rsplit('@')
+            _, r = ret.stdout.rsplit('@', 1)
             return cloudpickle.loads(bz2.decompress(base64.b64decode(r)))
         return remote_fn  # type: ignore
 

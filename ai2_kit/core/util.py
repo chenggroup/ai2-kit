@@ -286,6 +286,19 @@ def __export_remote_functions():
         return [e for tup in zip_longest(*list_of_lists) for e in tup if e is not None]
 
 
+    def limit(it, size=-1):
+        """
+        limit the size of an iterable
+        """
+        if size <= 0:
+            yield from it
+        else:
+            for i, x in enumerate(it):
+                if i >= size:
+                    break
+                yield x
+
+
     def dump_json(obj, path: str):
         default = lambda o: f"<<non-serializable: {type(o).__qualname__}>>"
         with open(path, 'w', encoding='utf-8') as f:
@@ -335,6 +348,7 @@ def __export_remote_functions():
         list_random_sample,
         list_sample,
         flat_evenly,
+        limit,
         dump_json,
         dump_text,
         flush_stdio,
@@ -351,6 +365,7 @@ def __export_remote_functions():
     list_random_sample,
     list_sample,
     flat_evenly,
+    limit,
     dump_json,
     dump_text,
     flush_stdio,

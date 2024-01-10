@@ -1,7 +1,7 @@
 from asaplib.data.xyz import ASAPXYZ
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.util import dump_json, flush_stdio
+from ai2_kit.core.util import dump_json, flush_stdio, limit
 from ai2_kit.core.pydantic import BaseModel
 
 from typing import List, Optional, Tuple, Dict
@@ -61,6 +61,10 @@ class CllModelDeviSelectorInputConfig(BaseModel):
     the function to screen the candidates, e.g
     "lambda x: x['ssw_energy'] < -1000"
     """
+    max_decent_per_traj: int = -1
+    """
+    limit the max number of decent structures per trajectory, -1 means unlimited
+    """
 
 
 @dataclass
@@ -109,6 +113,7 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
         f_trust_lo=f_trust_lo, f_trust_hi=f_trust_hi,
         type_map=input.type_map, work_dir=work_dir,
         new_explore_system_q=input.config.new_explore_system_q,
+        max_decent_per_traj=input.config.max_decent_per_traj,
         screening_fn=input.config.screening_fn,
     )
 
@@ -170,8 +175,9 @@ def __export_remote_functions():
                                              new_explore_system_q: float,
                                              type_map: List[str],
                                              work_dir: str,
+                                             max_decent_per_traj: int,
+                                             screening_fn: Optional[str],
                                              workers: int = 4,
-                                             screening_fn: Optional[str] = None,
                                              ) -> List[Tuple[Dict[str, ArtifactDict], dict]]:
         import joblib
         return joblib.Parallel(n_jobs=workers)(
@@ -181,6 +187,7 @@ def __export_remote_functions():
                 f_trust_lo=f_trust_lo, f_trust_hi=f_trust_hi,
                 type_map=type_map,
                 work_dir=os.path.join(work_dir, 'model_devi', f'{i:06}'),
+                max_decent_per_traj=max_decent_per_traj,
                 new_explore_system_q=new_explore_system_q,
                 screening_fn=screening_fn,
             )
@@ -195,7 +202,8 @@ def __export_remote_functions():
                                         type_map: List[str],
                                         work_dir: str,
                                         new_explore_system_q: float,
-                                        screening_fn: Optional[str] = None,
+                                        max_decent_per_traj: int,
+                                        screening_fn: Optional[str],
                                         ) -> Tuple[Dict[str, ArtifactDict], dict]:
         """
         analysis the model_devi output of explore stage and select candidates
@@ -281,24 +289,25 @@ def __export_remote_functions():
             'poor': len(poor_df),
         }
 
-
         result: Dict[str, ArtifactDict] = {}
-
-        # dump structures to different files
         # TODO: refactor the following repeating code
+        # TODO: dump good may lead to storage issue, so disable it for now
         if len(good_df) > 0:
             good_file = os.path.join(work_dir, 'good.xyz')
-            ase.io.write(good_file, [atoms_list[_i] for _i in good_df.index], format='extxyz')
+            # ase.io.write(good_file, [atoms_list[_i] for _i in good_df.index], format='extxyz')
             result['good'] = {'url': good_file, 'format': DataFormat.EXTXYZ,  # type: ignore
                               'attrs': {**model_devi_output['attrs']}}
+
         if len(poor_df) > 0:
             poor_file = os.path.join(work_dir, 'poor.xyz')
-            ase.io.write(poor_file, [atoms_list[_i] for _i in poor_df.index], format='extxyz')
+            # ase.io.write(poor_file, [atoms_list[_i] for _i in poor_df.index], format='extxyz')
             result['poor'] = {'url': poor_file, 'format': DataFormat.EXTXYZ,  # type: ignore
                               'attrs': {**model_devi_output['attrs']}}
         if len(decent_df) > 0:
             decent_file = os.path.join(work_dir, 'decent.xyz')
-            ase.io.write(decent_file, [atoms_list[_i] for _i in decent_df.index], format='extxyz')
+            ase.io.write(decent_file,
+                         list(limit((atoms_list[_i] for _i in decent_df.index), max_decent_per_traj)),
+                         format='extxyz')
             result['decent'] = {'url': decent_file, 'format': DataFormat.EXTXYZ,  # type: ignore
                                 'attrs': {**model_devi_output['attrs']}}
         if len(next_df) > 0:
@@ -306,9 +315,7 @@ def __export_remote_functions():
             ase.io.write(next_file, [atoms_list[_i] for _i in next_df.index], format='extxyz')
             result['next'] = {'url': next_file, 'format': DataFormat.EXTXYZ,  # type: ignore
                               'attrs': {**model_devi_output['attrs']}}
-
         dump_json([result, stats, list(decent_df.index), list(next_df.index)], os.path.join(work_dir, 'result.debug.json'))
-
         return result, stats
 
 

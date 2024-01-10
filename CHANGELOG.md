@@ -1,4 +1,7 @@
 # Change Logs
+## v0.12.6
+* fix: rsplit max should be 1
+
 ## v0.12.5
 * feat: support max_decent_per_traj
 

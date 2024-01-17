@@ -96,10 +96,8 @@ class BaseQueueSystem(ABC):
             success_indicator = name + '.success'
         running_indicator = name + '.running'
 
-        # TODO: maybe there are better way to inject running indicator
         inject_cmds = '\n'.join([
             self.get_setup_script(),
-            f'echo ${self.get_job_id_envvar()} > {shlex.quote(running_indicator)}',
             '',
         ])
         script = inject_cmd_to_script(script, inject_cmds)
@@ -139,6 +137,8 @@ class BaseQueueSystem(ABC):
         else:
             logger.info(f'Submit batch script: {script_path}')
             job_id = submit_cmd_fn(cmd)
+            # create running indicator
+            self.connector.dump_text(str(job_id), os.path.join(cwd, running_indicator))
 
         job = QueueJobFuture(self,
                              job_id=job_id,

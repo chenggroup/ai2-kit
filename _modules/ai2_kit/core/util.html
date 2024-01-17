@@ -491,11 +491,13 @@ document.write(`
     <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="load_yaml_files"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.load_yaml_files">[docs]</a><span class="k">def</span> <span class="nf">load_yaml_files</span><span class="p">(</span><span class="o">*</span><span class="n">paths</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span> <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="load_yaml_files"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.load_yaml_files">[docs]</a><span class="k">def</span> <span class="nf">load_yaml_files</span><span class="p">(</span><span class="o">*</span><span class="n">paths</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span> <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">purge_anonymous</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load yaml file: &#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">merge_dict</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">load_yaml_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)),</span> <span class="n">quiet</span><span class="o">=</span><span class="n">quiet</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="k">if</span> <span class="n">purge_anonymous</span><span class="p">:</span>
+        <span class="n">dict_remove_dot_keys</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">d</span></div>
 
 
@@ -613,6 +615,14 @@ document.write(`
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown node type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="dict_remove_dot_keys"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.dict_remove_dot_keys">[docs]</a><span class="k">def</span> <span class="nf">dict_remove_dot_keys</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+            <span class="k">del</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">dict_remove_dot_keys</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">])</span></div>
+
+
 <span class="k">def</span> <span class="nf">__export_remote_functions</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;cloudpickle compatible: https://stackoverflow.com/questions/75292769&quot;&quot;&quot;</span>
 
@@ -685,6 +695,19 @@ document.write(`
         <span class="k">return</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">zip_longest</span><span class="p">(</span><span class="o">*</span><span class="n">list_of_lists</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">tup</span> <span class="k">if</span> <span class="n">e</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
 
 
+    <span class="k">def</span> <span class="nf">limit</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">size</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        limit the size of an iterable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="n">it</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">it</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">size</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">yield</span> <span class="n">x</span>
+
+
     <span class="k">def</span> <span class="nf">dump_json</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">default</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&lt;&lt;non-serializable: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">)</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2">&gt;&gt;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -734,6 +757,7 @@ document.write(`
         <span class="n">list_random_sample</span><span class="p">,</span>
         <span class="n">list_sample</span><span class="p">,</span>
         <span class="n">flat_evenly</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">,</span>
         <span class="n">dump_json</span><span class="p">,</span>
         <span class="n">dump_text</span><span class="p">,</span>
         <span class="n">flush_stdio</span><span class="p">,</span>
@@ -750,6 +774,7 @@ document.write(`
     <span class="n">list_random_sample</span><span class="p">,</span>
     <span class="n">list_sample</span><span class="p">,</span>
     <span class="n">flat_evenly</span><span class="p">,</span>
+    <span class="n">limit</span><span class="p">,</span>
     <span class="n">dump_json</span><span class="p">,</span>
     <span class="n">dump_text</span><span class="p">,</span>
     <span class="n">flush_stdio</span><span class="p">,</span>

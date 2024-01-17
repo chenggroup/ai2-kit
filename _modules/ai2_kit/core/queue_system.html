@@ -505,10 +505,8 @@ document.write(`
             <span class="n">success_indicator</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.success&#39;</span>
         <span class="n">running_indicator</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.running&#39;</span>
 
-        <span class="c1"># TODO: maybe there are better way to inject running indicator</span>
         <span class="n">inject_cmds</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_setup_script</span><span class="p">(),</span>
-            <span class="sa">f</span><span class="s1">&#39;echo $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_job_id_envvar</span><span class="p">()</span><span class="si">}</span><span class="s1"> &gt; </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">running_indicator</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="s1">&#39;&#39;</span><span class="p">,</span>
         <span class="p">])</span>
         <span class="n">script</span> <span class="o">=</span> <span class="n">inject_cmd_to_script</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">inject_cmds</span><span class="p">)</span>
@@ -548,6 +546,8 @@ document.write(`
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Submit batch script: </span><span class="si">{</span><span class="n">script_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">job_id</span> <span class="o">=</span> <span class="n">submit_cmd_fn</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="c1"># create running indicator</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connector</span><span class="o">.</span><span class="n">dump_text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">job_id</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">running_indicator</span><span class="p">))</span>
 
         <span class="n">job</span> <span class="o">=</span> <span class="n">QueueJobFuture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                              <span class="n">job_id</span><span class="o">=</span><span class="n">job_id</span><span class="p">,</span>

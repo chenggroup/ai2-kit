@@ -796,7 +796,7 @@ document.write(`
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">combination</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">combinations</span><span class="p">):</span>
             <span class="n">lammps_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">combination_fields</span><span class="p">,</span> <span class="n">combination</span><span class="p">))</span>
             <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="o">**</span><span class="n">combination_vars</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">lammps_vars</span><span class="p">,</span>
                 <span class="s1">&#39;AI2KIT_CMD&#39;</span><span class="p">:</span> <span class="n">ai2_kit_cmd</span><span class="p">,</span>
             <span class="p">}</span>
 
@@ -809,6 +809,8 @@ document.write(`
             <span class="c1"># override default values with data file attrs</span>
             <span class="n">overridable_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">dict_nested_get</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">,</span> <span class="s1">&#39;lammps&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
             <span class="n">plumed_config</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plumed_config&#39;</span><span class="p">,</span> <span class="n">plumed_config</span><span class="p">)</span>
+            <span class="n">fix_statement</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fix_statement&#39;</span><span class="p">,</span> <span class="n">fix_statement</span><span class="p">)</span>
+            <span class="n">ensemble</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ensemble&#39;</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">)</span>
             <span class="n">type_alias</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type_alias&#39;</span><span class="p">,</span> <span class="n">type_alias</span><span class="p">)</span>
 
             <span class="c1"># be careful to override template_vars without changing the original dict</span>

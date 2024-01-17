@@ -410,7 +410,7 @@ document.write(`
 <span></span><span class="kn">from</span> <span class="nn">asaplib.data.xyz</span> <span class="kn">import</span> <span class="n">ASAPXYZ</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">dump_json</span><span class="p">,</span> <span class="n">flush_stdio</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">dump_json</span><span class="p">,</span> <span class="n">flush_stdio</span><span class="p">,</span> <span class="n">limit</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
@@ -469,6 +469,10 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    the function to screen the candidates, e.g</span>
 <span class="sd">    &quot;lambda x: x[&#39;ssw_energy&#39;] &lt; -1000&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">max_decent_per_traj</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    limit the max number of decent structures per trajectory, -1 means unlimited</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
@@ -518,6 +522,7 @@ document.write(`
         <span class="n">f_trust_lo</span><span class="o">=</span><span class="n">f_trust_lo</span><span class="p">,</span> <span class="n">f_trust_hi</span><span class="o">=</span><span class="n">f_trust_hi</span><span class="p">,</span>
         <span class="n">type_map</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="n">work_dir</span><span class="p">,</span>
         <span class="n">new_explore_system_q</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">new_explore_system_q</span><span class="p">,</span>
+        <span class="n">max_decent_per_traj</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_decent_per_traj</span><span class="p">,</span>
         <span class="n">screening_fn</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">screening_fn</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -579,8 +584,9 @@ document.write(`
                                              <span class="n">new_explore_system_q</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                                              <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                              <span class="n">work_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                             <span class="n">max_decent_per_traj</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                             <span class="n">screening_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                              <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
-                                             <span class="n">screening_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                                              <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArtifactDict</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]]:</span>
         <span class="kn">import</span> <span class="nn">joblib</span>
         <span class="k">return</span> <span class="n">joblib</span><span class="o">.</span><span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">workers</span><span class="p">)(</span>
@@ -590,6 +596,7 @@ document.write(`
                 <span class="n">f_trust_lo</span><span class="o">=</span><span class="n">f_trust_lo</span><span class="p">,</span> <span class="n">f_trust_hi</span><span class="o">=</span><span class="n">f_trust_hi</span><span class="p">,</span>
                 <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
                 <span class="n">work_dir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;model_devi&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">06</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span>
+                <span class="n">max_decent_per_traj</span><span class="o">=</span><span class="n">max_decent_per_traj</span><span class="p">,</span>
                 <span class="n">new_explore_system_q</span><span class="o">=</span><span class="n">new_explore_system_q</span><span class="p">,</span>
                 <span class="n">screening_fn</span><span class="o">=</span><span class="n">screening_fn</span><span class="p">,</span>
             <span class="p">)</span>
@@ -604,7 +611,8 @@ document.write(`
                                         <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                         <span class="n">work_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                         <span class="n">new_explore_system_q</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                                        <span class="n">screening_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                        <span class="n">max_decent_per_traj</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                        <span class="n">screening_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArtifactDict</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        analysis the model_devi output of explore stage and select candidates</span>
@@ -690,24 +698,25 @@ document.write(`
             <span class="s1">&#39;poor&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">poor_df</span><span class="p">),</span>
         <span class="p">}</span>
 
-
         <span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArtifactDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="c1"># dump structures to different files</span>
         <span class="c1"># TODO: refactor the following repeating code</span>
+        <span class="c1"># TODO: dump good may lead to storage issue, so disable it for now</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">good_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;good.xyz&#39;</span><span class="p">)</span>
-            <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">good_file</span><span class="p">,</span> <span class="p">[</span><span class="n">atoms_list</span><span class="p">[</span><span class="n">_i</span><span class="p">]</span> <span class="k">for</span> <span class="n">_i</span> <span class="ow">in</span> <span class="n">good_df</span><span class="o">.</span><span class="n">index</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)</span>
+            <span class="c1"># ase.io.write(good_file, [atoms_list[_i] for _i in good_df.index], format=&#39;extxyz&#39;)</span>
             <span class="n">result</span><span class="p">[</span><span class="s1">&#39;good&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">good_file</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">EXTXYZ</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
                               <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="n">model_devi_output</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]}}</span>
+
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">poor_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">poor_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;poor.xyz&#39;</span><span class="p">)</span>
-            <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">poor_file</span><span class="p">,</span> <span class="p">[</span><span class="n">atoms_list</span><span class="p">[</span><span class="n">_i</span><span class="p">]</span> <span class="k">for</span> <span class="n">_i</span> <span class="ow">in</span> <span class="n">poor_df</span><span class="o">.</span><span class="n">index</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)</span>
+            <span class="c1"># ase.io.write(poor_file, [atoms_list[_i] for _i in poor_df.index], format=&#39;extxyz&#39;)</span>
             <span class="n">result</span><span class="p">[</span><span class="s1">&#39;poor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">poor_file</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">EXTXYZ</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
                               <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="n">model_devi_output</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]}}</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">decent_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">decent_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;decent.xyz&#39;</span><span class="p">)</span>
-            <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">decent_file</span><span class="p">,</span> <span class="p">[</span><span class="n">atoms_list</span><span class="p">[</span><span class="n">_i</span><span class="p">]</span> <span class="k">for</span> <span class="n">_i</span> <span class="ow">in</span> <span class="n">decent_df</span><span class="o">.</span><span class="n">index</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)</span>
+            <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">decent_file</span><span class="p">,</span>
+                         <span class="nb">list</span><span class="p">(</span><span class="n">limit</span><span class="p">((</span><span class="n">atoms_list</span><span class="p">[</span><span class="n">_i</span><span class="p">]</span> <span class="k">for</span> <span class="n">_i</span> <span class="ow">in</span> <span class="n">decent_df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="n">max_decent_per_traj</span><span class="p">)),</span>
+                         <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)</span>
             <span class="n">result</span><span class="p">[</span><span class="s1">&#39;decent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">decent_file</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">EXTXYZ</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
                                 <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="n">model_devi_output</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]}}</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">next_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -715,9 +724,7 @@ document.write(`
             <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">next_file</span><span class="p">,</span> <span class="p">[</span><span class="n">atoms_list</span><span class="p">[</span><span class="n">_i</span><span class="p">]</span> <span class="k">for</span> <span class="n">_i</span> <span class="ow">in</span> <span class="n">next_df</span><span class="o">.</span><span class="n">index</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;extxyz&#39;</span><span class="p">)</span>
             <span class="n">result</span><span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">next_file</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="n">DataFormat</span><span class="o">.</span><span class="n">EXTXYZ</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
                               <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="n">model_devi_output</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]}}</span>
-
         <span class="n">dump_json</span><span class="p">([</span><span class="n">result</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">decent_df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">next_df</span><span class="o">.</span><span class="n">index</span><span class="p">)],</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;result.debug.json&#39;</span><span class="p">))</span>
-
         <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">stats</span>
 
 

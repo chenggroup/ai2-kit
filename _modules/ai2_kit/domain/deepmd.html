@@ -726,6 +726,18 @@ document.write(`
                 <span class="n">isolate_outliers</span><span class="o">=</span><span class="n">isolate_outliers</span><span class="p">,</span>
                 <span class="n">outlier_weight</span><span class="o">=</span><span class="n">outlier_weight</span><span class="p">,</span>
             <span class="p">)</span>
+
+            <span class="c1"># If dw_model is set in dp_input,</span>
+            <span class="c1"># it will create a softlink named dw_model.pb to the current dir,</span>
+            <span class="c1"># and then modify the value in dw_model to dw_model.pb.</span>
+            <span class="n">dw_model</span> <span class="o">=</span> <span class="n">dict_nested_get</span><span class="p">(</span><span class="n">dp_input</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;modifier&#39;</span><span class="p">,</span> <span class="s1">&#39;model_name&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">dw_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Create a soft link named &#39;dw_model.pb&#39; to the file specified by dw_model</span>
+                <span class="n">link_target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;dw_model.pb&#39;</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ln -sf </span><span class="si">{</span><span class="n">dw_model</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">link_target</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="c1"># Modify the value in dw_model to &#39;dw_model.pb&#39;</span>
+                <span class="n">dp_input</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;modifier&#39;</span><span class="p">][</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;dw_model.pb&#39;</span>
+
             <span class="n">dp_input_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="n">DP_INPUT_FILE</span><span class="p">)</span>
             <span class="n">dump_json</span><span class="p">(</span><span class="n">dp_input</span><span class="p">,</span> <span class="n">dp_input_path</span><span class="p">)</span>
 
@@ -813,8 +825,8 @@ document.write(`
 
         <span class="c1"># other params</span>
         <span class="n">dp_input</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;type_map&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">type_map</span>
-        <span class="k">return</span> <span class="n">dp_input</span>
 
+        <span class="k">return</span> <span class="n">dp_input</span>
 
     <span class="k">def</span> <span class="nf">make_deepmd_dataset</span><span class="p">(</span>
         <span class="n">dataset_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>

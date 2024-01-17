@@ -1,6 +1,9 @@
 # Change Logs
+## v0.12.8
+* improvement: optimize job running indicator
+
 ## v0.12.7
-* improve: allow to override fix_statement and ensemble in artifact
+* improvement: allow to override fix_statement and ensemble in artifact
 
 ## v0.12.6
 * fix: rsplit max should be 1

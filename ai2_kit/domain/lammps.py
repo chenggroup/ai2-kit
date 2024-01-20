@@ -139,12 +139,13 @@ class CllLammpsInputConfig(BaseModel):
     @classmethod
     def validate_domain(cls, values):
         ensemble = values.get('ensemble')
-        no_pbc = values.get('no_pbc')
-        if ensemble and ensemble.startswith('npt') and no_pbc:
-            raise ValueError('ensemble npt conflict with no_pcb')
-        if not ensemble.startswith('npt'):
-            logger.info('ensemble is not npt, force PRES to -1')
-            values['explore_vars']['PRES'] = [-1]
+        if ensemble:
+            no_pbc = values.get('no_pbc')
+            if ensemble.startswith('npt') and no_pbc:
+                raise ValueError('ensemble npt conflict with no_pcb')
+            if not ensemble.startswith('npt'):
+                logger.info('ensemble is not npt, force PRES to -1')
+                values['explore_vars']['PRES'] = [-1]
         return values
 
     def assert_var(self, var: str, msg: str = ''):

@@ -1,4 +1,7 @@
 # Change Logs
+## v0.12.9
+* fix: wrong lammps template for fep training
+
 ## v0.12.8
 * improvement: optimize job running indicator
 

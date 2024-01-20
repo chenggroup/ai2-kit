@@ -162,7 +162,7 @@ $$PAIR_COEFF_EXT
 pair_coeff  * * deepmd 1
 pair_coeff  * * deepmd 2
 
-fix PES_Sampling {DEFAULT_GROUP} adapt 0 &
+fix PES_Sampling ${DEFAULT_GROUP} adapt 0 &
     pair deepmd:1 scale * * v_LAMBDA_i &
     pair deepmd:2 scale * * v_LAMBDA_f
 '''
@@ -182,7 +182,7 @@ $$PAIR_COEFF_EXT
 pair_coeff  * * deepmd 1 $$FEP_INI_SPECORDER
 pair_coeff  * * deepmd 2 $$FEP_FIN_SPECORDER
 
-fix PES_Sampling {DEFAULT_GROUP} adapt 0 &
+fix PES_Sampling ${DEFAULT_GROUP} adapt 0 &
     pair deepmd:1 scale * * v_LAMBDA_i &
     pair deepmd:2 scale * * v_LAMBDA_f
 '''
@@ -206,7 +206,7 @@ pair_coeff * * $$SPECORDER_BASE
 thermo 1
 thermo_style custom step temp pe ke etotal
 thermo_modify format float %15.7f
-dump 1 {{DEFAULT_GROUP}} custom 1 traj-{ns}/*.lammpstrj id type x y z
+dump 1 ${{DEFAULT_GROUP}} custom 1 traj-{ns}/*.lammpstrj id type x y z
 rerun {in_traj} first 0 last 1000000000000 every 1 dump x y z box yes
 '''
 

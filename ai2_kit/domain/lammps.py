@@ -424,6 +424,7 @@ def __export_remote_functions():
                 assert dp_modifier is not None
                 lammps_vars['DEFAULT_GROUP'] = 'real_atom'
                 lammps_vars['EWALD_BETA'] = dp_modifier['ewald_beta']
+            lammps_vars['DUMP_GROUP'] = lammps_vars['DEFAULT_GROUP']
 
             dump_json(lammps_vars, os.path.join(task_dir, 'debug.lammps_vars.json'))  # for debug
             template_vars['VARIABLES'] = _get_lammps_variables(lammps_vars)
@@ -474,7 +475,7 @@ def __export_remote_functions():
             simulation.extend([
                 'thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz',
                 'thermo       ${THERMO_FREQ}',
-                'dump         1 ${DEFAULT_GROUP} custom ${DUMP_FREQ} %s/*%s id type x y z fx fy fz' % (LAMMPS_DUMP_DIR, LAMMPS_DUMP_SUFFIX),
+                'dump         1 ${DUMP_GROUP} custom ${DUMP_FREQ} %s/*%s id type x y z fx fy fz' % (LAMMPS_DUMP_DIR, LAMMPS_DUMP_SUFFIX),
                 'restart      10000 md.restart',
             ])
             template_vars['SIMULATION'] = '\n'.join(simulation)

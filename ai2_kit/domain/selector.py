@@ -65,6 +65,10 @@ class CllModelDeviSelectorInputConfig(BaseModel):
     """
     limit the max number of decent structures per trajectory, -1 means unlimited
     """
+    workers: int = 4
+    """
+    number of workers to run the analysis
+    """
 
 
 @dataclass
@@ -115,6 +119,7 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
         new_explore_system_q=input.config.new_explore_system_q,
         max_decent_per_traj=input.config.max_decent_per_traj,
         screening_fn=input.config.screening_fn,
+        workers=input.config.workers,
     )
 
     candidates = [ result['decent'] for result, _ in results if 'decent' in result ]
@@ -157,6 +162,7 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
             work_dir=work_dir,
             limit_per_cluster=asap_options.limit_per_cluster,
             sort_by_energy=asap_options.sort_by_ssw_energy,
+            workers=input.config.workers,
         )
 
     return CllModelDeviSelectorOutput(

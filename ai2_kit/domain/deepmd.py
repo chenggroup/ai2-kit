@@ -64,6 +64,10 @@ class CllDeepmdInputConfig(BaseModel):
     """
     Whether to compress model after training.
     """
+    pretrained_model: Optional[str] = None
+    """
+    Pretrained model used to finetune.
+    """
     isolate_outliers: bool = False
     """
     If isolate_outliers is enabled, then outlier data will be separated from training data.
@@ -199,6 +203,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
             dp_cmd=ctx.config.dp_cmd,
             compress_model=input.config.compress_model,
             cwd=dw_task_dir,
+            pretrained_model=input.config.pretrained_model,
         )
         dw_train_script = BashScript(
             template=ctx.config.script_template,
@@ -216,6 +221,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
             dp_cmd=ctx.config.dp_cmd,
             compress_model=input.config.compress_model,
             cwd=task_dir,
+            pretrained_model=input.config.pretrained_model,
         )
         all_steps.append(steps)
 
@@ -271,9 +277,12 @@ def _classify_dataset(dataset: List[Artifact]):
 
 def _build_deepmd_steps(dp_cmd: str,
                         compress_model: bool,
-                        cwd: str,):
+                        cwd: str,
+                        pretrained_model: Optional[str] = None,):
     steps = []
     dp_train_cmd = f'{dp_cmd} train {DP_INPUT_FILE}'
+    if pretrained_model:
+        dp_train_cmd = f'{dp_train_cmd} --finetune {pretrained_model}'
     dp_train_cmd_restart = f'if [ ! -f model.ckpt.index ]; then {dp_train_cmd}; else {dp_train_cmd} --restart model.ckpt; fi'
 
     steps.append(

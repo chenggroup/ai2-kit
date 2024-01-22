@@ -1,7 +1,7 @@
 from asaplib.data.xyz import ASAPXYZ
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.util import dump_json, flush_stdio, limit
+from ai2_kit.core.util import dump_json, dump_text, flush_stdio, limit
 from ai2_kit.core.pydantic import BaseModel
 
 from typing import List, Optional, Tuple, Dict
@@ -11,6 +11,7 @@ import pandas as pd
 from tabulate import tabulate
 from itertools import groupby
 from functools import lru_cache
+import traceback
 
 import ase.io
 import os
@@ -377,6 +378,8 @@ def __export_remote_functions():
             # FIXME: there are a lot of potential issue when the number of atoms is small
             # the root cause is in asaplib, which I guess has not been tested with small dataset
             selected_atoms_list = atoms_list
+        elif limit_per_cluster <= 0:
+            selected_atoms_list = atoms_list
         else:
             if sort_by_energy and 'ssw_energy' in atoms_list[0].info:
                 atoms_list = sorted(atoms_list, key=lambda atoms: atoms.info['ssw_energy'])
@@ -388,18 +391,14 @@ def __export_remote_functions():
             asapxyz = ASAPXYZ(tmp_structures_file)
 
             # group structures
-            asap_path_prefix = os.path.join(work_dir, 'asap')
-            descriptors, _ = get_descriptor(asapxyz, descriptor_opt, path_prefix=asap_path_prefix)
-            reduced_descriptors = reduce_dimension(descriptors, dim_reducer_opt)
-            trainer = get_trainer(reduced_descriptors, cluster_opt)
-            cluster_labels = get_cluster(asapxyz, reduced_descriptors, trainer, path_prefix=asap_path_prefix)
+            try:
+                asap_path_prefix = os.path.join(work_dir, 'asap')
+                descriptors, _ = get_descriptor(asapxyz, descriptor_opt, path_prefix=asap_path_prefix)
+                reduced_descriptors = reduce_dimension(descriptors, dim_reducer_opt)
+                trainer = get_trainer(reduced_descriptors, cluster_opt)
+                cluster_labels = get_cluster(asapxyz, reduced_descriptors, trainer, path_prefix=asap_path_prefix)
 
-            # dump_json(cluster_labels, os.path.join(work_dir, 'cluster.debug.json'))
-
-            # select frame from each cluster
-            if limit_per_cluster <= 0: # unlimit
-                selected_atoms_list = atoms_list  # do nothing
-            else:
+                # dump_json(cluster_labels, os.path.join(work_dir, 'cluster.debug.json'))
                 selected_frames = []
                 for frames in cluster_labels.values():
                     if len(frames) < limit_per_cluster:
@@ -407,6 +406,11 @@ def __export_remote_functions():
                     else:
                         selected_frames += list(frames[:limit_per_cluster])
                 selected_atoms_list = [atoms_list[i] for i in selected_frames]
+            except Exception as e:
+                print('asaplib failed: %s', e)
+                # dump exception to file
+                dump_text(traceback.format_exc(), os.path.join(work_dir, 'asaplib-exception.txt'))
+                selected_atoms_list = atoms_list
 
         # write selected structures to file
         distinct_structures_file = os.path.join(work_dir,  'distinct_structures.xyz')

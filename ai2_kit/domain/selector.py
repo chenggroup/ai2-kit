@@ -367,7 +367,7 @@ def __export_remote_functions():
         atoms_list = [atoms for _, atoms in artifacts_to_ase_atoms(candidates, type_map=type_map)]
 
 
-        if len(atoms_list) < 10:
+        if len(atoms_list) < 20:
             # FIXME: there are a lot of potential issue when the number of atoms is small
             # the root cause is in asaplib, which I guess has not been tested with small dataset
             selected_atoms_list = atoms_list

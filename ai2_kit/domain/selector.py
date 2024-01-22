@@ -336,6 +336,10 @@ def __export_remote_functions():
                                         sort_by_energy: bool = False,
                                         workers: int = 4,
                                         ) -> List[ArtifactDict]:
+        try:
+            dump_json(candidates, os.path.join(work_dir, 'candidates.debug.json'))
+        except Exception as e:
+            pass
         inputs = []
         for i, (ancestor_key, candidate_group) in enumerate(groupby(candidates, key=lambda c: c['attrs']['ancestor'])):
             candidate_group = list(candidate_group)

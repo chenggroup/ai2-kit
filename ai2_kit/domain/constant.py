@@ -193,6 +193,8 @@ clear
 # Rerun model deviation: {ns}
 shell mkdir traj-{ns}
 $$INITIALIZE
+variable DUMP_GROUP string "all"
+
 read_data {in_data}
 $$MASS_MAP_BASE
 

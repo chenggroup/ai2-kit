@@ -206,7 +206,7 @@ pair_coeff * * $$SPECORDER_BASE
 thermo 1
 thermo_style custom step temp pe ke etotal
 thermo_modify format float %15.7f
-dump 1 ${{DEFAULT_GROUP}} custom 1 traj-{ns}/*.lammpstrj id type x y z
+dump 1 ${{DUMP_GROUP}} custom 1 traj-{ns}/*.lammpstrj id type x y z
 rerun {in_traj} first 0 last 1000000000000 every 1 dump x y z box yes
 '''
 

@@ -520,7 +520,9 @@ def __export_remote_functions():
         write dp dataset that grouping by ancestor
         """
         output_dirs: List[ArtifactDict] = []
-        for key, dp_system_group in groupby(dp_system_list, key=lambda x: x[0]['attrs']['ancestor']):
+        get_ancestor = lambda x: x[0]['attrs']['ancestor']
+        dp_system_list = sorted(dp_system_list, key=get_ancestor)
+        for key, dp_system_group in groupby(dp_system_list, key=get_ancestor):
             dp_system_group = list(dp_system_group)
             if 0 == len(dp_system_group):
                 continue  # skip empty dataset

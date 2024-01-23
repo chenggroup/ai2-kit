@@ -129,8 +129,10 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
 
     # group next_structures by `attrs.source` and keep the first one
     # so that the total number of explore structures will be the same as the original one
+    get_source = lambda s: s['attrs']['source']
+    new_systems = sorted(new_systems, key=get_source)
     new_systems = [next(group) for _source, group in groupby(
-        new_systems, key=lambda s: s['attrs']['source'])]
+        new_systems, key=get_source)]
 
     # write model_deviation stats report
     # TODO: refactor into a function
@@ -340,8 +342,10 @@ def __export_remote_functions():
             dump_json(candidates, os.path.join(work_dir, 'candidates.debug.json'))
         except Exception as e:
             pass
+        get_ancestor = lambda c: c['attrs']['ancestor']
+        candidates = sorted(candidates, key=get_ancestor)
         inputs = []
-        for i, (ancestor_key, candidate_group) in enumerate(groupby(candidates, key=lambda c: c['attrs']['ancestor'])):
+        for i, (ancestor_key, candidate_group) in enumerate(groupby(candidates, key=get_ancestor)):
             candidate_group = list(candidate_group)
             inputs.append((candidate_group, candidate_group[0]['attrs']))
 

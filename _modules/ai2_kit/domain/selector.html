@@ -410,7 +410,7 @@ document.write(`
 <span></span><span class="kn">from</span> <span class="nn">asaplib.data.xyz</span> <span class="kn">import</span> <span class="n">ASAPXYZ</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">dump_json</span><span class="p">,</span> <span class="n">flush_stdio</span><span class="p">,</span> <span class="n">limit</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">dump_json</span><span class="p">,</span> <span class="n">dump_text</span><span class="p">,</span> <span class="n">flush_stdio</span><span class="p">,</span> <span class="n">limit</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
@@ -420,6 +420,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="kn">import</span> <span class="nn">ase.io</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -473,6 +474,10 @@ document.write(`
     <span class="n">max_decent_per_traj</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    limit the max number of decent structures per trajectory, -1 means unlimited</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    number of workers to run the analysis</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
@@ -524,6 +529,7 @@ document.write(`
         <span class="n">new_explore_system_q</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">new_explore_system_q</span><span class="p">,</span>
         <span class="n">max_decent_per_traj</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_decent_per_traj</span><span class="p">,</span>
         <span class="n">screening_fn</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">screening_fn</span><span class="p">,</span>
+        <span class="n">workers</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">workers</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;decent&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="s1">&#39;decent&#39;</span> <span class="ow">in</span> <span class="n">result</span> <span class="p">]</span>
@@ -532,8 +538,10 @@ document.write(`
 
     <span class="c1"># group next_structures by `attrs.source` and keep the first one</span>
     <span class="c1"># so that the total number of explore structures will be the same as the original one</span>
+    <span class="n">get_source</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;source&#39;</span><span class="p">]</span>
+    <span class="n">new_systems</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">new_systems</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">get_source</span><span class="p">)</span>
     <span class="n">new_systems</span> <span class="o">=</span> <span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="n">group</span><span class="p">)</span> <span class="k">for</span> <span class="n">_source</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span>
-        <span class="n">new_systems</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;source&#39;</span><span class="p">])]</span>
+        <span class="n">new_systems</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">get_source</span><span class="p">)]</span>
 
     <span class="c1"># write model_deviation stats report</span>
     <span class="c1"># TODO: refactor into a function</span>
@@ -566,6 +574,7 @@ document.write(`
             <span class="n">work_dir</span><span class="o">=</span><span class="n">work_dir</span><span class="p">,</span>
             <span class="n">limit_per_cluster</span><span class="o">=</span><span class="n">asap_options</span><span class="o">.</span><span class="n">limit_per_cluster</span><span class="p">,</span>
             <span class="n">sort_by_energy</span><span class="o">=</span><span class="n">asap_options</span><span class="o">.</span><span class="n">sort_by_ssw_energy</span><span class="p">,</span>
+            <span class="n">workers</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">workers</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">CllModelDeviSelectorOutput</span><span class="p">(</span>
@@ -738,8 +747,14 @@ document.write(`
                                         <span class="n">sort_by_energy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                                         <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
                                         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dump_json</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;candidates.debug.json&#39;</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">get_ancestor</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">]</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">get_ancestor</span><span class="p">)</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ancestor_key</span><span class="p">,</span> <span class="n">candidate_group</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">groupby</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">])):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ancestor_key</span><span class="p">,</span> <span class="n">candidate_group</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">groupby</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">get_ancestor</span><span class="p">)):</span>
             <span class="n">candidate_group</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">candidate_group</span><span class="p">)</span>
             <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">candidate_group</span><span class="p">,</span> <span class="n">candidate_group</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;attrs&#39;</span><span class="p">]))</span>
 
@@ -776,9 +791,11 @@ document.write(`
         <span class="n">atoms_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">atoms</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="n">artifacts_to_ase_atoms</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)]</span>
 
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_list</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_list</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
             <span class="c1"># FIXME: there are a lot of potential issue when the number of atoms is small</span>
             <span class="c1"># the root cause is in asaplib, which I guess has not been tested with small dataset</span>
+            <span class="n">selected_atoms_list</span> <span class="o">=</span> <span class="n">atoms_list</span>
+        <span class="k">elif</span> <span class="n">limit_per_cluster</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">selected_atoms_list</span> <span class="o">=</span> <span class="n">atoms_list</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">sort_by_energy</span> <span class="ow">and</span> <span class="s1">&#39;ssw_energy&#39;</span> <span class="ow">in</span> <span class="n">atoms_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">:</span>
@@ -791,18 +808,14 @@ document.write(`
             <span class="n">asapxyz</span> <span class="o">=</span> <span class="n">ASAPXYZ</span><span class="p">(</span><span class="n">tmp_structures_file</span><span class="p">)</span>
 
             <span class="c1"># group structures</span>
-            <span class="n">asap_path_prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;asap&#39;</span><span class="p">)</span>
-            <span class="n">descriptors</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_descriptor</span><span class="p">(</span><span class="n">asapxyz</span><span class="p">,</span> <span class="n">descriptor_opt</span><span class="p">,</span> <span class="n">path_prefix</span><span class="o">=</span><span class="n">asap_path_prefix</span><span class="p">)</span>
-            <span class="n">reduced_descriptors</span> <span class="o">=</span> <span class="n">reduce_dimension</span><span class="p">(</span><span class="n">descriptors</span><span class="p">,</span> <span class="n">dim_reducer_opt</span><span class="p">)</span>
-            <span class="n">trainer</span> <span class="o">=</span> <span class="n">get_trainer</span><span class="p">(</span><span class="n">reduced_descriptors</span><span class="p">,</span> <span class="n">cluster_opt</span><span class="p">)</span>
-            <span class="n">cluster_labels</span> <span class="o">=</span> <span class="n">get_cluster</span><span class="p">(</span><span class="n">asapxyz</span><span class="p">,</span> <span class="n">reduced_descriptors</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">path_prefix</span><span class="o">=</span><span class="n">asap_path_prefix</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">asap_path_prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;asap&#39;</span><span class="p">)</span>
+                <span class="n">descriptors</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_descriptor</span><span class="p">(</span><span class="n">asapxyz</span><span class="p">,</span> <span class="n">descriptor_opt</span><span class="p">,</span> <span class="n">path_prefix</span><span class="o">=</span><span class="n">asap_path_prefix</span><span class="p">)</span>
+                <span class="n">reduced_descriptors</span> <span class="o">=</span> <span class="n">reduce_dimension</span><span class="p">(</span><span class="n">descriptors</span><span class="p">,</span> <span class="n">dim_reducer_opt</span><span class="p">)</span>
+                <span class="n">trainer</span> <span class="o">=</span> <span class="n">get_trainer</span><span class="p">(</span><span class="n">reduced_descriptors</span><span class="p">,</span> <span class="n">cluster_opt</span><span class="p">)</span>
+                <span class="n">cluster_labels</span> <span class="o">=</span> <span class="n">get_cluster</span><span class="p">(</span><span class="n">asapxyz</span><span class="p">,</span> <span class="n">reduced_descriptors</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">path_prefix</span><span class="o">=</span><span class="n">asap_path_prefix</span><span class="p">)</span>
 
-            <span class="c1"># dump_json(cluster_labels, os.path.join(work_dir, &#39;cluster.debug.json&#39;))</span>
-
-            <span class="c1"># select frame from each cluster</span>
-            <span class="k">if</span> <span class="n">limit_per_cluster</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># unlimit</span>
-                <span class="n">selected_atoms_list</span> <span class="o">=</span> <span class="n">atoms_list</span>  <span class="c1"># do nothing</span>
-            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># dump_json(cluster_labels, os.path.join(work_dir, &#39;cluster.debug.json&#39;))</span>
                 <span class="n">selected_frames</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">frames</span> <span class="ow">in</span> <span class="n">cluster_labels</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">limit_per_cluster</span><span class="p">:</span>
@@ -810,6 +823,11 @@ document.write(`
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">selected_frames</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">frames</span><span class="p">[:</span><span class="n">limit_per_cluster</span><span class="p">])</span>
                 <span class="n">selected_atoms_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">atoms_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">selected_frames</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;asaplib failed: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                <span class="c1"># dump exception to file</span>
+                <span class="n">dump_text</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;asaplib-exception.txt&#39;</span><span class="p">))</span>
+                <span class="n">selected_atoms_list</span> <span class="o">=</span> <span class="n">atoms_list</span>
 
         <span class="c1"># write selected structures to file</span>
         <span class="n">distinct_structures_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span>  <span class="s1">&#39;distinct_structures.xyz&#39;</span><span class="p">)</span>

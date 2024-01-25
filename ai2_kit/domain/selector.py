@@ -244,8 +244,6 @@ def __export_remote_functions():
         #        step  max_devi_v  min_devi_v  avg_devi_v  max_devi_f  min_devi_f  avg_devi_f
         # 0        0    0.006793    0.000672    0.003490    0.143317    0.005612    0.026106
         # 1      100    0.006987    0.000550    0.003952    0.128178    0.006042    0.022608
-        if df.empty:
-
 
         # load structures
         atoms_list = []

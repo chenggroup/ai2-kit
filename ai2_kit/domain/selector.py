@@ -244,6 +244,8 @@ def __export_remote_functions():
         #        step  max_devi_v  min_devi_v  avg_devi_v  max_devi_f  min_devi_f  avg_devi_f
         # 0        0    0.006793    0.000672    0.003490    0.143317    0.005612    0.026106
         # 1      100    0.006987    0.000550    0.003952    0.128178    0.006042    0.022608
+        if df.empty:
+
 
         # load structures
         atoms_list = []
@@ -260,7 +262,6 @@ def __export_remote_functions():
 
         # screening structure before model_devi analysis
         if screening_fn is not None:
-
             if 'ssw_energy' in atoms_list[0].info:
                 s_ssw_energy = pd.Series(map(lambda atoms: atoms.info['ssw_energy'], atoms_list))  # type: ignore
 
@@ -292,7 +293,7 @@ def __export_remote_functions():
         # NOTE: select the last frame can increase the diversity of structures
         _ndf = df[df[force_col] < f_trust_hi]
         if len(_ndf) == 0:
-            next_df = df[0]  # the first frame is the initial structure
+            next_df = df.head(1)  # the first frame is the initial structure
         else:
             next_df = _ndf[_ndf[force_col] <= _ndf[force_col].quantile(new_explore_system_q)].tail(1)
 

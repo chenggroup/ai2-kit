@@ -8,15 +8,20 @@ from dpdata.data_type import Axis, DataType
 
 def __export_remote():
     def register_data_types():
+        if getattr(dpdata, '__registed__', False):
+            return
+
         DATA_TYPES = [
             DataType("fparam", np.ndarray, (Axis.NFRAMES, -1), required=False),
             DataType("aparam", np.ndarray, (Axis.NFRAMES, Axis.NATOMS, -1), required=False),
             DataType("efield", np.ndarray, (Axis.NFRAMES, Axis.NATOMS, 3), required=False),
             DataType("ext_efield", np.ndarray, (Axis.NFRAMES, 3), required=False),
             DataType("atomic_dipole", np.ndarray, (Axis.NFRAMES, -1), required=False),
+            DataType("atomic_polarizability", np.ndarray, (Axis.NFRAMES, -1), required=False),
         ]
         dpdata.System.register_data_type(*DATA_TYPES)
         dpdata.LabeledSystem.register_data_type(*DATA_TYPES)
+        dpdata.__registed__ = True
 
 
     def set_fparam(system, fparam):

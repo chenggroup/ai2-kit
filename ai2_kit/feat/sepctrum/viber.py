@@ -57,11 +57,12 @@ class LabelTaskBuilder:
 
 
 def dpdata_read_cp2k_data(cp2k_dir: str,
+                          cp2k_out: str = 'output',
                           wannier: str = 'wannier.xyz',
                           wannier_x: str = 'wannier_x.xyz',
                           wannier_y: str = 'wannier_y.xyz',
                           wannier_z: str = 'wannier_z.xyz',):
-    dp_sys = dpdata.LabeledSystem(cp2k_dir , fmt='cp2k/output')
+    dp_sys = dpdata.LabeledSystem(os.path.join(cp2k_dir, cp2k_out) , fmt='cp2k/output')
     nframes = dp_sys.get_nframes()
     natoms = dp_sys.get_natoms()
 

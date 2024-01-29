@@ -142,3 +142,4 @@ class BatchHelper:
     def __str__(self) -> str:
         # suppress fire help message
         return ''
+

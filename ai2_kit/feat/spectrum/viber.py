@@ -83,7 +83,7 @@ class Cp2kLabelTaskBuilder:
         return self
 
     def make_batch(self,
-                   prefix: str = 'batch-{i:02d}.sh',
+                   prefix: str = 'cp2k-batch-{i:02d}.sub',
                    concurrency: int = 5,
                    template: Optional[str] = None,
                    ignore_error: bool = False,

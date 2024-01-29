@@ -1,4 +1,7 @@
 # Change Logs
+## v0.12.22
+* improvement: add `ignore_error` for cp2k.
+
 ## v0.12.19
 * fix: wrong lammps template for fep training
 * improvement: select structure for next round from good and decent structures

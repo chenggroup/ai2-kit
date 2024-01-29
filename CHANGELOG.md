@@ -1,4 +1,7 @@
 # Change Logs
+## v0.12.23
+* improvement: add `ignore_error` for deepmd.
+
 ## v0.12.22
 * improvement: add `ignore_error` for cp2k.
 

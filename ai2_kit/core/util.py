@@ -215,7 +215,7 @@ def dict_remove_dot_keys(d):
             dict_remove_dot_keys(d[k])
 
 
-def cmd_with_checkpoint(cmd: str, checkpoint: str):
+def cmd_with_checkpoint(cmd: str, checkpoint: str, ignore_error: bool = False):
     """
     Add checkpoint to a shell command.
     If a checkpoint file exists, the command will be skipped,
@@ -224,14 +224,17 @@ def cmd_with_checkpoint(cmd: str, checkpoint: str):
 
     :param cmd: shell command
     :param checkpoint: checkpoint file name
+    :param ignore_error: if True, will not raise error if the command failed
     """
     checkpoint = shlex.quote(checkpoint)
+    exit_clause = [
+        '  __EXITCODE__=$?; if [ $__EXITCODE__ -ne 0 ]; then exit $__EXITCODE__; fi',
+    ] if not ignore_error else []
 
     return '\n'.join([
-        f'if [ -f {checkpoint}]; then',
-        f'  echo "hit checkpoint, skip"',
-        f'else',
+        f'if [ -f {checkpoint}]; then echo "hit checkpoint, skip"; else',
         f'  {cmd}',
+        *exit_clause,
         f'  touch {checkpoint}',
         f'fi',
     ])

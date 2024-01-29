@@ -87,7 +87,7 @@ class Cp2kLabelTaskBuilder:
                    concurrency: int = 5,
                    template: Optional[str] = None,
                    ignore_error: bool = False,
-                   cmd: str = 'cp2k.psmp'):
+                   cp2k_cmd: str = 'cp2k.psmp'):
         """
         Make batch script for cp2k labeling
 
@@ -119,7 +119,7 @@ class Cp2kLabelTaskBuilder:
                 f'pushd $_WORK_DIR_ || exit 1',
                 '#' * 80,
                 *[
-                    cmd_with_checkpoint(f'{cmd} -i {tag}.inp &> {tag}.out', f'{tag}.done', ignore_error)
+                    cmd_with_checkpoint(f'{cp2k_cmd} -i {tag}.inp &> {tag}.out', f'{tag}.done', ignore_error)
                     for tag in self._cp2k_inputs.keys()
                 ],
                 '#' * 80,

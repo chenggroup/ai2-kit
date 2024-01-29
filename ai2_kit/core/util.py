@@ -231,8 +231,9 @@ def cmd_with_checkpoint(cmd: str, checkpoint: str, ignore_error: bool = False):
         '  __EXITCODE__=$?; if [ $__EXITCODE__ -ne 0 ]; then exit $__EXITCODE__; fi',
     ] if not ignore_error else []
 
+    msg = shlex.quote(f"hit checkpoint: {checkpoint}, skip...")
     return '\n'.join([
-        f'if [ -f {checkpoint}]; then echo "hit checkpoint, skip"; else',
+        f'if [ -f {checkpoint} ]; then echo {msg}; else',
         f'  {cmd}',
         *exit_clause,
         f'  touch {checkpoint}',

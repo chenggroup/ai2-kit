@@ -47,6 +47,11 @@ class CllCp2kInputConfig(BaseModel):
     """
     limit_method: Literal["even", "random", "truncate"] = "even"
 
+    ignore_error: bool = False
+    """
+    Ignore error when running cp2k.
+    """
+
 
 class CllCp2kContextConfig(BaseModel):
     script_template: BashTemplate
@@ -119,6 +124,7 @@ async def cll_cp2k(input: CllCp2kInput, ctx: CllCp2kContext) -> GenericCp2kOutpu
             cwd=cp2k_task_dir['url'],
             cmd=cmd,
             checkpoint='cp2k',
+            exit_on_error=not input.config.ignore_error,
         ))
 
     # submit tasks and wait for completion

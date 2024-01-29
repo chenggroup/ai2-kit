@@ -100,6 +100,7 @@ class CllLammpsInputConfig(BaseModel):
     nsteps: int
     timestep: float = 0.0005
     sample_freq: int = 100
+    ignore_error: bool = False
 
     type_alias: Mapping[str, List[str]] = dict()
     '''
@@ -158,7 +159,6 @@ class CllLammpsContextConfig(BaseModel):
     script_template: BashTemplate
     lammps_cmd: str = 'lmp'
     concurrency: int = 5
-    ignore_error: bool = False
 
 
 @dataclass
@@ -244,7 +244,7 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
     steps = []
     for task_dir in task_dirs:
         steps.append(BashStep(
-            cwd=task_dir['url'], cmd=cmd, checkpoint='lammps', exit_on_error=not ctx.config.ignore_error))
+            cwd=task_dir['url'], cmd=cmd, checkpoint='lammps', exit_on_error=not input.config.ignore_error))
 
     # submit jobs by the number of concurrency
     jobs = []

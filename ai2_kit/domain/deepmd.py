@@ -95,6 +95,9 @@ class CllDeepmdInputConfig(BaseModel):
     Set this to True when you have multiple structures with the same ancestor.
     """
 
+    ignore_error: bool = False
+
+
 
 class CllDeepmdContextConfig(BaseModel):
     script_template: BashTemplate
@@ -165,6 +168,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
         deepmd_input_template=input.config.input_template,
         sel_type=input.sel_type,
         mode=input.mode,
+        ignore_error=input.config.ignore_error,
     )
 
     input_dataset += [ Artifact.of(**a) for a in new_dataset]
@@ -430,6 +434,7 @@ def __export_remote_functions():
         group_by_formula: bool,
         mode: str,
         sel_type: Optional[List[int]],
+        ignore_error: bool,
     ):
         register_data_types()
 
@@ -439,12 +444,17 @@ def __export_remote_functions():
         for raw_data in raw_data_collection:
             data_format = get_data_format(raw_data)  # type: ignore
             dp_system = None
-            if data_format == DataFormat.CP2K_OUTPUT_DIR:
-                dp_system = dpdata.LabeledSystem(os.path.join(raw_data['url'], 'output'), fmt='cp2k/output', type_map=type_map)
-            elif data_format == DataFormat.VASP_OUTPUT_DIR:
-                dp_system = dpdata.LabeledSystem(os.path.join(raw_data['url'], 'OUTCAR'), fmt='vasp/outcar', type_map=type_map)
-            else:
-                raise ValueError(f"Unsupported data format: {data_format}")
+            try:
+                if data_format == DataFormat.CP2K_OUTPUT_DIR:
+                    dp_system = dpdata.LabeledSystem(os.path.join(raw_data['url'], 'output'), fmt='cp2k/output', type_map=type_map)
+                elif data_format == DataFormat.VASP_OUTPUT_DIR:
+                    dp_system = dpdata.LabeledSystem(os.path.join(raw_data['url'], 'OUTCAR'), fmt='vasp/outcar', type_map=type_map)
+                else:
+                    raise ValueError(f"Unsupported data format: {data_format}")
+            except Exception as e:
+                if not ignore_error:
+                    raise e
+                logger.exception(f'Failed to load data: {raw_data}, error: {e}')
             # one case of len(dp_system) == 0 is when the system is not converged
             if dp_system is None or 0 == len(dp_system):
                 continue  # skip invalid data

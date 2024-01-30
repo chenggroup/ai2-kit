@@ -1,4 +1,7 @@
 # Change Logs
+## v0.13.0
+* feat: `ai2-kit tool hpc` for managing HPC jobs
+
 ## v0.12.23
 * improvement: add `ignore_error` for deepmd.
 

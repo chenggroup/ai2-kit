@@ -104,6 +104,7 @@ class Cp2kLabelTaskBuilder:
         else:
             with open(template, 'r') as f:
                 template = f.read()
+        template += '\n[ -n "$PBS_O_WORKDIR" ] && cd $PBS_O_WORKDIR]\n'
 
         os.makedirs(os.path.dirname(prefix), exist_ok=True)
         for i, task_group in enumerate(list_split(self._task_dirs, concurrency)):

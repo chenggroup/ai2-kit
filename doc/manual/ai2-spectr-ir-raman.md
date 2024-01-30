@@ -8,18 +8,18 @@ The `ai2-spectr` toolkit is a comprehensive suite tailored for the prediction an
 
 ## Case Study
 
-### Build an shell based workflow to generate dipole and polarizability dataset
+### Build a shell workflow to generate dipole and polarizability dataset
 
 This case study illustrates the construction of a workflow using a straightforward shell script. The workflow, driven by input system and CP2K configuration files, autonomously generates jobs. These jobs are then submitted for execution on an HPC cluster, facilitating the production of the dataset essential for training in Deepmd-kit.
 
-To get started, we need to prepare the following files:
+To get started, you need to prepare the following files:
 
 * System files for CP2K: They can be any format that supported by `ase.io`, for example `Al3O2.xyz`.
-* CP2K input files: The CP2K input files for the system. We need to prepare a configuration for dipole calculation and 3 configurations for polarizability calculation. For example, `cp2k-dipole.inp` and `cp2k-polar-x.inp`, `cp2k-polar-y.inp`, `cp2k-polar-z.inp`.
-  * Note that you need to ensure the file names of the wannier output files are different in different CP2K configurations. A good conventions is to named them as `wannier-dipole.xyz` and `wannier-polar-x.xyz`, `wannier-polar-y.xyz`, `wannier-polar-z.xyz`.
+* CP2K input files: The CP2K input files for the system. You need to prepare a configuration for dipole calculation and 3 configurations for polarizability calculation. For example, `cp2k-dipole.inp` and `cp2k-polar-x.inp`, `cp2k-polar-y.inp`, `cp2k-polar-z.inp`.
+  * Note that you need to ensure the file names of the wannier output files are different in different CP2K configurations. A good conventions is to named them as `wannier.xyz` and `wannier-x.xyz`, `wannier-y.xyz`, `wannier-z.xyz`.
   * You should use `@include coord_n_cell.inc` to include the coordinate and cell section in the CP2K input files.
 
-A good practice is to create a working directory and put all the files in it. For example, we create a directory named `Al3O2` and put all the files in it. 
+A good practice is to create a working directory and put all the files in it. For example, you can create a directory named `al3o2` and put all the files in it. 
 
 Now we can start to build shell script `workflow.sh` to automate the calculation. 
 
@@ -57,7 +57,7 @@ ai2-kit feat spectr viber cp2k-labeling \
 find ./run-01 
 
 # submit batch scripts and wait for completion
-ai2-kit tool batch slurm - submit ./run-01/cpk2-batch-*.sub - wait
+ai2-kit tool hpc slurm submit ./run-01/cpk2-batch-*.sub - wait
 
 # generate Deepmd-kit dataset
 ai2-kit tool dpdata read run-01/* --fmt cp2k/output+viber - write ./al2o3-dataset

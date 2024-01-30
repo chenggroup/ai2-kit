@@ -1,4 +1,7 @@
 # Change Logs
+## v0.13.2
+* improvement: refactor slurm done file
+
 ## v0.13.1
 * improvement: no need to return in wait method for slurm tool
 

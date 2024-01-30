@@ -100,7 +100,6 @@ class Slurm:
                 raise RuntimeError('Timeout')
         if not ignore_error and self._is_any_failed():
             raise RuntimeError('Some jobs failed')
-        return self._job_states
 
     def _is_any_failed(self):
         return any(state == JobState.FAILED for state in self._job_states.values())

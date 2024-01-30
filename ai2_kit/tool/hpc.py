@@ -56,7 +56,7 @@ class Slurm:
             raise ValueError('No files found')
         for file in files:
             with open(file, '+a') as fp:
-                append_if_not_exist(fp, 'touch ~slurm_$SLURM_JOB_ID.done # AUTO GENERATED')
+                append_if_not_exist(fp, 'touch slurm_$SLURM_JOB_ID.done # AUTO GENERATED')
         try:
             for file in files:
                 job_id = self._submit(file)
@@ -116,7 +116,7 @@ class Slurm:
                 if job_id in state:
                     self._job_states[job_id] = self._state_table[state[job_id]]
                 else:
-                    if os.path.exists(f'~slurm_{job_id}.done'):
+                    if os.path.exists(f'slurm_{job_id}.done'):
                         self._job_states[job_id] = JobState.COMPLETED
                     else:
                         self._job_states[job_id] = JobState.FAILED

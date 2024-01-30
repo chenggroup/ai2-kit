@@ -1,4 +1,7 @@
 # Change Logs
+## v0.13.1
+* improvement: no need to return in wait method for slurm tool
+
 ## v0.13.0
 * feat: `ai2-kit tool hpc` for managing HPC jobs
 

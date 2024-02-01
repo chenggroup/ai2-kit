@@ -132,7 +132,7 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
     get_source = lambda s: s['attrs']['source']
     # filter out the structures whose ancestor ends with '-fin'
     # FIXME: use a dedicated field to indicate the final structure
-    new_systems = [s for s in new_systems if not s['attrs']['ancestor'].endswith('-fin')]  ]
+    new_systems = [s for s in new_systems if not s['attrs']['ancestor'].endswith('-fin')]
     new_systems = sorted(new_systems, key=get_source)
     new_systems = [next(group) for _source, group in groupby(
         new_systems, key=get_source)]

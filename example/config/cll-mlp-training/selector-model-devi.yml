@@ -16,6 +16,14 @@ workflow:
         # for next round of exploration
         new_explore_system_q: 0.25
 
+        # Optional, limit max decent per trajectory
+        # Default: -1 (no limit)
+        max_decent_per_traj: 1
+
+        # Optional, number of workers for parallel computing, set it to 1 for debug.
+        # Default: 4
+        workers: 1
+
         # Optional, filter structures by condition defined by lambda string
         # The only input argument of lambda function is `ase.Atoms`
         # The following local variable can be used in the expression:

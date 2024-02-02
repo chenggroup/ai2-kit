@@ -1,16 +1,17 @@
 from asaplib.data.xyz import ASAPXYZ
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.util import dump_json, flush_stdio
+from ai2_kit.core.util import dump_json, dump_text, flush_stdio, limit
+from ai2_kit.core.pydantic import BaseModel
 
 from typing import List, Optional, Tuple, Dict
 from io import StringIO
-from pydantic import BaseModel
 from dataclasses import dataclass
 import pandas as pd
 from tabulate import tabulate
 from itertools import groupby
 from functools import lru_cache
+import traceback
 
 import ase.io
 import os
@@ -61,6 +62,14 @@ class CllModelDeviSelectorInputConfig(BaseModel):
     the function to screen the candidates, e.g
     "lambda x: x['ssw_energy'] < -1000"
     """
+    max_decent_per_traj: int = -1
+    """
+    limit the max number of decent structures per trajectory, -1 means unlimited
+    """
+    workers: int = 4
+    """
+    number of workers to run the analysis
+    """
 
 
 @dataclass
@@ -109,7 +118,9 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
         f_trust_lo=f_trust_lo, f_trust_hi=f_trust_hi,
         type_map=input.type_map, work_dir=work_dir,
         new_explore_system_q=input.config.new_explore_system_q,
+        max_decent_per_traj=input.config.max_decent_per_traj,
         screening_fn=input.config.screening_fn,
+        workers=input.config.workers,
     )
 
     candidates = [ result['decent'] for result, _ in results if 'decent' in result ]
@@ -118,8 +129,10 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
 
     # group next_structures by `attrs.source` and keep the first one
     # so that the total number of explore structures will be the same as the original one
+    get_source = lambda s: s['attrs']['source']
+    new_systems = sorted(new_systems, key=get_source)
     new_systems = [next(group) for _source, group in groupby(
-        new_systems, key=lambda s: s['attrs']['source'])]
+        new_systems, key=get_source)]
 
     # write model_deviation stats report
     # TODO: refactor into a function
@@ -152,6 +165,7 @@ async def cll_model_devi_selector(input: CllModelDeviSelectorInput, ctx: CllMode
             work_dir=work_dir,
             limit_per_cluster=asap_options.limit_per_cluster,
             sort_by_energy=asap_options.sort_by_ssw_energy,
+            workers=input.config.workers,
         )
 
     return CllModelDeviSelectorOutput(
@@ -170,8 +184,9 @@ def __export_remote_functions():
                                              new_explore_system_q: float,
                                              type_map: List[str],
                                              work_dir: str,
+                                             max_decent_per_traj: int,
+                                             screening_fn: Optional[str],
                                              workers: int = 4,
-                                             screening_fn: Optional[str] = None,
                                              ) -> List[Tuple[Dict[str, ArtifactDict], dict]]:
         import joblib
         return joblib.Parallel(n_jobs=workers)(
@@ -181,6 +196,7 @@ def __export_remote_functions():
                 f_trust_lo=f_trust_lo, f_trust_hi=f_trust_hi,
                 type_map=type_map,
                 work_dir=os.path.join(work_dir, 'model_devi', f'{i:06}'),
+                max_decent_per_traj=max_decent_per_traj,
                 new_explore_system_q=new_explore_system_q,
                 screening_fn=screening_fn,
             )
@@ -195,7 +211,8 @@ def __export_remote_functions():
                                         type_map: List[str],
                                         work_dir: str,
                                         new_explore_system_q: float,
-                                        screening_fn: Optional[str] = None,
+                                        max_decent_per_traj: int,
+                                        screening_fn: Optional[str],
                                         ) -> Tuple[Dict[str, ArtifactDict], dict]:
         """
         analysis the model_devi output of explore stage and select candidates
@@ -243,7 +260,6 @@ def __export_remote_functions():
 
         # screening structure before model_devi analysis
         if screening_fn is not None:
-
             if 'ssw_energy' in atoms_list[0].info:
                 s_ssw_energy = pd.Series(map(lambda atoms: atoms.info['ssw_energy'], atoms_list))  # type: ignore
 
@@ -269,9 +285,15 @@ def __export_remote_functions():
 
         # select the last frame from df whose model_devi score is less than the quantile
         # as the initial structure for next round of exploration to replace the original one
+        # the next frame should be selected from good or decent frame
+        # if there is no good or decent frame, use the first frame as the initial structure
         # NOTE: equal is essential to ensure the existence of next structure
         # NOTE: select the last frame can increase the diversity of structures
-        next_df = df[df[force_col] <= df[force_col].quantile(new_explore_system_q)].tail(1)
+        _ndf = df[df[force_col] < f_trust_hi]
+        if len(_ndf) == 0:
+            next_df = df.head(1)  # the first frame is the initial structure
+        else:
+            next_df = _ndf[_ndf[force_col] <= _ndf[force_col].quantile(new_explore_system_q)].tail(1)
 
         stats = {
             'src': model_devi_file,
@@ -281,24 +303,25 @@ def __export_remote_functions():
             'poor': len(poor_df),
         }
 
-
         result: Dict[str, ArtifactDict] = {}
-
-        # dump structures to different files
         # TODO: refactor the following repeating code
+        # TODO: dump good may lead to storage issue, so disable it for now
         if len(good_df) > 0:
             good_file = os.path.join(work_dir, 'good.xyz')
-            ase.io.write(good_file, [atoms_list[_i] for _i in good_df.index], format='extxyz')
+            # ase.io.write(good_file, [atoms_list[_i] for _i in good_df.index], format='extxyz')
             result['good'] = {'url': good_file, 'format': DataFormat.EXTXYZ,  # type: ignore
                               'attrs': {**model_devi_output['attrs']}}
+
         if len(poor_df) > 0:
             poor_file = os.path.join(work_dir, 'poor.xyz')
-            ase.io.write(poor_file, [atoms_list[_i] for _i in poor_df.index], format='extxyz')
+            # ase.io.write(poor_file, [atoms_list[_i] for _i in poor_df.index], format='extxyz')
             result['poor'] = {'url': poor_file, 'format': DataFormat.EXTXYZ,  # type: ignore
                               'attrs': {**model_devi_output['attrs']}}
         if len(decent_df) > 0:
             decent_file = os.path.join(work_dir, 'decent.xyz')
-            ase.io.write(decent_file, [atoms_list[_i] for _i in decent_df.index], format='extxyz')
+            ase.io.write(decent_file,
+                         list(limit((atoms_list[_i] for _i in decent_df.index), max_decent_per_traj)),
+                         format='extxyz')
             result['decent'] = {'url': decent_file, 'format': DataFormat.EXTXYZ,  # type: ignore
                                 'attrs': {**model_devi_output['attrs']}}
         if len(next_df) > 0:
@@ -306,9 +329,7 @@ def __export_remote_functions():
             ase.io.write(next_file, [atoms_list[_i] for _i in next_df.index], format='extxyz')
             result['next'] = {'url': next_file, 'format': DataFormat.EXTXYZ,  # type: ignore
                               'attrs': {**model_devi_output['attrs']}}
-
         dump_json([result, stats, list(decent_df.index), list(next_df.index)], os.path.join(work_dir, 'result.debug.json'))
-
         return result, stats
 
 
@@ -322,8 +343,14 @@ def __export_remote_functions():
                                         sort_by_energy: bool = False,
                                         workers: int = 4,
                                         ) -> List[ArtifactDict]:
+        try:
+            dump_json(candidates, os.path.join(work_dir, 'candidates.debug.json'))
+        except Exception as e:
+            pass
+        get_ancestor = lambda c: c['attrs']['ancestor']
+        candidates = sorted(candidates, key=get_ancestor)
         inputs = []
-        for i, (ancestor_key, candidate_group) in enumerate(groupby(candidates, key=lambda c: c['attrs']['ancestor'])):
+        for i, (ancestor_key, candidate_group) in enumerate(groupby(candidates, key=get_ancestor)):
             candidate_group = list(candidate_group)
             inputs.append((candidate_group, candidate_group[0]['attrs']))
 
@@ -360,9 +387,11 @@ def __export_remote_functions():
         atoms_list = [atoms for _, atoms in artifacts_to_ase_atoms(candidates, type_map=type_map)]
 
 
-        if len(atoms_list) < 10:
+        if len(atoms_list) < 20:
             # FIXME: there are a lot of potential issue when the number of atoms is small
             # the root cause is in asaplib, which I guess has not been tested with small dataset
+            selected_atoms_list = atoms_list
+        elif limit_per_cluster <= 0:
             selected_atoms_list = atoms_list
         else:
             if sort_by_energy and 'ssw_energy' in atoms_list[0].info:
@@ -375,18 +404,14 @@ def __export_remote_functions():
             asapxyz = ASAPXYZ(tmp_structures_file)
 
             # group structures
-            asap_path_prefix = os.path.join(work_dir, 'asap')
-            descriptors, _ = get_descriptor(asapxyz, descriptor_opt, path_prefix=asap_path_prefix)
-            reduced_descriptors = reduce_dimension(descriptors, dim_reducer_opt)
-            trainer = get_trainer(reduced_descriptors, cluster_opt)
-            cluster_labels = get_cluster(asapxyz, reduced_descriptors, trainer, path_prefix=asap_path_prefix)
+            try:
+                asap_path_prefix = os.path.join(work_dir, 'asap')
+                descriptors, _ = get_descriptor(asapxyz, descriptor_opt, path_prefix=asap_path_prefix)
+                reduced_descriptors = reduce_dimension(descriptors, dim_reducer_opt)
+                trainer = get_trainer(reduced_descriptors, cluster_opt)
+                cluster_labels = get_cluster(asapxyz, reduced_descriptors, trainer, path_prefix=asap_path_prefix)
 
-            # dump_json(cluster_labels, os.path.join(work_dir, 'cluster.debug.json'))
-
-            # select frame from each cluster
-            if limit_per_cluster <= 0: # unlimit
-                selected_atoms_list = atoms_list  # do nothing
-            else:
+                # dump_json(cluster_labels, os.path.join(work_dir, 'cluster.debug.json'))
                 selected_frames = []
                 for frames in cluster_labels.values():
                     if len(frames) < limit_per_cluster:
@@ -394,6 +419,11 @@ def __export_remote_functions():
                     else:
                         selected_frames += list(frames[:limit_per_cluster])
                 selected_atoms_list = [atoms_list[i] for i in selected_frames]
+            except Exception as e:
+                print('asaplib failed: %s', e)
+                # dump exception to file
+                dump_text(traceback.format_exc(), os.path.join(work_dir, 'asaplib-exception.txt'))
+                selected_atoms_list = atoms_list
 
         # write selected structures to file
         distinct_structures_file = os.path.join(work_dir,  'distinct_structures.xyz')

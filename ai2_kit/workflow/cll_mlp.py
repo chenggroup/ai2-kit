@@ -4,6 +4,7 @@ from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import load_yaml_files, merge_dict
 from ai2_kit.core.resource_manager import ResourceManager
 from ai2_kit.core.checkpoint import set_checkpoint_file, apply_checkpoint
+from ai2_kit.core.pydantic import BaseModel
 from ai2_kit.domain import (
     deepmd,
     iface,
@@ -16,8 +17,8 @@ from ai2_kit.domain import (
     updater,
 )
 
-from pydantic import BaseModel
 from typing import Dict, List, Optional, Any
+from dataclasses import dataclass
 from fire import Fire
 
 import asyncio
@@ -52,7 +53,10 @@ class WorkflowConfig(BaseModel):
     class General(BaseModel):
         type_map: List[str]
         mass_map: List[float]
+        sel_type: Optional[List[str]]
+
         max_iters: int = 1
+        mode: iface.TRAINING_MODE = 'default'
         update_explore_systems: bool = False
 
     class Label(BaseModel):
@@ -141,6 +145,8 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig,
 
         # parse workflow config
         workflow_config = WorkflowConfig.parse_obj(raw_workflow_config)
+        shared_vars = precondition(workflow_config)
+
         if i >= workflow_config.general.max_iters:
             logger.info(f'Iteration {i} exceeds max_iters, stop iteration.')
             break
@@ -158,6 +164,7 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig,
         if workflow_config.label.cp2k and context_config.label.cp2k:
             cp2k_input = cp2k.CllCp2kInput(
                 config=workflow_config.label.cp2k,
+                mode=workflow_config.general.mode,
                 type_map=type_map,
                 system_files=[] if selector_output is None else selector_output.get_model_devi_dataset(),
                 initiated=i > 0,
@@ -195,9 +202,11 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig,
         if workflow_config.train.deepmd:
             deepmd_input = deepmd.CllDeepmdInput(
                 config=workflow_config.train.deepmd,
+                mode=workflow_config.general.mode,
                 type_map=type_map,
                 old_dataset=[] if train_output is None else train_output.get_training_dataset(),
                 new_dataset=label_output.get_labeled_system_dataset(),
+                sel_type=shared_vars.dp_sel_type,
             )
             deepmd_context = deepmd.CllDeepmdContext(
                 path_prefix=os.path.join(iter_path_prefix, 'train-deepmd'),
@@ -217,11 +226,14 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig,
         if workflow_config.explore.lammps and context_config.explore.lammps:
             lammps_input = lammps.CllLammpsInput(
                 config=workflow_config.explore.lammps,
+                mode=workflow_config.general.mode,
                 type_map=type_map,
                 mass_map=mass_map,
                 dp_models={'': train_output.get_mlp_models()},
                 preset_template='default',
                 new_system_files=new_explore_system_files,
+                dp_modifier=shared_vars.dp_modifier,
+                dp_sel_type=shared_vars.dp_sel_type,
             )
             lammps_context = lammps.CllLammpsContext(
                 path_prefix=os.path.join(iter_path_prefix, 'explore-lammps'),
@@ -261,7 +273,6 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig,
                 resource_manager=resource_manager,
             )
             selector_output = await apply_checkpoint(f'{cp_prefix}/selector-model-devi')(selector.cll_model_devi_selector)(selector_input, selector_context)
-
         else:
             raise ValueError('No select method is specified')
 
@@ -280,6 +291,53 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig,
             raw_workflow_config = merge_dict(copy.deepcopy(
                 config.workflow), update_config.table[update_cursor])
             update_cursor += 1
+
+
+@dataclass
+class SharedVars():
+    dp_modifier: Optional[dict] = None
+    dp_sel_type: Optional[List[int]] = None
+
+
+def precondition(workflow_cfg: WorkflowConfig) -> SharedVars:
+    """
+    precondition of workflow config to raise error early,
+    and extra variables that may shared by multiple steps
+
+    The known shared variables are:
+      dp_modifier, which include vars sys_charge_map, model_charge_map, ewald_h, ewald_beta
+      sel_type, which is suppose to be used in dplr/dpff mode
+    """
+    shared_vars = SharedVars()
+
+    mode = workflow_cfg.general.mode
+    type_map = workflow_cfg.general.type_map
+    sel_type = workflow_cfg.general.sel_type
+
+    if mode == 'dpff':
+        assert sel_type is not None, 'sel_type should be specified in general config for dpff mode'
+        shared_vars.dp_sel_type = [ type_map.index(t)  for t in sel_type ]
+
+    deepmd_cfg = workflow_cfg.train.deepmd
+    if deepmd_cfg is not None:
+        if mode == 'dpff':
+            modifier = deepmd_cfg.input_template['model'].get('modifier')
+            assert modifier is not None, 'modifier should be specified in deepmd input template for dpff mode'
+            shared_vars.dp_modifier = modifier
+        elif mode == 'fep-redox':
+            assert deepmd_cfg.input_template['model']['fitting_net']['numb_fparam'] == 2, 'numb_fparam should be 2 for fep-redox/fep-pka mode'
+
+    lammps_cfg = workflow_cfg.explore.lammps
+    if lammps_cfg is not None:
+        if mode == 'dpff':
+            lammps_cfg.assert_var('EFIELD')
+            lammps_cfg.assert_var('KMESH')
+            efield = lammps_cfg.explore_vars.get('EFIELD', lammps_cfg.broadcast_vars.get('EFIELD'))
+            assert all([isinstance(item, list) for item in efield ]), 'EFIELD should be a list of vector'  # type: ignore
+        elif mode in ['fep-redox', 'fep-pka']:
+            lammps_cfg.assert_var('LAMBDA_f')
+
+    return shared_vars
 
 
 if __name__ == '__main__':

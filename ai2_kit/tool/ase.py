@@ -1,7 +1,7 @@
 import ase.io
 import glob
 
-from ai2_kit.core.util import ensure_dir
+from ai2_kit.core.util import ensure_dir, expand_globs
 from ai2_kit.domain.cp2k import dump_coord_n_cell
 from typing import List, Union
 from ase import Atoms
@@ -12,10 +12,7 @@ class AseHelper:
         self._atoms_list: List[Atoms] = []
 
     def read(self, *file_path_or_glob: str, **kwargs):
-        files = []
-        for file_path in file_path_or_glob:
-            files += sorted(glob.glob(file_path, recursive=True)) if '*' in file_path else [file_path]
-
+        files = expand_globs(file_path_or_glob)
         if len(files) == 0:
             raise FileNotFoundError(f'No file found for {file_path_or_glob}')
         for file in files:
@@ -35,7 +32,6 @@ class AseHelper:
             atoms.set_pbc(pbc)
         return self
 
-
     def set_by_ref(self, ref_file: str, **kwargs):
         kwargs.setdefault('index', 0)
         ref_atoms = ase.io.read(ref_file, **kwargs)
@@ -51,17 +47,23 @@ class AseHelper:
                 pass
         return self
 
-
     def limit(self, n: int):
         self._atoms_list = self._atoms_list[:n]
         return self
 
+    def delete_atoms(self, id: Union[int, List[int]], start_id=0):
+        """
+        delete atoms by id or list of id
 
-    def delete_atoms(self, id: Union[int, List[int]]):
+        :param id: id or list of id
+        :param start_id: the start id of first item, for example, in LAMMPS the id of first item is 1, in ASE it is 0
+        """
+
         ids = [id] if isinstance(id, int) else id
         for atoms in self._atoms_list:
             for i in sorted(ids, reverse=True):
-                del atoms[i]
+                assert i >= start_id, f'Invalid id {i}'
+                del atoms[i - start_id]
         return self
 
     def write_each_frame(self, filename: str, **kwargs):

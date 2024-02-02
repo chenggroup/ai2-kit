@@ -1,7 +1,7 @@
-from pydantic import BaseModel
 from typing import Optional, List, Union, Sequence
 import shlex
 
+from .pydantic import BaseModel
 
 def exit_on_error_statment(v='__EXITCODE__'):
     return f"{v}=$?; if [ ${v} -ne 0 ]; then exit ${v}; fi"

@@ -370,6 +370,61 @@ In the above parameters,
 * `--path-prefix h2o_64-run-01` specifies the remote working directory, which will create a `h2o_64-run-01` directory under `work_dir` to store the execution results of the workflow;
 * `--checkpoint run-01.cpkt` will generate a checkpoint file locally to save the execution status of the workflow, so as to resume execution after the execution is interrupted.
 
+## Special Use Cases
+
+### Train MLP model for FEP based Redox Potential Calculation
+
+To train MLP model for FEP based Redox Potential Calculation,
+you need to make use of `fparam` feature of `deepmd`
+to fit the PES of initial (ini) and finial (fin) state of the reaction.
+
+And should also config different label configuration for ini and fin state.
+
+Here is the key configuration you need to pay attention to:
+
+#### Config explore artifacts with `fep-ini` and `fep-fin` attrs
+
+Explore artifacts are used as initial structures for structure explore.  For example:
+
+```yaml
+artifacts:
+  explore-h2ox64:
+    url: /path/to/h2ox64.xyz
+    attrs:
+      fep-ini:
+        dp_fparam: 0
+        cp2k:
+          input_template: !load_text cp2k-ini.inp
+      fep-fin:
+        dp_fparam: 1
+        cp2k:
+          input_template: !load_text cp2k-fin.inp
+```
+
+#### Config LAMMPS explore mode with `fep-redox`
+The following example dismiss the common configuration of LAMMPS,
+and only focus on the `fep-redox` specific configuration.
+
+```yaml
+workflow:
+  explore:
+    lammps:
+      mode: fep-redox
+      template_vars:
+        # The fparam option of deepmd pair style
+        # The value of fparam should be consistent with the fparam in the explore artifacts
+        # doc: https://docs.deepmodeling.com/projects/deepmd/en/latest/third-party/lammps-command.html#pair-style-deepmd
+        FEP_INI_DP_OPT: fparam 0
+        FEP_FIN_DP_OPT: fparam 1
+```
+
+#### Config `numb_fparam` in `deepmd` input template
+https://docs.deepmodeling.com/projects/deepmd/en/master/train/train-input.html
+
+TODO: example.
+
+### Training MLP for FEP based pKa Calculation
+TODO
 
 ### Screening Beyond Model Deviation
 The configurations produced through the process of `Exploration` are chosen simply based on whether their Maximum Model Deviation of Forces falls within the range defined by `f_trust_lo` and `f_trust_hi`. However, such screening process still leaves a large number of configurations that require labeling. The screening{cite}`Guo2023checmate` is improved by adding an clustering procedure, which is allowed to remove structurally similar configurations. To enable this functionality, `asap_options: {}` is added in the above `workflow.yml`. For details of clustering method, users are referred to [the documentation](https://bingqingcheng.github.io/cluster.html) of ASAP{cite}`Cheng2020mapping`. 

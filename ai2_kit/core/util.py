@@ -1,6 +1,6 @@
 from ruamel.yaml import YAML, ScalarNode, SequenceNode
 from pathlib import Path
-from typing import Tuple, List, TypeVar, Union
+from typing import Tuple, List, TypeVar, Union, Iterable
 from dataclasses import field
 from itertools import zip_longest
 import asyncio
@@ -8,6 +8,7 @@ import asyncio
 import shortuuid
 import hashlib
 import base64
+import shlex
 import copy
 import os
 import random
@@ -82,11 +83,13 @@ def load_yaml_file(path: Union[Path, str]):
     return yaml.load(path)
 
 
-def load_yaml_files(*paths: Tuple[Path], quiet: bool = False):
+def load_yaml_files(*paths: Tuple[Path], quiet: bool = False, purge_anonymous = True):
     d = {}
     for path in paths:
         print('load yaml file: ', path)
         d = merge_dict(d, load_yaml_file(Path(path)), quiet=quiet)  # type: ignore
+    if purge_anonymous:
+        dict_remove_dot_keys(d)
     return d
 
 
@@ -103,7 +106,7 @@ def s_uuid():
 
 def sort_unique_str_list(l: List[str]) -> List[str]:
     """remove duplicate str and sort"""
-    return list(sorted(set(l)))
+    return sorted(set(l))
 
 
 T = TypeVar('T')
@@ -204,6 +207,40 @@ def _yaml_get_path_node(node, constructor):
         raise ValueError(f'Unknown node type {type(node)}')
 
 
+def dict_remove_dot_keys(d):
+    for k in list(d.keys()):
+        if k.startswith('.'):
+            del d[k]
+        elif isinstance(d[k], dict):
+            dict_remove_dot_keys(d[k])
+
+
+def cmd_with_checkpoint(cmd: str, checkpoint: str, ignore_error: bool = False):
+    """
+    Add checkpoint to a shell command.
+    If a checkpoint file exists, the command will be skipped,
+    otherwise the command will be executed and
+    a checkpoint file will be created if the command is executed successfully.
+
+    :param cmd: shell command
+    :param checkpoint: checkpoint file name
+    :param ignore_error: if True, will not raise error if the command failed
+    """
+    checkpoint = shlex.quote(checkpoint)
+    exit_clause = [
+        '  __EXITCODE__=$?; if [ $__EXITCODE__ -ne 0 ]; then exit $__EXITCODE__; fi',
+    ] if not ignore_error else []
+
+    msg = shlex.quote(f"hit checkpoint: {checkpoint}, skip...")
+    return '\n'.join([
+        f'if [ -f {checkpoint} ]; then echo {msg}; else',
+        f'  {cmd}',
+        *exit_clause,
+        f'  touch {checkpoint}',
+        f'fi',
+    ])
+
+
 def __export_remote_functions():
     """cloudpickle compatible: https://stackoverflow.com/questions/75292769"""
 
@@ -276,6 +313,19 @@ def __export_remote_functions():
         return [e for tup in zip_longest(*list_of_lists) for e in tup if e is not None]
 
 
+    def limit(it, size=-1):
+        """
+        limit the size of an iterable
+        """
+        if size <= 0:
+            yield from it
+        else:
+            for i, x in enumerate(it):
+                if i >= size:
+                    break
+                yield x
+
+
     def dump_json(obj, path: str):
         default = lambda o: f"<<non-serializable: {type(o).__qualname__}>>"
         with open(path, 'w', encoding='utf-8') as f:
@@ -299,8 +349,20 @@ def __export_remote_functions():
             os.makedirs(dirname, exist_ok=True)
 
 
-    def expand_globs(paths: List[str]) -> List[str]:
-        paths = flatten([glob.glob(path) for path in paths])
+    def expand_globs(patterns: Iterable[str], raise_invalid=False) -> List[str]:
+        """
+        Expand glob patterns in paths
+
+        :param patterns: list of paths or glob patterns
+        :param raise_invalid: if True, will raise error if no file found for a glob pattern
+        :return: list of expanded paths
+        """
+        paths = []
+        for pattern in patterns:
+            result = glob.glob(pattern, recursive=True) if '*' in pattern else [pattern]
+            if raise_invalid and len(result) == 0:
+                raise FileNotFoundError(f'No file found for {pattern}')
+            paths += result
         return sort_unique_str_list(paths)
 
 
@@ -313,6 +375,7 @@ def __export_remote_functions():
         list_random_sample,
         list_sample,
         flat_evenly,
+        limit,
         dump_json,
         dump_text,
         flush_stdio,
@@ -329,6 +392,7 @@ def __export_remote_functions():
     list_random_sample,
     list_sample,
     flat_evenly,
+    limit,
     dump_json,
     dump_text,
     flush_stdio,

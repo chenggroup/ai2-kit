@@ -1,4 +1,94 @@
 # Change Logs
+## v0.13.2
+* improvement: refactor slurm done file
+
+## v0.13.1
+* improvement: no need to return in wait method for slurm tool
+
+## v0.13.0
+* feat: `ai2-kit tool hpc` for managing HPC jobs
+
+## v0.12.23
+* improvement: add `ignore_error` for deepmd.
+
+## v0.12.22
+* improvement: add `ignore_error` for cp2k.
+
+## v0.12.19
+* fix: wrong lammps template for fep training
+* improvement: select structure for next round from good and decent structures
+
+## v0.12.9
+* fix: wrong lammps template for fep training
+
+## v0.12.8
+* improvement: optimize job running indicator
+
+## v0.12.7
+* improvement: allow to override fix_statement and ensemble in artifact
+
+## v0.12.6
+* fix: rsplit max should be 1
+* improve: don't keep good and poor structures to save storage
+
+## v0.12.5
+* feat: support max_decent_per_traj
+
+## v0.12.4
+* fix: wrong softlink path
+
+## v0.12.3
+* improvement: create softlink for dw_model
+
+## v0.12.2
+* fix: wrong lammps template_vars
+
+## v0.12.1
+* fix: fail to load config when it contains key starts with 
+* fix: wrong lammps template_vars
+
+## v0.12.0
+* feat: support `dpff` training mode
+* improvement: strict check of workflow configuration
+* fix: wrong specorder of `fep-pka` mode
+* breaking: `mode` move to general config section
+* breaking: atom id of `DELETE_ATOMS` of `fep` mode now start from 1 instead of 0 (the same as lammps)
+* breaking: require `deepmd-kit` when use `dpff` mode
+
+## v0.11.3
+* fix: incomplete lammps template_vars
+
+## v0.11.2
+* fix: pickle issue
+
+## v0.11.1
+* fix: typo
+
+## v0.11.0
+* feat: cll-training-workflow support `fep-redox` mode, details [here](./doc/manual/cll-workflow.md#train-mlp-model-for-fep-based-redox-potential-calculation
+)
+* feat: dpdata support `set_fparam`
+
+## v0.10.16
+* fix: ensure no duplicate dataset in deepmd input
+
+## v0.10.15
+* fix: lammps vars should also be template vars
+
+## v0.10.14
+* improvement: plumed config support lammps template vars, e.g `$$TEMP`
+
+## v0.10.13
+* feat: batch toolkit
+
+## v0.10.12
+* fix: openpbs workdir
+
+## v0.10.11
+* feat: support pbs job scheduler
+
+## v0.10.10
+* fix: dpdata filter
 
 ## v0.10.9
 * refactor: aos-analysis options

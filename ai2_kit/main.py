@@ -67,6 +67,16 @@ class ToolGroup:
         from ai2_kit.core.checkpoint import CheckpointCmd
         return CheckpointCmd
 
+    @property
+    def batch(self):
+        from ai2_kit.tool.batch import BatchHelper
+        return BatchHelper
+
+    @property
+    def hpc(self):
+        from ai2_kit.tool.hpc import cmd_entry
+        return cmd_entry
+
 class FeatureGroup:
     """
     Featuring tools for specific domains.
@@ -87,6 +97,13 @@ class FeatureGroup:
         """
         return self.catalysis
 
+    @property
+    def spectr(self):
+        """
+        Spectrum specific tools.
+        """
+        from ai2_kit.feat.spectrum import CmdEntries
+        return CmdEntries
 
 ai2_kit = Group({
     'workflow': WorkflowGroup(),

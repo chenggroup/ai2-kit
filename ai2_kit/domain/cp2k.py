@@ -1,20 +1,22 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import merge_dict, dict_nested_get, list_split, list_sample, dump_json, dump_text
+from ai2_kit.core.util import dict_nested_get, list_split, list_sample, dump_json, dump_text
 from ai2_kit.core.log import get_logger
+from ai2_kit.core.pydantic import BaseModel
 
-from typing import List, Tuple, Literal, Optional
-from pydantic import BaseModel
+from typing import List, Tuple, Literal, Optional, Mapping, Any, Iterable
 from dataclasses import dataclass
 from ase import Atoms
 
+from string import Template
 import copy
 import os
 
 from .data import DataFormat, ase_atoms_to_cp2k_input_data, artifacts_to_ase_atoms
-from .iface import ICllLabelOutput, BaseCllContext
+from .iface import ICllLabelOutput, BaseCllContext, TRAINING_MODE
 from .util import dump_cp2k_input
+
 
 logger = get_logger(__name__)
 
@@ -31,11 +33,24 @@ class CllCp2kInputConfig(BaseModel):
     """
     Input template for cp2k. Could be a dict or content of a cp2k input file.
     """
+
+    template_vars: Mapping[str, Any] = dict()
+    """
+    Template variables for input_template and wfn_warmup_template.
+
+    Those vars can be referenced in the LAMMPS input template as $$VAR_NAME.
+    """
+
     limit: int = 50
     """
     Limit of the number of systems to be labeled.
     """
     limit_method: Literal["even", "random", "truncate"] = "even"
+
+    ignore_error: bool = False
+    """
+    Ignore error when running cp2k.
+    """
 
 
 class CllCp2kContextConfig(BaseModel):
@@ -48,6 +63,7 @@ class CllCp2kContextConfig(BaseModel):
 @dataclass
 class CllCp2kInput:
     config: CllCp2kInputConfig
+    mode: TRAINING_MODE
     system_files: List[Artifact]
     type_map: List[str]
     initiated: bool = False  # FIXME: this seems to be a bad design idea
@@ -86,7 +102,9 @@ async def cll_cp2k(input: CllCp2kInput, ctx: CllCp2kContext) -> GenericCp2kOutpu
         system_files=[a.to_dict() for a in input.system_files],
         type_map=input.type_map,
         base_dir=tasks_dir,
+        mode=input.mode,
         input_template=input.config.input_template,
+        template_vars=input.config.template_vars,
         # initialize all data if not initiated
         limit=0 if not input.initiated else input.config.limit,
         limit_method=input.config.limit_method,
@@ -106,6 +124,7 @@ async def cll_cp2k(input: CllCp2kInput, ctx: CllCp2kContext) -> GenericCp2kOutpu
             cwd=cp2k_task_dir['url'],
             cmd=cmd,
             checkpoint='cp2k',
+            exit_on_error=not input.config.ignore_error,
         ))
 
     # submit tasks and wait for completion
@@ -133,10 +152,16 @@ async def cll_cp2k(input: CllCp2kInput, ctx: CllCp2kContext) -> GenericCp2kOutpu
 
 def __export_remote_functions():
 
+    class Cp2kInputTemplate(Template):
+        delimiter = '$$'
+
+
     def make_cp2k_task_dirs(system_files: List[ArtifactDict],
                             type_map: List[str],
                             input_template: Optional[str],
+                            template_vars: Mapping[str, Any],
                             base_dir: str,
+                            mode: TRAINING_MODE,
                             limit: int = 0,
                             wfn_warmup_template: Optional[str] = None,
                             limit_method: Literal["even", "random", "truncate"] = "even",
@@ -163,10 +188,25 @@ def __export_remote_functions():
             warmup_input = overridable_params.get('wfn_warmup_template', wfn_warmup_template)
             normal_input = overridable_params.get('input_template', input_template)
 
+            # be careful to override template_vars without changing the original dict
+            template_vars = {**template_vars, **overridable_params.get('template_vars', dict())}
+
+            # inject INTENSITY and POLARIZATION if efield is provided
+            efield = data_file['attrs'].get('efield')  # set by upstream task, lammps, for example
+            if mode == 'dpff':
+                assert efield is not None, 'efield is required for dpff mode'
+
+            if efield:
+                intensity, polarisation = lammps_efield_to_cp2k(efield)  # type: ignore
+                template_vars['INTENSITY'] = intensity
+                template_vars['POLARISATION'] = ' '.join(map(str, polarisation))
+
             if warmup_input:
+                warmup_input = Cp2kInputTemplate(warmup_input).substitute(template_vars)
                 dump_text(warmup_input, os.path.join(task_dir, warmup_file_name))
 
             assert normal_input, 'normal_input must be provided'
+            normal_input = Cp2kInputTemplate(normal_input).substitute(template_vars)
             dump_text(normal_input, os.path.join(task_dir, input_file_name))
 
             # create coord_n_cell.inp
@@ -177,9 +217,7 @@ def __export_remote_functions():
                 'url': task_dir,
                 'attrs': data_file['attrs'],
             })
-
         return task_dirs
-
 
     def dump_coord_n_cell(fp, atoms: Atoms):
         coords, cell = ase_atoms_to_cp2k_input_data(atoms)
@@ -191,6 +229,24 @@ def __export_remote_functions():
                 'C': ' '.join(map(str, cell[2])),
             }
         }, fp)
+
+
+    def lammps_efield_to_cp2k(efield: Iterable[float]):
+        """
+        IN CP2K, the efield is defined as
+        INTENSITY and POLARIZATION (direction of the electric field)
+
+        :param efield: list of 3 floats, the electric field in lammps unit
+        :return: intensity, polarization
+        """
+        import numpy as np
+        from scipy import constants
+
+        efield = np.array(efield)
+        factor = constants.physical_constants["atomic unit of electric field"][0] * constants.angstrom
+        intensity = np.linalg.norm(efield)
+        polarization = efield / np.linalg.norm(efield)
+        return intensity / factor, polarization  # type: ignore
 
 
     return (

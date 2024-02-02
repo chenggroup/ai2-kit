@@ -7,8 +7,8 @@ artifacts:
     url: /data/home/whxu/data/FEP-HF/explore
     includes: '*.xyz'
 
+    # fep-ini and fep-fin must be defined in the FEP mode for explore data
     attrs:
-      # fep-ini and fep-fin must be defined in the FEP mode
       fep-ini:
         cp2k:
           input_template: !load_text cp2k-ini.inp
@@ -21,10 +21,11 @@ workflow:
     type_map: [ O, H, F]
     mass_map: [ 15.999, 1.0080, 18.9984 ]
     max_iters: 1
+    mode: fep-pka
 
   label:
     cp2k:
-      limit: 10
+      limit: 20
 
   train:
     deepmd:
@@ -34,9 +35,6 @@ workflow:
 
   explore:
     lammps:
-      mode: fep
-      preset_template: fep
-
       timestep: 0.0005
       sample_freq: 100
       nsteps: 1000
@@ -57,6 +55,7 @@ workflow:
          SET_ATOM_TYPE: |
             set atom 162 type ${H_ghost}
 
+         # The index of deleleted atoms is 1-based since v0.12.0
          DELETE_ATOMS: [ 162 ]
 
          # PAIR_STYLE_EXT:

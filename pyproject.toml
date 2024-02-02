@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ai2-kit"
-version = "0.10.9"
+version = "0.13.2"
 description = ""
 authors = ["weihong.xu <xuweihong.cn@gmail.com>"]
 readme = "README.md"
@@ -54,3 +54,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 ai2-kit = "ai2_kit.main:main"
 ai2-cat = "ai2_kit.feat.catalysis:cli_main"
+ai2-spectr = "ai2_kit.feat.spectrum:cli_main"

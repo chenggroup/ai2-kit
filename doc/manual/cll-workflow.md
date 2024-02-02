@@ -334,6 +334,9 @@ workflow:
     model_devi:
         f_trust_lo: 0.4
         f_trust_hi: 0.6
+        # Remove structurally similar configurations using clustering method.
+        # If not needed, delete the following line. 
+        asap_options: {}
 
   update:
     walkthrough:
@@ -423,8 +426,14 @@ TODO: example.
 ### Training MLP for FEP based pKa Calculation
 TODO
 
+### Screening Beyond Model Deviation
+The configurations produced through the process of `Exploration` are chosen simply based on whether their Maximum Model Deviation of Forces falls within the range defined by `f_trust_lo` and `f_trust_hi`. However, such screening process still leaves a large number of configurations that require labeling. The screening{cite}`Guo2023checmate` is improved by adding an clustering procedure, which is allowed to remove structurally similar configurations. To enable this functionality, `asap_options: {}` is added in the above `workflow.yml`. For details of clustering method, users are referred to [the documentation](https://bingqingcheng.github.io/cluster.html) of ASAP{cite}`Cheng2020mapping`. 
+
 ## Citation
-If you use this workflow with LASP in your research, please cite the following papers: 
-> Yu-Xin Guo, Yong-Bin Zhuang, Jueli Shi, Jun Cheng; ChecMatE: A workflow package to automatically generate machine learning potentials and phase diagrams for semiconductor alloys. J. Chem. Phys. 7 September 2023; 159 (9): 094801. https://doi.org/10.1063/5.0166858
-> Huang, S., Shang, C., Kang, P., Zhang, X. & Liu, Z. LASP: Fast global potential energy surface exploration. Wiley Interdiscip Rev Comput Mol Sci 9, (2019). https://doi.org/10.1002/wcms.1415
+If you use clustering methods in your research, please cite the following paper: {cite}`Guo2023checmate,Cheng2020mapping`
+
+If you use LASP in your research, please cite the following paper: {cite}`Huang2019lasp`
+
+  
+  
   

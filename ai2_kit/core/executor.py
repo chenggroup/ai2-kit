@@ -72,11 +72,11 @@ class Executor(ABC):
         ...
 
     @abstractmethod
-    def upload(self, from_artifact: Artifact, to_dir: str) -> Artifact:
+    def upload(self, from_path: str, to_dir: str) -> str:
         ...
 
     @abstractmethod
-    def download(self, from_artifact: Artifact, to_dir: str) -> Artifact:
+    def download(self, from_path: str, to_dir: str) -> str:
         ...
 
     @abstractmethod
@@ -186,20 +186,11 @@ class HpcExecutor(Executor):
         pattern = os.path.join(artifact.url, artifact.includes)
         return self.glob(pattern)
 
-    def upload(self, from_artifact: Artifact, to_dir: str) -> Artifact:
-        dest_path = self.connector.upload(from_artifact.url, to_dir)
-        return Artifact(
-            executor=self.name,
-            url=dest_path,
-            attrs=from_artifact.attrs,
-        ) # type: ignore
+    def upload(self, from_path: str, to_dir: str):
+        return self.connector.upload(from_path, to_dir)
 
-    def download(self, from_artifact: Artifact, to_dir: str) -> Artifact:
-        dest_path = self.connector.download(from_artifact.url, to_dir)
-        return Artifact(
-            url=dest_path,
-            attrs=from_artifact.attrs,
-        ) # type: ignore
+    def download(self, from_path: str, to_dir: str):
+        return self.connector.download(from_path, to_dir)
 
 
 def create_executor(config: BaseExecutorConfig, name: str) -> Executor:

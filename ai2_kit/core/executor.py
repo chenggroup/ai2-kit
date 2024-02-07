@@ -1,3 +1,14 @@
+from typing import Optional, Dict, List, TypeVar, Callable, Mapping, Union
+from abc import ABC, abstractmethod
+from invoke import Result
+import cloudpickle
+import tempfile
+import tarfile
+import os
+import shlex
+import base64
+import bz2
+
 from .queue_system import QueueSystemConfig, BaseQueueSystem, Slurm, Lsf, PBS
 from .job import JobFuture
 from .artifact import Artifact
@@ -6,18 +17,8 @@ from .util import s_uuid
 from .log import get_logger
 from .pydantic import BaseModel
 
+
 logger = get_logger(__name__)
-
-
-from typing import Optional, Dict, List, TypeVar, Callable, Mapping, Union
-from abc import ABC, abstractmethod
-from invoke import Result
-import os
-import shlex
-import base64
-import bz2
-import cloudpickle
-
 
 class BaseExecutorConfig(BaseModel):
     ssh: Optional[SshConfig]
@@ -125,7 +126,8 @@ class HpcExecutor(Executor):
         self.queue_system = queue_system
         self.work_dir = work_dir
         self.python_cmd = python_cmd
-        self.tmp_dir = os.path.join(self.work_dir, '.tmp')  # TODO: make it configurable
+        self.tmp_dir = os.path.join(self.work_dir, '.tmp')
+        self.python_pkgs_dir = os.path.join(self.tmp_dir, 'python_pkgs')
 
     def init(self):
         # if work_dir is relative path, it will be relative to user home
@@ -135,6 +137,22 @@ class HpcExecutor(Executor):
 
         self.mkdir(self.work_dir)
         self.mkdir(self.tmp_dir)
+        self.mkdir(self.python_pkgs_dir)
+        self.upload_python_pkg('ai2_kit')
+
+    def upload_python_pkg(self, pkg: str):
+        """
+        upload python package to remote server
+        """
+        pkg_path = os.path.dirname(__import__(pkg).__file__)
+        with tempfile.NamedTemporaryFile(suffix='.tar.gz') as fp:
+            with tarfile.open(fp.name, 'w:gz') as tar_fp:
+                tar_fp.add(pkg_path, arcname=os.path.basename(pkg_path), filter=_filter_pyc_files)
+            fp.flush()
+            self.upload(fp.name, self.python_pkgs_dir)
+            file_name = os.path.basename(fp.name)
+        self.run(f'cd {shlex.quote(self.python_pkgs_dir)} && tar -xf {shlex.quote(file_name)}')
+        logger.info('add python package: %s', pkg)
 
     def mkdir(self, path: str):
         return self.connector.run('mkdir -p {}'.format(shlex.quote(path)))
@@ -157,15 +175,15 @@ class HpcExecutor(Executor):
             python_cmd = self.python_cmd
         if cwd is None:
             cwd = self.work_dir
-        cd_cwd = f'cd {shlex.quote(cwd)}  &&'
+        base_cmd = f'cd {shlex.quote(cwd)} && PYTHONPATH={shlex.quote(self.python_pkgs_dir)} '
         script_len = len(script)
         logger.info('the size of generated python script is %s', script_len)
         if script_len < 100_000: # ssh connection will be closed of the size of command is too large
-            return self.connector.run(f'{cd_cwd} {python_cmd} -c {shlex.quote(script)}', hide=True)
+            return self.connector.run(f'{base_cmd} {python_cmd} -c {shlex.quote(script)}', hide=True)
         else:
             script_path = os.path.join(self.tmp_dir, f'run_python_script_{s_uuid()}.py')
             self.dump_text(script, script_path)
-            ret = self.connector.run(f'{cd_cwd} {python_cmd} {shlex.quote(script_path)}', hide=True)
+            ret = self.connector.run(f'{base_cmd} {python_cmd} {shlex.quote(script_path)}', hide=True)
             self.connector.run(f'rm {shlex.quote(script_path)}')
             return ret
 
@@ -227,3 +245,8 @@ def fn_to_script(fn: Callable, delimiter='@'):
         f'''sys.stdout.flush()''',  # ensure all output is printed
     ]
     return ';'.join(script)
+
+def _filter_pyc_files(tarinfo):
+    if tarinfo.name.endswith('.pyc') or tarinfo.name.endswith('__pycache__'):
+        return None
+    return tarinfo

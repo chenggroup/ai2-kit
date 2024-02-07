@@ -1,7 +1,7 @@
 from typing import Optional, Dict, List, TypeVar, Callable, Mapping, Union
 from abc import ABC, abstractmethod
 from invoke import Result
-import cloudpickle
+import cloudpickle as cp
 import tempfile
 import tarfile
 import os
@@ -189,10 +189,10 @@ class HpcExecutor(Executor):
 
     def run_python_fn(self, fn: FnType, python_cmd=None, cwd=None) -> FnType:
         def remote_fn(*args, **kwargs):
-            script = fn_to_script(lambda: fn(*args, **kwargs), delimiter='@')
+            script = fn_to_script(fn, args, kwargs, delimiter='@')
             ret = self.run_python_script(script=script, python_cmd=python_cmd, cwd=None)
             _, r = ret.stdout.rsplit('@', 1)
-            return cloudpickle.loads(bz2.decompress(base64.b64decode(r)))
+            return cp.loads(bz2.decompress(base64.b64decode(r)))
         return remote_fn  # type: ignore
 
     def submit(self, script: str, cwd: str, **kwargs):
@@ -235,16 +235,30 @@ class ExecutorManager:
         return self._executors[name]
 
 
-def fn_to_script(fn: Callable, delimiter='@'):
-    dumped_fn = base64.b64encode(bz2.compress(cloudpickle.dumps(fn, protocol=cloudpickle.DEFAULT_PROTOCOL), 5))
+def fn_to_script(fn: Callable, args, kwargs, delimiter='@'):
+    dumped_fn = base64.b64encode(bz2.compress(cp.dumps(fn, protocol=cp.DEFAULT_PROTOCOL), 5))
     script = [
         f'''import base64,bz2,sys,cloudpickle as cp''',
-        f'''r=cp.loads(bz2.decompress(base64.b64decode({repr(dumped_fn)})))()''',
+        f'''fn={pickle_converts(fn)}''',
+        f'''args={pickle_converts(args)}''',
+        f'''kwargs={pickle_converts(kwargs)}''',
+        'r=fn(*args, **kwargs)',
         f'''sys.stdout.flush()''',  # ensure all output is printed
         f'''print({repr(delimiter)}+base64.b64encode(bz2.compress(cp.dumps(r, protocol=cp.DEFAULT_PROTOCOL),5)).decode('ascii'))''',
         f'''sys.stdout.flush()''',  # ensure all output is printed
     ]
     return ';'.join(script)
+
+
+def pickle_converts(obj, pickle_module='cp', bz2_module='bz2', base64_module='base64'):
+    """
+    convert an object to its pickle string form
+    """
+    obj_pkl = cp.dumps(obj, protocol=cp.DEFAULT_PROTOCOL)
+    compress_level = 5 if len(obj_pkl) > 4096 else 1
+    compressed = bz2.compress(obj_pkl, compress_level)
+    obj_b64 = base64.b64encode(compressed).decode('ascii')
+    return f'{pickle_module}.loads({bz2_module}.decompress({base64_module}.b64decode({repr(obj_b64)})))'
 
 def _filter_pyc_files(tarinfo):
     if tarinfo.name.endswith('.pyc') or tarinfo.name.endswith('__pycache__'):

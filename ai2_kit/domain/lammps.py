@@ -302,368 +302,352 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
     return GenericLammpsOutput(model_devi_outputs=outputs)
 
 
-def __export_remote_functions():
 
-    class LammpsInputTemplate(Template):
-        delimiter = '$$'
+class LammpsInputTemplate(Template):
+    delimiter = '$$'
 
-    def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
-                              broadcast_vars: Mapping[str, Sequence[Any]],
-                              data_files: List[ArtifactDict],
-                              dp_models: Mapping[str, List[str]],
-                              n_steps: int,
-                              timestep: float,
-                              sample_freq: float,
-                              no_pbc: bool,
-                              n_wise: int,
-                              ensemble: Optional[str],
-                              fix_statement: Optional[str],
-                              preset_template: str,
-                              input_template: Optional[str],
-                              plumed_config: Optional[str],
-                              extra_template_vars: Mapping[str, Any],
-                              type_map: List[str],
-                              mass_map: List[float],
-                              type_alias: Mapping[str, List[str]],
-                              work_dir: str,
-                              dp_modifier: Optional[dict],
-                              dp_sel_type: Optional[List[int]],
-                              mode: TRAINING_MODE,
-                              ai2_kit_cmd: str,
-                              ):
-        # setup workspace
-        input_data_dir = os.path.join(work_dir, 'input_data')
-        tasks_dir = os.path.join(work_dir, 'tasks')
-        for path in (input_data_dir, tasks_dir):
-            os.makedirs(path, exist_ok=True)
+def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
+                            broadcast_vars: Mapping[str, Sequence[Any]],
+                            data_files: List[ArtifactDict],
+                            dp_models: Mapping[str, List[str]],
+                            n_steps: int,
+                            timestep: float,
+                            sample_freq: float,
+                            no_pbc: bool,
+                            n_wise: int,
+                            ensemble: Optional[str],
+                            fix_statement: Optional[str],
+                            preset_template: str,
+                            input_template: Optional[str],
+                            plumed_config: Optional[str],
+                            extra_template_vars: Mapping[str, Any],
+                            type_map: List[str],
+                            mass_map: List[float],
+                            type_alias: Mapping[str, List[str]],
+                            work_dir: str,
+                            dp_modifier: Optional[dict],
+                            dp_sel_type: Optional[List[int]],
+                            mode: TRAINING_MODE,
+                            ai2_kit_cmd: str,
+                            ):
+    # setup workspace
+    input_data_dir = os.path.join(work_dir, 'input_data')
+    tasks_dir = os.path.join(work_dir, 'tasks')
+    for path in (input_data_dir, tasks_dir):
+        os.makedirs(path, exist_ok=True)
 
-        # create data files
-        input_dataset = []
-        atoms_list = artifacts_to_ase_atoms(data_files, type_map=type_map)
-        for i, (artifact, atoms) in enumerate(atoms_list):
-            #  create data file
-            ancestor = artifact['attrs']['ancestor']
-            data_file = os.path.join(input_data_dir, f'{ancestor}-{i:06d}.lammps.data')
-            if mode == 'dpff':
-                assert dp_modifier is not None and dp_sel_type is not None, 'dp_modifier & dp_sel_type is required for dpff mode'
-                sys_charge_map = dp_modifier['sys_charge_map']
-                model_charge_map = dp_modifier['model_charge_map']
-                with open(data_file, 'w') as fp:
-                    dump_dplr_lammps_data(fp, atoms, type_map=type_map, sel_type=dp_sel_type,
-                                          sys_charge_map=sys_charge_map, model_charge_map=model_charge_map)  # type: ignore
-            else:
-                ase.io.write(data_file, atoms, format='lammps-data', specorder=type_map)  # type: ignore
-            input_dataset.append({
-                'url': data_file,
-                'attrs': artifact['attrs'],
-            })
-
-        # generate combinations of variants
-        combination_fields: List[str] = ['DATA_FILE']
-        combination_values: List[List[Any]] = [input_dataset]
-        for k, v in combination_vars.items():
-            combination_fields.append(k)
-            combination_values.append(v)  # type: ignore
-        if 1 < n_wise <= len(combination_fields):
-            logger.info(f'using {n_wise}-wise combination')
-            combinations = AllPairs(combination_values, n=n_wise)
+    # create data files
+    input_dataset = []
+    atoms_list = artifacts_to_ase_atoms(data_files, type_map=type_map)
+    for i, (artifact, atoms) in enumerate(atoms_list):
+        #  create data file
+        ancestor = artifact['attrs']['ancestor']
+        data_file = os.path.join(input_data_dir, f'{ancestor}-{i:06d}.lammps.data')
+        if mode == 'dpff':
+            assert dp_modifier is not None and dp_sel_type is not None, 'dp_modifier & dp_sel_type is required for dpff mode'
+            sys_charge_map = dp_modifier['sys_charge_map']
+            model_charge_map = dp_modifier['model_charge_map']
+            with open(data_file, 'w') as fp:
+                dump_dplr_lammps_data(fp, atoms, type_map=type_map, sel_type=dp_sel_type,
+                                        sys_charge_map=sys_charge_map, model_charge_map=model_charge_map)  # type: ignore
         else:
-            logger.info('using full combination')
-            combinations = itertools.product(*combination_values)
+            ase.io.write(data_file, atoms, format='lammps-data', specorder=type_map)  # type: ignore
+        input_dataset.append({
+            'url': data_file,
+            'attrs': artifact['attrs'],
+        })
 
-        combinations = list(map(list, combinations))
+    # generate combinations of variants
+    combination_fields: List[str] = ['DATA_FILE']
+    combination_values: List[List[Any]] = [input_dataset]
+    for k, v in combination_vars.items():
+        combination_fields.append(k)
+        combination_values.append(v)  # type: ignore
+    if 1 < n_wise <= len(combination_fields):
+        logger.info(f'using {n_wise}-wise combination')
+        combinations = AllPairs(combination_values, n=n_wise)
+    else:
+        logger.info('using full combination')
+        combinations = itertools.product(*combination_values)
 
-        # broadcast broadcast_vars to all combinations
-        for k in broadcast_vars.keys():
-            # TODO: moving this check to pydatnic validator
-            assert k not in combination_fields, f'broadcast_vars {k} is already in explore_vars'
+    combinations = list(map(list, combinations))
 
-        combination_fields.extend(broadcast_vars.keys())
-        for i, combination in enumerate(combinations):
-            for _vars in broadcast_vars.values():
-                combination.append(_vars[i % len(_vars)])
+    # broadcast broadcast_vars to all combinations
+    for k in broadcast_vars.keys():
+        # TODO: moving this check to pydatnic validator
+        assert k not in combination_fields, f'broadcast_vars {k} is already in explore_vars'
 
-        # generate tasks input
-        task_dirs = []
-        for i, combination in enumerate(combinations):
-            lammps_vars = dict(zip(combination_fields, combination))
-            template_vars = {
-                **lammps_vars,
-                'AI2KIT_CMD': ai2_kit_cmd,
-            }
+    combination_fields.extend(broadcast_vars.keys())
+    for i, combination in enumerate(combinations):
+        for _vars in broadcast_vars.values():
+            combination.append(_vars[i % len(_vars)])
 
-            # setup task dir
-            task_dir = os.path.join(tasks_dir, f'{i:06d}')
-            os.makedirs(os.path.join(task_dir, LAMMPS_DUMP_DIR), exist_ok=True)
+    # generate tasks input
+    task_dirs = []
+    for i, combination in enumerate(combinations):
+        lammps_vars = dict(zip(combination_fields, combination))
+        template_vars = {
+            **lammps_vars,
+            'AI2KIT_CMD': ai2_kit_cmd,
+        }
 
-            data_file = lammps_vars.pop('DATA_FILE')
+        # setup task dir
+        task_dir = os.path.join(tasks_dir, f'{i:06d}')
+        os.makedirs(os.path.join(task_dir, LAMMPS_DUMP_DIR), exist_ok=True)
 
-            # override default values with data file attrs
-            overridable_params: dict = dict_nested_get(data_file, ['attrs', 'lammps'], dict())  # type: ignore
-            plumed_config = overridable_params.get('plumed_config', plumed_config)
-            fix_statement = overridable_params.get('fix_statement', fix_statement)
-            ensemble = overridable_params.get('ensemble', ensemble)
-            type_alias = overridable_params.get('type_alias', type_alias)
+        data_file = lammps_vars.pop('DATA_FILE')
 
-            # be careful to override template_vars without changing the original dict
-            extra_template_vars = {**extra_template_vars, **overridable_params.get('template_vars', dict())}
+        # override default values with data file attrs
+        overridable_params: dict = dict_nested_get(data_file, ['attrs', 'lammps'], dict())  # type: ignore
+        plumed_config = overridable_params.get('plumed_config', plumed_config)
+        fix_statement = overridable_params.get('fix_statement', fix_statement)
+        ensemble = overridable_params.get('ensemble', ensemble)
+        type_alias = overridable_params.get('type_alias', type_alias)
 
-            # generate types related template vars
-            types_template_vars = get_types_template_vars(type_map=type_map, mass_map=mass_map,
-                                                          type_alias=type_alias, sel_type=dp_sel_type)
+        # be careful to override template_vars without changing the original dict
+        extra_template_vars = {**extra_template_vars, **overridable_params.get('template_vars', dict())}
 
-            ## build variables section
-            lammps_vars['DATA_FILE'] = data_file['url']
-            lammps_vars['N_STEPS'] = n_steps
-            lammps_vars['THERMO_FREQ'] = sample_freq
-            lammps_vars['DUMP_FREQ'] = sample_freq
-            lammps_vars['SAMPLE_FREQ'] = sample_freq
-            lammps_vars['DEFAULT_GROUP'] = 'all'
+        # generate types related template vars
+        types_template_vars = get_types_template_vars(type_map=type_map, mass_map=mass_map,
+                                                        type_alias=type_alias, sel_type=dp_sel_type)
 
-            if mode == 'dpff':
-                assert dp_modifier is not None
-                lammps_vars['DEFAULT_GROUP'] = 'real_atom'
-                lammps_vars['EWALD_BETA'] = dp_modifier['ewald_beta']
-            lammps_vars['DUMP_GROUP'] = lammps_vars['DEFAULT_GROUP']
+        ## build variables section
+        lammps_vars['DATA_FILE'] = data_file['url']
+        lammps_vars['N_STEPS'] = n_steps
+        lammps_vars['THERMO_FREQ'] = sample_freq
+        lammps_vars['DUMP_FREQ'] = sample_freq
+        lammps_vars['SAMPLE_FREQ'] = sample_freq
+        lammps_vars['DEFAULT_GROUP'] = 'all'
 
-            dump_json(lammps_vars, os.path.join(task_dir, 'debug.lammps_vars.json'))  # for debug
-            template_vars['VARIABLES'] = _get_lammps_variables(lammps_vars)
-            ## build init settings
-            template_vars['INITIALIZE'] =  '\n'.join([
-                'units           metal',
-                'atom_style      %s' % ('full' if mode == 'dpff' else 'atomic'),
-                'boundary ' + ('f f f' if no_pbc else 'p p p'),
-            ])
-            ## build read data section
-            extra_types = sum(len(l) for l in type_alias.values())  # how many alias type are defined
-            template_vars['READ_DATA'] = (
-                '''if "${restart} > 0" '''
-                '''then "read_restart md.restart.*" '''
-                '''else "read_data ${DATA_FILE} extra/atom/types %s"''' % extra_types
-            )
+        if mode == 'dpff':
+            assert dp_modifier is not None
+            lammps_vars['DEFAULT_GROUP'] = 'real_atom'
+            lammps_vars['EWALD_BETA'] = dp_modifier['ewald_beta']
+        lammps_vars['DUMP_GROUP'] = lammps_vars['DEFAULT_GROUP']
 
-            ## build simulation section
-            simulation = [
-                '''if "${restart} == 0" then "velocity ${DEFAULT_GROUP} create ${TEMP} %d"''' % (random.randrange(10 ^ 6 - 1) + 1)
-            ]
+        dump_json(lammps_vars, os.path.join(task_dir, 'debug.lammps_vars.json'))  # for debug
+        template_vars['VARIABLES'] = _get_lammps_variables(lammps_vars)
+        ## build init settings
+        template_vars['INITIALIZE'] =  '\n'.join([
+            'units           metal',
+            'atom_style      %s' % ('full' if mode == 'dpff' else 'atomic'),
+            'boundary ' + ('f f f' if no_pbc else 'p p p'),
+        ])
+        ## build read data section
+        extra_types = sum(len(l) for l in type_alias.values())  # how many alias type are defined
+        template_vars['READ_DATA'] = (
+            '''if "${restart} > 0" '''
+            '''then "read_restart md.restart.*" '''
+            '''else "read_data ${DATA_FILE} extra/atom/types %s"''' % extra_types
+        )
 
-            if fix_statement is None:
-                assert ensemble is not None, 'either fix_statement or ensemble is required'
-                fix_statement = get_ensemble(ensemble, group='${DEFAULT_GROUP}')
-
-            if mode == 'dpff':
-                simulation.extend([
-                    'compute  real_temp real_atom temp',
-                    fix_statement,
-                    'fix_modify 1 temp real_temp',
-                    '',
-                ])
-            else:
-                simulation.append(fix_statement)
-
-            if plumed_config:
-                plumed_config = LammpsInputTemplate(plumed_config).substitute(defaultdict(str), **template_vars)
-                plumed_config_file = os.path.join(task_dir, 'plumed.input')
-                dump_text(plumed_config, plumed_config_file)
-                simulation.append(f'fix cll_plumed ${{DEFAULT_GROUP}} plumed plumedfile {plumed_config_file} outfile plumed.out')
-
-            if no_pbc:
-                simulation.extend([
-                    'velocity ${DEFAULT_GROUP} zero linear',
-                    'fix      fm ${DEFAULT_GROUP} momentum 1 linear 1 1 1',
-                ])
-            simulation.extend([
-                'thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz',
-                'thermo       ${THERMO_FREQ}',
-                'dump         1 ${DUMP_GROUP} custom ${DUMP_FREQ} %s/*%s id type x y z fx fy fz' % (LAMMPS_DUMP_DIR, LAMMPS_DUMP_SUFFIX),
-                'restart      10000 md.restart',
-            ])
-            template_vars['SIMULATION'] = '\n'.join(simulation)
-            ## build run section
-            template_vars['RUN'] = '\n'.join([
-                'timestep %f' % timestep,
-                'run      ${N_STEPS} upto',
-            ])
-
-            dp_models_vars = _get_dp_models_variables(dp_models)
-            template_vars = {**template_vars, **types_template_vars, **dp_models_vars, **extra_template_vars}
-            dump_json(template_vars, os.path.join(task_dir, 'debug.template_vars.json'))
-
-            if input_template is None:
-                input_template = PRESET_LAMMPS_INPUT_TEMPLATE[preset_template]
-            dump_text(input_template, os.path.join(task_dir, 'debug.input_template.txt'))
-            lammps_input = LammpsInputTemplate(input_template).substitute(defaultdict(str),**template_vars)
-            dump_text(lammps_input, os.path.join(task_dir, 'lammps.input'))
-
-            # the `source` field is required as model_devi will use it to update init structures
-            task_dirs.append({'url': task_dir,
-                              'attrs': {
-                                  **data_file['attrs'],
-                                  'source': data_file['url'],
-                                  'efield': lammps_vars.get('EFIELD'),
-                              }})  # type: ignore
-        return tasks_dir, task_dirs
-
-
-    def get_types_template_vars(type_map: List[str], mass_map: List[float],
-                                type_alias: Mapping[str, List[str]], sel_type: Optional[List[int]]):
-        """
-        generate template vars that related to type_map, mass_map, type_alias, sel_type
-
-        the order of atom type index is:
-        real atoms (defined in type_map), virtual atoms (defined in sel_type) and then alias (defined in type_alias)
-        """
-        template_vars = {}
-        type_to_mass = dict(zip(type_map, mass_map))
-
-        # new types gonna to be added
-        ext_type_map = []
-        ext_mass_map = []
-
-        # handle sel_type (used by dplr)
-        # sel_type must be handle before type_alias as they are defined in data file
-        # while type_alias are defined in lammps script
-        type_association = []
-        if sel_type is not None:
-            n_real_atom = len(type_map)
-            for i, t in enumerate(sel_type):
-                # add placeholder for sel_type
-                ext_type_map.append(f'_X_{i}')
-                ext_mass_map.append(1.0)
-                # type association is to define relationship between virtual and real atom type in lammps
-                type_association.extend([t + 1, n_real_atom + i + 1])
-            template_vars['DPLR_TYPE_ASSOCIATION'] = ' '.join(map(str, type_association))
-
-        # handle alias and fep special special rule
-        alias_specorder = []
-        alias_specorder_with_null = []
-        for real_type, alias in type_alias.items():
-            for t in alias:
-                alias_specorder.append(real_type)
-                if t.endswith('ghost') or t.endswith('null'):
-                    alias_specorder_with_null.append('NULL')
-                else:
-                    alias_specorder_with_null.append(real_type)
-                ext_type_map.append(t)
-                ext_mass_map.append(type_to_mass[real_type])
-
-        # inject group for dpff mode
-        if sel_type is not None:
-            real_atom_start = 1
-            real_atom_end = real_atom_start + len(type_map)
-            virtual_atom_end = real_atom_end + len(sel_type)
-            alias_end = virtual_atom_end + len(ext_type_map) - len(sel_type)
-
-            dpff_real_atom = [*range(real_atom_start, real_atom_end),  *range(virtual_atom_end, alias_end)]
-            dpff_virtual_atom = range(real_atom_end, virtual_atom_end)
-
-            template_vars['DPFF_REAL_ATOM'] = ' '.join(map(str, dpff_real_atom))
-            template_vars['DPFF_VIRTUAL_ATOM'] = ' '.join(map(str, dpff_virtual_atom))
-            template_vars['DPFF_GROUPS'] = '\n'.join([
-                f'group real_atom    type {template_vars["DPFF_REAL_ATOM"]}',
-                f'group virtual_atom type {template_vars["DPFF_VIRTUAL_ATOM"]}',
-                f'neigh_modify    every 10 delay 0 check no exclude group real_atom virtual_atom',
-            ])
-
-        # SPECORDER is used to specify the order of types in the lammps data file
-        # For example, if the complete type_map is [H, O, O_1, O_2, H_1, H_2],
-        # then the specorder should be [H, O, O, O, H, H]
-        specorder = type_map + alias_specorder
-        fep_fin_specorder = type_map + alias_specorder_with_null
-
-        # specorder in the format of H O H NULL, for lammps pair coeff input
-        template_vars['SPECORDER'] = ' '.join(specorder)
-        template_vars['SPECORDER_BASE'] = ' '.join(type_map)
-        template_vars['FEP_INI_SPECORDER'] = template_vars['SPECORDER']
-        template_vars['FEP_FIN_SPECORDER'] = ' '.join(fep_fin_specorder)
-
-        # specorder in the format of ['H', 'O', 'H', 'NULL'], for ai2-kit command line input
-        template_vars['SPECORDER_LIST'] = str(specorder)
-        template_vars['SPECORDER_BASE_LIST'] = str(type_map)
-        template_vars['FEP_INI_SPECORDER_LIST'] = template_vars['SPECORDER_LIST']
-        template_vars['FEP_FIN_SPECORDER_LIST'] = str(fep_fin_specorder)
-
-        # mass map is in the form of
-        # variable   H               equal 1
-        # variable   O               equal 2
-        # variable   H_null          equal 3
-        # mass ${H} 1.007
-        # mass ${O} 15.999
-        # mass ${H_null} 1.0
-        template_vars['MASS_MAP_FULL'] = _get_masses(type_map + ext_type_map, mass_map + ext_mass_map)
-        template_vars['MASS_MAP_BASE'] = _get_masses(type_map, mass_map)
-        template_vars['MASS_MAP'] =  template_vars['MASS_MAP_FULL']
-        return template_vars
-
-
-    def _get_type_map_vars(type_map: List[str]):
-        return dict(zip(type_map, range(1, len(type_map) + 1)))
-
-
-    def _get_masses(type_map: List[str], mass_map: List[float]):
-        lines = [
-            _get_lammps_variables(_get_type_map_vars(type_map)),
-            '',
+        ## build simulation section
+        simulation = [
+            '''if "${restart} == 0" then "velocity ${DEFAULT_GROUP} create ${TEMP} %d"''' % (random.randrange(10 ^ 6 - 1) + 1)
         ]
-        for t, m in zip(type_map, mass_map):
-            lines.append(f'mass ${{{t}}} {m}')
-        return '\n'.join(lines)
 
+        if fix_statement is None:
+            assert ensemble is not None, 'either fix_statement or ensemble is required'
+            fix_statement = get_ensemble(ensemble, group='${DEFAULT_GROUP}')
 
-    def _get_dp_models_variables(models: Mapping[str, List[str]]):
-        vars = {}
-        for k, v in models.items():
-            prefix = 'DP_MODELS' if k == '' else f'DP_{k}_MODELS'
-            vars[prefix] = ' '.join(v)
-            for i, m in enumerate(v):
-                vars[f'{prefix}_{i}'] = m
-        return vars
-
-
-    def _get_lammps_variables(vars: Mapping[str, Any]):
-        lines = []
-        for k, v in vars.items():
-            if isinstance(v, str):
-                # TODO: should escape `v` in case of special characters
-                line = f'variable    {k:16} string "{v}"'
-            elif isinstance(v, list):  # vector or args
-                line = f'variable    {k:16} string \"{" ".join(str(x) for x in v)}\"'
-            else:
-                line = f'variable    {k:16} equal {v}'
-            lines.append(line)
-        return '\n'.join(lines)
-
-
-    def get_ensemble(ensemble: str, group='all'):
-        lines = []
-        if ensemble in ('npt', 'npt-i', 'npt-iso',):
-            lines.append('fix 1 %(group)s npt temp ${TEMP} ${TEMP} ${TAU_T} iso ${PRES} ${PRES} ${TAU_P}')
-        elif ensemble in ('npt-a', 'npt-aniso',):
-            lines.append('fix 1 %(group)s npt temp ${TEMP} ${TEMP} ${TAU_T} aniso ${PRES} ${PRES} ${TAU_P}')
-        elif ensemble in ('npt-t', 'npt-tri',):
-            lines.append('fix 1 %(group)s npt temp ${TEMP} ${TEMP} ${TAU_T} tri ${PRES} ${PRES} ${TAU_P}')
-        elif ensemble in ('nvt',):
-            lines.append('fix 1 %(group)s nvt temp ${TEMP} ${TEMP} ${TAU_T}')
-        elif ensemble in ('nve',):
-            lines.append('fix 1 %(group)s nve')
-        elif ensemble in ('csvr',):
-            lines.append('fix 1 %(group)s nve')
-            lines.append('fix 2 %(group)s temp/csvr ${TEMP} ${TEMP} ${TIME_CONST} %(seed)d')
+        if mode == 'dpff':
+            simulation.extend([
+                'compute  real_temp real_atom temp',
+                fix_statement,
+                'fix_modify 1 temp real_temp',
+                '',
+            ])
         else:
-            raise ValueError('unknown ensemble: ' + ensemble)
-        return '\n'.join(lines) % {'group': group, 'seed': random.randrange(10^6 - 1) + 1}
+            simulation.append(fix_statement)
 
-    return (
-        LammpsInputTemplate,
-        make_lammps_task_dirs,
-        get_ensemble,
-        get_types_template_vars,
-    )
+        if plumed_config:
+            plumed_config = LammpsInputTemplate(plumed_config).substitute(defaultdict(str), **template_vars)
+            plumed_config_file = os.path.join(task_dir, 'plumed.input')
+            dump_text(plumed_config, plumed_config_file)
+            simulation.append(f'fix cll_plumed ${{DEFAULT_GROUP}} plumed plumedfile {plumed_config_file} outfile plumed.out')
+
+        if no_pbc:
+            simulation.extend([
+                'velocity ${DEFAULT_GROUP} zero linear',
+                'fix      fm ${DEFAULT_GROUP} momentum 1 linear 1 1 1',
+            ])
+        simulation.extend([
+            'thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz',
+            'thermo       ${THERMO_FREQ}',
+            'dump         1 ${DUMP_GROUP} custom ${DUMP_FREQ} %s/*%s id type x y z fx fy fz' % (LAMMPS_DUMP_DIR, LAMMPS_DUMP_SUFFIX),
+            'restart      10000 md.restart',
+        ])
+        template_vars['SIMULATION'] = '\n'.join(simulation)
+        ## build run section
+        template_vars['RUN'] = '\n'.join([
+            'timestep %f' % timestep,
+            'run      ${N_STEPS} upto',
+        ])
+
+        dp_models_vars = _get_dp_models_variables(dp_models)
+        template_vars = {**template_vars, **types_template_vars, **dp_models_vars, **extra_template_vars}
+        dump_json(template_vars, os.path.join(task_dir, 'debug.template_vars.json'))
+
+        if input_template is None:
+            input_template = PRESET_LAMMPS_INPUT_TEMPLATE[preset_template]
+        dump_text(input_template, os.path.join(task_dir, 'debug.input_template.txt'))
+        lammps_input = LammpsInputTemplate(input_template).substitute(defaultdict(str),**template_vars)
+        dump_text(lammps_input, os.path.join(task_dir, 'lammps.input'))
+
+        # the `source` field is required as model_devi will use it to update init structures
+        task_dirs.append({'url': task_dir,
+                            'attrs': {
+                                **data_file['attrs'],
+                                'source': data_file['url'],
+                                'efield': lammps_vars.get('EFIELD'),
+                            }})  # type: ignore
+    return tasks_dir, task_dirs
 
 
-(
-    LammpsInputTemplate,
-    make_lammps_task_dirs,
-    get_ensemble,
-    get_types_template_vars,
-) = __export_remote_functions()
+def get_types_template_vars(type_map: List[str], mass_map: List[float],
+                            type_alias: Mapping[str, List[str]], sel_type: Optional[List[int]]):
+    """
+    generate template vars that related to type_map, mass_map, type_alias, sel_type
+
+    the order of atom type index is:
+    real atoms (defined in type_map), virtual atoms (defined in sel_type) and then alias (defined in type_alias)
+    """
+    template_vars = {}
+    type_to_mass = dict(zip(type_map, mass_map))
+
+    # new types gonna to be added
+    ext_type_map = []
+    ext_mass_map = []
+
+    # handle sel_type (used by dplr)
+    # sel_type must be handle before type_alias as they are defined in data file
+    # while type_alias are defined in lammps script
+    type_association = []
+    if sel_type is not None:
+        n_real_atom = len(type_map)
+        for i, t in enumerate(sel_type):
+            # add placeholder for sel_type
+            ext_type_map.append(f'_X_{i}')
+            ext_mass_map.append(1.0)
+            # type association is to define relationship between virtual and real atom type in lammps
+            type_association.extend([t + 1, n_real_atom + i + 1])
+        template_vars['DPLR_TYPE_ASSOCIATION'] = ' '.join(map(str, type_association))
+
+    # handle alias and fep special special rule
+    alias_specorder = []
+    alias_specorder_with_null = []
+    for real_type, alias in type_alias.items():
+        for t in alias:
+            alias_specorder.append(real_type)
+            if t.endswith('ghost') or t.endswith('null'):
+                alias_specorder_with_null.append('NULL')
+            else:
+                alias_specorder_with_null.append(real_type)
+            ext_type_map.append(t)
+            ext_mass_map.append(type_to_mass[real_type])
+
+    # inject group for dpff mode
+    if sel_type is not None:
+        real_atom_start = 1
+        real_atom_end = real_atom_start + len(type_map)
+        virtual_atom_end = real_atom_end + len(sel_type)
+        alias_end = virtual_atom_end + len(ext_type_map) - len(sel_type)
+
+        dpff_real_atom = [*range(real_atom_start, real_atom_end),  *range(virtual_atom_end, alias_end)]
+        dpff_virtual_atom = range(real_atom_end, virtual_atom_end)
+
+        template_vars['DPFF_REAL_ATOM'] = ' '.join(map(str, dpff_real_atom))
+        template_vars['DPFF_VIRTUAL_ATOM'] = ' '.join(map(str, dpff_virtual_atom))
+        template_vars['DPFF_GROUPS'] = '\n'.join([
+            f'group real_atom    type {template_vars["DPFF_REAL_ATOM"]}',
+            f'group virtual_atom type {template_vars["DPFF_VIRTUAL_ATOM"]}',
+            f'neigh_modify    every 10 delay 0 check no exclude group real_atom virtual_atom',
+        ])
+
+    # SPECORDER is used to specify the order of types in the lammps data file
+    # For example, if the complete type_map is [H, O, O_1, O_2, H_1, H_2],
+    # then the specorder should be [H, O, O, O, H, H]
+    specorder = type_map + alias_specorder
+    fep_fin_specorder = type_map + alias_specorder_with_null
+
+    # specorder in the format of H O H NULL, for lammps pair coeff input
+    template_vars['SPECORDER'] = ' '.join(specorder)
+    template_vars['SPECORDER_BASE'] = ' '.join(type_map)
+    template_vars['FEP_INI_SPECORDER'] = template_vars['SPECORDER']
+    template_vars['FEP_FIN_SPECORDER'] = ' '.join(fep_fin_specorder)
+
+    # specorder in the format of ['H', 'O', 'H', 'NULL'], for ai2-kit command line input
+    template_vars['SPECORDER_LIST'] = str(specorder)
+    template_vars['SPECORDER_BASE_LIST'] = str(type_map)
+    template_vars['FEP_INI_SPECORDER_LIST'] = template_vars['SPECORDER_LIST']
+    template_vars['FEP_FIN_SPECORDER_LIST'] = str(fep_fin_specorder)
+
+    # mass map is in the form of
+    # variable   H               equal 1
+    # variable   O               equal 2
+    # variable   H_null          equal 3
+    # mass ${H} 1.007
+    # mass ${O} 15.999
+    # mass ${H_null} 1.0
+    template_vars['MASS_MAP_FULL'] = _get_masses(type_map + ext_type_map, mass_map + ext_mass_map)
+    template_vars['MASS_MAP_BASE'] = _get_masses(type_map, mass_map)
+    template_vars['MASS_MAP'] =  template_vars['MASS_MAP_FULL']
+    return template_vars
+
+
+def _get_type_map_vars(type_map: List[str]):
+    return dict(zip(type_map, range(1, len(type_map) + 1)))
+
+
+def _get_masses(type_map: List[str], mass_map: List[float]):
+    lines = [
+        _get_lammps_variables(_get_type_map_vars(type_map)),
+        '',
+    ]
+    for t, m in zip(type_map, mass_map):
+        lines.append(f'mass ${{{t}}} {m}')
+    return '\n'.join(lines)
+
+
+def _get_dp_models_variables(models: Mapping[str, List[str]]):
+    vars = {}
+    for k, v in models.items():
+        prefix = 'DP_MODELS' if k == '' else f'DP_{k}_MODELS'
+        vars[prefix] = ' '.join(v)
+        for i, m in enumerate(v):
+            vars[f'{prefix}_{i}'] = m
+    return vars
+
+
+def _get_lammps_variables(vars: Mapping[str, Any]):
+    lines = []
+    for k, v in vars.items():
+        if isinstance(v, str):
+            # TODO: should escape `v` in case of special characters
+            line = f'variable    {k:16} string "{v}"'
+        elif isinstance(v, list):  # vector or args
+            line = f'variable    {k:16} string \"{" ".join(str(x) for x in v)}\"'
+        else:
+            line = f'variable    {k:16} equal {v}'
+        lines.append(line)
+    return '\n'.join(lines)
+
+
+def get_ensemble(ensemble: str, group='all'):
+    lines = []
+    if ensemble in ('npt', 'npt-i', 'npt-iso',):
+        lines.append('fix 1 %(group)s npt temp ${TEMP} ${TEMP} ${TAU_T} iso ${PRES} ${PRES} ${TAU_P}')
+    elif ensemble in ('npt-a', 'npt-aniso',):
+        lines.append('fix 1 %(group)s npt temp ${TEMP} ${TEMP} ${TAU_T} aniso ${PRES} ${PRES} ${TAU_P}')
+    elif ensemble in ('npt-t', 'npt-tri',):
+        lines.append('fix 1 %(group)s npt temp ${TEMP} ${TEMP} ${TAU_T} tri ${PRES} ${PRES} ${TAU_P}')
+    elif ensemble in ('nvt',):
+        lines.append('fix 1 %(group)s nvt temp ${TEMP} ${TEMP} ${TAU_T}')
+    elif ensemble in ('nve',):
+        lines.append('fix 1 %(group)s nve')
+    elif ensemble in ('csvr',):
+        lines.append('fix 1 %(group)s nve')
+        lines.append('fix 2 %(group)s temp/csvr ${TEMP} ${TEMP} ${TIME_CONST} %(seed)d')
+    else:
+        raise ValueError('unknown ensemble: ' + ensemble)
+    return '\n'.join(lines) % {'group': group, 'seed': random.randrange(10^6 - 1) + 1}

@@ -147,72 +147,68 @@ async def cll_vasp(input: CllVaspInput, ctx: CllVaspContext) -> GenericVaspOutpu
     return GenericVaspOutput(vasp_outputs=vasp_outputs)
 
 
-def __export_remote_functions():
-    def make_vasp_task_dirs(system_files: List[ArtifactDict],
-                            type_map: List[str],
-                            input_template: dict,
-                            potcar_source: dict,
-                            base_dir: str,
-                            kpoints_template: Optional[dict] = None,
-                            limit: int = 0,
-                            sample_method: Literal["even", "random", "truncate"] = "even"
-                            ) -> List[ArtifactDict]:
-        """Generate VASP input files from LAMMPS dump files or XYZ files."""
+def make_vasp_task_dirs(system_files: List[ArtifactDict],
+                        type_map: List[str],
+                        input_template: dict,
+                        potcar_source: dict,
+                        base_dir: str,
+                        kpoints_template: Optional[dict] = None,
+                        limit: int = 0,
+                        sample_method: Literal["even", "random", "truncate"] = "even"
+                        ) -> List[ArtifactDict]:
+    """Generate VASP input files from LAMMPS dump files or XYZ files."""
 
-        import ase.io
-        from ase import Atoms
-        from ase.io.vasp import _symbol_count_from_symbols
+    import ase.io
+    from ase import Atoms
+    from ase.io.vasp import _symbol_count_from_symbols
 
-        task_dirs = []
-        atoms_list: List[Tuple[ArtifactDict, Atoms]] = artifacts_to_ase_atoms(system_files, type_map)
+    task_dirs = []
+    atoms_list: List[Tuple[ArtifactDict, Atoms]] = artifacts_to_ase_atoms(system_files, type_map)
 
-        if limit > 0:
-            atoms_list = list_sample(atoms_list, limit, method=sample_method)
+    if limit > 0:
+        atoms_list = list_sample(atoms_list, limit, method=sample_method)
 
-        for i, (file, atoms) in enumerate(atoms_list):
-            # create task dir
-            task_dir = os.path.join(base_dir, f'{str(i).zfill(6)}')
-            os.makedirs(task_dir, exist_ok=True)
+    for i, (file, atoms) in enumerate(atoms_list):
+        # create task dir
+        task_dir = os.path.join(base_dir, f'{str(i).zfill(6)}')
+        os.makedirs(task_dir, exist_ok=True)
 
-            # create input file
-            input_data = copy.deepcopy(input_template)
-            input_data = dict_nested_get(
-                file, ['attrs', 'vasp', 'input_data'], input_data # type: ignore
-            )
-            incar = Incar.from_dict(input_data)
-            incar.write_file(os.path.join(task_dir, 'INCAR'))
+        # create input file
+        input_data = copy.deepcopy(input_template)
+        input_data = dict_nested_get(
+            file, ['attrs', 'vasp', 'input_data'], input_data # type: ignore
+        )
+        incar = Incar.from_dict(input_data)
+        incar.write_file(os.path.join(task_dir, 'INCAR'))
 
-            # create POSCAR
-            elements_all = atoms.get_chemical_symbols()
-            elements = [
-                item[0] for item in _symbol_count_from_symbols(elements_all)
-            ]
-            ase.io.write(
-                os.path.join(task_dir, 'POSCAR'), atoms, format='vasp'
-            )
+        # create POSCAR
+        elements_all = atoms.get_chemical_symbols()
+        elements = [
+            item[0] for item in _symbol_count_from_symbols(elements_all)
+        ]
+        ase.io.write(
+            os.path.join(task_dir, 'POSCAR'), atoms, format='vasp'
+        )
 
-            # create POTCAR
-            with open(os.path.join(task_dir, 'POTCAR'), 'w') as out_file:
-                for element in elements:
-                    with open(potcar_source[element], 'r') as in_file:
-                        out_file.write(in_file.read())
+        # create POTCAR
+        with open(os.path.join(task_dir, 'POTCAR'), 'w') as out_file:
+            for element in elements:
+                with open(potcar_source[element], 'r') as in_file:
+                    out_file.write(in_file.read())
 
-            # create KPOINTS
-            kpoints_template = dict_nested_get(
-                file, ['attrs', 'vasp', 'kpoints_template'], None # type: ignore
-            )
-            if kpoints_template:
-                kpoints = Kpoints.from_dict(kpoints_template)
-                kpoints.write_file(os.path.join(task_dir, 'KPOINTS'))
+        # create KPOINTS
+        kpoints_template = dict_nested_get(
+            file, ['attrs', 'vasp', 'kpoints_template'], None # type: ignore
+        )
+        if kpoints_template:
+            kpoints = Kpoints.from_dict(kpoints_template)
+            kpoints.write_file(os.path.join(task_dir, 'KPOINTS'))
 
-            # inherit attrs from input file
-            # TODO: inherit only ancestor key should be enough
-            task_dirs.append({
-                'url': task_dir,
-                'attrs': file['attrs'],
-            })
+        # inherit attrs from input file
+        # TODO: inherit only ancestor key should be enough
+        task_dirs.append({
+            'url': task_dir,
+            'attrs': file['attrs'],
+        })
 
-        return task_dirs
-
-    return make_vasp_task_dirs
-make_vasp_task_dirs = __export_remote_functions()
+    return task_dirs

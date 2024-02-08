@@ -4,22 +4,19 @@ import os
 import copy
 
 
-def __ArtifactDict():
-    class ArtifactDict(TypedDict):
-        """
-        A dict representation of Artifact.
-        Use this when you need to run a remote function call as pydantic model is not pickleable.
+class ArtifactDict(TypedDict):
+    """
+    A dict representation of Artifact.
+    Use this when you need to run a remote function call as pydantic model is not pickleable.
 
-        referrer is not included in this dict as it is not pickleable.
-        """
-        url: str
-        attrs: dict
-        executor: Optional[str]
-        format: Optional[str]
-        includes: Optional[str]
-        key: Optional[str]
-    return ArtifactDict
-ArtifactDict = __ArtifactDict()
+    referrer is not included in this dict as it is not pickleable.
+    """
+    url: str
+    attrs: dict
+    executor: Optional[str]
+    format: Optional[str]
+    includes: Optional[str]
+    key: Optional[str]
 
 
 class Artifact(BaseModel):

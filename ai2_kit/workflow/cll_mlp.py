@@ -325,7 +325,7 @@ def precondition(workflow_cfg: WorkflowConfig) -> SharedVars:
             assert modifier is not None, 'modifier should be specified in deepmd input template for dpff mode'
             shared_vars.dp_modifier = modifier
         elif mode == 'fep-redox':
-            assert deepmd_cfg.input_template['model']['fitting_net']['numb_fparam'] == 2, 'numb_fparam should be 2 for fep-redox/fep-pka mode'
+            assert deepmd_cfg.input_template['model']['fitting_net']['numb_fparam'] == 1, 'numb_fparam should be 1 for fep-redox/fep-pka mode'
 
     lammps_cfg = workflow_cfg.explore.lammps
     if lammps_cfg is not None:

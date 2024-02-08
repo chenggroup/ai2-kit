@@ -236,12 +236,9 @@ class ExecutorManager:
 
 
 def fn_to_script(fn: Callable, args, kwargs, delimiter='@'):
-    dumped_fn = base64.b64encode(bz2.compress(cp.dumps(fn, protocol=cp.DEFAULT_PROTOCOL), 5))
     script = [
         f'''import base64,bz2,sys,cloudpickle as cp''',
-        f'''fn={pickle_converts(fn)}''',
-        f'''args={pickle_converts(args)}''',
-        f'''kwargs={pickle_converts(kwargs)}''',
+        f'''fn,args,kwargs={pickle_converts((fn, args, kwargs))}''',
         'r=fn(*args, **kwargs)',
         f'''sys.stdout.flush()''',  # ensure all output is printed
         f'''print({repr(delimiter)}+base64.b64encode(bz2.compress(cp.dumps(r, protocol=cp.DEFAULT_PROTOCOL),5)).decode('ascii'))''',

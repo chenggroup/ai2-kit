@@ -241,161 +241,124 @@ def cmd_with_checkpoint(cmd: str, checkpoint: str, ignore_error: bool = False):
     ])
 
 
-def __export_remote_functions():
-    """cloudpickle compatible: https://stackoverflow.com/questions/75292769"""
 
-    def merge_dict(lo: dict, ro: dict, path=None, ignore_none=True, quiet=False):
-        """
-        Merge two dict, the left dict will be overridden.
-        Note: list will be replaced instead of merged.
-        """
-        if path is None:
-            path = []
-        for key, value in ro.items():
-            if ignore_none and value is None:
-                continue
-            if key in lo:
-                current_path = path + [str(key)]
-                if isinstance(lo[key], dict) and isinstance(value, dict):
-                    merge_dict(lo[key], value, path=current_path, ignore_none=ignore_none, quiet=quiet)
-                else:
-                    if not quiet:
-                        print('.'.join(current_path) + ' has been overridden')
-                    lo[key] = value
+def merge_dict(lo: dict, ro: dict, path=None, ignore_none=True, quiet=False):
+    """
+    Merge two dict, the left dict will be overridden.
+    Note: list will be replaced instead of merged.
+    """
+    if path is None:
+        path = []
+    for key, value in ro.items():
+        if ignore_none and value is None:
+            continue
+        if key in lo:
+            current_path = path + [str(key)]
+            if isinstance(lo[key], dict) and isinstance(value, dict):
+                merge_dict(lo[key], value, path=current_path, ignore_none=ignore_none, quiet=quiet)
             else:
+                if not quiet:
+                    print('.'.join(current_path) + ' has been overridden')
                 lo[key] = value
-        return lo
-
-    def dict_nested_get(d: dict, keys: List[str], default=EMPTY):
-        """get value from nested dict"""
-        for key in keys:
-            if key not in d and default is not EMPTY:
-                return default
-            d = d[key]
-        return d
-
-    def dict_nested_set(d: dict, keys: List[str], value):
-        """set value to nested dict"""
-        for key in keys[:-1]:
-            d = d[key]
-        d[keys[-1]] = value
-
-    def list_even_sample(l, size):
-        if size <= 0 or size > len(l):
-            return l
-        # calculate the sample interval
-        interval = len(l) / size
-        return [l[int(i * interval)] for i in range(size)]
-
-    def list_random_sample(l, size, seed = None):
-        if seed is None:
-            seed = len(l)
-        random.seed(seed)
-        return random.sample(l, size)
-
-    def list_sample(l, size, method='even', **kwargs):
-        if method == 'even':
-            return list_even_sample(l, size)
-        elif method == 'random':
-            return list_random_sample(l, size, **kwargs)
-        elif method == 'truncate':
-            return l[:size]
         else:
-            raise ValueError(f'Unknown sample method {method}')
+            lo[key] = value
+    return lo
 
-    def flat_evenly(list_of_lists):
-        """
-        flat a list of lists and ensure the output result distributed evenly
-        >>> flat_evenly([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-        [1, 4, 7, 2, 5, 8, 3, 6, 9]
-        Ref: https://stackoverflow.com/questions/76751171/how-to-flat-a-list-of-lists-and-ensure-the-output-result-distributed-evenly-in-p
-        """
-        return [e for tup in zip_longest(*list_of_lists) for e in tup if e is not None]
+def dict_nested_get(d: dict, keys: List[str], default=EMPTY):
+    """get value from nested dict"""
+    for key in keys:
+        if key not in d and default is not EMPTY:
+            return default
+        d = d[key]
+    return d
 
+def dict_nested_set(d: dict, keys: List[str], value):
+    """set value to nested dict"""
+    for key in keys[:-1]:
+        d = d[key]
+    d[keys[-1]] = value
 
-    def limit(it, size=-1):
-        """
-        limit the size of an iterable
-        """
-        if size <= 0:
-            yield from it
-        else:
-            for i, x in enumerate(it):
-                if i >= size:
-                    break
-                yield x
+def list_even_sample(l, size):
+    if size <= 0 or size > len(l):
+        return l
+    # calculate the sample interval
+    interval = len(l) / size
+    return [l[int(i * interval)] for i in range(size)]
 
+def list_random_sample(l, size, seed = None):
+    if seed is None:
+        seed = len(l)
+    random.seed(seed)
+    return random.sample(l, size)
 
-    def dump_json(obj, path: str):
-        default = lambda o: f"<<non-serializable: {type(o).__qualname__}>>"
-        with open(path, 'w', encoding='utf-8') as f:
-            json.dump(obj, f, indent=2, default=default)
+def list_sample(l, size, method='even', **kwargs):
+    if method == 'even':
+        return list_even_sample(l, size)
+    elif method == 'random':
+        return list_random_sample(l, size, **kwargs)
+    elif method == 'truncate':
+        return l[:size]
+    else:
+        raise ValueError(f'Unknown sample method {method}')
 
-
-    def dump_text(text: str, path: str, **kwargs):
-        with open(path, 'w', **kwargs) as f:
-            f.write(text)
-
-
-    def flush_stdio():
-        import sys
-        sys.stdout.flush()
-        sys.stderr.flush()
-
-
-    def ensure_dir(path: str):
-        dirname = os.path.dirname(path)
-        if dirname:
-            os.makedirs(dirname, exist_ok=True)
-
-
-    def expand_globs(patterns: Iterable[str], raise_invalid=False) -> List[str]:
-        """
-        Expand glob patterns in paths
-
-        :param patterns: list of paths or glob patterns
-        :param raise_invalid: if True, will raise error if no file found for a glob pattern
-        :return: list of expanded paths
-        """
-        paths = []
-        for pattern in patterns:
-            result = glob.glob(pattern, recursive=True) if '*' in pattern else [pattern]
-            if raise_invalid and len(result) == 0:
-                raise FileNotFoundError(f'No file found for {pattern}')
-            paths += result
-        return sort_unique_str_list(paths)
+def flat_evenly(list_of_lists):
+    """
+    flat a list of lists and ensure the output result distributed evenly
+    >>> flat_evenly([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+    [1, 4, 7, 2, 5, 8, 3, 6, 9]
+    Ref: https://stackoverflow.com/questions/76751171/how-to-flat-a-list-of-lists-and-ensure-the-output-result-distributed-evenly-in-p
+    """
+    return [e for tup in zip_longest(*list_of_lists) for e in tup if e is not None]
 
 
-    # export functions
-    return (
-        merge_dict,
-        dict_nested_get,
-        dict_nested_set,
-        list_even_sample,
-        list_random_sample,
-        list_sample,
-        flat_evenly,
-        limit,
-        dump_json,
-        dump_text,
-        flush_stdio,
-        ensure_dir,
-        expand_globs,
-    )
+def limit(it, size=-1):
+    """
+    limit the size of an iterable
+    """
+    if size <= 0:
+        yield from it
+    else:
+        for i, x in enumerate(it):
+            if i >= size:
+                break
+            yield x
 
 
-(
-    merge_dict,
-    dict_nested_get,
-    dict_nested_set,
-    list_even_sample,
-    list_random_sample,
-    list_sample,
-    flat_evenly,
-    limit,
-    dump_json,
-    dump_text,
-    flush_stdio,
-    ensure_dir,
-    expand_globs,
-) = __export_remote_functions()
+def dump_json(obj, path: str):
+    default = lambda o: f"<<non-serializable: {type(o).__qualname__}>>"
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(obj, f, indent=2, default=default)
+
+
+def dump_text(text: str, path: str, **kwargs):
+    with open(path, 'w', **kwargs) as f:
+        f.write(text)
+
+
+def flush_stdio():
+    import sys
+    sys.stdout.flush()
+    sys.stderr.flush()
+
+
+def ensure_dir(path: str):
+    dirname = os.path.dirname(path)
+    if dirname:
+        os.makedirs(dirname, exist_ok=True)
+
+
+def expand_globs(patterns: Iterable[str], raise_invalid=False) -> List[str]:
+    """
+    Expand glob patterns in paths
+
+    :param patterns: list of paths or glob patterns
+    :param raise_invalid: if True, will raise error if no file found for a glob pattern
+    :return: list of expanded paths
+    """
+    paths = []
+    for pattern in patterns:
+        result = glob.glob(pattern, recursive=True) if '*' in pattern else [pattern]
+        if raise_invalid and len(result) == 0:
+            raise FileNotFoundError(f'No file found for {pattern}')
+        paths += result
+    return sort_unique_str_list(paths)

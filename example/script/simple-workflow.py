@@ -7,32 +7,25 @@ from typing import List
 import asyncio
 import os
 
-# Define remote executable functions
-def __export_remote_functions():
 
-    def process_input(n: int, base_dir: str):
-        import random
+def process_input(n: int, base_dir: str):
+    import random
 
-        task_dirs = []
-        for i in range(n):
-            task_dir = os.path.join(base_dir, str(i))
-            os.makedirs(task_dir, exist_ok=True)
-            with open(os.path.join(task_dir, 'input'), 'w') as f:
-                f.write(str(random.randint(0, 100)))
-            task_dirs.append(task_dir)
-        return task_dirs
+    task_dirs = []
+    for i in range(n):
+        task_dir = os.path.join(base_dir, str(i))
+        os.makedirs(task_dir, exist_ok=True)
+        with open(os.path.join(task_dir, 'input'), 'w') as f:
+            f.write(str(random.randint(0, 100)))
+        task_dirs.append(task_dir)
+    return task_dirs
 
-    def process_output(task_dirs: List[str]):
-        outputs = []
-        for task_dir in task_dirs:
-            with open(os.path.join(task_dir, 'output'), 'r') as f:
-                outputs.append(int(f.read().strip()))
-        return sum(outputs)
-
-    return (process_input, process_output)
-
-
-(process_input, process_output) = __export_remote_functions()
+def process_output(task_dirs: List[str]):
+    outputs = []
+    for task_dir in task_dirs:
+        with open(os.path.join(task_dir, 'output'), 'r') as f:
+            outputs.append(int(f.read().strip()))
+    return sum(outputs)
 
 
 # Define workflow

@@ -1,4 +1,10 @@
 # Change Logs
+
+## v0.14.0
+* refactor: python remote execution solution
+* feat: upload local python package to remote
+* improvement: move some dependencies to optional 
+
 ## v0.13.2
 * improvement: refactor slurm done file
 

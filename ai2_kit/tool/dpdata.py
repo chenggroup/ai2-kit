@@ -8,6 +8,7 @@ from dpdata.data_type import Axis, DataType
 
 logger = get_logger(__name__)
 
+
 def register_data_types():
     if getattr(dpdata, '__registed__', False):
         return
@@ -23,7 +24,6 @@ def register_data_types():
     dpdata.System.register_data_type(*DATA_TYPES)
     dpdata.LabeledSystem.register_data_type(*DATA_TYPES)
     dpdata.__registed__ = True
-
 
 
 def set_fparam(system, fparam):

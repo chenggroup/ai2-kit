@@ -152,7 +152,7 @@ class HpcExecutor(Executor):
             self.upload(fp.name, self.python_pkgs_dir)
             file_name = os.path.basename(fp.name)
         self.run(f'cd {shlex.quote(self.python_pkgs_dir)} && tar -xf {shlex.quote(file_name)}')
-        logger.info('add python package: %s', pkg)
+        logger.info('add python package: %s', pkg_path)
 
     def mkdir(self, path: str):
         return self.connector.run('mkdir -p {}'.format(shlex.quote(path)))

@@ -15,7 +15,7 @@ import os
 
 from .data import DataFormat, ase_atoms_to_cp2k_input_data, artifacts_to_ase_atoms
 from .iface import ICllLabelOutput, BaseCllContext, TRAINING_MODE
-from .util import dump_cp2k_input
+from .util import cp2k_dump_input
 
 
 logger = get_logger(__name__)
@@ -220,7 +220,7 @@ def make_cp2k_task_dirs(system_files: List[ArtifactDict],
 
 def dump_coord_n_cell(fp, atoms: Atoms):
     coords, cell = ase_atoms_to_cp2k_input_data(atoms)
-    dump_cp2k_input({
+    cp2k_dump_input({
         'COORD': dict.fromkeys(coords, ''),  # FIXME: this is a dirty hack, should make dump_cp2k_input support COORD
         'CELL': {
             'A': ' '.join(map(str, cell[0])),

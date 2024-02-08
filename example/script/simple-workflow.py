@@ -20,6 +20,7 @@ def process_input(n: int, base_dir: str):
         task_dirs.append(task_dir)
     return task_dirs
 
+
 def process_output(task_dirs: List[str]):
     outputs = []
     for task_dir in task_dirs:

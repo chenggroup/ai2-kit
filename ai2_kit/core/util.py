@@ -241,7 +241,6 @@ def cmd_with_checkpoint(cmd: str, checkpoint: str, ignore_error: bool = False):
     ])
 
 
-
 def merge_dict(lo: dict, ro: dict, path=None, ignore_none=True, quiet=False):
     """
     Merge two dict, the left dict will be overridden.

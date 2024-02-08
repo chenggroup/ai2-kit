@@ -3,7 +3,7 @@ import re
 import numpy as np
 
 
-def substitute_vars(string, vars: dict):
+def cp2p_substitute_vars(string, vars: dict):
     # Define a regular expression for placeholders
     placeholder_pattern = re.compile(r"\$\{?(\w+)(?:-(\w+))?\}?")
     # Define a function to replace the placeholders with keyword arguments
@@ -26,7 +26,7 @@ def substitute_vars(string, vars: dict):
     # Return the string with the placeholders replaced
     return placeholder_pattern.sub(replace_placeholder, string)
 
-def process_cp2k_macro(fp):
+def cp2k_process_macro(fp):
     # Define a regular expression for @SET directive with case insensitive flag
     set_pattern = re.compile(r"@SET\s+(\w+)\s+(.+)", re.IGNORECASE) # Added re.IGNORECASE flag
     # Initialize an empty dictionary for variables and a list for output lines
@@ -63,7 +63,7 @@ def process_cp2k_macro(fp):
     # Return the variables dictionary and the output list as a single string with newline characters
     return variables, "\n".join(output_lines)
 
-def parse_cp2k_input(fp):
+def cp2k_parse_input(fp):
     # Initialize an empty dictionary and a stack
     output = {}
     stack = []
@@ -114,18 +114,18 @@ def parse_cp2k_input(fp):
 
 
 # TODO: handle coords
-def load_cp2k_input(fp):
-    variables, processed_text = process_cp2k_macro(fp)
-    substituted_text = substitute_vars(processed_text, variables)
-    return parse_cp2k_input(io.StringIO(substituted_text))
+def cp2k_load_input(fp):
+    variables, processed_text = cp2k_process_macro(fp)
+    substituted_text = cp2p_substitute_vars(processed_text, variables)
+    return cp2k_parse_input(io.StringIO(substituted_text))
 
 
-def loads_cp2k_input(text):
-    return load_cp2k_input(io.StringIO(text))
+def cp2k_loads_input(text):
+    return cp2k_load_input(io.StringIO(text))
 
 
 # TODO: handle coords
-def dumps_cp2k_input(input_dict):
+def cp2k_dumps_input(input_dict):
     # Initialize an empty list for output lines
     output_lines = []
     # Define a helper function to recursively dump the sections and values
@@ -149,8 +149,8 @@ def dumps_cp2k_input(input_dict):
     return "\n".join(output_lines)
 
 
-def dump_cp2k_input(input_dict, fp):
-    fp.write(dumps_cp2k_input(input_dict))
+def cp2k_dump_input(input_dict, fp):
+    fp.write(cp2k_dumps_input(input_dict))
 
 
 class LammpsData:

@@ -25,9 +25,13 @@ allpairspy = "^2.5.0"
 tabulate = "^0.9.0"
 asaplib = "^0.0.2"
 joblib = "^1.2.0"
-dscribe = "1.2.2"
-jupyter-formily = "0.0.7"
-ipympl = "^0.9.3"
+
+dscribe = {version = "1.2.2", optional = true}
+jupyter-formily = {version = "0.0.7", optional = true}
+ipympl = {version = "^0.9.3", optional = true}
+
+[tool.poetry.extras]
+all = ["dscribe", "jupyter-formily", "ipympl"]
 
 
 [[tool.poetry.source]]

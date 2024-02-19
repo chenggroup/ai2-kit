@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.14.1
+* refactor: make `asaplib` optional
+
 ## v0.14.0
 * refactor: python remote execution solution
 * feat: upload local python package to remote

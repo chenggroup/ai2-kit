@@ -1,4 +1,3 @@
-from asaplib.data.xyz import ASAPXYZ
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import dump_json, dump_text, flush_stdio, limit
@@ -19,7 +18,6 @@ import os
 from .data import get_data_format, DataFormat, artifacts_to_ase_atoms
 from .iface import ICllSelectorOutput, BaseCllContext
 from .constant import LAMMPS_DUMP_DIR, LAMMPS_DUMP_SUFFIX, DEFAULT_ASAP_SOAP_DESC, DEFAULT_ASAP_PCA_REDUCER
-from .asap import get_descriptor, reduce_dimension, get_trainer, get_cluster
 
 
 logger = get_logger(__name__)
@@ -381,6 +379,10 @@ def select_distinct_structures(candidates: List[ArtifactDict],
                                 limit_per_cluster: int = -1,
                                 sort_by_energy: bool = False,
                                 ):
+
+    from .asap import get_descriptor, reduce_dimension, get_trainer, get_cluster
+    from asaplib.data.xyz import ASAPXYZ
+
     os.makedirs(work_dir, exist_ok=True)
 
     dump_json(attrs, os.path.join(work_dir, 'attrs.debug.json'))

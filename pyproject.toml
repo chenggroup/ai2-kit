@@ -23,15 +23,15 @@ pymatgen = "^2023.2.22"
 mdanalysis = "^2.4.3"
 allpairspy = "^2.5.0"
 tabulate = "^0.9.0"
-asaplib = "^0.0.2"
 joblib = "^1.2.0"
 
+asaplib = {version = "^0.0.2", optional = true}
 dscribe = {version = "1.2.2", optional = true}
 jupyter-formily = {version = "0.0.7", optional = true}
 ipympl = {version = "^0.9.3", optional = true}
 
 [tool.poetry.extras]
-all = ["dscribe", "jupyter-formily", "ipympl"]
+all = ["dscribe", "jupyter-formily", "ipympl", "asaplib"]
 
 
 [[tool.poetry.source]]

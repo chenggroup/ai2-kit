@@ -3,6 +3,7 @@ DP_DISP_FILE = 'lcurve.out'
 DP_PROFILING_FILE = 'timeline.json'
 DP_INPUT_FILE = 'input.json'
 DP_FROZEN_MODEL = 'frozen_model.pb'
+DP_FINAL_MODEL = 'final_model.pb'
 DP_ORIGINAL_MODEL = 'original_model.pb'
 
 MODEL_DEVI_OUT = 'model_devi.out'

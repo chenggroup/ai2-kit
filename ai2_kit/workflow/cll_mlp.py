@@ -207,6 +207,7 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig,
                 old_dataset=[] if train_output is None else train_output.get_training_dataset(),
                 new_dataset=label_output.get_labeled_system_dataset(),
                 sel_type=shared_vars.dp_sel_type,
+                previous=[] if train_output is None else train_output.get_mlp_models(),
             )
             deepmd_context = deepmd.CllDeepmdContext(
                 path_prefix=os.path.join(iter_path_prefix, 'train-deepmd'),

@@ -26,7 +26,8 @@ from .constant import (
     DP_PROFILING_FILE,
     DP_INPUT_FILE,
     DP_FROZEN_MODEL,
-    DP_ORIGINAL_MODEL
+    DP_ORIGINAL_MODEL,
+    DP_FINAL_MODEL,
 )
 
 logger = get_logger(__name__)
@@ -100,6 +101,12 @@ class CllDeepmdInputConfig(BaseModel):
     Set this to True when you have multiple structures with the same ancestor.
     """
 
+    init_from_previous: bool = False
+    """
+    Use the previous models to initialize the current training,
+    which can speed up the training process.
+    """
+
     ignore_error: bool = False
 
 
@@ -118,6 +125,7 @@ class CllDeepmdInput:
     sel_type: Optional[List[int]]
     old_dataset: List[Artifact]  # training data used by previous iteration
     new_dataset: List[Artifact]  # training data used by current iteration
+    previous: List[Artifact]  # previous models used by previous iteration
 
 
 @dataclass
@@ -220,13 +228,22 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
 
     all_steps: List[list] = []
     # run dp training jobs
-    for task_dir in dp_task_dirs:
+
+    for i, task_dir in enumerate(dp_task_dirs):
         executor.mkdir(task_dir)
+        # FIXME: a temporary workaround to support previous model
+        previous_model = None
+        if input.config.init_from_previous and input.previous:
+            j = i % len(input.previous)
+            previous_model = os.path.join(os.path.dirname(input.previous[j].url),
+                                          DP_ORIGINAL_MODEL)
+
         steps = _build_deepmd_steps(
             dp_cmd=ctx.config.dp_cmd,
             compress_model=input.config.compress_model,
             cwd=task_dir,
             pretrained_model=input.config.pretrained_model,
+            previous_model=previous_model,
         )
         all_steps.append(steps)
 
@@ -283,9 +300,14 @@ def _classify_dataset(dataset: List[Artifact]):
 def _build_deepmd_steps(dp_cmd: str,
                         compress_model: bool,
                         cwd: str,
+                        previous_model: Optional[str] = None,
                         pretrained_model: Optional[str] = None,):
     steps = []
     dp_train_cmd = f'{dp_cmd} train {DP_INPUT_FILE}'
+
+    if previous_model:
+        dp_train_cmd = f'{dp_train_cmd} -f {previous_model}'
+
     if pretrained_model:
         dp_train_cmd = f'{dp_train_cmd} --finetune {pretrained_model}'
     dp_train_cmd_restart = f'if [ ! -f model.ckpt.index ]; then {dp_train_cmd}; else {dp_train_cmd} --restart model.ckpt; fi'
@@ -298,7 +320,9 @@ def _build_deepmd_steps(dp_cmd: str,
                                    dp_cmd, 'compress', '-i', DP_ORIGINAL_MODEL, '-o', DP_FROZEN_MODEL],
                               cwd=cwd))
     else:
-        steps.append(BashStep(cmd=[dp_cmd, 'freeze', '-o', DP_FROZEN_MODEL],
+        # FIXME: a temporary workaround to support previous model
+        steps.append(BashStep(cmd=[dp_cmd, 'freeze', '-o', DP_ORIGINAL_MODEL, '&&',
+                                   'cp', DP_ORIGINAL_MODEL, DP_FROZEN_MODEL],
                               cwd=cwd))
     return steps
 

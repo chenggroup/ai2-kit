@@ -150,7 +150,6 @@ async def cll_cp2k(input: CllCp2kInput, ctx: CllCp2kContext) -> GenericCp2kOutpu
     return GenericCp2kOutput(cp2k_outputs=cp2k_outputs)
 
 
-
 class Cp2kInputTemplate(Template):
     delimiter = '$$'
 

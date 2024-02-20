@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 from io import StringIO
 import numpy as np
 import shlex
+import shutil
 import invoke
 import os
 import stat
@@ -153,10 +154,14 @@ class LocalConnector(BaseConnector):
         return to_path
 
     def upload(self, from_path: str, to_dir: str) -> str:
-        return self.sym_link(from_path, to_dir)
+        os.makedirs(to_dir, exist_ok=True)
+        shutil.copy(from_path, to_dir)
+        return os.path.join(to_dir, safe_basename(from_path))
 
     def download(self, from_path: str, to_dir: str) -> str:
-        return self.sym_link(from_path, to_dir)
+        os.makedirs(to_dir, exist_ok=True)
+        shutil.copy(from_path, to_dir)
+        return os.path.join(to_dir, safe_basename(from_path))
 
 
 def get_ln_cmd(from_path: str, to_path: str):

@@ -1,4 +1,6 @@
 # Change Logs
+## v0.14.2
+* feat: temporary support for init from previous model
 
 ## v0.14.1
 * refactor: make `asaplib` optional

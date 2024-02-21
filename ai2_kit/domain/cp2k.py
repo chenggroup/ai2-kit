@@ -117,7 +117,7 @@ async def cll_cp2k(input: CllCp2kInput, ctx: CllCp2kContext) -> GenericCp2kOutpu
         # run warmup if needed
         # note: use if-else instead of boolean shortcut to avoid wrong status
         cmd = '\n'.join([
-            f'if [ -f wfn_warmup.inp ]; then {ctx.config.cp2k_cmd} -i wfn_warmup.inp &> wfn_warmup.out || rm *.wfn || true; fi && \\',
+            f'if [ -f wfn_warmup.inp ]; then {ctx.config.cp2k_cmd} -i wfn_warmup.inp &> wfn_warmup.out || rm *.wfn && false; fi && \\',
             f'{ctx.config.cp2k_cmd} -i input.inp &> output && {ctx.config.post_cp2k_cmd}',
         ])
         steps.append(BashStep(

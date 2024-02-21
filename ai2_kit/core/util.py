@@ -64,10 +64,6 @@ def wait_for_change(widget, attribute):
     return future
 
 
-def default_mutable_field(obj):
-    return field(default_factory=lambda: copy.copy(obj))
-
-
 def get_yaml():
     yaml = YAML(typ='safe')
     JoinTag.register(yaml)

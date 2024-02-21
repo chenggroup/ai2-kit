@@ -1,5 +1,5 @@
 # Change Logs
-## v0.14.5
+## v0.14.6
 * hotfix: remove cp2k wfn if warmup step is failed
 
 ## v0.14.4

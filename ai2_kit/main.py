@@ -77,6 +77,11 @@ class ToolGroup:
         from ai2_kit.tool.hpc import cmd_entry
         return cmd_entry
 
+    @property
+    def misc(self):
+        from ai2_kit.tool.misc import cmd_entry
+        return cmd_entry
+
 class FeatureGroup:
     """
     Featuring tools for specific domains.

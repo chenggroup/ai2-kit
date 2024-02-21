@@ -1,4 +1,7 @@
 # Change Logs
+## v0.14.8
+* feat: tool to format cp2k input
+
 ## v0.14.7
 * hotfix: remove cp2k wfn if warmup step is failed
 

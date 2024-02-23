@@ -329,7 +329,7 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
                             dp_sel_type: Optional[List[int]],
                             mode: TRAINING_MODE,
                             ai2_kit_cmd: str,
-                            rel_path_to: Optional[str] = None,  # For dflow-galaxy
+                            rel_path: bool = False,
                             ):
     # setup workspace
     input_data_dir = os.path.join(work_dir, 'input_data')
@@ -413,8 +413,8 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
                                                         type_alias=type_alias, sel_type=dp_sel_type)
 
         ## build variables section
-        if rel_path_to:
-            lammps_vars['DATA_FILE'] = os.path.relpath(data_file['url'], rel_path_to)
+        if rel_path:
+            lammps_vars['DATA_FILE'] = os.path.relpath(data_file['url'], task_dir)
         else:
             lammps_vars['DATA_FILE'] = data_file['url']
 

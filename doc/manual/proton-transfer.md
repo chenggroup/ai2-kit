@@ -247,3 +247,7 @@ This command will draw the distance change over time.
 The output of the above command will be like below:  
 
 ![distance-to-interface](../res/distance-to-interface.png "distance-to-interface")
+
+## Reference
+
+[Shengheng Yan, Binju Wang, and Hai Lin Journal of Chemical Theory and Computation 2023 19 (2), 448-459 DOI: 10.1021/acs.jctc.2c01097](https://pubs.acs.org/doi/10.1021/acs.jctc.2c01097)

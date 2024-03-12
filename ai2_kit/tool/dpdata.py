@@ -1,11 +1,12 @@
 from ai2_kit.core.util import ensure_dir, expand_globs
-from ai2_kit.core.log import get_logger
+from ai2_kit.feat.spectrum.viber import dpdata_read_cp2k_viber_data
 
 import numpy as np
 
 import dpdata
 from dpdata.data_type import Axis, DataType
 
+from ai2_kit.core.log import get_logger
 logger = get_logger(__name__)
 
 
@@ -14,16 +15,18 @@ def register_data_types():
         return
 
     DATA_TYPES = [
-        DataType("fparam", np.ndarray, (Axis.NFRAMES, -1), required=False),
-        DataType("aparam", np.ndarray, (Axis.NFRAMES, Axis.NATOMS, -1), required=False),
-        DataType("efield", np.ndarray, (Axis.NFRAMES, Axis.NATOMS, 3), required=False),
-        DataType("ext_efield", np.ndarray, (Axis.NFRAMES, 3), required=False),
-        DataType("atomic_dipole", np.ndarray, (Axis.NFRAMES, -1), required=False),
-        DataType("atomic_polarizability", np.ndarray, (Axis.NFRAMES, -1), required=False),
+        DataType("fparam", np.ndarray, (Axis.NFRAMES, -1), required=False),  # type: ignore
+        DataType("aparam", np.ndarray, (Axis.NFRAMES, Axis.NATOMS, -1), required=False), # type: ignore
+        DataType("efield", np.ndarray, (Axis.NFRAMES, Axis.NATOMS, 3), required=False), # type: ignore
+        DataType("ext_efield", np.ndarray, (Axis.NFRAMES, 3), required=False), # type: ignore
+        DataType("atomic_dipole", np.ndarray, (Axis.NFRAMES, -1), required=False), # type: ignore
+        DataType("atomic_polarizability", np.ndarray, (Axis.NFRAMES, -1), required=False), # type: ignore
     ]
-    dpdata.System.register_data_type(*DATA_TYPES)
-    dpdata.LabeledSystem.register_data_type(*DATA_TYPES)
-    dpdata.__registed__ = True
+    dpdata.System.register_data_type(*DATA_TYPES) # type: ignore
+    dpdata.LabeledSystem.register_data_type(*DATA_TYPES) # type: ignore
+    dpdata.__registed__ = True  # type: ignore
+
+register_data_types()
 
 
 def set_fparam(system, fparam):
@@ -34,13 +37,8 @@ def set_fparam(system, fparam):
 
 class DpdataHelper:
 
-    def __init__(self, label: bool = True):
-        """
-        label: if True, read data with labels (force, energy, etc), else read data without labels,
-          use --nolabel to disable reading labels
-        """
+    def __init__(self):
         self._systems = []
-        self._label = label
 
     def read(self, *file_path_or_glob: str, **kwargs):
         """
@@ -50,6 +48,7 @@ class DpdataHelper:
         :param file_path_or_glob: path or glob pattern to find data files
         :param kwargs: arguments to pass to dpdata.System / dpdata.LabeledSystem
         """
+
         kwargs.setdefault('fmt', 'deepmd/npy')
         files = expand_globs(file_path_or_glob)
         if len(files) == 0:
@@ -104,16 +103,22 @@ class DpdataHelper:
         """
         Set fparam for all systems
 
-        :param fparam: fparam to set, should be a scalar or vector
+        :param fparam: fparam to set, should be a scalar or vector, e.g. 1.0 or [1.0, 2.0]
         """
         for system in self._systems:
             set_fparam(system, fparam)
         return self
 
-    def _read(self, file: str, **kwargs):
-        if self._label:
-            self._systems.extend(dpdata.LabeledSystem(file, **kwargs))  # type: ignore
-        else:
-            self._systems.extend(dpdata.System(file, **kwargs))  # type: ignore
+    def _read(self, data_path: str, **kwargs):
+        fmt = kwargs.get('fmt')
+        assert fmt is not None, 'fmt is required'
 
-register_data_types()
+        if fmt == 'cp2k/viber':
+            systems = dpdata_read_cp2k_viber_data(data_path, **kwargs)
+
+        systems = dpdata.System(data_path, **kwargs)
+        if 'fparam' in systems.data:
+            fparam = systems.data['fparam']
+            set_fparam(systems, fparam)
+
+        self._systems.extend(systems)  # type: ignore

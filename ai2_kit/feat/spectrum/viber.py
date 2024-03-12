@@ -1,24 +1,19 @@
-from ase import Atoms
-import ase.io
-
-from typing import List, Optional
+from typing import List, Dict, Optional
 from collections import OrderedDict
+from ase import Atoms
+import numpy as np
+import ase.io
+import dpdata
 import shlex
 import os
 
-from ai2_kit.tool.dpdata import register_data_types
+from MDAnalysis.lib.distances import distance_array, minimize_vectors
+
 from ai2_kit.core.util import list_split, expand_globs, cmd_with_checkpoint
 from ai2_kit.domain.cp2k import dump_coord_n_cell
 from ai2_kit.core.log import get_logger
 
-
-register_data_types()
 logger = get_logger(__name__)
-
-
-def ensure_file_exists(file_path: str):
-    assert os.path.isfile(file_path), f'{file_path} is not a file'
-    return file_path
 
 
 class Cp2kLabelTaskBuilder:
@@ -49,7 +44,7 @@ class Cp2kLabelTaskBuilder:
         Add cp2k input file for dipole or polarizability calculation
         """
         assert tag not in self._cp2k_inputs, f'Tag {tag} already exists'
-        self._cp2k_inputs[tag] = ensure_file_exists(file_path)
+        self._cp2k_inputs[tag] = _ensure_file_exists(file_path)
         return self
 
     def make_task(self, out_dir: str):
@@ -147,11 +142,126 @@ class Cp2kLabelTaskBuilder:
         logger.info(f'Loaded {len(data)} systems from {filename}, total {len(self._atoms_list)} systems')
 
 
+def dpdata_read_cp2k_viber_data(data_dir: str,
+                                lumped_dict: Dict[str, int],
+                                output_file: str = 'output',
+                                wannier: str = 'wannier.xyz',
+                                wannier_x: str = 'wannier_x.xyz',
+                                wannier_y: str = 'wannier_y.xyz',
+                                wannier_z: str = 'wannier_z.xyz',
+                                wacent_symbol='X',
+                                ):
+
+    """
+    read the cp2k output file and wannier functions
+
+    :param data_dir: the directory of the data
+    :param lumped_dict: the dictionary of the element and the expected coordination number, e.g. {"O": 4} (for water molecule)
+    :param output_file: the cp2k output file name
+    :param wannier: the wannier function file name
+    :param wannier_x: the wannier function file name of x direction electric field
+    :param wannier_y: the wannier function file name of y direction electric field
+    :param wannier_z: the wannier function file name of z direction electric field
+    :param wacent_symbol: the symbol of the wannier function centroid
+    """
+
+    dp_sys = dpdata.LabeledSystem(os.path.join(data_dir, output_file) , fmt='cp2k/output')
+    wannier_atoms = ase.io.read(os.path.join(data_dir, wannier), index=":", format='extxyz')
+    wannier_atoms_x = ase.io.read(os.path.join(data_dir, wannier_x), index=":", format='extxyz')
+    wannier_atoms_y = ase.io.read(os.path.join(data_dir, wannier_y), index=":", format='extxyz')
+    wannier_atoms_z = ase.io.read(os.path.join(data_dir, wannier_z), index=":", format='extxyz')
+
+    # get cell
+    cell = dp_sys.data['cells'][0]
+
+    # build the data of atomic_dipole and atomic_polarizability with numpy
+    stc_list = _set_cells(wannier_atoms, cell)  # type: ignore
+    wfc = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
+
+    stc_list = _set_cells(wannier_atoms_x, cell)  # type: ignore
+    wfc_x = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
+
+    stc_list = _set_cells(wannier_atoms_y, cell)  # type: ignore
+    wfc_y = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
+
+    stc_list = _set_cells(wannier_atoms_z, cell)  # type: ignore
+    wfc_z = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
+
+    polar = np.zeros((wfc.shape[0], wfc.shape[1], 3), dtype = float)
+    eps = 1e-3
+
+    polar[:, :, 0] = (wfc_x - wfc) / eps
+    polar[:, :, 1] = (wfc_y - wfc) / eps
+    polar[:, :, 2] = (wfc_z - wfc) / eps
+
+    # assign data to dp_sys
+    dp_sys.data['atomic_dipole'] = wfc
+    dp_sys.data['atomic_polarizability'] = polar.reshape(polar.shape[0], -1)
+    return dp_sys
+
+
+def _get_lumped_wacent_poses_rel(stc: Atoms, elem_symbol, wacent_symbol, cutoff=1.0, expected_cn=4):
+    """
+    determine the positions of the wannier centers around O
+    and sum it into the wannier centroid.
+    """
+    elem_idx = np.where(stc.symbols == elem_symbol)[0]
+    wacent_idx = np.where(stc.symbols == wacent_symbol)[0]
+    elem_poses = stc.positions[elem_idx]
+    wacent_poses = stc.positions[wacent_idx]
+
+    cellpar = stc.cell.cellpar()
+    assert cellpar is not None, "cellpar is None"
+    #dist_matrix
+    dist_mat = distance_array(elem_poses, wacent_poses, box=cellpar)
+
+    #each row get distance and select the candidates
+    lumped_wacent_poses_rel = []
+    for elem_entry, dist_vec in enumerate(dist_mat):
+        bool_vec = (dist_vec < cutoff)
+        cn = np.sum(bool_vec)
+
+        # modify neighbor wannier centers coords relative to the center element atom
+        neig_wacent_poses = wacent_poses[bool_vec, :]
+        neig_wacent_poses_rel = neig_wacent_poses - elem_poses[elem_entry]
+        neig_wacent_poses_rel = minimize_vectors(neig_wacent_poses_rel, box=cellpar)
+        lumped_wacent_pos_rel = neig_wacent_poses_rel.mean(axis=0)
+
+        if cn != expected_cn:
+            logger.warning(f"Coordination number of {elem_symbol} is {cn}, expected {expected_cn}")
+
+        lumped_wacent_poses_rel.append(lumped_wacent_pos_rel)
+    lumped_wacent_poses_rel = np.stack(lumped_wacent_poses_rel)
+    return lumped_wacent_poses_rel
+
+
+def _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol):
+    """
+    set the wannier function centroids
+    """
+    X_pos = []
+    for stc in stc_list:
+        for elem_symbol, expected_cn in lumped_dict.items():
+            lumped_wacent_poses_rel = _get_lumped_wacent_poses_rel(
+                stc=stc, elem_symbol=elem_symbol, wacent_symbol = wacent_symbol,
+                cutoff = 1.0, expected_cn=expected_cn)
+            X_pos.append(lumped_wacent_poses_rel)
+    wfc_pos = np.reshape(X_pos, (len(stc_list), -1))
+    return wfc_pos
+
+
+def _set_cells(stc_list: List[Atoms], cell):
+    for stc in stc_list:
+        stc.set_cell(cell)
+        stc.set_pbc(True)
+    return stc_list
+
+
+def _ensure_file_exists(file_path: str):
+    assert os.path.isfile(file_path), f'{file_path} is not a file'
+    return file_path
+
+
 cmd_entry = {
-        'cp2k-labeling': Cp2kLabelTaskBuilder,
-    }
-
-
-if __name__ == '__main__':
-    from fire import Fire
-    Fire(cmd_entry)
+    'cp2k-labeling': Cp2kLabelTaskBuilder,
+}

@@ -28,10 +28,9 @@ ai2-kit tool dpdata read ./workdir/iters-*/train-deepmd/new_dataset/* --fmt deep
 # You can also save data with hdf5 format
 ai2-kit tool dpdata read ./workdir/iters-*/train-deepmd/new_dataset/* --fmt deepmd/npy - write ./merged.hdf5 --fmt deepmd/hdf5
 
-
 # Use lambda expression to filter outlier data
 ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy - filter "lambda x: x['forces'].max() < 10" - write ./path/to/filtered_dataset
 
-# Add fparam to dataset
-ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy - set_fparam [0,1] - write ./path/to/filtered_dataset
+# Set fparam when reading data
+ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy --fparam [0,1] - write ./path/to/new_dataset
 ```

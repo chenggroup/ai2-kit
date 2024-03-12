@@ -16,7 +16,7 @@ To get started, you need to prepare the following files:
 
 * System files for CP2K: They can be any format that supported by `ase.io`, for example `Al3O2.xyz`.
 * CP2K input files: The CP2K input files for the system. You need to prepare a configuration for dipole calculation and 3 configurations for polarizability calculation. For example, `cp2k-dipole.inp` and `cp2k-polar-x.inp`, `cp2k-polar-y.inp`, `cp2k-polar-z.inp`.
-  * Note that you need to ensure the file names of the wannier output files are different in different CP2K configurations. A good conventions is to named them as `wannier.xyz` and `wannier-x.xyz`, `wannier-y.xyz`, `wannier-z.xyz`.
+  * Note that you need to ensure the file names of the wannier output files are different in different CP2K configurations. A good conventions is to named them as `wannier.xyz` and `wannier_x.xyz`, `wannier_y.xyz`, `wannier_z.xyz`.
   * You should use `@include coord_n_cell.inc` to include the coordinate and cell section in the CP2K input files.
 
 A good practice is to create a working directory and put all the files in it. For example, you can create a directory named `al3o2` and put all the files in it. 
@@ -59,8 +59,16 @@ find ./run-01
 # submit batch scripts and wait for completion
 ai2-kit tool hpc slurm submit ./run-01/cpk2-batch-*.sub - wait
 
-# generate Deepmd-kit dataset
-ai2-kit tool dpdata read run-01/* --fmt cp2k/output+viber - write ./al2o3-dataset
+# generate dataset
+ai2-kit tool dpdata read run-01/* --fmt cp2k/viber --lumped_dict '{O:4}' --output_file output  \
+  --wannier wannier.xyz --wannier_x wannier_x.xyz --wannier_y wannier_y.xyz --wannier_z wannier_z.xyz \
+  - write ./al2o3-dataset
+```
+
+This script may take a long time to finish, you can run it with `nohup` and use `&` to put it in background. For example
+
+```bash
+nohup bash workflow.sh &>> workflow.log &
 ```
 
 Note that you can view the help document of each command by running with `-h` option, for example 
@@ -68,16 +76,11 @@ Note that you can view the help document of each command by running with `-h` op
 ai2-kit feat spectr viber cp2k-labeling - add_system -h
 ```
 
-Then we can run the script to generate the dataset. This script may take a long time to finish, you can run it with `nohup` and use `&` to put it in background. For example
-
-```bash
-nohup bash workflow.sh &>> workflow.log &
-```
-
 After the script finished, you can find the generated dataset in `al2o3-dataset` directory.
 
 ### Training Deepmd-kit model
-TODO
+
+
 
 ### Predict Dipole and Polarizability
 TODO

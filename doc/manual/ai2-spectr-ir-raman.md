@@ -40,14 +40,16 @@ module load cp2k/7.1
 EOF
 
 # generate CP2K labeling tasks
+# note that the tag decide the output file name, 
+# for example, --tag dipole's output file will be dipole.out
 ai2-kit feat spectr viber cp2k-labeling \
 - add_system Al3O2.xyz \
 - add_cp2k_input cp2k-dipole.inp --tag dipole \
 - add_cp2k_input cp2k-polar-x.inp --tag polar-x \
 - add_cp2k_input cp2k-polar-y.inp --tag polar-y \
 - add_cp2k_input cp2k-polar-z.inp --tag polar-z \
-- make_task ./run-01 \
-- make_batch "./run-01/cpk2-batch-{i:02d}.sub" \
+- make_tasks ./run-01 \
+- make_scripts "./run-01/cpk2-batch-{i:02d}.sub" \
 --concurrency 5 \
 --cp2k_cmd "mpirun cp2k.popt" \
 --template slurm-cp2k.template \
@@ -60,7 +62,7 @@ find ./run-01
 ai2-kit tool hpc slurm submit ./run-01/cpk2-batch-*.sub - wait
 
 # generate dataset
-ai2-kit tool dpdata read run-01/* --fmt cp2k/viber --lumped_dict '{O:4}' --output_file output  \
+ai2-kit tool dpdata read run-01/* --fmt cp2k/viber --lumped_dict '{O:4}' --output_file dipole.out \
   --wannier wannier.xyz --wannier_x wannier_x.xyz --wannier_y wannier_y.xyz --wannier_z wannier_z.xyz \
   - write ./al2o3-dataset
 ```

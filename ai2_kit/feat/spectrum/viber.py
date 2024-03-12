@@ -47,7 +47,7 @@ class Cp2kLabelTaskBuilder:
         self._cp2k_inputs[tag] = _ensure_file_exists(file_path)
         return self
 
-    def make_task(self, out_dir: str):
+    def make_tasks(self, out_dir: str):
         """
         Make task dirs for cp2k labeling (prepare systems and cp2k input files)
         :param out_dir: output dir
@@ -77,12 +77,12 @@ class Cp2kLabelTaskBuilder:
         logger.info(f'Generated {len(task_dirs)} task dirs')
         return self
 
-    def make_batch(self,
-                   prefix: str = 'cp2k-batch-{i:02d}.sub',
-                   concurrency: int = 5,
-                   template: Optional[str] = None,
-                   ignore_error: bool = False,
-                   cp2k_cmd: str = 'cp2k.psmp'):
+    def make_scripts(self,
+                     prefix: str = 'cp2k-batch-{i:02d}.sub',
+                     concurrency: int = 5,
+                     template: Optional[str] = None,
+                     ignore_error: bool = False,
+                     cp2k_cmd: str = 'cp2k.psmp'):
         """
         Make batch script for cp2k labeling
 

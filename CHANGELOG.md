@@ -1,4 +1,7 @@
 # Change Logs
+## v0.14.11
+* fix edge case of efield
+
 ## v0.14.9
 * for dflow-galaxy: reference lammps data file use relative path
 

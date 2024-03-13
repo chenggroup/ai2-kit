@@ -144,6 +144,7 @@ class CllLammpsInputConfig(BaseModel):
             result[k] = v
         return result
 
+
     @root_validator()
     @classmethod
     def validate_domain(cls, values):
@@ -155,6 +156,18 @@ class CllLammpsInputConfig(BaseModel):
             if not ensemble.startswith('npt'):
                 logger.info('ensemble is not npt, force PRES to -1')
                 values['explore_vars']['PRES'] = [-1]
+
+        # get all alias types
+        type_alias = values.get('type_alias', {})
+        alias_type = list(itertools.chain(*type_alias.values()))
+
+        # ensure all ghost type are defined in type_alias
+        fep_opts = values.get('fep_opts', {})
+        ghost_types = fep_opts.get('ini_ghost_types', []) + fep_opts.get('fin_ghost_types', [])
+        for t in ghost_types:
+            if t not in alias_type:
+                raise ValueError(f'ghost type {t} is not defined in type_alias')
+
         return values
 
     def assert_var(self, var: str, msg: str = ''):
@@ -358,7 +371,7 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
             model_charge_map = dp_modifier['model_charge_map']
             with open(data_file, 'w') as fp:
                 dump_dplr_lammps_data(fp, atoms, type_map=type_map, sel_type=dp_sel_type,
-                                        sys_charge_map=sys_charge_map, model_charge_map=model_charge_map)  # type: ignore
+                                      sys_charge_map=sys_charge_map, model_charge_map=model_charge_map)  # type: ignore
         else:
             ase.io.write(data_file, atoms, format='lammps-data', specorder=type_map)  # type: ignore
         input_dataset.append({
@@ -420,8 +433,8 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
         types_template_vars = get_types_template_vars(
             type_map=type_map, mass_map=mass_map,
             type_alias=type_alias, sel_type=dp_sel_type,
-            fep_ini_ghost_types=input.config.fep_opts.ini_ghost_types,
-            fep_fin_ghost_types=input.config.fep_opts.fin_ghost_types,
+            fep_ini_ghost_types=fep_opts.ini_ghost_types,
+            fep_fin_ghost_types=fep_opts.fin_ghost_types,
         )
 
         ## build variables section
@@ -491,9 +504,23 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
         simulation.extend([
             'thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz',
             'thermo       ${THERMO_FREQ}',
-            'dump         1 ${DUMP_GROUP} custom ${DUMP_FREQ} %s/*%s id type x y z fx fy fz' % (LAMMPS_DUMP_DIR, LAMMPS_DUMP_SUFFIX),
-            'restart      10000 md.restart',
         ])
+
+        if mode == 'fep-pka':
+            simulation.extend([
+                'dump 1 fep_ini_atoms custom ${DUMP_FREQ} traj-ini/*.lammpstrj id type element x y z fx fy fz',
+                'dump 2 fep_fin_atoms custom ${DUMP_FREQ} traj-fin/*.lammpstrj id type element x y z fx fy fz',
+                'dump modify 1 element $$SPECORDER',
+                'dump modify 2 element $$SPECORDER',
+            ])
+        else:
+            simulation.extend([
+                'dump 1 ${DUMP_GROUP} custom ${DUMP_FREQ} traj/*.lammpstrj id type element x y z fx fy fz',
+                'dump modify 1 element $$SPECORDER',
+            ])
+        simulation.append('restart 10000 md.restart')
+
+
         template_vars['SIMULATION'] = '\n'.join(simulation)
         ## build run section
         template_vars['RUN'] = '\n'.join([
@@ -551,15 +578,17 @@ def get_types_template_vars(type_map: List[str], mass_map: List[float],
             type_association.extend([t + 1, n_real_atom + i + 1])
         template_vars['DPLR_TYPE_ASSOCIATION'] = ' '.join(map(str, type_association))
 
-    # handle alias
-    alias_specorder = []
+    # SPECORDER is used to specify the order of types in the lammps data file
+    # For example, if the complete type_map is [H, O, O_1, O_2, H_1, H_2],
+    # then the specorder should be [H, O, O, O, H, H]
+    specorder = type_map[:]
+
     fep_ini_specorder = type_map[:]
     fep_fin_specorder = type_map[:]
 
     for real_type, alias in type_alias.items():
-
         for t in alias:
-            alias_specorder.append(real_type)
+            specorder.append(real_type)
             if t in fep_ini_ghost_types:
                 fep_ini_specorder.append('NULL')
             else:
@@ -572,8 +601,18 @@ def get_types_template_vars(type_map: List[str], mass_map: List[float],
             ext_type_map.append(t)
             ext_mass_map.append(type_to_mass[real_type])
 
+    # define group for fep pka mode
+    all_types = type_map + ext_type_map
 
-    # inject group for dpff mode
+    fep_ini_type_vars = _to_lammps_type_vars([t for t in all_types if t not in fep_ini_ghost_types])
+    fep_fin_type_vars = _to_lammps_type_vars([t for t in all_types if t not in fep_fin_ghost_types])
+
+    template_vars['FEP_GROUPS'] = '\n'.join([
+        f'group fep_ini_atoms type {fep_ini_type_vars}',
+        f'group fep_fin_atoms type {fep_fin_type_vars}'
+    ])
+
+    # define group for dpff mode
     if sel_type is not None:
         real_atom_start = 1
         real_atom_end = real_atom_start + len(type_map)
@@ -591,10 +630,6 @@ def get_types_template_vars(type_map: List[str], mass_map: List[float],
             f'neigh_modify    every 10 delay 0 check no exclude group real_atom virtual_atom',
         ])
 
-    # SPECORDER is used to specify the order of types in the lammps data file
-    # For example, if the complete type_map is [H, O, O_1, O_2, H_1, H_2],
-    # then the specorder should be [H, O, O, O, H, H]
-    specorder = type_map + alias_specorder
 
     # specorder in the format of H O H NULL, for lammps pair coeff input
     template_vars['SPECORDER'] = ' '.join(specorder)
@@ -671,3 +706,7 @@ def get_ensemble(ensemble: str, group='all'):
     else:
         raise ValueError('unknown ensemble: ' + ensemble)
     return '\n'.join(lines) % {'group': group, 'seed': random.randrange(10^6 - 1) + 1}
+
+
+def _to_lammps_type_vars(types: List[str]):
+    return ' '.join(f'${{{t}}}' for t in types)

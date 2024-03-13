@@ -119,9 +119,9 @@ $$POST_READ_DATA
 $$SET_ATOM_TYPE
 # <<<<< SET_ATOM_TYPE
 
-# >>>>> DPFF_GROUPS
+# >>>>> GROUPS
 $$DPFF_GROUPS
-# <<<<< DPFF_GROUPS
+# <<<<< GROUPS
 '''
 
 _DEFAULT_LAMMPS_BOTTOM = '''\
@@ -152,9 +152,9 @@ _DP_FEP_REDOX_FORCE_FIELD = '''\
 variable LAMBDA_i equal 1-v_LAMBDA_f
 
 pair_style  hybrid/overlay &
-            $$PAIR_STYLE_EXT &
             deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi_ini.out $$FEP_INI_DP_OPT &
-            deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi_fin.out $$FEP_FIN_DP_OPT
+            deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi_fin.out $$FEP_FIN_DP_OPT &
+            $$PAIR_STYLE_EXT
 
 # >>>>> PAIR_COEFF_EXT
 $$PAIR_COEFF_EXT
@@ -171,10 +171,14 @@ fix PES_Sampling ${DEFAULT_GROUP} adapt 0 &
 _DP_FEP_PKA_FORCE_FIELD = '''\
 variable LAMBDA_i equal 1-v_LAMBDA_f
 
+# >>>>> FEP_GROUPS
+$$FEP_GROUPS
+# <<<<< FEP_GROUPS
+
 pair_style  hybrid/overlay &
-            $$PAIR_STYLE_EXT &
-            deepmd $$DP_MODELS_0 $$FEP_INI_DP_OPT &
-            deepmd $$DP_MODELS_0 $$FEP_FIN_DP_OPT
+            deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi_ini.out $$FEP_INI_DP_OPT &
+            deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi_fin.out $$FEP_FIN_DP_OPT &
+            $$PAIR_STYLE_EXT
 
 # >>>>> PAIR_COEFF_EXT
 $$PAIR_COEFF_EXT
@@ -187,50 +191,6 @@ fix PES_Sampling ${DEFAULT_GROUP} adapt 0 &
     pair deepmd:1 scale * * v_LAMBDA_i &
     pair deepmd:2 scale * * v_LAMBDA_f
 '''
-
-def _get_fep_rerun_setting(ns: str, in_data:str, in_traj: str):
-    return f'''\
-clear
-# Rerun model deviation: {ns}
-shell mkdir traj-{ns}
-$$INITIALIZE
-variable DUMP_GROUP string "all"
-
-read_data {in_data}
-$$MASS_MAP_BASE
-
-# >>>>> POST_READ_DATA
-$$POST_READ_DATA
-# <<<<< POST_READ_DATA
-
-pair_style deepmd $$DP_MODELS out_freq 1 out_file model_devi_{ns}.out
-pair_coeff * * $$SPECORDER_BASE
-
-thermo 1
-thermo_style custom step temp pe ke etotal
-thermo_modify format float %15.7f
-dump 1 ${{DUMP_GROUP}} custom 1 traj-{ns}/*.lammpstrj id type x y z
-rerun {in_traj} first 0 last 1000000000000 every 1 dump x y z box yes
-'''
-
-# Notes
-# 1. LAMMPS shell command use triple quote to pass a string with space and special chars in it.
-# e.g """ "$$SPECORDER" """
-# 2. ase read lammps-data format need to set style to "atomic"
-# ref: https://gitlab.com/ase/ase/-/issues/1126
-_FEP_PKA_BOTTOM = '\n'.join(['''\
-# Run post processing script
-shell env > debug.env.txt
-shell cat traj/*.lammpstrj > traj.lammpstrj
-shell cp ${DATA_FILE} ini.data
-clear
-shell $$AI2KIT_CMD tool ase read traj.lammpstrj   --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - write ini.lammpstrj --format lammps-dump-text  --type_map """ "$$SPECORDER_BASE_LIST" """
-shell $$AI2KIT_CMD tool ase read traj.lammpstrj   --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - delete_atoms """ "$$DELETE_ATOMS" --start_id 1 """ - write fin.lammpstrj --format lammps-dump-text --type_map """ "$$SPECORDER_BASE_LIST" """
-shell $$AI2KIT_CMD tool ase read traj/0.lammpstrj --format lammps-dump-text --specorder """ "$$SPECORDER_LIST" """ - delete_atoms """ "$$DELETE_ATOMS" --start_id 1 """ - write fin.data --format lammps-data --specorder """ "$$SPECORDER_BASE_LIST" """
-''',
-    _get_fep_rerun_setting('ini', 'ini.data', 'ini.lammpstrj'),
-    _get_fep_rerun_setting('fin', 'fin.data', 'fin.lammpstrj'),
-])
 
 _DPFF_CONFIG = '''\
 bond_style    zero

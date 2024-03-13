@@ -196,8 +196,11 @@ def make_cp2k_task_dirs(system_files: List[ArtifactDict],
 
         if efield:
             intensity, polarisation = lammps_efield_to_cp2k(efield)  # type: ignore
-            template_vars['INTENSITY'] = intensity
-            template_vars['POLARISATION'] = ' '.join(map(str, polarisation))
+            template_vars['INTENSITY'] = ''
+            template_vars['POLARISATION'] = ''
+            if intensity != 0:
+                template_vars['INTENSITY'] = f'INTENSITY {intensity}'
+                template_vars['POLARISATION'] = f'POLARISATION {" ".join(map(str, polarisation))}'
 
         if warmup_input:
             warmup_input = Cp2kInputTemplate(warmup_input).substitute(template_vars)

@@ -243,5 +243,8 @@ def lammps_efield_to_cp2k(efield: Iterable[float]):
     efield = np.array(efield)
     factor = constants.physical_constants["atomic unit of electric field"][0] * constants.angstrom
     intensity = np.linalg.norm(efield)
-    polarization = efield / np.linalg.norm(efield)
+    if intensity == 0:
+        polarization = np.array([0.0, 0.0, 0.0])
+    else:
+        polarization = efield / np.linalg.norm(efield)
     return intensity / factor, polarization  # type: ignore

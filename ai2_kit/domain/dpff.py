@@ -1,9 +1,14 @@
-import dpdata
 from dpdata.unit import econvs
-from ase import Atoms
-import re
-import numpy as np
 from typing import List
+
+from ase.geometry.cell import cell_to_cellpar
+from ase import Atoms
+import numpy as np
+
+import ase.io
+import dpdata
+import re
+
 
 from .util import LammpsData
 
@@ -20,7 +25,6 @@ def set_dplr_ext_from_cp2k_output(dp_sys: dpdata.LabeledSystem,
                                     sel_type: List[int],
                                     ):
 
-    import ase.io
     wannier_atoms = ase.io.read(wannier_file)
     with open(cp2k_output, 'r') as fp:
         raw_energy = get_cp2k_output_total_energy(fp)
@@ -96,7 +100,6 @@ def get_sel_ids(dp_sys, type_map, sel_type):
 
 
 def get_atomic_dipole(dp_sys, sel_ids, wannier_atoms, wannier_cutoff = 1.0):
-    from ase.geometry.cell import cell_to_cellpar
     from MDAnalysis.lib.distances import distance_array, minimize_vectors
 
     coords = dp_sys.data['coords'].reshape(-1, 3)
@@ -140,6 +143,7 @@ def get_pbc_atomic_efield(dp_sys,
     # natoms * 3
     pbc_efield = extended_efield[:natoms]
     return pbc_efield
+
 
 def get_sel_type(model_path) -> List[int]:
     try:

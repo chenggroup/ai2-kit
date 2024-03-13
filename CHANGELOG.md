@@ -1,4 +1,7 @@
 # Change Logs
+## v0.15.0
+* improve fep pka mode
+
 ## v0.14.11
 * fix edge case of efield
 

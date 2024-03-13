@@ -30,6 +30,11 @@ from .dpff import dump_dplr_lammps_data
 logger = get_logger(__name__)
 
 
+class FepOptions(BaseModel):
+    ini_ghost_types: List[str] = []
+    fin_ghost_types: List[str] = []
+
+
 class CllLammpsInputConfig(BaseModel):
     n_wise: int = 0
     """
@@ -116,6 +121,9 @@ class CllLammpsInputConfig(BaseModel):
     set atom 2 type ${H_ghost}
     ```
     '''
+
+    fep_opts: FepOptions = FepOptions()
+
 
     @validator('explore_vars', pre=True)
     @classmethod
@@ -233,7 +241,7 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
         mode=input.mode,
         dp_modifier=input.dp_modifier,
         dp_sel_type=input.dp_sel_type,
-        ai2_kit_cmd=f'{executor.python_cmd} -m ai2_kit.main',
+        fep_opts=input.config.fep_opts,
     )
 
     # build scripts and submit
@@ -302,35 +310,35 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
     return GenericLammpsOutput(model_devi_outputs=outputs)
 
 
-
 class LammpsInputTemplate(Template):
     delimiter = '$$'
 
+
 def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
-                            broadcast_vars: Mapping[str, Sequence[Any]],
-                            data_files: List[ArtifactDict],
-                            dp_models: Mapping[str, List[str]],
-                            n_steps: int,
-                            timestep: float,
-                            sample_freq: float,
-                            no_pbc: bool,
-                            n_wise: int,
-                            ensemble: Optional[str],
-                            fix_statement: Optional[str],
-                            preset_template: str,
-                            input_template: Optional[str],
-                            plumed_config: Optional[str],
-                            extra_template_vars: Mapping[str, Any],
-                            type_map: List[str],
-                            mass_map: List[float],
-                            type_alias: Mapping[str, List[str]],
-                            work_dir: str,
-                            dp_modifier: Optional[dict],
-                            dp_sel_type: Optional[List[int]],
-                            mode: TRAINING_MODE,
-                            ai2_kit_cmd: str,
-                            rel_path: bool = False,
-                            ):
+                          broadcast_vars: Mapping[str, Sequence[Any]],
+                          data_files: List[ArtifactDict],
+                          dp_models: Mapping[str, List[str]],
+                          n_steps: int,
+                          timestep: float,
+                          sample_freq: float,
+                          no_pbc: bool,
+                          n_wise: int,
+                          ensemble: Optional[str],
+                          fix_statement: Optional[str],
+                          preset_template: str,
+                          input_template: Optional[str],
+                          plumed_config: Optional[str],
+                          extra_template_vars: Mapping[str, Any],
+                          type_map: List[str],
+                          mass_map: List[float],
+                          type_alias: Mapping[str, List[str]],
+                          work_dir: str,
+                          dp_modifier: Optional[dict],
+                          dp_sel_type: Optional[List[int]],
+                          mode: TRAINING_MODE,
+                          fep_opts: FepOptions,
+                          rel_path: bool = False,
+                          ):
     # setup workspace
     input_data_dir = os.path.join(work_dir, 'input_data')
     tasks_dir = os.path.join(work_dir, 'tasks')
@@ -389,7 +397,6 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
         lammps_vars = dict(zip(combination_fields, combination))
         template_vars = {
             **lammps_vars,
-            'AI2KIT_CMD': ai2_kit_cmd,
         }
 
         # setup task dir
@@ -404,13 +411,18 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
         fix_statement = overridable_params.get('fix_statement', fix_statement)
         ensemble = overridable_params.get('ensemble', ensemble)
         type_alias = overridable_params.get('type_alias', type_alias)
+        fep_opts = FepOptions(**overridable_params.get('fep_opts', fep_opts.dict()))
 
         # be careful to override template_vars without changing the original dict
         extra_template_vars = {**extra_template_vars, **overridable_params.get('template_vars', dict())}
 
         # generate types related template vars
-        types_template_vars = get_types_template_vars(type_map=type_map, mass_map=mass_map,
-                                                        type_alias=type_alias, sel_type=dp_sel_type)
+        types_template_vars = get_types_template_vars(
+            type_map=type_map, mass_map=mass_map,
+            type_alias=type_alias, sel_type=dp_sel_type,
+            fep_ini_ghost_types=input.config.fep_opts.ini_ghost_types,
+            fep_fin_ghost_types=input.config.fep_opts.fin_ghost_types,
+        )
 
         ## build variables section
         if rel_path:
@@ -510,7 +522,8 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
 
 
 def get_types_template_vars(type_map: List[str], mass_map: List[float],
-                            type_alias: Mapping[str, List[str]], sel_type: Optional[List[int]]):
+                            type_alias: Mapping[str, List[str]], sel_type: Optional[List[int]],
+                            fep_ini_ghost_types: List[str], fep_fin_ghost_types: List[str]):
     """
     generate template vars that related to type_map, mass_map, type_alias, sel_type
 
@@ -538,18 +551,27 @@ def get_types_template_vars(type_map: List[str], mass_map: List[float],
             type_association.extend([t + 1, n_real_atom + i + 1])
         template_vars['DPLR_TYPE_ASSOCIATION'] = ' '.join(map(str, type_association))
 
-    # handle alias and fep special special rule
+    # handle alias
     alias_specorder = []
-    alias_specorder_with_null = []
+    fep_ini_specorder = type_map[:]
+    fep_fin_specorder = type_map[:]
+
     for real_type, alias in type_alias.items():
+
         for t in alias:
             alias_specorder.append(real_type)
-            if t.endswith('ghost') or t.endswith('null'):
-                alias_specorder_with_null.append('NULL')
+            if t in fep_ini_ghost_types:
+                fep_ini_specorder.append('NULL')
             else:
-                alias_specorder_with_null.append(real_type)
+                fep_ini_specorder.append(real_type)
+            if t in fep_fin_ghost_types:
+                fep_fin_specorder.append('NULL')
+            else:
+                fep_fin_specorder.append(real_type)
+
             ext_type_map.append(t)
             ext_mass_map.append(type_to_mass[real_type])
+
 
     # inject group for dpff mode
     if sel_type is not None:
@@ -573,19 +595,14 @@ def get_types_template_vars(type_map: List[str], mass_map: List[float],
     # For example, if the complete type_map is [H, O, O_1, O_2, H_1, H_2],
     # then the specorder should be [H, O, O, O, H, H]
     specorder = type_map + alias_specorder
-    fep_fin_specorder = type_map + alias_specorder_with_null
 
     # specorder in the format of H O H NULL, for lammps pair coeff input
     template_vars['SPECORDER'] = ' '.join(specorder)
     template_vars['SPECORDER_BASE'] = ' '.join(type_map)
-    template_vars['FEP_INI_SPECORDER'] = template_vars['SPECORDER']
+
+    template_vars['FEP_INI_SPECORDER'] = ' '.join(fep_ini_specorder)
     template_vars['FEP_FIN_SPECORDER'] = ' '.join(fep_fin_specorder)
 
-    # specorder in the format of ['H', 'O', 'H', 'NULL'], for ai2-kit command line input
-    template_vars['SPECORDER_LIST'] = str(specorder)
-    template_vars['SPECORDER_BASE_LIST'] = str(type_map)
-    template_vars['FEP_INI_SPECORDER_LIST'] = template_vars['SPECORDER_LIST']
-    template_vars['FEP_FIN_SPECORDER_LIST'] = str(fep_fin_specorder)
 
     # mass map is in the form of
     # variable   H               equal 1
@@ -594,9 +611,7 @@ def get_types_template_vars(type_map: List[str], mass_map: List[float],
     # mass ${H} 1.007
     # mass ${O} 15.999
     # mass ${H_null} 1.0
-    template_vars['MASS_MAP_FULL'] = _get_masses(type_map + ext_type_map, mass_map + ext_mass_map)
-    template_vars['MASS_MAP_BASE'] = _get_masses(type_map, mass_map)
-    template_vars['MASS_MAP'] =  template_vars['MASS_MAP_FULL']
+    template_vars['MASS_MAP'] = _get_masses(type_map + ext_type_map, mass_map + ext_mass_map)
     return template_vars
 
 

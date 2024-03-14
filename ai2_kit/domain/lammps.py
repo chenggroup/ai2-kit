@@ -512,14 +512,14 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
                 'shell mkdir traj-ini traj-fin',
                 'dump 1 fep_ini_atoms custom ${DUMP_FREQ} traj-ini/*.lammpstrj id type element x y z fx fy fz',
                 'dump 2 fep_fin_atoms custom ${DUMP_FREQ} traj-fin/*.lammpstrj id type element x y z fx fy fz',
-                f'dump modify 1 element {types_template_vars["SPECORDER"]}',
-                f'dump modify 2 element {types_template_vars["SPECORDER"]}',
+                f'dump_modify 1 element {types_template_vars["SPECORDER"]}',
+                f'dump_modify 2 element {types_template_vars["SPECORDER"]}',
             ])
         else:
             simulation.extend([
                 'shell mkdir traj',
                 'dump 1 ${DUMP_GROUP} custom ${DUMP_FREQ} traj/*.lammpstrj id type element x y z fx fy fz',
-                f'dump modify 1 element {types_template_vars["SPECORDER"]}',
+                f'dump_modify 1 element {types_template_vars["SPECORDER"]}',
             ])
         simulation.append('restart 10000 md.restart')
 

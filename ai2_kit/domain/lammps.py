@@ -509,17 +509,17 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
 
         if mode == 'fep-pka':
             simulation.extend([
-                'shell mkdir -p traj-ini traj-fin',
+                'shell mkdir traj-ini traj-fin',
                 'dump 1 fep_ini_atoms custom ${DUMP_FREQ} traj-ini/*.lammpstrj id type element x y z fx fy fz',
                 'dump 2 fep_fin_atoms custom ${DUMP_FREQ} traj-fin/*.lammpstrj id type element x y z fx fy fz',
-                'dump modify 1 element $$SPECORDER',
-                'dump modify 2 element $$SPECORDER',
+                f'dump modify 1 element {types_template_vars["SPECORDER"]}',
+                f'dump modify 2 element {types_template_vars["SPECORDER"]}',
             ])
         else:
             simulation.extend([
-                'shell mkdir -p traj',
+                'shell mkdir traj',
                 'dump 1 ${DUMP_GROUP} custom ${DUMP_FREQ} traj/*.lammpstrj id type element x y z fx fy fz',
-                'dump modify 1 element $$SPECORDER',
+                f'dump modify 1 element {types_template_vars["SPECORDER"]}',
             ])
         simulation.append('restart 10000 md.restart')
 
@@ -636,7 +636,6 @@ def get_types_template_vars(type_map: List[str], mass_map: List[float],
 
     # specorder in the format of H O H NULL, for lammps pair coeff input
     template_vars['SPECORDER'] = ' '.join(specorder)
-    template_vars['SPECORDER_BASE'] = ' '.join(type_map)
 
     template_vars['FEP_INI_SPECORDER'] = ' '.join(fep_ini_specorder)
     template_vars['FEP_FIN_SPECORDER'] = ' '.join(fep_fin_specorder)

@@ -162,11 +162,12 @@ class CllLammpsInputConfig(BaseModel):
         alias_type = list(itertools.chain(*type_alias.values()))
 
         # ensure all ghost type are defined in type_alias
-        fep_opts = values.get('fep_opts', {})
-        ghost_types = fep_opts.get('ini_ghost_types', []) + fep_opts.get('fin_ghost_types', [])
-        for t in ghost_types:
-            if t not in alias_type:
-                raise ValueError(f'ghost type {t} is not defined in type_alias')
+        fep_opts = values.get('fep_opts')
+        if fep_opts:
+            ghost_types = fep_opts.ini_ghost_types + fep_opts.fin_ghost_types
+            for t in ghost_types:
+                if t not in alias_type:
+                    raise ValueError(f'ghost type {t} is not defined in type_alias')
 
         return values
 
@@ -414,7 +415,7 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
 
         # setup task dir
         task_dir = os.path.join(tasks_dir, f'{i:06d}')
-        os.makedirs(os.path.join(task_dir, LAMMPS_DUMP_DIR), exist_ok=True)
+        os.makedirs(task_dir, exist_ok=True)
 
         data_file = lammps_vars.pop('DATA_FILE')
 
@@ -508,6 +509,7 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
 
         if mode == 'fep-pka':
             simulation.extend([
+                'shell mkdir -p traj-ini traj-fin',
                 'dump 1 fep_ini_atoms custom ${DUMP_FREQ} traj-ini/*.lammpstrj id type element x y z fx fy fz',
                 'dump 2 fep_fin_atoms custom ${DUMP_FREQ} traj-fin/*.lammpstrj id type element x y z fx fy fz',
                 'dump modify 1 element $$SPECORDER',
@@ -515,6 +517,7 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
             ])
         else:
             simulation.extend([
+                'shell mkdir -p traj',
                 'dump 1 ${DUMP_GROUP} custom ${DUMP_FREQ} traj/*.lammpstrj id type element x y z fx fy fz',
                 'dump modify 1 element $$SPECORDER',
             ])

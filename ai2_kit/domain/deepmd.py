@@ -497,18 +497,22 @@ def make_deepmd_dataset(
             if data_format == DataFormat.CP2K_OUTPUT_DIR:
                 # Arguments of DPLR model can be found here:
                 # https://github.com/deepmodeling/deepmd-kit/blob/master/doc/model/dplr.md
-                set_dplr_ext_from_cp2k_output(
-                    dp_sys=dp_system,
-                    cp2k_output=os.path.join(raw_data['url'], 'output'),
-                    wannier_file=os.path.join(raw_data['url'], 'wannier.xyz'),
-                    ext_efield=raw_data['attrs']['efield'],
-                    type_map=type_map,
-                    sys_charge_map=modifier['sys_charge_map'],
-                    model_charge_map=modifier['model_charge_map'],
-                    ewald_h=modifier['ewald_h'],
-                    ewald_beta=modifier['ewald_beta'],
-                    sel_type=sel_type,
-                )
+                try:
+                    set_dplr_ext_from_cp2k_output(
+                        dp_sys=dp_system,
+                        cp2k_output=os.path.join(raw_data['url'], 'output'),
+                        wannier_file=os.path.join(raw_data['url'], 'wannier.xyz'),
+                        ext_efield=raw_data['attrs']['efield'],
+                        type_map=type_map,
+                        sys_charge_map=modifier['sys_charge_map'],
+                        model_charge_map=modifier['model_charge_map'],
+                        ewald_h=modifier['ewald_h'],
+                        ewald_beta=modifier['ewald_beta'],
+                        sel_type=sel_type,
+                    )
+                except Exception as e:
+                    logger.exception(f'dpff: failed to set dplr ext')
+                    continue
             else:
                 raise ValueError(f"Unsupported data format: {data_format}")
 

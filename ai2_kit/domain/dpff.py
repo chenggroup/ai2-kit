@@ -11,6 +11,9 @@ import re
 
 
 from .util import LammpsData
+from ai2_kit.core.log import get_logger
+
+logger = get_logger(__name__)
 
 
 def set_dplr_ext_from_cp2k_output(dp_sys: dpdata.LabeledSystem,
@@ -113,7 +116,8 @@ def get_atomic_dipole(dp_sys, sel_ids, wannier_atoms, wannier_cutoff = 1.0):
     for ii, dist_vec in enumerate(dist_mat):
         mask = (dist_vec < wannier_cutoff)
         cn = np.sum(mask)
-        assert cn == 4
+        if cn != 4:
+            raise ValueError(f'wannier atoms {ii} has {cn} atoms in the cutoff range')
         wc_coord_rel = e_coords[mask] - ref_coords[ii]
         wc_coord_rel = minimize_vectors(wc_coord_rel, box=cellpar)
         _atomic_dipole = wc_coord_rel.mean(axis=0)

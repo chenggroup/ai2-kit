@@ -200,7 +200,7 @@ def dpdata_read_cp2k_viber_data(data_dir: str,
 
         dp_sys.data['atomic_polarizability'] = polar.reshape(polar.shape[0], -1)
     elif mode == 'dipole_only':
-        pass
+        dp_sys.data['atomic_polarizability'] = np.array([-1])
     else:
         logger.warning(f"There is no mode called '{mode}', expected 'both' or 'dipole_only'")
 

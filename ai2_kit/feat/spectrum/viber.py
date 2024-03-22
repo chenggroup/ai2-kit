@@ -150,6 +150,7 @@ def dpdata_read_cp2k_viber_data(data_dir: str,
                                 wannier_y: str = 'wannier_y.xyz',
                                 wannier_z: str = 'wannier_z.xyz',
                                 wacent_symbol='X',
+                                mode = 'both'
                                 ):
 
     """
@@ -166,37 +167,43 @@ def dpdata_read_cp2k_viber_data(data_dir: str,
     """
 
     dp_sys = dpdata.LabeledSystem(os.path.join(data_dir, output_file) , fmt='cp2k/output')
-    wannier_atoms = ase.io.read(os.path.join(data_dir, wannier), index=":", format='extxyz')
-    wannier_atoms_x = ase.io.read(os.path.join(data_dir, wannier_x), index=":", format='extxyz')
-    wannier_atoms_y = ase.io.read(os.path.join(data_dir, wannier_y), index=":", format='extxyz')
-    wannier_atoms_z = ase.io.read(os.path.join(data_dir, wannier_z), index=":", format='extxyz')
 
     # get cell
     cell = dp_sys.data['cells'][0]
 
     # build the data of atomic_dipole and atomic_polarizability with numpy
+    wannier_atoms = ase.io.read(os.path.join(data_dir, wannier), index=":", format='extxyz')
     stc_list = _set_cells(wannier_atoms, cell)  # type: ignore
     wfc = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
 
-    stc_list = _set_cells(wannier_atoms_x, cell)  # type: ignore
-    wfc_x = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
-
-    stc_list = _set_cells(wannier_atoms_y, cell)  # type: ignore
-    wfc_y = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
-
-    stc_list = _set_cells(wannier_atoms_z, cell)  # type: ignore
-    wfc_z = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
-
-    polar = np.zeros((wfc.shape[0], wfc.shape[1], 3), dtype = float)
-    eps = 1e-3
-
-    polar[:, :, 0] = (wfc_x - wfc) / eps
-    polar[:, :, 1] = (wfc_y - wfc) / eps
-    polar[:, :, 2] = (wfc_z - wfc) / eps
-
-    # assign data to dp_sys
     dp_sys.data['atomic_dipole'] = wfc
-    dp_sys.data['atomic_polarizability'] = polar.reshape(polar.shape[0], -1)
+
+    if mode == 'both':
+        wannier_atoms_x = ase.io.read(os.path.join(data_dir, wannier_x), index=":", format='extxyz')
+        stc_list = _set_cells(wannier_atoms_x, cell)  # type: ignore
+        wfc_x = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
+
+        wannier_atoms_y = ase.io.read(os.path.join(data_dir, wannier_y), index=":", format='extxyz')
+        stc_list = _set_cells(wannier_atoms_y, cell)  # type: ignore
+        wfc_y = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
+
+        wannier_atoms_z = ase.io.read(os.path.join(data_dir, wannier_z), index=":", format='extxyz')
+        stc_list = _set_cells(wannier_atoms_z, cell)  # type: ignore
+        wfc_z = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
+
+        polar = np.zeros((wfc.shape[0], wfc.shape[1], 3), dtype = float)
+        eps = 1e-3
+
+        polar[:, :, 0] = (wfc_x - wfc) / eps
+        polar[:, :, 1] = (wfc_y - wfc) / eps
+        polar[:, :, 2] = (wfc_z - wfc) / eps
+
+        dp_sys.data['atomic_polarizability'] = polar.reshape(polar.shape[0], -1)
+    elif mode == 'dipole_only':
+        pass
+    else:
+        logger.warning(f"There is no mode called '{mode}', expected 'both' or 'dipole_only'")
+
     return dp_sys
 
 

@@ -150,6 +150,7 @@ def dpdata_read_cp2k_viber_data(data_dir: str,
                                 wannier_y: str = 'wannier_y.xyz',
                                 wannier_z: str = 'wannier_z.xyz',
                                 wacent_symbol='X',
+                                eps = 1e-3,
                                 mode = 'both'
                                 ):
 
@@ -192,7 +193,6 @@ def dpdata_read_cp2k_viber_data(data_dir: str,
         wfc_z = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
 
         polar = np.zeros((wfc.shape[0], wfc.shape[1], 3), dtype = float)
-        eps = 1e-3
 
         polar[:, :, 0] = (wfc_x - wfc) / eps
         polar[:, :, 1] = (wfc_y - wfc) / eps

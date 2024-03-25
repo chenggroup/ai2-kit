@@ -114,6 +114,7 @@ class DpdataHelper:
         assert fmt is not None, 'fmt is required'
 
         if fmt == 'cp2k/viber':
+            kwargs.pop('fmt')
             systems = dpdata_read_cp2k_viber_data(data_path, **kwargs)
 
         systems = dpdata.System(data_path, **kwargs)

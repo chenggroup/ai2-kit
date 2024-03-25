@@ -1,4 +1,8 @@
 # Change Logs
+## v0.15.4
+* fix fep pka bugs
+* fix dpdata wrong arguments
+
 ## v0.15.0
 * improve fep pka mode
 

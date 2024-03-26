@@ -1,4 +1,7 @@
 # Change Logs
+## v0.15.6
+* fix dpdata tool
+
 ## v0.15.5
 * fix dpdata read
 

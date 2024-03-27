@@ -1,4 +1,7 @@
 # Change Logs
+## v0.15.7
+* fix ai2spectr entry
+
 ## v0.15.6
 * fix dpdata tool
 

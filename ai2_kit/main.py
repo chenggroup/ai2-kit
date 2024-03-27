@@ -108,7 +108,7 @@ class FeatureGroup:
         Spectrum specific tools.
         """
         from ai2_kit.feat.spectrum import CmdEntries
-        return CmdEntries
+        return CmdEntries()
 
 ai2_kit = Group({
     'workflow': WorkflowGroup(),

@@ -361,8 +361,8 @@ class ConfigBuilder:
 
         template_vars = {
             'run_type': 'MD' if aimd else 'ENERGY_FORCE',
-            'basic_set_file': os.path.abspath(basic_set_file),
-            'potential_file': os.path.abspath(potential_file),
+            'basic_set_file': find_cp2k_data_file(basic_set_file),
+            'potential_file': find_cp2k_data_file(potential_file),
             'parameter_file': parameter_file,
             'uks': 'T' if total_ve % 2 else 'F',
             'kinds': kinds,

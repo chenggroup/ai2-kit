@@ -1,4 +1,7 @@
 # Change Logs
+## v0.15.8
+* fix ai2cat cp2k data path
+
 ## v0.15.7
 * fix ai2spectr entry
 

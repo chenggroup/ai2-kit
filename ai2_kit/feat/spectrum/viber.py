@@ -150,6 +150,7 @@ def dpdata_read_cp2k_viber_data(data_dir: str,
                                 wannier_y: str = 'wannier_y.xyz',
                                 wannier_z: str = 'wannier_z.xyz',
                                 wacent_symbol='X',
+                                cutoff = 1.2,
                                 eps = 1e-3,
                                 mode = 'both'
                                 ):
@@ -174,23 +175,33 @@ def dpdata_read_cp2k_viber_data(data_dir: str,
 
     # build the data of atomic_dipole and atomic_polarizability with numpy
     wannier_atoms = ase.io.read(os.path.join(data_dir, wannier), index=":", format='extxyz')
+
+    lumped_dict_c = lumped_dict.copy()
+    del_list = []
+    for k in lumped_dict_c.keys():
+        if k not in wannier_atoms[0].get_chemical_symbols():
+            del_list.append(k)
+
+    for i in del_list:
+        del lumped_dict_c[i]
+
     stc_list = _set_cells(wannier_atoms, cell)  # type: ignore
-    wfc = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
+    wfc = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol)
 
     dp_sys.data['atomic_dipole'] = wfc
 
     if mode == 'both':
         wannier_atoms_x = ase.io.read(os.path.join(data_dir, wannier_x), index=":", format='extxyz')
         stc_list = _set_cells(wannier_atoms_x, cell)  # type: ignore
-        wfc_x = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
+        wfc_x = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol)
 
         wannier_atoms_y = ase.io.read(os.path.join(data_dir, wannier_y), index=":", format='extxyz')
         stc_list = _set_cells(wannier_atoms_y, cell)  # type: ignore
-        wfc_y = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
+        wfc_y = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol)
 
         wannier_atoms_z = ase.io.read(os.path.join(data_dir, wannier_z), index=":", format='extxyz')
         stc_list = _set_cells(wannier_atoms_z, cell)  # type: ignore
-        wfc_z = _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol)
+        wfc_z = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol)
 
         polar = np.zeros((wfc.shape[0], wfc.shape[1], 3), dtype = float)
 
@@ -200,14 +211,14 @@ def dpdata_read_cp2k_viber_data(data_dir: str,
 
         dp_sys.data['atomic_polarizability'] = polar.reshape(polar.shape[0], -1)
     elif mode == 'dipole_only':
-        dp_sys.data['atomic_polarizability'] = np.array([-1])
+        dp_sys.data['atomic_polarizability'] = np.array([-1,-1]).reshape(1,-1)
     else:
         logger.warning(f"There is no mode called '{mode}', expected 'both' or 'dipole_only'")
 
     return dp_sys
 
 
-def _get_lumped_wacent_poses_rel(stc: Atoms, elem_symbol, wacent_symbol, cutoff=1.0, expected_cn=4):
+def _get_lumped_wacent_poses_rel(stc: Atoms, elem_symbol, wacent_symbol, cutoff=1.2, expected_cn=4):
     """
     determine the positions of the wannier centers around O
     and sum it into the wannier centroid.
@@ -242,7 +253,7 @@ def _get_lumped_wacent_poses_rel(stc: Atoms, elem_symbol, wacent_symbol, cutoff=
     return lumped_wacent_poses_rel
 
 
-def _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol):
+def _set_lumped_wfc(stc_list, lumped_dict, cutoff, wacent_symbol):
     """
     set the wannier function centroids
     """
@@ -251,9 +262,11 @@ def _set_lumped_wfc(stc_list, lumped_dict, wacent_symbol):
         for elem_symbol, expected_cn in lumped_dict.items():
             lumped_wacent_poses_rel = _get_lumped_wacent_poses_rel(
                 stc=stc, elem_symbol=elem_symbol, wacent_symbol = wacent_symbol,
-                cutoff = 1.0, expected_cn=expected_cn)
-            X_pos.append(lumped_wacent_poses_rel)
-    wfc_pos = np.reshape(X_pos, (len(stc_list), -1))
+                cutoff = cutoff, expected_cn=expected_cn)
+            X_pos.append(np.reshape(lumped_wacent_poses_rel, (len(stc_list), -1)))
+    wfc_pos = np.concatenate(X_pos,axis = 1)
+    #         X_pos.append(lumped_wacent_poses_rel)
+    # wfc_pos = np.reshape(X_pos, (len(stc_list), -1))
     return wfc_pos
 
 

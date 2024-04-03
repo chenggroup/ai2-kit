@@ -115,12 +115,16 @@ class DpdataHelper:
 
         if fmt == 'cp2k/viber':
             kwargs.pop('fmt')
-            system = dpdata_read_cp2k_viber_data(data_path, **kwargs)
+            try:
+                system = dpdata_read_cp2k_viber_data(data_path, **kwargs)
+            except:
+                logger.warn(f'Fail to read {data_path}')
+                return
         else:
             system = dpdata.LabeledSystem(data_path, **kwargs)
 
         fparam = kwargs.get('fparam', None)
         if fparam is not None:
             set_fparam(system, fparam)
-
+            
         self._systems.extend(system)  # type: ignore

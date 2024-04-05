@@ -307,10 +307,10 @@ def _build_deepmd_steps(dp_cmd: str,
 
     if previous_model:
         dp_train_cmd = f'{dp_train_cmd} -f {previous_model}'
-
     if pretrained_model:
         dp_train_cmd = f'{dp_train_cmd} --finetune {pretrained_model}'
-    dp_train_cmd_restart = f'if [ ! -f model.ckpt.index ]; then {dp_train_cmd}; else {dp_train_cmd} --restart model.ckpt; fi'
+
+    dp_train_cmd_restart = f'if [ ! -f model.ckpt.index ]; then {dp_train_cmd}; else {dp_cmd} train {DP_INPUT_FILE} --restart model.ckpt; fi'
 
     steps.append(
         BashStep(cmd=dp_train_cmd_restart, cwd=cwd, checkpoint='dp-train')  # type: ignore

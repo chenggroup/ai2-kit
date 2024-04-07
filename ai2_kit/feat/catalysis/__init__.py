@@ -222,7 +222,7 @@ class ConfigBuilder:
         with open(plumed_input_path, 'w', encoding='utf-8') as fp:
             fp.write('\n'.join(plumed_input))
 
-    def gen_lammps_input(self, out_dir='./out', **kwargs):
+    def gen_lammps_input(self, out_dir='./out', abs_path=True, **kwargs):
         assert self._atoms is not None, 'atoms must be loaded first'
         kwargs = {
             'nsteps': 20000,
@@ -244,7 +244,7 @@ class ConfigBuilder:
         }
 
         template_file  = kwargs.pop('template_file', os.path.join(AI2CAT_RES_DIR, 'lammps-post.inp'))
-        dp_models = parse_path_list(kwargs.pop('dp_models'), to_abs=True)
+        dp_models = parse_path_list(kwargs.pop('dp_models'), to_abs=abs_path)
         ensemble = kwargs.pop('ensemble')
 
         type_map, mass_map = get_type_map(self._atoms)

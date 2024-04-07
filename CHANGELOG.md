@@ -1,4 +1,8 @@
 # Change Logs
+## v0.15.10
+* fix deepmd restart
+* improve gen lammps script tool
+
 ## v0.15.9
 * fix loading cp2k viber data
 

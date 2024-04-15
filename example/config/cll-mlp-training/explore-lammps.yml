@@ -36,6 +36,9 @@ workflow:
       # Specific timestep of the simulation.
       timestep: 0.0005
 
+      # Ignore the error of the simulation.
+      ignore_error: true
+
       # Specific sample frequency.
       sample_freq: 100
 

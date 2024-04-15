@@ -38,6 +38,9 @@ workflow:
       # Optional, limit the number of structures to label, default: 0 (no limit)
       limit: 10
 
+      # Ignore the error of the label, default: false
+      ignore_error: true
+
       # The input template for CP2K.
       # You can put the content of the input template here,
       # or you can put the input template in a file, for example, cp2k-input.inp,

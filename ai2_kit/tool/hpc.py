@@ -106,20 +106,26 @@ class Slurm:
 
     def _update_job_states(self):
         query_cmd = f"{self._squeue_bin} --noheader --format='%i %t' -u $USER"
-        with os.popen(query_cmd) as fp:
-            state = {}
-            for line in fp:
-                if line:
-                    job_id, slurm_state = line.split()
-                    state[job_id] = slurm_state
-            for job_id in self._job_states:
-                if job_id in state:
-                    self._job_states[job_id] = self._state_table[state[job_id]]
+        
+        fp = os.popen(query_cmd)
+        out = fp.read()
+        exit_code = fp.close()
+        if exit_code is not None:
+            raise RuntimeError(f'Failed to query job states: {exit_code}')
+
+        state = {}
+        for line in out.splitlines():
+            if line:
+                job_id, slurm_state = line.split()
+                state[job_id] = slurm_state
+        for job_id in self._job_states:
+            if job_id in state:
+                self._job_states[job_id] = self._state_table[state[job_id]]
+            else:
+                if os.path.exists(f'slurm_{job_id}.done'):
+                    self._job_states[job_id] = JobState.COMPLETED
                 else:
-                    if os.path.exists(f'slurm_{job_id}.done'):
-                        self._job_states[job_id] = JobState.COMPLETED
-                    else:
-                        self._job_states[job_id] = JobState.FAILED
+                    self._job_states[job_id] = JobState.FAILED
 
     def _cancel(self):
         for job_id in self._job_states:

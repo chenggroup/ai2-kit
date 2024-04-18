@@ -1,4 +1,8 @@
 # Change Logs
+
+## v0.15.11
+* fix hpc tool
+
 ## v0.15.10
 * fix deepmd restart
 * improve gen lammps script tool

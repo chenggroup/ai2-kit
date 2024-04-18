@@ -26,7 +26,7 @@ class UiHelper:
         self.lammps_args = None
 
         self.system_file = None
-        self.cp2k_basic_set_file = None
+        self.cp2k_basis_set_file = None
         self.cp2k_potential_file = None
         self.cp2k_parameter_file = None
 
@@ -41,15 +41,15 @@ class UiHelper:
         self.system_file = args.get('system_file', self.system_file)
 
     def _set_default_cp2k_basic_args(self, args: dict):
-        if self.cp2k_basic_set_file is not None:
-            args['basic_set_file'] = self.cp2k_basic_set_file
+        if self.cp2k_basis_set_file is not None:
+            args['basis_set_file'] = self.cp2k_basis_set_file
         if self.cp2k_potential_file is not None:
             args['potential_file'] = self.cp2k_potential_file
         if self.cp2k_parameter_file is not None:
             args['parameter_file'] = self.cp2k_parameter_file
 
     def _update_default_cp2k_basic_args(self, args: dict):
-        self.cp2k_basic_set_file = args.get('basic_set_file', self.cp2k_basic_set_file)
+        self.cp2k_basis_set_file = args.get('basis_set_file', self.cp2k_basis_set_file)
         self.cp2k_potential_file = args.get('potential_file', self.cp2k_potential_file)
         self.cp2k_parameter_file = args.get('parameter_file', self.cp2k_parameter_file)
 
@@ -231,7 +231,7 @@ class UiHelper:
         # patch for FilePicker
         return merge_dict(schema, {'schema': {'properties': {
             'system_file':    _get_file_picker(),
-            'basic_set_file': _get_file_picker(),
+            'basis_set_file': _get_file_picker(),
             'potential_file': _get_file_picker(),
             'parameter_file': _get_file_picker(),
         }}}, quiet=True)
@@ -242,7 +242,7 @@ class UiHelper:
         schema = load_json(schema_path)
         return merge_dict(schema, {'schema': {'properties': {
             'system_file':    _get_file_picker(),
-            'basic_set_file': _get_file_picker(),
+            'basis_set_file': _get_file_picker(),
             'potential_file': _get_file_picker(),
             'parameter_file': _get_file_picker(),
         }}}, quiet=True)

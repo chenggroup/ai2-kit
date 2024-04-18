@@ -186,28 +186,29 @@ def dpdata_read_cp2k_viber_data(data_dir: str,
         del lumped_dict_c[i]
 
     stc_list = _set_cells(wannier_atoms, cell)  # type: ignore
-    wfc = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol)
+    wfc_compute_polar = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol, to_polar = True)
+    wfc_save = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol, to_polar = False)
 
-    dp_sys.data['atomic_dipole'] = wfc
+    dp_sys.data['atomic_dipole'] = wfc_save
 
     if mode == 'both':
         wannier_atoms_x = ase.io.read(os.path.join(data_dir, wannier_x), index=":", format='extxyz')
         stc_list = _set_cells(wannier_atoms_x, cell)  # type: ignore
-        wfc_x = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol)
+        wfc_x = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol, to_polar = True)
 
         wannier_atoms_y = ase.io.read(os.path.join(data_dir, wannier_y), index=":", format='extxyz')
         stc_list = _set_cells(wannier_atoms_y, cell)  # type: ignore
-        wfc_y = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol)
+        wfc_y = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol, to_polar = True)
 
         wannier_atoms_z = ase.io.read(os.path.join(data_dir, wannier_z), index=":", format='extxyz')
         stc_list = _set_cells(wannier_atoms_z, cell)  # type: ignore
-        wfc_z = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol)
+        wfc_z = _set_lumped_wfc(stc_list, lumped_dict_c, cutoff, wacent_symbol, to_polar = True)
 
-        polar = np.zeros((wfc.shape[0], wfc.shape[1], 3), dtype = float)
+        polar = np.zeros((wfc_compute_polar.shape[0], wfc_compute_polar.shape[1], 3), dtype = float)
 
-        polar[:, :, 0] = (wfc_x - wfc) / eps
-        polar[:, :, 1] = (wfc_y - wfc) / eps
-        polar[:, :, 2] = (wfc_z - wfc) / eps
+        polar[:, :, 0] = (wfc_x - wfc_compute_polar) / eps
+        polar[:, :, 1] = (wfc_y - wfc_compute_polar) / eps
+        polar[:, :, 2] = (wfc_z - wfc_compute_polar) / eps
 
         dp_sys.data['atomic_polarizability'] = polar.reshape(polar.shape[0], -1)
     elif mode == 'dipole_only':
@@ -252,23 +253,47 @@ def _get_lumped_wacent_poses_rel(stc: Atoms, elem_symbol, wacent_symbol, cutoff=
     lumped_wacent_poses_rel = np.stack(lumped_wacent_poses_rel)
     return lumped_wacent_poses_rel
 
+def _can_retain(item,elem_symbol):
+    if not isinstance(item,str): return True
+    if item != elem_symbol: return True
+    return False
 
-def _set_lumped_wfc(stc_list, lumped_dict, cutoff, wacent_symbol):
+def _is_X(item):
+    if not isinstance(item,str): return False
+    if item == 'X': return True
+    return False
+
+def _set_lumped_wfc(stc_list, lumped_dict, cutoff, wacent_symbol, to_polar = True):
     """
     set the wannier function centroids
     """
     X_pos = []
-    for stc in stc_list:
-        for elem_symbol, expected_cn in lumped_dict.items():
-            lumped_wacent_poses_rel = _get_lumped_wacent_poses_rel(
-                stc=stc, elem_symbol=elem_symbol, wacent_symbol = wacent_symbol,
-                cutoff = cutoff, expected_cn=expected_cn)
-            X_pos.append(np.reshape(lumped_wacent_poses_rel, (len(stc_list), -1)))
-    wfc_pos = np.concatenate(X_pos,axis = 1)
-    #         X_pos.append(lumped_wacent_poses_rel)
-    # wfc_pos = np.reshape(X_pos, (len(stc_list), -1))
-    return wfc_pos
+    if to_polar:
+        for stc in stc_list:
+            x_symbol = list(stc.symbols)
+            
+            for elem_symbol, expected_cn in lumped_dict.items():
+                lumped_wacent_poses_rel = _get_lumped_wacent_poses_rel(
+                    stc=stc, elem_symbol=elem_symbol, wacent_symbol = wacent_symbol,
+                    cutoff = cutoff, expected_cn=expected_cn)
+                out_elem_symbol = list(lumped_wacent_poses_rel)
+                x_symbol = [item if _can_retain(item,elem_symbol) else out_elem_symbol.pop(0) for item in x_symbol]
 
+            x_symbol = [item for item in x_symbol if not _is_X(item)]
+            x_symbol = [np.array([0.,0.,0.]) if isinstance(item, str) else item for item in x_symbol]
+            x_symbol = np.concatenate(x_symbol ,axis = 0)
+            X_pos.append(np.array(x_symbol))
+        wfc_pos = np.array(X_pos)
+        return wfc_pos
+    else:
+        for stc in stc_list:
+            for elem_symbol, expected_cn in lumped_dict.items():
+                lumped_wacent_poses_rel = _get_lumped_wacent_poses_rel(
+                    stc=stc, elem_symbol=elem_symbol, wacent_symbol = wacent_symbol,
+                    cutoff = cutoff, expected_cn=expected_cn)
+                X_pos.append(np.reshape(lumped_wacent_poses_rel, (len(stc_list), -1)))
+        wfc_pos = np.concatenate(X_pos,axis = 1)
+        return wfc_pos
 
 def _set_cells(stc_list: List[Atoms], cell):
     for stc in stc_list:

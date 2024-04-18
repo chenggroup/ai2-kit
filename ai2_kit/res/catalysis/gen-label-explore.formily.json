@@ -76,7 +76,7 @@
         "x-designable-id": "7ri1h7284k4",
         "x-index": 2
       },
-      "basic_set_file": {
+      "basis_set_file": {
         "type": "string",
         "title": "Basic Set File",
         "x-decorator": "FormItem",
@@ -84,7 +84,7 @@
         "x-validator": [],
         "x-component-props": {},
         "x-decorator-props": {},
-        "name": "basic_set_file",
+        "name": "basis_set_file",
         "x-designable-id": "5czwq9wajpu",
         "x-index": 3,
         "description": "CP2K basic set file.",

@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.16.0
+* ai2-cat: refine the basis set and potential selection
+* ai2-cat: support multiple basic set and potential files
+* ai2-spectr: fix wrong atom order
+
 ## v0.15.11
 * fix hpc tool
 

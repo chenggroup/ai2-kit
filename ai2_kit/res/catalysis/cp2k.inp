@@ -6,8 +6,9 @@
     METHOD QS
     STRESS_TENSOR ANALYTICAL
     &DFT
-        BASIS_SET_FILE_NAME $basic_set_file
-        POTENTIAL_FILE_NAME $potential_file
+
+$basis_n_potential
+
         CHARGE              0
         UKS                 $uks
         &MGRID

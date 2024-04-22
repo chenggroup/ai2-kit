@@ -130,7 +130,8 @@ class CllLammpsInputConfig(BaseModel):
 
     pair_style hybrid/overlay &
                deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi.out $$FEP_DP_OPT &
-               buck/coul/long 10.0 10.0 &
+               buck/coul/long 10.0 10.0
+
     pair_coeff  * * deepmd 1 $$SPECORDER
     pair_coeff  * * buck/coul/long 10.0 10.0
     '''

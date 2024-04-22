@@ -207,6 +207,7 @@ fix dplr all dplr $$DP_MODELS_0 type_associate $$DPLR_TYPE_ASSOCIATION bond_type
 
 PRESET_LAMMPS_INPUT_TEMPLATE = {
     'default'  : '\n'.join([_DEFAULT_LAMMPS_TOP, _DP_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM]),
+    'custom-ff': '\n'.join([_DEFAULT_LAMMPS_TOP, '$$CUSTOM_FF', _DEFAULT_LAMMPS_BOTTOM]),
     'fep-pka'  : '\n'.join([_DEFAULT_LAMMPS_TOP, _DP_FEP_PKA_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM]),
     'fep-redox': '\n'.join([_DEFAULT_LAMMPS_TOP, _DP_FEP_REDOX_FORCE_FIELD, _DEFAULT_LAMMPS_BOTTOM ]),
     'dpff'     : '\n'.join([_DEFAULT_LAMMPS_TOP, _DP_FORCE_FIELD, _DPFF_CONFIG, _DEFAULT_LAMMPS_BOTTOM]),

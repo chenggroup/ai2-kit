@@ -122,6 +122,19 @@ class CllLammpsInputConfig(BaseModel):
     ```
     '''
 
+    custom_ff: Optional[str] = None
+    '''
+    Allow user to set custom force field. If set, the custom force field will be used instead of the default one.
+    The use can use $$DP_MODELS to reference the deepmd models, and $$SPECORDER to reference the atom type order.
+    For example:
+
+    pair_style hybrid/overlay &
+               deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi.out $$FEP_DP_OPT &
+               buck/coul/long 10.0 10.0 &
+    pair_coeff  * * deepmd 1 $$SPECORDER
+    pair_coeff  * * buck/coul/long 10.0 10.0
+    '''
+
     fep_opts: FepOptions = FepOptions()
 
 
@@ -230,7 +243,7 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
         elif input.mode == 'dpff':
             preset_template = 'dpff'
         else:
-            preset_template = 'default'
+            preset_template = 'custom-ff' if input.config.custom_ff else 'default'
 
     tasks_dir, task_dirs = executor.run_python_fn(make_lammps_task_dirs)(
         combination_vars=input.config.explore_vars,
@@ -256,6 +269,7 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
         dp_modifier=input.dp_modifier,
         dp_sel_type=input.dp_sel_type,
         fep_opts=input.config.fep_opts,
+        custom_ff=input.config.custom_ff,
     )
 
     # build scripts and submit
@@ -352,6 +366,7 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
                           mode: TRAINING_MODE,
                           fep_opts: FepOptions,
                           rel_path: bool = False,
+                          custom_ff: Optional[str] = None,
                           ):
     # setup workspace
     input_data_dir = os.path.join(work_dir, 'input_data')
@@ -411,6 +426,7 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
         lammps_vars = dict(zip(combination_fields, combination))
         template_vars = {
             **lammps_vars,
+            'CUSTOM_FF': custom_ff or '',
         }
 
         # setup task dir

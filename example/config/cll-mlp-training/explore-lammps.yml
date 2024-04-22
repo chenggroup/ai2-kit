@@ -81,3 +81,14 @@ workflow:
           - [0, 0, 1]
           - [0, 1, 0]
           - [1, 0, 0]
+
+
+      # Optional, allow user to set custom force field. If set, the custom force field will be used instead of the default one.
+      # The use can use $$DP_MODELS to reference the deepmd models, and $$SPECORDER to reference the atom type order.
+      # For example:
+      # pair_style hybrid/overlay &
+      #            deepmd $$DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi.out &
+      #            buck/coul/long 10.0 10.0 &
+      # pair_coeff  * * deepmd 1 $$SPECORDER
+      # pair_coeff  * * buck/coul/long 10.0 10.0
+      custom_ff:

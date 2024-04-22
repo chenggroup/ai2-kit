@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.16.1
+* cp2k: use fp32 for input data
+* lammps: support custom force field via `custom_ff` option
+
 ## v0.16.0
 * ai2-cat: refine the basis set and potential selection
 * ai2-cat: support multiple basic set and potential files

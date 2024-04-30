@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.17.0
+* feat: anyware for explore
+* breaking change: new checkpoint system
+
 ## v0.16.1
 * cp2k: use fp32 for input data
 * lammps: support custom force field via `custom_ff` option

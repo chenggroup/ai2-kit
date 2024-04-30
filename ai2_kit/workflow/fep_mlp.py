@@ -12,7 +12,7 @@ from ai2_kit.domain import (
     constant as const,
     updater,
 )
-from ai2_kit.core.checkpoint import set_checkpoint_file, apply_checkpoint
+from ai2_kit.core.checkpoint import set_checkpoint_dir, apply_checkpoint
 
 from pydantic import BaseModel
 from typing import Dict, List, Optional, Any
@@ -77,7 +77,7 @@ def run_workflow(*config_files,
         checkpoint: checkpoint file
     """
     if checkpoint is not None:
-        set_checkpoint_file(checkpoint)
+        set_checkpoint_dir(checkpoint)
 
     config_data = load_yaml_files(*config_files)
     config = FepWorkflowConfig.parse_obj(config_data)

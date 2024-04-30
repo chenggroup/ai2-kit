@@ -21,11 +21,11 @@ class ArtifactDict(TypedDict):
 
 class Artifact(BaseModel):
 
-    key: Optional[str]
-    executor: Optional[str]
+    key: Optional[str] = None
+    executor: Optional[str] = None
     url: str
-    format: Optional[str]
-    includes: Optional[str]
+    format: Optional[str] = None
+    includes: Optional[str] = None
     attrs: dict = dict()
 
     @classmethod
@@ -36,7 +36,10 @@ class Artifact(BaseModel):
            includes: Optional[str] = None,
            attrs: Optional[dict] = None,
            format: Optional[str] = None,):
-        """Create an Artifact instance. Use this instead of __init__ to avoid type error of pydantic"""
+        """
+        Create an Artifact instance. Use this instead of __init__ to avoid type error of pydantic
+        This method should be deprecated.
+        """
         return cls(url=url,
                    executor=executor,
                    format=format,

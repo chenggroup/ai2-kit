@@ -13,7 +13,6 @@ import json
 from .connector import BaseConnector
 from .log import get_logger
 from .job import JobFuture, JobState
-from .checkpoint import apply_checkpoint, del_checkpoint
 from .util import short_hash
 from .pydantic import BaseModel
 

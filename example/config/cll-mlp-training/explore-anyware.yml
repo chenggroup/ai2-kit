@@ -64,11 +64,10 @@ workflow:
       # Specify the variants to explore.
       # Variants defined here will be used in full combination.
       # You can also specify custom variables here.
+      # Each variable should be a list of values.
       product_vars:
-        TEMP: [ 330, 430, 530]
+        TEMP: [330, 430, 530]
         PRES: [1]
-        TAU_T: 0.1  # Optional
-        TAU_P: 0.5  # Optional
 
       # Optional, same as product_vars,
       # but the values will be broadcasted to all combinations.

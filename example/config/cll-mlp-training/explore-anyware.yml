@@ -62,10 +62,7 @@ workflow:
           pair style deepmd $$DP_MODELS
 
       # Specify the variants to explore.
-      # Variants defined here will be used in full combination or n-wise combination.
-      # Those value will be mapped to the variables in the LAMMPS input file.
-      # The key should be upper case.
-      # TEMP, PRES are required, the others are optional.
+      # Variants defined here will be used in full combination.
       # You can also specify custom variables here.
       product_vars:
         TEMP: [ 330, 430, 530]

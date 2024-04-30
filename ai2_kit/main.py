@@ -63,11 +63,6 @@ class ToolGroup:
         return Yaml
 
     @property
-    def checkpoint(self):
-        from ai2_kit.core.checkpoint import CheckpointCmd
-        return CheckpointCmd
-
-    @property
     def batch(self):
         from ai2_kit.tool.batch import BatchHelper
         return BatchHelper

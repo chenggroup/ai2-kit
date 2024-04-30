@@ -549,6 +549,7 @@ def _write_dp_dataset_by_formula(dp_system_list: List[Tuple[ArtifactDict, dpdata
     for _, system in dp_system_list[1:]:
         multi_systems.append(system)
 
+    # pylint: disable=no-member
     multi_systems.to_deepmd_npy(out_dir, type_map=type_map)  # type: ignore
 
     return [ {

@@ -17,7 +17,6 @@ import itertools
 import random
 import ase.io
 
-
 from .iface import BaseCllContext, ICllExploreOutput, TRAINING_MODE
 from .constant import (
     LAMMPS_DUMP_DIR,

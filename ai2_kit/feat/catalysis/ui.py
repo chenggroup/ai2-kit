@@ -55,6 +55,7 @@ class UiHelper:
 
 
     def gen_aimd_config(self, out_dir: str, **default_value):
+        os.makedirs(out_dir, exist_ok=True)
         if self.aimd_args is None:
             self.aimd_args = default_value
         self._set_default_system_file(self.aimd_args)
@@ -85,6 +86,7 @@ class UiHelper:
 
 
     def gen_train_vendors_config(self, out_dir: str, **default_value):
+        os.makedirs(out_dir, exist_ok=True)
         if self.label_explore_args is None:
             self.label_explore_args = default_value
         self._set_default_system_file(self.label_explore_args)
@@ -115,6 +117,7 @@ class UiHelper:
         asyncio.ensure_future(_task())
 
     def gen_train_config(self, out_dir: str, **default_value):
+        os.makedirs(out_dir, exist_ok=True)
         if self.train_args is None:
             self.train_args = default_value
         self._set_default_system_file(self.train_args)
@@ -148,6 +151,7 @@ class UiHelper:
         asyncio.ensure_future(_task())
 
     def gen_lammps_config(self, out_dir: str, work_dir: str, **default_value):
+        os.makedirs(out_dir, exist_ok=True)
         if self.lammps_args is None:
             self.lammps_args = default_value
         self._set_default_system_file(self.lammps_args)

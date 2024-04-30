@@ -222,9 +222,9 @@ def make_cp2k_task_dirs(system_files: List[ArtifactDict],
 
 def dump_coord_n_cell(fp, atoms: Atoms):
     coords, cell = ase_atoms_to_cp2k_input_data(atoms)
-    # use fp32 precision
     cp2k_dump_input({
         'COORD': dict.fromkeys(coords, ''),  # FIXME: this is a dirty hack, should make dump_cp2k_input support COORD
+        # use fp32 precision, or 7 decimal places
         'CELL': {
             'A': ' '.join( f'{v:.7f}' for v in cell[0]),
             'B': ' '.join( f'{v:.7f}' for v in cell[1]),

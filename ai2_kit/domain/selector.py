@@ -231,6 +231,8 @@ def select_structures_by_model_devi(model_devi_output: ArtifactDict,
     data_format = get_data_format(model_devi_output)  # type: ignore
     if data_format in (DataFormat.LAMMPS_OUTPUT_DIR, DataFormat.LASP_LAMMPS_OUT_DIR):
         model_devi_file = os.path.join(model_devi_dir, model_devi_file)
+    elif data_format == DataFormat.ANYWARE_OUTPUT_DIR:
+        model_devi_file = os.path.join(model_devi_dir, 'model_devi.out')
     else:
         raise ValueError('unknown model_devi_data types')
     logger.info('start to analysis file: %s', model_devi_file)
@@ -251,7 +253,7 @@ def select_structures_by_model_devi(model_devi_output: ArtifactDict,
         for frame_id in df.step:
             dump_file = os.path.join(model_devi_dir, lammps_dump_dir, f'{frame_id}{LAMMPS_DUMP_SUFFIX}')
             atoms_list += ase.io.read(dump_file, ':', format='lammps-dump-text', specorder=type_map)
-    elif data_format == DataFormat.LASP_LAMMPS_OUT_DIR:
+    elif data_format in (DataFormat.LASP_LAMMPS_OUT_DIR, DataFormat.ANYWARE_OUTPUT_DIR):
         structures_file = os.path.join(model_devi_dir, 'structures.xyz')
         atoms_list += ase.io.read(structures_file, ':', format='extxyz')
     else:

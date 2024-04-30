@@ -1,4 +1,4 @@
-from ai2_kit.core.artifact import ArtifactDict
+from ai2_kit.core.artifact import ArtifactDict, Artifact
 
 from typing import List, Tuple, Optional
 from ase import Atoms
@@ -13,6 +13,8 @@ class DataFormat:
     VASP_OUTPUT_DIR = 'vasp/output_dir'
     LAMMPS_OUTPUT_DIR = 'lammps/output_dir'
     DEEPMD_OUTPUT_DIR = 'deepmd/output_dir'
+    ANYWARE_OUTPUT_DIR = 'anyware/output_dir'
+
     DEEPMD_MODEL = 'deepmd/model'
     DEEPMD_NPY = 'deepmd/npy'
     LASP_LAMMPS_OUT_DIR ='lasp+lammps/output_dir'
@@ -46,14 +48,37 @@ def get_data_format(artifact: dict) -> Optional[str]:
 
 
 def artifacts_to_ase_atoms(artifacts: List[ArtifactDict], type_map: List[str]) -> List[Tuple[ArtifactDict, Atoms]]:
+    """
+    Read ase atoms list from artifacts
+    Deprecated since it is not recommended to use ArtifactDict
+    """
     results = []
     for a in artifacts:
         data_format = get_data_format(a)  # type: ignore
         url = a['url']
-        if data_format == DataFormat.VASP_POSCAR:
+        if data_format in [DataFormat.VASP_POSCAR, 'vasp']:
             atoms_list = ase.io.read(url, ':', format='vasp')
-        elif data_format == DataFormat.EXTXYZ:
+        elif data_format in [DataFormat.EXTXYZ, 'extxyz']:
             atoms_list = ase.io.read(url, ':', format='extxyz')
+        elif data_format is not None:
+            atoms_list = ase.io.read(url, ':', format=data_format)
+        else:
+            raise ValueError(f'unsupported data format: {data_format}')
+        results.extend((a, atoms) for atoms in atoms_list)
+    return results
+
+
+def artifacts_to_ase_atoms_v2(artifacts: List[Artifact]) -> List[Tuple[Artifact, Atoms]]:
+    results = []
+    for a in artifacts:
+        data_format = get_data_format(a.to_dict())  # type: ignore
+        url = a.url
+        if data_format in [DataFormat.VASP_POSCAR, 'vasp']:
+            atoms_list = ase.io.read(url, ':', format='vasp')
+        elif data_format in [DataFormat.EXTXYZ, 'extxyz']:
+            atoms_list = ase.io.read(url, ':', format='extxyz')
+        elif data_format is not None:
+            atoms_list = ase.io.read(url, ':', format=data_format)
         else:
             raise ValueError(f'unsupported data format: {data_format}')
         results.extend((a, atoms) for atoms in atoms_list)

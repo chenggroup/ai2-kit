@@ -67,7 +67,7 @@ workflow:
       # The key should be upper case.
       # TEMP, PRES are required, the others are optional.
       # You can also specify custom variables here.
-      explore_vars:
+      product_vars:
         TEMP: [ 330, 430, 530]
         PRES: [1]
         TAU_T: 0.1  # Optional

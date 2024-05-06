@@ -20,6 +20,7 @@ class AseHelper:
         return self
 
     def write(self, filename: str, **kwargs):
+        ensure_dir(filename.format(i=0))
         self._write(filename, self._atoms_list, **kwargs)
 
     def set_cell(self, cell, scale_atoms=False, apply_constraint=True):
@@ -67,8 +68,43 @@ class AseHelper:
         return self
 
     def write_each_frame(self, filename: str, **kwargs):
+        """
+        write each frame to a separate file
+
+        :param filename: the filename template, use {i} to represent the index, for example, 'frame_{i}.xyz'
+        :param kwargs: other arguments for ase.io.write
+        """
+        ensure_dir(filename.format(i=0))
         for i, atoms in enumerate(self._atoms_list):
             self._write(filename.format(i=i), atoms, **kwargs)
+
+
+    def write_dplr_lammps_data(self, filename: str,
+                               type_map: List[str], sel_type: List[int],
+                               sys_charge_map: List[float], model_charge_map: List[float]):
+
+        """
+        write atoms to LAMMPS data file for DPLR
+        the naming convention of params follows Deepmd-Kit's
+
+        about dplr: https://docs.deepmodeling.com/projects/deepmd/en/master/model/dplr.html
+        about fitting tensor: https://docs.deepmodeling.com/projects/deepmd/en/master/model/train-fitting-tensor.html
+
+
+        :param filename: the filename of LAMMPS data file, use {i} to represent the index, for example, 'frame_{i}.lammps.data'
+        :param type_map: the type map of atom type, for example, [O,H]
+        :param sel_type: the selected type of atom, for example, [0] means atom type 0, aka O is selected
+        :param sys_charge_map: the charge map of atom in system, for example, [6, 1]
+        :param model_charge_map: the charge map of atom in model, for example, [-8]
+        """
+
+        from ai2_kit.domain.dpff import dump_dplr_lammps_data
+        ensure_dir(filename.format(i=0))
+        for i, atoms in enumerate(self._atoms_list):
+            with open(filename.format(i=i), 'w') as f:
+                dump_dplr_lammps_data(f, atoms=atoms, type_map=type_map, sel_type=sel_type,
+                                      sys_charge_map=sys_charge_map, model_charge_map=model_charge_map)
+
 
     def _read(self, filename: str, **kwargs):
         kwargs.setdefault('index', ':')
@@ -79,7 +115,6 @@ class AseHelper:
 
     def _write(self, filename: str, atoms_list, **kwargs):
         assert len(atoms_list) > 0, 'No atoms to write'
-        ensure_dir(filename)
         fmt = kwargs.get('format', None)
         if fmt == 'lammps-dump-text':
             return self._write_lammps_dump_text(filename, atoms_list, **kwargs)

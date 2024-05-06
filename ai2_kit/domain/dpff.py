@@ -17,16 +17,16 @@ logger = get_logger(__name__)
 
 
 def set_dplr_ext_from_cp2k_output(dp_sys: dpdata.LabeledSystem,
-                                    cp2k_output: str,
-                                    wannier_file: str,
-                                    type_map: List[str],
-                                    sys_charge_map: List[int],
-                                    model_charge_map: List[int],
-                                    ewald_h: float,
-                                    ewald_beta: float,
-                                    ext_efield,
-                                    sel_type: List[int],
-                                    ):
+                                  cp2k_output: str,
+                                  wannier_file: str,
+                                  type_map: List[str],
+                                  sys_charge_map: List[int],
+                                  model_charge_map: List[int],
+                                  ewald_h: float,
+                                  ewald_beta: float,
+                                  ext_efield,
+                                  sel_type: List[int],
+                                  ):
 
     wannier_atoms = ase.io.read(wannier_file)
     with open(cp2k_output, 'r') as fp:
@@ -130,11 +130,11 @@ def get_atomic_dipole(dp_sys, sel_ids, wannier_atoms, wannier_cutoff = 1.0):
 
 
 def get_pbc_atomic_efield(dp_sys,
-                            extended_coords,
-                            extended_charges,
-                            ewald_h,
-                            ewald_beta,
-                            ):
+                          extended_coords,
+                          extended_charges,
+                          ewald_h,
+                          ewald_beta,
+                          ):
     from deepmd.infer.ewald_recp import EwaldRecp
 
     er = EwaldRecp(ewald_h, ewald_beta)
@@ -164,10 +164,27 @@ def build_sel_type_assertion(sel_type, model_path: str, py_cmd='python'):
 
 
 def dump_dplr_lammps_data(fp, atoms: Atoms, type_map: List[str], sel_type: List[int],
-                            sys_charge_map: List[float], model_charge_map: List[float]):
+                          sys_charge_map: List[float], model_charge_map: List[float]):
 
-    assert len(type_map) == len(sys_charge_map), f'type_map {type_map} and sys_charge_map {sys_charge_map} must have the same length'
-    assert len(sel_type) == len(model_charge_map), f'sel_type {sel_type} and model_charge_map {model_charge_map} must have the same length'
+    """
+    dump atoms to LAMMPS data file for DPLR
+    the naming convention of params follows Deepmd-Kit's
+
+    about dplr: https://docs.deepmodeling.com/projects/deepmd/en/master/model/dplr.html
+    about fitting tensor: https://docs.deepmodeling.com/projects/deepmd/en/master/model/train-fitting-tensor.html
+
+    :param fp: file pointer
+    :param type_map: the type map of atom type, for example, [O,H]
+    :param sel_type: the selected type of atom, for example, [0] means atom type 0, aka O is selected
+    :param sys_charge_map: the charge map of atom in system, for example, [6, 1]
+    :param model_charge_map: the charge map of atom in model, for example, [-8]
+    """
+
+    if len(type_map) != len(sys_charge_map):
+        raise ValueError(f'type_map {type_map} and sys_charge_map {sys_charge_map} must have the same length')
+
+    if len(sel_type) != len(model_charge_map):
+        raise ValueError(f'sel_type {sel_type} and model_charge_map {model_charge_map} must have the same length')
 
     new_atoms = atoms.copy()
     vtypes = get_unused_symbols(type_map, len(sel_type))

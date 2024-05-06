@@ -17,6 +17,7 @@ This toolkit include the following commands:
 | set_cell | Set the cell of all frames in the trajectory. | `ai2-kit tool ase read ./path/to/traj.xyz - set_cell "[10,10,10,90,90,90]"` | [ase.Atoms.set_cell](https://wiki.fysik.dtu.dk/ase/ase/atoms.html#ase.Atoms.set_cell) |
 | set_pbc | Set the periodic boundary condition of all frames in the trajectory. | `ai2-kit tool ase read ./path/to/traj.xyz - set_pbc "[True,True,True]"` | [ase.Atoms.set_pbc](https://wiki.fysik.dtu.dk/ase/ase/atoms.html#ase.Atoms.set_pbc) |  
 | delete_atoms | Delete atoms from all frames in the trajectory. | `ai2-kit tool ase read ./path/to/traj.xyz - delete_atoms  "[1,2,3]"` | |
+| write_dplr_lammps_data | Write data in the format LAMMPS data for DPLR | | |
 
 Those commands are chainable and can be used to process trajectory in a pipeline fashion (separated by `-`). For more information, please refer to the following examples.
 
@@ -44,4 +45,8 @@ ai2-kit tool ase read ./workdir/iters-*/selector*/model-devi/*/good.xyz  - write
 
 # Convert xyz file to cp2k-inc file
 ai2-kit tool ase read coord.xyz - set_cell "[10,10,10,90,90,90]" - write coord_n_cell.inc --format cp2k-inc
+
+# Convert xyz file to DPLR LAMMPS data
+# Note: don't have space in the list
+ai2-kit tool ase read tmp/1.xyz - write_dplr_lammps_data tmp/dplr/{i}.lammps.data --type_map [O,H] --sel_type [0] --sys_charge_map [6,1] --model_charge_map [-8]
 ```

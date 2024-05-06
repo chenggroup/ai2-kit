@@ -48,5 +48,5 @@ ai2-kit tool ase read coord.xyz - set_cell "[10,10,10,90,90,90]" - write coord_n
 
 # Convert xyz file to DPLR LAMMPS data
 # Note: don't have space in the list
-ai2-kit tool ase read tmp/1.xyz - write_dplr_lammps_data tmp/dplr/{i}.lammps.data --type_map [O,H] --sel_type [0] --sys_charge_map [6,1] --model_charge_map [-8]
+ai2-kit tool ase read h2o.xyz - write_dplr_lammps_data tmp/dplr/{i}.lammps.data --type_map [O,H] --sel_type [0] --sys_charge_map [6,1] --model_charge_map [-8]
 ```

@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.17.1
+* feat: cmd to write dplr lammps data
+
 ## v0.17.0
 * feat: anyware for explore
 * breaking change: new checkpoint system

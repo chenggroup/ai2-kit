@@ -278,6 +278,6 @@ def make_anyware_task_dirs(work_dir: str,
             template_file_path = os.path.join(task_dir, k)
             dump_text(_Template(v).substitute(**template_vars, **dp_vars), template_file_path, encoding='utf-8')
         task_artifacts.append(Artifact(url=task_dir,
-                                       attrs=system_artifact.attrs,
+                                       attrs={**system_artifact.attrs, 'source': system_artifact.url},
                                        format=DataFormat.ANYWARE_OUTPUT_DIR))
     return task_artifacts

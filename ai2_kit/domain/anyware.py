@@ -196,11 +196,18 @@ async def anyware(input: AnywareInput, ctx: AnywareContext) -> AnywareOutput:
     await gather_jobs(jobs, max_tries=2)
 
     if input.config.post_process_fn:
-        _locals = {}
-        exec(input.config.post_process_fn, None, _locals)
-        _locals['post_process_fn']([task.url for task in task_artifacts])
+        executor.run_python_fn(run_post_process_fn)(
+            post_process_fn=input.config.post_process_fn,
+            task_dirs=[task.url for task in task_artifacts]
+        )
 
     return AnywareOutput(output_dirs=task_artifacts)
+
+
+def run_post_process_fn(post_process_fn: str, task_dirs: List[str]):
+    _locals = {}
+    exec(post_process_fn, None, _locals)
+    _locals['post_process_fn'](task_dirs)
 
 
 def make_anyware_task_dirs(work_dir: str,

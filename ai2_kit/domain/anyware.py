@@ -106,17 +106,17 @@ class AnywareConfig(BaseModel):
     The function must named as `post_process_fn` and accept a list of task directories as input.
     The below is an example of merging multiple file into one by keeping only the last line of each file.
 
-
-    def post_process_fn(task_dirs):
-        import glob
-        for task_dir in task_dirs:
-            files = glob.glob(os.path.join(task_dir, '*.out'))  # file to merge
-            with open(os.path.join(task_dir, 'merged.out'), 'w') as fp:
-                for file in files:
-                    with open(file, 'r') as f:
-                        lines = f.readlines()
-                        if len(lines) > 0:
-                            fp.write(lines[-1])
+    post_process_fn: |
+        def post_process_fn(task_dirs):
+            import glob
+            for task_dir in task_dirs:
+                files = glob.glob(os.path.join(task_dir, '*.out'))  # file to merge
+                with open(os.path.join(task_dir, 'merged.out'), 'w') as fp:
+                    for file in files:
+                        with open(file, 'r') as f:
+                            lines = f.readlines()
+                            if len(lines) > 0:
+                                fp.write(lines[-1])
     """
 
     delimiter: str = '$$'

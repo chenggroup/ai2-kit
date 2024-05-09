@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.17.4
+* fix: anyware execution
+
 ## v0.17.3
 * fix: anyware output artifact
 

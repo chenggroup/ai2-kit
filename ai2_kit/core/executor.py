@@ -49,7 +49,7 @@ class Executor(ABC):
         ...
 
     @abstractmethod
-    def run_python_fn(self, fn: FnType, python_cmd=None) -> FnType:
+    def run_python_fn(self, fn: FnType, python_cmd=None, cwd=None) -> FnType:
         ...
 
     @abstractmethod
@@ -190,7 +190,7 @@ class HpcExecutor(Executor):
     def run_python_fn(self, fn: FnType, python_cmd=None, cwd=None) -> FnType:
         def remote_fn(*args, **kwargs):
             script = fn_to_script(fn, args, kwargs, delimiter='@')
-            ret = self.run_python_script(script=script, python_cmd=python_cmd, cwd=None)
+            ret = self.run_python_script(script=script, python_cmd=python_cmd, cwd=cwd)
             _, r = ret.stdout.rsplit('@', 1)
             return cp.loads(bz2.decompress(base64.b64decode(r)))
         return remote_fn  # type: ignore

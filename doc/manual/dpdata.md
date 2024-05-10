@@ -7,14 +7,24 @@ This toolkit is a command line wrapper of [dpdata](https://github.com/deepmodeli
 
 ## Usage
 
+```bash
+ai2-kit tool dpdata # show all commands
+ai2-kit tool dpdata to_ase -h  # show doc of specific command
+```
+
 This toolkit include the following commands:
 
 | Command | Description | Example | Reference |
 | --- | --- | --- | --- |
 | read | Read dataset into memory. This command by itself is useless, you should chain other command after reading data into memory. | `ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy` | Support wildcard, can be call multiple time |
 | write | Use MultiSystems to merge dataset and write to directory | `ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy - write ./path/to/merged_dataset` | |
-| filter | Use lambda expression to filter dataset by system data. | `ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy - filter "lambda x: x['forces'].max() < 10" - write ./path/to/filtered_dataset` | |
-| set_fparam | add `fparam` to dataset, can be float or list of float | `ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy - set_fparam [0,1] - write ./path/to/filtered_dataset` | |
+| filter | Use lambda expression to filter dataset by system data. | See in `Example` | |
+| set_fparam | add `fparam` to dataset, can be float or list of float | See in `Example` | |
+| slice | use slice expression to process systems | see in `Example` | |
+| sample | sample data by different methods, current supported method are `even` and `random` | see in `Example` | |
+| eval | use `deepmd DeepPot` to (re)label loaded data | see in `Example` | |
+| to_ase | convert dpdata format to ase format and use [ase tool](./ase.md) to process | see in `Example` |  |
+
 
 Those commands are chainable and can be used to process trajectory in a pipeline fashion (separated by `-`). For more information, please refer to the following examples.
 
@@ -33,4 +43,10 @@ ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy - filter "lambda x: 
 
 # Set fparam when reading data
 ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy --fparam [0,1] - write ./path/to/new_dataset
+
+# (re)label data
+ai2-kit tool dpdata read dp-h2o --nolabel - eval dp-frozen.pb - write new-dp-hwo
+
+# Drop the first 10 frames and then sample 10 frames use random method, and save it as xyz format
+ai2-kit tool dpdata read dp-h2o - slice 10: - sample 10 --method random - to_ase - write h2o.xyz
 ```

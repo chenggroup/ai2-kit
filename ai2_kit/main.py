@@ -49,13 +49,13 @@ class ToolGroup:
 
     @property
     def ase(self):
-        from ai2_kit.tool.ase import AseHelper
-        return AseHelper
+        from ai2_kit.tool.ase import AseTool
+        return AseTool
 
     @property
     def dpdata(self):
-        from ai2_kit.tool.dpdata import DpdataHelper
-        return DpdataHelper
+        from ai2_kit.tool.dpdata import DpdataTool
+        return DpdataTool
 
     @property
     def yaml(self):
@@ -64,8 +64,8 @@ class ToolGroup:
 
     @property
     def batch(self):
-        from ai2_kit.tool.batch import BatchHelper
-        return BatchHelper
+        from ai2_kit.tool.batch import BatchTool
+        return BatchTool
 
     @property
     def hpc(self):

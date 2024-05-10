@@ -54,8 +54,32 @@ class TestDataTransform(TestCase):
         dp_system = dpdata.LabeledSystem(self.cp2k_output_file, fmt='cp2k/output')
 
         atoms_list: List[Atoms] = dp_system.to_ase_structure()  # type: ignore
-        print(atoms_list)
-
         dp_system = dpdata.LabeledSystem(atoms_list[0], fmt='ase/structure')
         dp_system += dpdata.LabeledSystem(atoms_list[0], fmt='ase/structure')
-        print(dp_system)
+
+
+class TestDataFile(TestCase):
+    plumed_colvar_file = data_dir / 'plumed_colvar.txt'
+
+    def test_colvar(self):
+        from ai2_kit.lib import plumed
+
+        df1 = plumed.load_colvar_from_files(self.plumed_colvar_file)
+        df2 = plumed.load_colvar_from_files(self.plumed_colvar_file, self.plumed_colvar_file)
+
+        self.assertEqual(len(df1), 20)
+        self.assertEqual(len(df2), 40)
+
+
+        cvs, bias = plumed.get_cvs_bias_from_df(df1, ['d1'], 'opes.bias')
+        self.assertEqual(cvs.shape, (20,))
+        grid = np.linspace(cvs.min(), cvs.max(),100)
+        self.assertEqual(grid.shape, (100,))
+
+
+        cvs, bias = plumed.get_cvs_bias_from_df(df1, ['d1', 'd2'], 'opes.bias')
+        self.assertEqual(cvs.shape, (2, 20))
+
+        grid = np.linspace(cvs.min(axis=1), cvs.max(axis=1),100).T
+        self.assertEqual(grid.shape, (2, 100))
+

@@ -8,7 +8,7 @@ packages = [{include = "ai2_kit"}]
 include = ["ai2_kit/res/*"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 fire = "^0.5.0"
 fabric = "^2.7.1"
 pydantic = "^1.10.2"
@@ -16,7 +16,7 @@ invoke = "^1.7.3"
 ruamel-yaml = "^0.17.21"
 cloudpickle = "^2.2.0"
 shortuuid = "^1.0.11"
-dpdata = "^0.2.16"
+dpdata = "0.2.18"
 pandas = "^1.5.3"
 ase = "^3.22.1"
 pymatgen = "^2023.2.22"
@@ -29,6 +29,8 @@ asaplib = {version = "^0.0.2", optional = true}
 dscribe = {version = "1.2.2", optional = true}
 jupyter-formily = {version = "0.0.7", optional = true}
 ipympl = {version = "^0.9.3", optional = true}
+scipy = "^1.13.0"
+psutil = "^5.9.8"
 
 [tool.poetry.extras]
 all = ["dscribe", "jupyter-formily", "ipympl", "asaplib"]
@@ -66,5 +68,5 @@ line-length = 120
 
 [tool.ruff.lint]
 explicit-preview-rules = true
-ignore = ["E741", "F541"]
+ignore = ["E741", "F541", "F841"]
 extend-select = ["PLR1704"]

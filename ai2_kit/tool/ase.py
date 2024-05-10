@@ -1,15 +1,15 @@
-import ase.io
-import glob
-
-from ai2_kit.core.util import ensure_dir, expand_globs
+from ai2_kit.core.util import ensure_dir, expand_globs, slice_from_str, SAMPLE_METHOD, list_sample
 from ai2_kit.domain.cp2k import dump_coord_n_cell
-from typing import List, Union
+
+from typing import List, Union, Optional
 from ase import Atoms
+import ase.io
 
 
-class AseHelper:
-    def __init__(self):
-        self._atoms_list: List[Atoms] = []
+class AseTool:
+
+    def __init__(self, atoms_list: Optional[List[Atoms]] = None):
+        self._atoms_list: List[Atoms] = [] if atoms_list is None else atoms_list
 
     def read(self, *file_path_or_glob: str, **kwargs):
         files = expand_globs(file_path_or_glob)
@@ -48,9 +48,47 @@ class AseHelper:
                 pass
         return self
 
-    def limit(self, n: int):
-        self._atoms_list = self._atoms_list[:n]
+    def size(self):
+        """
+        size of loaded data
+        """
+        print(len(self._atoms_list))
         return self
+
+    def slice(self, expr: str):
+        """
+        slice systems by python slice expression, for example
+        `10:`, `:10`, `::2`, etc
+
+        :param start: start index
+        :param stop: stop index
+        :param step: step
+        """
+        s = slice_from_str(expr)
+        self._atoms_list = self._atoms_list[s]
+        return self
+
+    def sample(self, size: int, method: SAMPLE_METHOD='even', **kwargs):
+        """
+        sample data
+
+        :param size: size of sample, if size is larger than data size, return all data
+        :param method: method to sample, can be 'even', 'random', 'truncate', default is 'even'
+        :param seed: seed for random sample, only used when method is 'random'
+        """
+        self._atoms_list= list_sample(self._atoms_list, size, method, **kwargs)
+        return self
+
+    def to_dpdata(self, labeled=False):
+        """
+        convert to dpdata format and use dpdata tool to handle
+
+        :param labeled: if True, use dpdata.LabeledSystem, else use dpdata.System
+        """
+        from .dpdata import dpdata, DpdataTool
+        System = dpdata.LabeledSystem if labeled else dpdata.System
+        systems = [System(atom, fmt='ase/structure') for atom in self._atoms_list]
+        return DpdataTool(systems=systems)
 
     def delete_atoms(self, id: Union[int, List[int]], start_id=0):
         """

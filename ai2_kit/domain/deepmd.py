@@ -109,7 +109,6 @@ class CllDeepmdInputConfig(BaseModel):
     ignore_error: bool = False
 
 
-
 class CllDeepmdContextConfig(BaseModel):
     script_template: BashTemplate
     dp_cmd: str = 'dp'

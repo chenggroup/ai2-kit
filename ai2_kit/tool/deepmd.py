@@ -33,3 +33,4 @@ def display_lcurve(in_file: str = 'lcurve.out', save_to: Optional[str] = None, f
         fig.canvas.flush_events()
     else:
         fig.savefig(save_to, dpi=300, bbox_inches='tight')
+

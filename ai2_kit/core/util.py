@@ -1,19 +1,20 @@
+from typing import Tuple, List, TypeVar, Union, Iterable, Literal
 from ruamel.yaml import YAML, ScalarNode, SequenceNode
-from pathlib import Path
-from typing import Tuple, List, TypeVar, Union, Iterable
-from dataclasses import field
+from collections import namedtuple
 from itertools import zip_longest
-import asyncio
+from pathlib import Path
 
 import shortuuid
+import asyncio
 import hashlib
+import inspect
 import base64
-import shlex
-import copy
-import os
+import psutil
 import random
+import shlex
 import json
 import glob
+import os
 
 from .log import get_logger
 
@@ -21,6 +22,7 @@ logger = get_logger(__name__)
 
 EMPTY = object()
 
+SAMPLE_METHOD = Literal['even', 'random', 'truncate']
 
 def load_json(path: Union[Path, str], encoding: str = 'utf-8'):
     if isinstance(path, str):
@@ -286,7 +288,7 @@ def list_random_sample(l, size, seed = None):
     random.seed(seed)
     return random.sample(l, size)
 
-def list_sample(l, size, method='even', **kwargs):
+def list_sample(l, size: int, method: SAMPLE_METHOD='even', **kwargs):
     if method == 'even':
         return list_even_sample(l, size)
     elif method == 'random':
@@ -357,3 +359,19 @@ def expand_globs(patterns: Iterable[str], raise_invalid=False) -> List[str]:
             raise FileNotFoundError(f'No file found for {pattern}')
         paths += result
     return sort_unique_str_list(paths)
+
+
+def slice_from_str(index: str):
+    """
+    get slice object from a string expression,
+    for example: "1:10" -> slice(1, 10), ":10" -> slice(None, 10), etc
+    """
+    parse = lambda s: int(s) if s else None
+    parts = index.split(':')
+    return slice(*(parse(s) for s in parts))
+
+
+def perf_log(msg):
+    process = psutil.Process()
+    mem_info = process.memory_info()
+    logger.info('perf: rss: %s M %s', mem_info.rss / 1024 ** 2, msg)

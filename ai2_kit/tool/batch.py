@@ -10,7 +10,7 @@ from ai2_kit.core.log import get_logger
 logger = get_logger(__name__)
 
 
-class BatchHelper:
+class BatchTool:
     """
     A toolkit to help generate batch scripts.
     """
@@ -22,9 +22,7 @@ class BatchHelper:
         :param work_dirs: path or glob of work directories
         :param cmd: command to run, use {work_dir} to represent the work directory
         """
-
         paths = expand_globs(work_dirs)
-
         for path in paths:
             assert os.path.isdir(path), f'{path} is not a directory'
             _cmd = f"cd {shlex.quote(path)} && {cmd.format(work_dir=path)}"
@@ -41,9 +39,7 @@ class BatchHelper:
         or {basename} to represent the basename of the source path
         :param copy: use copy instead of link
         """
-
         paths = expand_globs(sources)
-
         for i, path in enumerate(paths):
             target_path = target.format(i=i, basename=os.path.basename(path))
             ensure_dir(target_path)

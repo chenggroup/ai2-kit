@@ -1,12 +1,13 @@
-from ai2_kit.core.util import ensure_dir, expand_globs
 from ai2_kit.feat.spectrum.viber import dpdata_read_cp2k_viber_data
-
-import numpy as np
-
-import dpdata
-from dpdata.data_type import Axis, DataType
-
+from ai2_kit.core.util import ensure_dir, expand_globs, list_sample, SAMPLE_METHOD, perf_log, slice_from_str
 from ai2_kit.core.log import get_logger
+
+from typing import Optional
+from dpdata.data_type import Axis, DataType
+import numpy as np
+import dpdata
+
+
 logger = get_logger(__name__)
 
 
@@ -26,19 +27,15 @@ def register_data_types():
     dpdata.LabeledSystem.register_data_type(*DATA_TYPES) # type: ignore
     dpdata.__registed__ = True  # type: ignore
 
+
 register_data_types()
 
 
-def set_fparam(system, fparam):
-    nframes = system.get_nframes()
-    system.data['fparam'] = np.tile(fparam, (nframes, 1))
-    return system
+class DpdataTool:
 
-
-class DpdataHelper:
-
-    def __init__(self):
-        self._systems = []
+    def __init__(self, verbose = False, systems: Optional[list] = None):
+        self._systems = [] if systems is None else systems
+        self._verbose = verbose
 
     def read(self, *file_path_or_glob: str, **kwargs):
         """
@@ -48,7 +45,6 @@ class DpdataHelper:
         :param file_path_or_glob: path or glob pattern to find data files
         :param kwargs: arguments to pass to dpdata.System / dpdata.LabeledSystem
         """
-
         kwargs.setdefault('fmt', 'deepmd/npy')
         files = expand_globs(file_path_or_glob)
         if len(files) == 0:
@@ -64,13 +60,39 @@ class DpdataHelper:
         :param lambda_expr: lambda expression to filter data
         """
         fn = eval(lambda_expr)
-        self._systems = [ system for system in self._systems if fn(system.data)]
+        self._systems = [system for system in self._systems if fn(system.data)]
         return self
 
-    @property
-    def merge_write(self):
-        logger.warn('merge_write is deprecated, use write instead')
-        return self.write
+    def slice(self, expr: str):
+        """
+        slice systems by python slice expression, for example
+        `10:`, `:10`, `::2`, etc
+
+        :param start: start index
+        :param stop: stop index
+        :param step: step
+        """
+        s = slice_from_str(expr)
+        self._systems = self._systems[s]
+        return self
+
+    def sample(self, size: int, method: SAMPLE_METHOD='even', **kwargs):
+        """
+        sample data
+
+        :param size: size of sample, if size is larger than data size, return all data
+        :param method: method to sample, can be 'even', 'random', 'truncate', default is 'even'
+        :param seed: seed for random sample, only used when method is 'random'
+        """
+        self._systems = list_sample(self._systems, size, method, **kwargs)
+        return self
+
+    def size(self):
+        """
+        size of loaded data
+        """
+        print(len(self._systems))
+        return self
 
     def write(self, out_path: str, fmt='deepmd/npy', merge: bool = True):
         """
@@ -109,22 +131,77 @@ class DpdataHelper:
             set_fparam(system, fparam)
         return self
 
-    def _read(self, data_path: str, **kwargs):
-        fmt = kwargs.get('fmt')
-        assert fmt is not None, 'fmt is required'
+    def eval(self, dp_model: str):
+        """
+        Use deepmd model to label energy, force and viral
 
+        :param dp_model: path to deepmd frozen model
+        """
+        from deepmd.infer import DeepPot
+        systems = dpdata.System()
+        systems.extend(self._systems)
+
+        coords = systems.data['coords']
+        cells = None if systems.nopbc else systems.data['cells']
+        atypes = systems.data['atom_types']
+
+        perf_log('before deepmd label')
+        pot = DeepPot(dp_model, auto_batch_size=True)  # type: ignore
+        e, f, v = pot.eval(coords=coords, cells=cells, atom_types=atypes)  # type: ignore
+        perf_log('after deepmd label')
+
+        n_atoms = systems.get_natoms()
+        n_frames = systems.get_nframes()
+
+        e = e.reshape((n_frames,))
+        f = f.reshape((n_frames, n_atoms, 3))
+        v = v.reshape((n_frames, 3, 3))
+
+        data = {**systems.data, 'energies': e, 'forces': f, "virials": v}
+        # replace system files
+        self._systems = []
+        self._systems.extend(dpdata.LabeledSystem.from_dict({'data':data}))  # type: ignore
+        perf_log('after update data')
+        return self
+
+    def to_ase(self):
+        """
+        Convert dpdata format to ase format, and use ase tool to handle
+        """
+        from .ase import AseTool
+        atoms_list = []
+        for sys in self._systems:
+            atoms_list.extend(sys.to_ase_structure())
+        return AseTool(atoms_list=atoms_list)
+
+    def _read(self, data_path: str, **kwargs):
+        fmt = kwargs.pop('fmt')
+        label = kwargs.get('label', True)
+
+        assert fmt is not None, 'fmt is required'
         if fmt == 'cp2k/viber':
-            kwargs.pop('fmt')
             try:
                 system = dpdata_read_cp2k_viber_data(data_path, **kwargs)
             except:
                 logger.warn(f'Fail to read {data_path}')
                 return
         else:
-            system = dpdata.LabeledSystem(data_path, **kwargs)
+            system = dpdata.LabeledSystem(data_path, fmt=fmt, **kwargs) if label else dpdata.System(data_path, fmt=fmt, **kwargs)
 
         fparam = kwargs.get('fparam', None)
         if fparam is not None:
             set_fparam(system, fparam)
-            
+
+        # use extend to flatten system
+        # TODO: I don't know if flatten system will lead to performance issues.
         self._systems.extend(system)  # type: ignore
+
+    def _verbose_log(self, msg, **kwargs):
+        if self._verbose:
+            logger.info(msg, **kwargs)
+
+
+def set_fparam(system, fparam):
+    nframes = system.get_nframes()
+    system.data['fparam'] = np.tile(fparam, (nframes, 1))
+    return system

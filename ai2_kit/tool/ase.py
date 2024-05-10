@@ -1,9 +1,13 @@
 from ai2_kit.core.util import ensure_dir, expand_globs, slice_from_str, SAMPLE_METHOD, list_sample
+from ai2_kit.core.log import get_logger
 from ai2_kit.domain.cp2k import dump_coord_n_cell
 
 from typing import List, Union, Optional
 from ase import Atoms
 import ase.io
+
+
+logger = get_logger(__name__)
 
 
 class AseTool:
@@ -105,9 +109,14 @@ class AseTool:
                 del atoms[i - start_id]
         return self
 
-    def write_each_frame(self, filename: str, **kwargs):
+    @property
+    def write_each_frame(self):
+        logger.warn('write_each_frame has been deprecated, use write_frames instead')
+        return self.write_frames
+
+    def write_frames(self, filename: str, **kwargs):
         """
-        write each frame to a separate file
+        write each frame to a separate file, useful to write to format only support single frame, POSCAR for example
 
         :param filename: the filename template, use {i} to represent the index, for example, 'frame_{i}.xyz'
         :param kwargs: other arguments for ase.io.write
@@ -115,7 +124,6 @@ class AseTool:
         ensure_dir(filename.format(i=0))
         for i, atoms in enumerate(self._atoms_list):
             self._write(filename.format(i=i), atoms, **kwargs)
-
 
     def write_dplr_lammps_data(self, filename: str,
                                type_map: List[str], sel_type: List[int],

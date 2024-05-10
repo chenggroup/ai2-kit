@@ -18,7 +18,7 @@ This toolkit include the following commands:
 | --- | --- | --- | --- |
 | read | Read trajectory files into memory. This command by itself is useless, you should chain other command after reading data into memory. | `ai2-kit tool ase read ./path/to/traj.xyz` | [ase.io.read](https://wiki.fysik.dtu.dk/ase/ase/io/io.html#ase.io.read), support wildcard, can be call multiple times |
 | write | Write all frame of a trajectory into a single file. | `ai2-kit tool ase read ./path/to/traj.xyz - write ./path/to/output.xyz` | [ase.io.write](https://wiki.fysik.dtu.dk/ase/ase/io/io.html#ase.io.write) |
-| write_each_frame | Write each frame of a trajectory into a separated file. The file name should include `{i}` or other valid Python `str.format` to indicate the frame number | `ai2-kit tool ase read ./path/to/traj.xyz - write_each_frame ./path/to/POSCAR-{i:04d} --format vasp` | [ase.io.write](https://wiki.fysik.dtu.dk/ase/ase/io/io.html#ase.io.write) |
+| write_frames | Write each frame of a trajectory into a separated file. The file name should include `{i}` or other valid Python `str.format` to indicate the frame number | `ai2-kit tool ase read ./path/to/traj.xyz - write_frames ./path/to/POSCAR-{i:04d} --format vasp` | [ase.io.write](https://wiki.fysik.dtu.dk/ase/ase/io/io.html#ase.io.write) |
 | set_cell | Set the cell of all frames in the trajectory. | see in `Example` | [ase.Atoms.set_cell](https://wiki.fysik.dtu.dk/ase/ase/atoms.html#ase.Atoms.set_cell) |
 | set_pbc | Set the periodic boundary condition of all frames in the trajectory. | see in `Example` | [ase.Atoms.set_pbc](https://wiki.fysik.dtu.dk/ase/ase/atoms.html#ase.Atoms.set_pbc) |  
 | delete_atoms | Delete atoms from all frames in the trajectory. | see in `Example` | |
@@ -34,11 +34,11 @@ Those commands are chainable and can be used to process trajectory in a pipeline
 
 ```bash
 # Convert every frame in xyz trajectory to separated POSCAR files
-ai2-kit tool ase read ./path/to/traj.xyz - write_each_frame "POSCAR-{i:04d}" --format vasp
+ai2-kit tool ase read ./path/to/traj.xyz - write_frames "POSCAR-{i:04d}" --format vasp
 
 # Convert every 20th frame in xyz trajectory to separated POSCAR files
 # For more information about the index syntax, please refer to https://wiki.fysik.dtu.dk/ase/ase/io/io.html#ase.io.read
-ai2-kit tool ase read ./path/to/traj.xyz --index '::20' - write_each_frame "POSCAR-{i:04d}" --format vasp 
+ai2-kit tool ase read ./path/to/traj.xyz --index '::20' - write_frames "POSCAR-{i:04d}" --format vasp 
 
 # Convert a single lammps dump data to a POSCAR file
 ai2-kit tool ase read ./path/to/lammp-dump.data --format lammps-dump-text --specorder "[O,H]" - write POSCAR --format vasp

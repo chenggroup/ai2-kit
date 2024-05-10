@@ -19,8 +19,6 @@ import ase.io
 
 from .iface import BaseCllContext, ICllExploreOutput, TRAINING_MODE
 from .constant import (
-    LAMMPS_DUMP_DIR,
-    LAMMPS_DUMP_SUFFIX,
     PRESET_LAMMPS_INPUT_TEMPLATE,
 )
 from .data import DataFormat, artifacts_to_ase_atoms
@@ -437,21 +435,21 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
 
         # override default values with data file attrs
         overridable_params: dict = dict_nested_get(data_file, ['attrs', 'lammps'], dict())  # type: ignore
-        plumed_config = overridable_params.get('plumed_config', plumed_config)
-        fix_statement = overridable_params.get('fix_statement', fix_statement)
-        ensemble = overridable_params.get('ensemble', ensemble)
-        type_alias = overridable_params.get('type_alias', type_alias)
-        fep_opts = FepOptions(**overridable_params.get('fep_opts', fep_opts.dict()))
+        _plumed_config = overridable_params.get('plumed_config', plumed_config)
+        _fix_statement = overridable_params.get('fix_statement', fix_statement)
+        _ensemble = overridable_params.get('ensemble', ensemble)
+        _type_alias = overridable_params.get('type_alias', type_alias)
+        _fep_opts = FepOptions(**overridable_params.get('fep_opts', fep_opts.dict()))
 
         # be careful to override template_vars without changing the original dict
-        extra_template_vars = {**extra_template_vars, **overridable_params.get('template_vars', dict())}
+        _extra_template_vars = {**extra_template_vars, **overridable_params.get('template_vars', dict())}
 
         # generate types related template vars
         types_template_vars = get_types_template_vars(
             type_map=type_map, mass_map=mass_map,
-            type_alias=type_alias, sel_type=dp_sel_type,
-            fep_ini_ghost_types=fep_opts.ini_ghost_types,
-            fep_fin_ghost_types=fep_opts.fin_ghost_types,
+            type_alias=_type_alias, sel_type=dp_sel_type,
+            fep_ini_ghost_types=_fep_opts.ini_ghost_types,
+            fep_fin_ghost_types=_fep_opts.fin_ghost_types,
         )
 
         ## build variables section
@@ -481,7 +479,7 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
             'boundary ' + ('f f f' if no_pbc else 'p p p'),
         ])
         ## build read data section
-        extra_types = sum(len(l) for l in type_alias.values())  # how many alias type are defined
+        extra_types = sum(len(l) for l in _type_alias.values())  # how many alias type are defined
         template_vars['READ_DATA'] = (
             '''if "${restart} > 0" '''
             '''then "read_restart md.restart.*" '''
@@ -493,24 +491,24 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
             '''if "${restart} == 0" then "velocity ${DEFAULT_GROUP} create ${TEMP} %d"''' % (random.randrange(10 ^ 6 - 1) + 1)
         ]
 
-        if fix_statement is None:
-            assert ensemble is not None, 'either fix_statement or ensemble is required'
-            fix_statement = get_ensemble(ensemble, group='${DEFAULT_GROUP}')
+        if _fix_statement is None:
+            assert _ensemble is not None, 'either fix_statement or ensemble is required'
+            _fix_statement = get_ensemble(_ensemble, group='${DEFAULT_GROUP}')
 
         if mode == 'dpff':
             simulation.extend([
                 'compute  real_temp real_atom temp',
-                fix_statement,
+                _fix_statement,
                 'fix_modify 1 temp real_temp',
                 '',
             ])
         else:
-            simulation.append(fix_statement)
+            simulation.append(_fix_statement)
 
-        if plumed_config:
-            plumed_config = LammpsInputTemplate(plumed_config).substitute(defaultdict(str), **template_vars)
+        if _plumed_config:
+            _plumed_config = LammpsInputTemplate(_plumed_config).substitute(defaultdict(str), **template_vars)
             plumed_config_file = os.path.join(task_dir, 'plumed.input')
-            dump_text(plumed_config, plumed_config_file)
+            dump_text(_plumed_config, plumed_config_file)
             simulation.append(f'fix cll_plumed ${{DEFAULT_GROUP}} plumed plumedfile {plumed_config_file} outfile plumed.out')
 
         if no_pbc:
@@ -539,7 +537,6 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
             ])
         simulation.append('restart 10000 md.restart')
 
-
         template_vars['SIMULATION'] = '\n'.join(simulation)
         ## build run section
         template_vars['RUN'] = '\n'.join([
@@ -548,7 +545,7 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
         ])
 
         dp_models_vars = _get_dp_models_variables(dp_models)
-        template_vars = {**template_vars, **types_template_vars, **dp_models_vars, **extra_template_vars}
+        template_vars = {**template_vars, **types_template_vars, **dp_models_vars, **_extra_template_vars}
         dump_json(template_vars, os.path.join(task_dir, 'debug.template_vars.json'))
 
         if input_template is None:
@@ -559,11 +556,11 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
 
         # the `source` field is required as model_devi will use it to update init structures
         task_dirs.append({'url': task_dir,
-                            'attrs': {
-                                **data_file['attrs'],
-                                'source': data_file['url'],
-                                'efield': lammps_vars.get('EFIELD'),
-                            }})  # type: ignore
+                          'attrs': {
+                              **data_file['attrs'],
+                              'source': data_file['url'],
+                              'efield': lammps_vars.get('EFIELD'),
+                          }})  # type: ignore
     return tasks_dir, task_dirs
 
 

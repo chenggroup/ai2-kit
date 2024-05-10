@@ -33,18 +33,18 @@ Those commands are chainable and can be used to process trajectory in a pipeline
 ## Example
 
 ```bash
-# Convert every frame in xyz trajectory to a POSCAR file
+# Convert every frame in xyz trajectory to separated POSCAR files
 ai2-kit tool ase read ./path/to/traj.xyz - write_each_frame "POSCAR-{i:04d}" --format vasp
 
-# Convert every 20th frame in xyz trajectory to a POSCAR file
+# Convert every 20th frame in xyz trajectory to separated POSCAR files
 # For more information about the index syntax, please refer to https://wiki.fysik.dtu.dk/ase/ase/io/io.html#ase.io.read
 ai2-kit tool ase read ./path/to/traj.xyz --index '::20' - write_each_frame "POSCAR-{i:04d}" --format vasp 
 
-# Convert lammps dump data to a POSCAR file
-ai2-kit tool ase read ./path/to/lammp-dump.data --format lammps-dump-text --specorder "['O','H']" - write "POSCAR" --format vasp
+# Convert a single lammps dump data to a POSCAR file
+ai2-kit tool ase read ./path/to/lammp-dump.data --format lammps-dump-text --specorder "[O,H]" - write POSCAR --format vasp
 
 # Delete atoms from a trajectory
-ai2-kit tool ase read lammps.data --format lammps-data --style atomic - delete_atoms "[10, 12]" - write lammps-fin.data --format lammps-data
+ai2-kit tool ase read lammps.data --format lammps-data --style atomic - delete_atoms "[10,12]" - write lammps-fin.data --format lammps-data
 
 # Read multiple files and write them into a single file
 ai2-kit tool ase read ./path/to/data1/*.xyz - read ./path/to/data2/*.xyz - write all.xyz
@@ -56,7 +56,7 @@ ai2-kit tool ase read ./workdir/iters-*/selector*/model-devi/*/good.xyz  - write
 ai2-kit tool ase read coord.xyz - set_cell "[10,10,10,90,90,90]" - write coord_n_cell.inc --format cp2k-inc
 
 # Convert xyz file to DPLR LAMMPS data
-# Note: don't have space in the list
+# Note: don't have space in the list or else you have to quote it with ""
 ai2-kit tool ase read h2o.xyz - write_dplr_lammps_data tmp/dplr/{i}.lammps.data --type_map [O,H] --sel_type [0] --sys_charge_map [6,1] --model_charge_map [-8]
 
 # Drop the first 10 frames and then sample 10 frames use random method, and save it as dpdata.System format

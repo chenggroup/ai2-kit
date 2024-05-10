@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.18.1
+* refactor: ase write_each_frame to write_frames
+
 ## v0.18.0
 * feat: reweighting algorithm
 * feat: dpdata tool support eval

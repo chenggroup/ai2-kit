@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.17.5
+* fix: redefine variable in for-loop
+
 ## v0.17.4
 * fix: anyware execution
 

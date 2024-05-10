@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.18.0
+* feat: reweighting algorithm
+* feat: dpdata tool support eval
+* improve: support covert between ase and dpdata format
+* chore: replace `pylint` with `ruff`
+
 ## v0.17.5
 * fix: redefine variable in for-loop
 

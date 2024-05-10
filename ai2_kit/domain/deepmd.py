@@ -18,7 +18,7 @@ import dpdata
 
 from .iface import ICllTrainOutput, BaseCllContext, TRAINING_MODE
 from .data import DataFormat, get_data_format
-from .dpff import set_dplr_ext_from_cp2k_output, build_sel_type_assertion
+from .dpff import set_dplr_ext_from_cp2k_output
 
 from .constant import (
     DP_CHECKPOINT_FILE,
@@ -27,7 +27,6 @@ from .constant import (
     DP_INPUT_FILE,
     DP_FROZEN_MODEL,
     DP_ORIGINAL_MODEL,
-    DP_FINAL_MODEL,
 )
 
 logger = get_logger(__name__)
@@ -491,7 +490,6 @@ def make_deepmd_dataset(
         # generate extra data for dpff
         if mode == 'dpff':
             modifier = deepmd_input_template['model']['modifier']
-            model_name = modifier['model_name']
             assert sel_type is not None, 'sel_type must be set in dpff mode'
 
             if data_format == DataFormat.CP2K_OUTPUT_DIR:
@@ -510,7 +508,7 @@ def make_deepmd_dataset(
                         ewald_beta=modifier['ewald_beta'],
                         sel_type=sel_type,
                     )
-                except Exception as e:
+                except Exception:
                     logger.exception(f'dpff: failed to set dplr ext')
                     continue
             else:
@@ -564,7 +562,8 @@ def _write_dp_dataset_by_ancestor(dp_system_list: List[Tuple[ArtifactDict, dpdat
     write dp dataset that grouping by ancestor
     """
     output_dirs: List[ArtifactDict] = []
-    get_ancestor = lambda x: x[0]['attrs']['ancestor']
+    def get_ancestor(x):
+        return x[0]['attrs']['ancestor']
     dp_system_list = sorted(dp_system_list, key=get_ancestor)
     for key, dp_system_group in groupby(dp_system_list, key=get_ancestor):
         dp_system_group = list(dp_system_group)

@@ -61,7 +61,10 @@ ai2-cat = "ai2_kit.feat.catalysis:cli_main"
 ai2-spectr = "ai2_kit.feat.spectrum:cli_main"
 
 [tool.ruff]
+preview = true
 line-length = 120
 
-[too.ruff.lint]
+[tool.ruff.lint]
+explicit-preview-rules = true
+ignore = ["E741", "F541"]
 extend-select = ["PLR1704"]

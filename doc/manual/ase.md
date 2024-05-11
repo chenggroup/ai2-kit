@@ -41,15 +41,15 @@ ai2-kit tool ase read ./path/to/traj.xyz - write_frames "POSCAR-{i:04d}" --forma
 ai2-kit tool ase read ./path/to/traj.xyz --index '::20' - write_frames "POSCAR-{i:04d}" --format vasp 
 
 # Convert a single lammps dump data to a POSCAR file
-ai2-kit tool ase read ./path/to/lammp-dump.data --format lammps-dump-text --specorder "[O,H]" - write POSCAR --format vasp
+ai2-kit tool ase read ./path/to/lammp-dump.data --format lammps-dump-text --specorder [O,H] - write POSCAR --format vasp
 
 # Delete atoms from a trajectory
-ai2-kit tool ase read lammps.data --format lammps-data --style atomic - delete_atoms "[10,12]" - write lammps-fin.data --format lammps-data
+ai2-kit tool ase read lammps.data --format lammps-data --style atomic - delete_atoms [10,12] - write lammps-fin.data --format lammps-data
 
 # Read multiple files and write them into a single file
 ai2-kit tool ase read ./path/to/data1/*.xyz - read ./path/to/data2/*.xyz - write all.xyz
 
-# Read all `good` structures generate by CLL training workflow
+# Read all `good` structures generate by CLL training workflow use glob
 ai2-kit tool ase read ./workdir/iters-*/selector*/model-devi/*/good.xyz  - write all-good.syz
 
 # Convert xyz file to cp2k-inc file
@@ -60,5 +60,5 @@ ai2-kit tool ase read coord.xyz - set_cell "[10,10,10,90,90,90]" - write coord_n
 ai2-kit tool ase read h2o.xyz - write_dplr_lammps_data tmp/dplr/{i}.lammps.data --type_map [O,H] --sel_type [0] --sys_charge_map [6,1] --model_charge_map [-8]
 
 # Drop the first 10 frames and then sample 10 frames use random method, and save it as dpdata.System format
-ai2-kit tool ase read h2o.lammpstrj --specorder [H,O] - slice :10 - sample 10 --method random - to_dpdata - write dp-h2o --nomerge
+ai2-kit tool ase read h2o.lammpstrj --specorder [H,O] - slice 10: - sample 10 --method random - to_dpdata - write dp-h2o --nomerge
 ```

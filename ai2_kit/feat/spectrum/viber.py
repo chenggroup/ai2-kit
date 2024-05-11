@@ -253,15 +253,14 @@ def _get_lumped_wacent_poses_rel(stc: Atoms, elem_symbol, wacent_symbol, cutoff=
     lumped_wacent_poses_rel = np.stack(lumped_wacent_poses_rel)
     return lumped_wacent_poses_rel
 
+
 def _can_retain(item,elem_symbol):
-    if not isinstance(item,str): return True
-    if item != elem_symbol: return True
+    if not isinstance(item, str):
+        return True
+    if item != elem_symbol:
+        return True
     return False
 
-def _is_X(item):
-    if not isinstance(item,str): return False
-    if item == 'X': return True
-    return False
 
 def _set_lumped_wfc(stc_list, lumped_dict, cutoff, wacent_symbol, to_polar = True):
     """
@@ -271,7 +270,7 @@ def _set_lumped_wfc(stc_list, lumped_dict, cutoff, wacent_symbol, to_polar = Tru
     if to_polar:
         for stc in stc_list:
             x_symbol = list(stc.symbols)
-            
+
             for elem_symbol, expected_cn in lumped_dict.items():
                 lumped_wacent_poses_rel = _get_lumped_wacent_poses_rel(
                     stc=stc, elem_symbol=elem_symbol, wacent_symbol = wacent_symbol,
@@ -279,7 +278,7 @@ def _set_lumped_wfc(stc_list, lumped_dict, cutoff, wacent_symbol, to_polar = Tru
                 out_elem_symbol = list(lumped_wacent_poses_rel)
                 x_symbol = [item if _can_retain(item,elem_symbol) else out_elem_symbol.pop(0) for item in x_symbol]
 
-            x_symbol = [item for item in x_symbol if not _is_X(item)]
+            x_symbol = [item for item in x_symbol if item != 'X']
             x_symbol = [np.array([0.,0.,0.]) if isinstance(item, str) else item for item in x_symbol]
             x_symbol = np.concatenate(x_symbol ,axis = 0)
             X_pos.append(np.array(x_symbol))

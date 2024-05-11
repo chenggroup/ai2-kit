@@ -106,7 +106,7 @@ class Slurm:
 
     def _update_job_states(self):
         query_cmd = f"{self._squeue_bin} --noheader --format='%i %t' -u $USER"
-        
+
         fp = os.popen(query_cmd)
         out = fp.read()
         exit_code = fp.close()

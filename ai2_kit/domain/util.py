@@ -1,7 +1,7 @@
 import io
 import re
 import numpy as np
-
+from ase.calculators.lammps import Prism, convert
 
 def cp2p_substitute_vars(string, vars: dict):
     # Define a regular expression for placeholders
@@ -166,14 +166,18 @@ class LammpsData:
         self.angles = None
         self.bonds = None
         self.dihedrals = None
+        self.velocities = None
 
     def write(self, fp, **kwargs):
         specorder = kwargs.get("specorder", None)
         if specorder is not None:
             self.set_atype_from_specorder(specorder)
+            n_atype = len(specorder)
+        else:
+            n_atype = len(np.unique(self.atoms.numbers))
         atom_style = kwargs.get("atom_style", "full")
 
-        header = self._make_header(fp.name)
+        header = self._make_header(fp.name, n_atype)
         fp.write(header)
         body = self._make_atoms(atom_style)
         fp.write(body)
@@ -186,13 +190,15 @@ class LammpsData:
         if self.dihedrals is not None:
             fp.write("\nDihedrals\n\n")
             np.savetxt(fp, self.dihedrals, fmt="%d")
+        if self.velocities is not None:
+            fp.write("\nVelocities\n\n")
+            np.savetxt(fp, self.velocities, fmt=["%d", "%.16f", "%.16f", "%.16f"])
 
-    def _make_header(self, out_file):
-        cell = self.atoms.cell.cellpar()
+    def _make_header(self, out_file, n_atype):
         nat = len(self.atoms)
         s = "%s (written by toolbox by Jia-Xin Zhu)\n\n" % out_file
         s += "%d atoms\n" % nat
-        s += "%d atom types\n" % len(np.unique(self.atoms.numbers))
+        s += "%d atom types\n" % n_atype
         if self.bonds is not None:
             s += "%d bonds\n" % len(self.bonds)
             s += "%d bond types\n" % len(np.unique(self.bonds[:, 1]))
@@ -202,8 +208,15 @@ class LammpsData:
         if self.dihedrals is not None:
             s += "%d dihedrals\n" % len(self.dihedrals)
             s += "%d dihedral types\n" % len(np.unique(self.dihedrals[:, 1]))
-        s += "%.4f %.4f xlo xhi\n%.4f %.4f ylo yhi\n%.4f %.4f zlo zhi\n\n\n" % (
-            0.0, cell[0], 0.0, cell[1], 0.0, cell[2])
+        prismobj = Prism(self.atoms.get_cell())
+        xhi, yhi, zhi, xy, xz, yz = convert(
+            prismobj.get_lammps_prism(), "distance", "ASE", "metal")
+        s += "0.0 %.6f xlo xhi\n" % xhi
+        s += "0.0 %.6f ylo yhi\n" % yhi
+        s += "0.0 %.6f zlo zhi\n" % zhi
+        if prismobj.is_skewed():
+            s += "%.6f %.6f %.6f xy xz yz\n" % (xy, xz, yz)
+        s += "\n"
         return s
 
     def _make_atoms(self, atom_style):
@@ -249,6 +262,9 @@ class LammpsData:
 
     def set_dihedral(self, dihedrals):
         self.dihedrals = np.reshape(dihedrals, (-1, 6))
+
+    def set_velocities(self, velocities):
+        self.velocities = np.reshape(velocities, (-1, 4))
 
     def _setup(self):
         self.positions = self.atoms.get_positions()

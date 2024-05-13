@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.18.3
+* lammps: use relative path to reference plumed input
+
 ## v0.18.2
 * fix lammps data util for dplr
 * fix cp2k cell digit limit

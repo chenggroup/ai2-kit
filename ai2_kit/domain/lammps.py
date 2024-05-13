@@ -509,7 +509,7 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
             _plumed_config = LammpsInputTemplate(_plumed_config).substitute(defaultdict(str), **template_vars)
             plumed_config_file = os.path.join(task_dir, 'plumed.input')
             dump_text(_plumed_config, plumed_config_file)
-            simulation.append(f'fix cll_plumed ${{DEFAULT_GROUP}} plumed plumedfile {plumed_config_file} outfile plumed.out')
+            simulation.append(f'fix cll_plumed ${{DEFAULT_GROUP}} plumed plumedfile plumed.input outfile plumed.out')
 
         if no_pbc:
             simulation.extend([

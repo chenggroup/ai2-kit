@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.18.2
+* fix lammps data util for dplr
+* fix cp2k cell digit limit
+
 ## v0.18.1
 * refactor: ase write_each_frame to write_frames
 

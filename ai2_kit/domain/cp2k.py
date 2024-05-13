@@ -226,9 +226,9 @@ def dump_coord_n_cell(fp, atoms: Atoms):
         'COORD': dict.fromkeys(coords, ''),  # FIXME: this is a dirty hack, should make dump_cp2k_input support COORD
         # use fp32 precision, or 7 decimal places
         'CELL': {
-            'A': ' '.join( f'{v:.7f}' for v in cell[0]),
-            'B': ' '.join( f'{v:.7f}' for v in cell[1]),
-            'C': ' '.join( f'{v:.7f}' for v in cell[2]),
+            'A': ' '.join( f'{str(v)[:8]}' for v in cell[0]),
+            'B': ' '.join( f'{str(v)[:8]}' for v in cell[1]),
+            'C': ' '.join( f'{str(v)[:8]}' for v in cell[2]),
         }
     }, fp)
 

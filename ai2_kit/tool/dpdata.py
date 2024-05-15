@@ -43,14 +43,12 @@ class DpdataTool:
         default format is deepmd/npy
 
         :param file_path_or_glob: path or glob pattern to find data files
-        :param kwargs: arguments to pass to dpdata.System / dpdata.LabeledSystem
+        :param fmt: format to read, default is deepmd/npy
+        :param label: default is True, use dpdata.LabeledSystem if True, else use dpdata.System
+        :param kwargs: arguments to pass to dpdata.System or dpdata.LabeledSystem
         """
-        kwargs.setdefault('fmt', 'deepmd/npy')
-        files = expand_globs(file_path_or_glob)
-        if len(files) == 0:
-            raise FileNotFoundError(f'No file found for {file_path_or_glob}')
-        for file in files:
-            self._read(file, **kwargs)
+        systems = dpdata_read(*file_path_or_glob, **kwargs)
+        self._systems.extend(systems)
         return self
 
     def filter(self, lambda_expr: str):
@@ -174,28 +172,6 @@ class DpdataTool:
             atoms_list.extend(sys.to_ase_structure())
         return AseTool(atoms_list=atoms_list)
 
-    def _read(self, data_path: str, **kwargs):
-        fmt = kwargs.pop('fmt')
-        label = kwargs.get('label', True)
-
-        assert fmt is not None, 'fmt is required'
-        if fmt == 'cp2k/viber':
-            try:
-                system = dpdata_read_cp2k_viber_data(data_path, **kwargs)
-            except:
-                logger.warn(f'Fail to read {data_path}')
-                return
-        else:
-            system = dpdata.LabeledSystem(data_path, fmt=fmt, **kwargs) if label else dpdata.System(data_path, fmt=fmt, **kwargs)
-
-        fparam = kwargs.get('fparam', None)
-        if fparam is not None:
-            set_fparam(system, fparam)
-
-        # use extend to flatten system
-        # TODO: I don't know if flatten system will lead to performance issues.
-        self._systems.extend(system)  # type: ignore
-
     def _verbose_log(self, msg, **kwargs):
         if self._verbose:
             logger.info(msg, **kwargs)
@@ -204,4 +180,48 @@ class DpdataTool:
 def set_fparam(system, fparam):
     nframes = system.get_nframes()
     system.data['fparam'] = np.tile(fparam, (nframes, 1))
+    return system
+
+
+def dpdata_read(*file_path_or_glob: str, **kwargs):
+    """
+    read data from multiple paths, support glob pattern
+    default format is deepmd/npy
+
+    :param file_path_or_glob: path or glob pattern to find data files
+    :param fmt: format to read, default is deepmd/npy
+    :param label: default is True, use dpdata.LabeledSystem if True, else use dpdata.System
+    :param kwargs: arguments to pass to dpdata.System or dpdata.LabeledSystem
+    """
+    kwargs.setdefault('fmt', 'deepmd/npy')
+    files = expand_globs(file_path_or_glob)
+    if len(files) == 0:
+        raise FileNotFoundError(f'No file found in {file_path_or_glob}')
+
+    systems = []
+    for file in files:
+        system = _dpdata_read(file, **kwargs)
+        if system is not None:
+            systems.extend(system)
+    return systems
+
+
+def _dpdata_read(data_path: str, **kwargs):
+    # pop custom arguments or else it will be passed to dpdata.System and raise error
+    fmt = kwargs.pop('fmt', 'deepmd/npy')
+    fparam = kwargs.pop('fparam', None)
+    label = kwargs.pop('label', True)
+
+    if fmt == 'cp2k/viber':
+        try:
+            system = dpdata_read_cp2k_viber_data(data_path, **kwargs)
+        except Exception:
+            logger.exception(f'Fail to read cp2k/viber from {data_path}, ignore and continue')
+            return None
+    else:
+        system = dpdata.LabeledSystem(data_path, fmt=fmt, **kwargs) if label else dpdata.System(data_path, fmt=fmt, **kwargs)
+
+    if fparam is not None:
+        set_fparam(system, fparam)
+
     return system

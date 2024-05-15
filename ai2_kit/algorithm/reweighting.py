@@ -63,8 +63,6 @@ def compute_fes(cvs: np.ndarray, bias: np.ndarray, temp: float, grid=None,
     return _FesResult(fes=fes, grid=grid, extend=extend)
 
 
-
-
 def compute_kde_weight(baseline_energy: np.ndarray, target_energy: np.ndarray,
                        temp: float, kB=default_kB,
                        ev_to_kjmol=default_ev_to_kjmol,):
@@ -83,13 +81,23 @@ def compute_kde_weight(baseline_energy: np.ndarray, target_energy: np.ndarray,
     return np.exp( -beta * (te - be))
 
 
+def reweighting_cli(baseline_dataset: str,
+                    target_dataset: str,
+                    colvar_file: str):
 
-class ReweightTool:
+    baseline_system = dpdata.System(baseline_dataset)
 
-    @classmethod
-    def from_dpdata_system(cls, dp_sys):
-        ...
 
+class ReweightingTool:
 
     def __init__(self):
+        ...
+
+    def load_baseline_data(self, ):
+        ...
+
+    def load_target_data(self, ):
+        ...
+
+    def load_colvar(self, colvar_file: str):
         ...

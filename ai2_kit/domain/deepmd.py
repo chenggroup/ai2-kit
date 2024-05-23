@@ -326,16 +326,16 @@ def _build_deepmd_steps(dp_cmd: str,
 
 
 def make_deepmd_task_dirs(input_template: dict,
-                            model_num: int,
-                            type_map: List[str],
-                            train_systems: List[str],
-                            outlier_systems: List[str],
-                            validation_systems: List[str],
-                            isolate_outliers: bool,
-                            outlier_weight: float,
-                            dw_input_template: Optional[dict],
-                            base_dir: str,
-                            ):
+                          model_num: int,
+                          type_map: List[str],
+                          train_systems: List[str],
+                          outlier_systems: List[str],
+                          validation_systems: List[str],
+                          isolate_outliers: bool,
+                          outlier_weight: float,
+                          dw_input_template: Optional[dict],
+                          base_dir: str,
+                          ):
     dp_task_dirs = [os.path.join(base_dir, f'{i:03d}')  for i in range(model_num)]
     for task_dir in dp_task_dirs:
         os.makedirs(task_dir, exist_ok=True)
@@ -383,13 +383,13 @@ def make_deepmd_task_dirs(input_template: dict,
 
 
 def make_deepmd_input(input_template: dict,
-                        type_map: List[str],
-                        train_systems: List[str],
-                        outlier_systems: List[str],
-                        validation_systems: List[str],
-                        isolate_outliers: bool,
-                        outlier_weight: float,
-                        ):
+                      type_map: List[str],
+                      train_systems: List[str],
+                      outlier_systems: List[str],
+                      validation_systems: List[str],
+                      isolate_outliers: bool,
+                      outlier_weight: float,
+                      ):
     # create dp train input file
     # ref: https://github.com/deepmodeling/dpgen2/blob/master/examples/ch4/param_CH4_deepmd-kit-2.1.1.json
     # ref: https://github.com/deepmodeling/dpgen2/blob/master/dpgen2/op/prep_dp_train.py
@@ -532,7 +532,7 @@ def make_deepmd_dataset(
 
 
 def _write_dp_dataset_by_formula(dp_system_list: List[Tuple[ArtifactDict, dpdata.LabeledSystem]],
-                                    out_dir: str, type_map: List[str]):
+                                 out_dir: str, type_map: List[str]):
     """
     Write dp dataset that grouping by formula
     Use dpdata.MultipleSystems to merge systems with the same formula

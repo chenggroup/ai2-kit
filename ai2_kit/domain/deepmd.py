@@ -3,7 +3,7 @@ from ai2_kit.core.script import BashTemplate
 from ai2_kit.core.script import BashScript, BashStep
 from ai2_kit.core.job import gather_jobs
 from ai2_kit.core.log import get_logger
-from ai2_kit.core.util import dict_nested_get, expand_globs, dump_json, list_split, flatten
+from ai2_kit.core.util import dict_nested_get, expand_globs, dump_json, list_split, flatten, create_fn
 from ai2_kit.core.pydantic import BaseModel
 from ai2_kit.tool.dpdata import set_fparam, register_data_types
 
@@ -106,7 +106,20 @@ class CllDeepmdInputConfig(BaseModel):
     which can speed up the training process.
     """
 
+    input_modifier_fn: Optional[str] = None
+    """
+    A python function to modify the input data.
+    The function should take a input dict as input and return a dict.
+
+    def input_modifier_fn(input: dict) -> dict:
+        ...
+        return new_input
+    """
+
     ignore_error: bool = False
+    """
+    Ignore non critical errors.
+    """
 
 
 class CllDeepmdContextConfig(BaseModel):
@@ -205,6 +218,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
         isolate_outliers=input.config.isolate_outliers,
         dw_input_template=dw_input_template,
         base_dir=tasks_dir,
+        input_modifier_fn=input.config.input_modifier_fn,
     )
 
     # run dw training job if needed
@@ -230,6 +244,8 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
     for i, task_dir in enumerate(dp_task_dirs):
         executor.mkdir(task_dir)
         # FIXME: a temporary workaround to support previous model
+        # Here we assume that the model are on the same cluster
+        # it will fail if we support multiple cluster in the future
         previous_model = None
         if input.config.init_from_previous and input.previous:
             j = i % len(input.previous)
@@ -335,7 +351,11 @@ def make_deepmd_task_dirs(input_template: dict,
                           outlier_weight: float,
                           dw_input_template: Optional[dict],
                           base_dir: str,
+                          input_modifier_fn: Optional[str],
                           ):
+
+    input_modifier = create_fn(input_modifier_fn, 'input_modifier_fn') if input_modifier_fn else lambda x: x
+
     dp_task_dirs = [os.path.join(base_dir, f'{i:03d}')  for i in range(model_num)]
     for task_dir in dp_task_dirs:
         os.makedirs(task_dir, exist_ok=True)
@@ -360,6 +380,7 @@ def make_deepmd_task_dirs(input_template: dict,
             # Modify the value in dw_model to 'dw_model.pb'
             dp_input['model']['modifier']['model_name'] = 'dw_model.pb'
 
+        dp_input = input_modifier(dp_input)
         dp_input_path = os.path.join(task_dir, DP_INPUT_FILE)
         dump_json(dp_input, dp_input_path)
 
@@ -580,3 +601,4 @@ def _write_dp_dataset_by_ancestor(dp_system_list: List[Tuple[ArtifactDict, dpdat
                             'format': DataFormat.DEEPMD_NPY,
                             'attrs': {**dp_system_group[0][0]['attrs']}})  # type: ignore
     return output_dirs
+

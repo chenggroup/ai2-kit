@@ -375,3 +375,11 @@ def perf_log(msg):
     process = psutil.Process()
     mem_info = process.memory_info()
     logger.info('perf: rss: %s M %s', mem_info.rss / 1024 ** 2, msg)
+
+
+def create_fn(func_str: str, fn_name: str):
+    _locals = {}
+    exec(func_str, _locals)
+    if fn_name not in _locals:
+        raise ValueError(f'Function {fn_name} not found in {func_str}')
+    return _locals[fn_name]

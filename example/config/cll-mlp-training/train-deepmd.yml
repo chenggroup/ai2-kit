@@ -63,7 +63,7 @@ workflow:
       # For example, change auto_prob_style according to train data.
       # You can define directly, or use !load path/to/fn.py to load from a file.
       input_modifier_fn: |
-        def input_modifier(input_data):
+        def input_modifier_fn(input_data):
             input_data['model']['descriptor']['auto_prob_style'] = 'auto'
             return input_data
 

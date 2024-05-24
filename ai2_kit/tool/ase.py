@@ -79,6 +79,9 @@ class AseTool:
         :param size: size of sample, if size is larger than data size, return all data
         :param method: method to sample, can be 'even', 'random', 'truncate', default is 'even'
         :param seed: seed for random sample, only used when method is 'random'
+
+        Note that by default the seed is length of input list,
+        if you want to generate different sample each time, you should set random seed manually
         """
         self._atoms_list= list_sample(self._atoms_list, size, method, **kwargs)
         return self
@@ -121,9 +124,10 @@ class AseTool:
         :param filename: the filename template, use {i} to represent the index, for example, 'frame_{i}.xyz'
         :param kwargs: other arguments for ase.io.write
         """
-        ensure_dir(filename.format(i=0))
         for i, atoms in enumerate(self._atoms_list):
-            self._write(filename.format(i=i), atoms, **kwargs)
+            _filename = filename.format(i=i)
+            ensure_dir(_filename)
+            self._write(_filename, atoms, **kwargs)
 
     def write_dplr_lammps_data(self, filename: str,
                                type_map: List[str], sel_type: List[int],

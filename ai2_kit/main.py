@@ -26,6 +26,13 @@ class AlgorithmGroup:
         from ai2_kit.algorithm import aos_analysis
         return aos_analysis.cli_entry
 
+    def reweighting(self):
+        """
+        Reweightning toolkit
+        """
+        from ai2_kit.algorithm.reweighting import ReweightingTool
+        return ReweightingTool()
+
 
 class WorkflowGroup:
     """
@@ -66,6 +73,11 @@ class ToolGroup:
     def batch(self):
         from ai2_kit.tool.batch import BatchTool
         return BatchTool
+
+    @property
+    def frame(self):
+        from ai2_kit.tool.frame import FrameTool
+        return FrameTool
 
     @property
     def hpc(self):

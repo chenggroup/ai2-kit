@@ -42,12 +42,12 @@ class DpdataTool:
         read data from multiple paths, support glob pattern
         default format is deepmd/npy
 
-        :param file_path_or_glob: path or glob pattern to find data files
+        :param file_path_or_glob: path or glob pattern to locate data path
         :param fmt: format to read, default is deepmd/npy
         :param label: default is True, use dpdata.LabeledSystem if True, else use dpdata.System
         :param kwargs: arguments to pass to dpdata.System or dpdata.LabeledSystem
         """
-        systems = dpdata_read(*file_path_or_glob, **kwargs)
+        systems = read(*file_path_or_glob, **kwargs)
         self._systems.extend(systems)
         return self
 
@@ -81,6 +81,9 @@ class DpdataTool:
         :param size: size of sample, if size is larger than data size, return all data
         :param method: method to sample, can be 'even', 'random', 'truncate', default is 'even'
         :param seed: seed for random sample, only used when method is 'random'
+
+        Note that by default the seed is length of input list,
+        if you want to generate different sample each time, you should set random seed manually
         """
         self._systems = list_sample(self._systems, size, method, **kwargs)
         return self
@@ -183,12 +186,12 @@ def set_fparam(system, fparam):
     return system
 
 
-def dpdata_read(*file_path_or_glob: str, **kwargs):
+def read(*file_path_or_glob: str, **kwargs):
     """
     read data from multiple paths, support glob pattern
     default format is deepmd/npy
 
-    :param file_path_or_glob: path or glob pattern to find data files
+    :param file_path_or_glob: path or glob pattern to locate data path
     :param fmt: format to read, default is deepmd/npy
     :param label: default is True, use dpdata.LabeledSystem if True, else use dpdata.System
     :param kwargs: arguments to pass to dpdata.System or dpdata.LabeledSystem
@@ -200,13 +203,13 @@ def dpdata_read(*file_path_or_glob: str, **kwargs):
 
     systems = []
     for file in files:
-        system = _dpdata_read(file, **kwargs)
+        system = _read(file, **kwargs)
         if system is not None:
             systems.extend(system)
     return systems
 
 
-def _dpdata_read(data_path: str, **kwargs):
+def _read(data_path: str, **kwargs):
     # pop custom arguments or else it will be passed to dpdata.System and raise error
     fmt = kwargs.pop('fmt', 'deepmd/npy')
     fparam = kwargs.pop('fparam', None)

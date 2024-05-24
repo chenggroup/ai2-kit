@@ -289,6 +289,17 @@ def list_random_sample(l, size, seed = None):
     return random.sample(l, size)
 
 def list_sample(l, size: int, method: SAMPLE_METHOD='even', **kwargs):
+    """
+    sample list
+
+    :param size: size of sample, if size is larger than data size, return all data
+    :param method: method to sample, can be 'even', 'random', 'truncate', default is 'even'
+    :param seed: seed for random sample, only used when method is 'random'
+
+    Note that by default the seed is length of input list,
+    if you want to generate different sample each time, you should set random seed manually
+    """
+
     if method == 'even':
         return list_even_sample(l, size)
     elif method == 'random':
@@ -357,8 +368,12 @@ def expand_globs(patterns: Iterable[str], raise_invalid=False) -> List[str]:
         result = glob.glob(pattern, recursive=True) if '*' in pattern else [pattern]
         if raise_invalid and len(result) == 0:
             raise FileNotFoundError(f'No file found for {pattern}')
-        paths += result
-    return sort_unique_str_list(paths)
+        for p in result:
+            if p not in paths:
+                paths.append(p)
+            else:
+                logger.warn(f'path {p} already exists in the list')
+    return paths
 
 
 def slice_from_str(index: str):

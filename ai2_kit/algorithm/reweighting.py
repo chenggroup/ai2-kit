@@ -1,16 +1,24 @@
-from typing import Union, Iterable, List
+from typing import Optional, Dict
 from collections import namedtuple
-from scipy.stats import gaussian_kde
-import numpy as np
-import pandas as pd
 
-import dpdata
+from scipy.stats import gaussian_kde
+import pandas as pd
+import numpy as np
+
+from ai2_kit.core.util import expand_globs, ensure_dir
+from ai2_kit.core.log import get_logger
+from ai2_kit.lib import plumed
+
+
+logger = get_logger(__name__)
+
 
 default_kB = 0.0083144621  # Boltzmann constant in kJ/mol/K
 default_ev_to_kjmol = 96.4853365  # conversion factor from eV to kJ/mol
 
 
 _FesResult = namedtuple('FesResult', ['fes', 'grid', 'extend'])
+
 
 def compute_fes(cvs: np.ndarray, bias: np.ndarray, temp: float, grid=None,
                 w=1, kB=default_kB, grid_size=100j):
@@ -81,23 +89,96 @@ def compute_kde_weight(baseline_energy: np.ndarray, target_energy: np.ndarray,
     return np.exp( -beta * (te - be))
 
 
-def reweighting_cli(baseline_dataset: str,
-                    target_dataset: str,
-                    colvar_file: str):
+def load_dp_energy(*path_or_glob: str):
+    """
+    load dpdata energy data from npy files
 
-    baseline_system = dpdata.System(baseline_dataset)
+    :param path_or_glob: path or glob pattern to locate data path, for example dpdata/**/energy.npy
+    """
+
+    files = expand_globs(*path_or_glob, raise_invalid=True)
+    energies = []
+    for file in files:
+        energy = np.load(file)
+        energies.append(energy)
+
+    return np.concatenate(energies)
 
 
 class ReweightingTool:
 
     def __init__(self):
-        ...
+        self.data: Dict[str, np.ndarray] = {}
+        self.colvar_df = None
 
-    def load_baseline_data(self, ):
-        ...
+    def load_energy(self, *path_or_glob: str, tag: str):
+        """
+        read baseline data as dpdata.LabeledSystem
 
-    def load_target_data(self, ):
-        ...
+        :param path_or_glob: path or glob pattern to locate data path
+        :param tag: a string tag to distinguish data, it is suggested to use `baseline` and `target`
+        """
+        energy = load_dp_energy(path_or_glob)
+        if tag in self.data:
+            self.data[tag] = np.concatenate([self.data[tag], energy])
+        else:
+            self.data[tag] = energy
+        return self
 
-    def load_colvar(self, colvar_file: str):
-        ...
+
+    def load_colvar(self, *path_or_glob: str):
+        """
+        load PLUMED COLVAR files and concatenate into a single DataFrame
+        you have to ensure the COLVAR data is aligned with energies
+
+        :param path_or_glob: path or glob pattern to locate data path
+        """
+
+        paths = expand_globs(path_or_glob)
+        self.colvar_df = plumed.load_colvar_from_files(*paths)
+        return self
+
+    def reweighting(self, cv: str, bias: str, temp: float,
+                    grid_size=0.01, save_fig_to: Optional[str]=None,
+                    baseline_tag='baseline', target_tag='target'):
+        """
+        run reweighting against loaded data
+
+        :param cv: name of collective variable columns, for example d1
+        :param bias: name of bias column, for example opes.bias
+        :param temp: temperature
+        :param save_to: save th
+        """
+        import matplotlib.pyplot as plt
+
+        cvs_df, bias_df = plumed.get_cvs_bias_from_df(self.colvar_df, [cv], bias)
+        logger.info(f'cvs shape: {cvs_df.shape}, bias shape: {bias_df.shape}')
+
+        # compute baseline fes
+        baseline_fes = compute_fes(cvs_df, bias_df, temp=temp, grid_size=grid_size)
+        grid = baseline_fes.grid
+
+        # compute weight
+        baseline_e = self.data[baseline_tag].reshape((-1, 1))
+        target_e = self.data[target_tag].reshape((-1, 1))
+        logger.info(f'baseline energy shape: {baseline_e.shape}, target energy shape: {target_e.shape}')
+
+        w = compute_kde_weight(baseline_e, target_e, temp=temp)
+        w = w.reshape((-1,))
+
+        # compute target fes
+        target_fes = compute_fes(cvs_df, bias_df, temp=temp, grid=grid, w=w)
+
+        # use matplot to draw baseline and target 1D FES on the image
+        plt.plot(grid, baseline_fes.fes, label='Baseline FES')
+        plt.plot(grid, target_fes.fes, label='Target FES')
+        plt.legend()
+        fig = plt.gcf()
+
+        if save_fig_to is None:
+            fig.canvas.draw()
+            fig.canvas.flush_events()
+        else:
+            ensure_dir(save_fig_to)
+            fig.savefig(save_fig_to, dpi=300, bbox_inches='tight')
+

@@ -1,4 +1,9 @@
 # Change Logs
+
+## v0.18.5
+* frame file process command line tool
+* command line interface for reweighting algorithm
+
 ## v0.18.4
 * deepmd: support `input_modifier_fn`
 

@@ -33,8 +33,8 @@ class FrameTool:
 
         if self.header and header and self.header != header:
             logger.warning('Header is different from previous loaded data')
-            logger.info(f'Previous header: {''.join(self.header)}')
-            logger.info(f'Current header: {''.join(header)}')
+            logger.info(f'Previous header: {"".join(self.header)}')
+            logger.info(f'Current header: {"".join(header)}')
 
         self.header = header
         self.frames.extend(frames)

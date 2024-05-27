@@ -47,7 +47,7 @@ then you can generate batch scripts with the following command:
 
 ```bash
 ai2-kit tool batch gen_batches new/task-* --header_file header.sh --cmd "mpirun cp2k.popt -i ../cp2k.inp &> output" \
-    --out_script "new/cp2k-{i}.sbatch" --concurrency 5
+    --out "new/cp2k-{i}.sbatch" --concurrency 5
 ```
 
 The above command will generate 5 batch scripts named `new/cp2k-0.sbatch`, `new/cp2k-1.sbatch`, etc. and each batch script will run part of the tasks in `new/task-*` directory. 

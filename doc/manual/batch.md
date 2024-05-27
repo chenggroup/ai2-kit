@@ -60,4 +60,4 @@ ls -1 new/cp2k-*.sbatch | xargs -I {} sbatch {}
 
 ## Tips
 
-* You can use the `write_each_frames` in `ase tool` to generate multiple input files, then use the above command to generate batch scripts for each input file.
+* You can use the `write_frames` in `ase tool` to generate multiple input files, then use the above command to generate batch scripts for each input file.

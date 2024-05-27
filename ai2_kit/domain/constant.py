@@ -10,9 +10,6 @@ MODEL_DEVI_OUT = 'model_devi.out'
 MODEL_DEVI_NEU_OUT = 'model_devi_neu.out'
 MODEL_DEVI_RED_OUT = 'model_devi_red.out'
 
-LAMMPS_DUMP_DIR = 'traj'
-LAMMPS_DUMP_SUFFIX = '.lammpstrj'
-
 SELECTOR_OUTPUT = 'selector_output'
 
 

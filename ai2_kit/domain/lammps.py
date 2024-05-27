@@ -300,15 +300,19 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
         common = dict(url=task_dir['url'], executor=executor.name, format=DataFormat.LAMMPS_OUTPUT_DIR)
         if input.mode == 'fep-pka':
             # in fep-pka mode,
-            # ini and fin states have different structures, so their lammps_dump_dir is different
+            # ini and fin states have different structures, so their structure files are different
             # their label method is different too, so we need to unpack `fep-ini` and `fep-fin` accordingly
             outputs += [
                 Artifact.of(**common, attrs={
-                    **task_dir['attrs'], 'model_devi_file': 'model_devi_ini.out', 'lammps_dump_dir': 'traj-ini',
+                    **task_dir['attrs'],
+                    'model_devi_file': 'model_devi_ini.out',
+                    'structures': 'traj-fep-ini.lammpstrj',
                     **task_dir['attrs']['fep-ini'],
                 }),
                 Artifact.of(**common, attrs={
-                    **task_dir['attrs'], 'model_devi_file': 'model_devi_fin.out', 'lammps_dump_dir': 'traj-fin',
+                    **task_dir['attrs'],
+                    'model_devi_file': 'model_devi_fin.out',
+                    'structures': 'traj-fep-fin.lammpstrj',
                     **task_dir['attrs']['fep-fin'],
                     'ancestor': task_dir['attrs']['ancestor'] + '-fin',  # only fin needs
                 }),
@@ -523,16 +527,14 @@ def make_lammps_task_dirs(combination_vars: Mapping[str, Sequence[Any]],
 
         if mode == 'fep-pka':
             simulation.extend([
-                'shell mkdir traj-ini traj-fin',
-                'dump 1 fep_ini_atoms custom ${DUMP_FREQ} traj-ini/*.lammpstrj id type element x y z fx fy fz',
-                'dump 2 fep_fin_atoms custom ${DUMP_FREQ} traj-fin/*.lammpstrj id type element x y z fx fy fz',
+                'dump 1 fep_ini_atoms custom ${DUMP_FREQ} traj-fep-ini.lammpstrj id type element x y z fx fy fz',
+                'dump 2 fep_fin_atoms custom ${DUMP_FREQ} traj-fep-fin.lammpstrj id type element x y z fx fy fz',
                 f'dump_modify 1 element {types_template_vars["SPECORDER"]}',
                 f'dump_modify 2 element {types_template_vars["SPECORDER"]}',
             ])
         else:
             simulation.extend([
-                'shell mkdir traj',
-                'dump 1 ${DUMP_GROUP} custom ${DUMP_FREQ} traj/*.lammpstrj id type element x y z fx fy fz',
+                'dump 1 ${DUMP_GROUP} custom ${DUMP_FREQ} traj.lammpstrj id type element x y z fx fy fz',
                 f'dump_modify 1 element {types_template_vars["SPECORDER"]}',
             ])
         simulation.append('restart 10000 md.restart')
@@ -646,13 +648,11 @@ def get_types_template_vars(type_map: List[str], mass_map: List[float],
             f'neigh_modify    every 10 delay 0 check no exclude group real_atom virtual_atom',
         ])
 
-
     # specorder in the format of H O H NULL, for lammps pair coeff input
     template_vars['SPECORDER'] = ' '.join(specorder)
 
     template_vars['FEP_INI_SPECORDER'] = ' '.join(fep_ini_specorder)
     template_vars['FEP_FIN_SPECORDER'] = ' '.join(fep_fin_specorder)
-
 
     # mass map is in the form of
     # variable   H               equal 1

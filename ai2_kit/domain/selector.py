@@ -17,7 +17,7 @@ import os
 
 from .data import get_data_format, DataFormat, artifacts_to_ase_atoms
 from .iface import ICllSelectorOutput, BaseCllContext
-from .constant import LAMMPS_DUMP_DIR, LAMMPS_DUMP_SUFFIX, DEFAULT_ASAP_SOAP_DESC, DEFAULT_ASAP_PCA_REDUCER
+from .constant import DEFAULT_ASAP_SOAP_DESC, DEFAULT_ASAP_PCA_REDUCER
 
 
 logger = get_logger(__name__)
@@ -250,7 +250,7 @@ def select_structures_by_model_devi(model_devi_output: ArtifactDict,
     atoms_list = []
     if data_format == DataFormat.LAMMPS_OUTPUT_DIR:
         lammpstrj_file = model_devi_output['attrs'].pop('structures', 'traj.lammpstrj')
-        atoms_list += ase.io.read(os.path.join(model_devi_dir, lammpstrj_file), ':', format='lammpstrj')
+        atoms_list += ase.io.read(os.path.join(model_devi_dir, lammpstrj_file), ':', format='lammps-dump-text', specorder=type_map)
     elif data_format in (DataFormat.LASP_LAMMPS_OUT_DIR, DataFormat.ANYWARE_OUTPUT_DIR):
         structures_file = os.path.join(model_devi_dir, 'structures.xyz')
         atoms_list += ase.io.read(structures_file, ':', format='extxyz')

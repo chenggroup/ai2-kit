@@ -258,6 +258,7 @@ def select_structures_by_model_devi(model_devi_output: ArtifactDict,
         raise ValueError('unknown model_devi_data types')
 
     # screening structure before model_devi analysis
+    # FIXME: this should be moved to after the model_devi analysis
     if screening_fn is not None:
         if 'ssw_energy' in atoms_list[0].info:
             s_ssw_energy = pd.Series(map(lambda atoms: atoms.info['ssw_energy'], atoms_list))  # type: ignore

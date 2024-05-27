@@ -169,6 +169,8 @@ class AseTool:
         if fmt == 'lammps-dump-text':
             return self._write_lammps_dump_text(filename, atoms_list, **kwargs)
         if fmt == 'cp2k-inc' or (fmt is None and filename.endswith('.inc')):
+            if not isinstance(atoms_list, list):
+                atoms_list = [atoms_list]
             assert len(atoms_list) == 1, 'cp2k-inc only support single frame'
             return self._write_cp2k_inc(filename, atoms_list[0])
         return ase.io.write(filename, atoms_list, **kwargs)

@@ -29,17 +29,17 @@ ai2-kit tool frame read COLVAR --frame_size 1 --header_size 1 - slice 100000: - 
 The reason of not using ase tool to sample is ase will take extra time to parse the trajectory file,
 by using frame tool to sample and then use ase tool to convert the data to dpdata format will save time.
 
-Note that we need to use `traj.lammpstrj` and `COLVAR` are aligned, so we need to use the same slice and random seed for both sampling.
-
+Note that we need to ensure `traj.lammpstrj` and `COLVAR` are aligned, so we have to use the same slice and random seed for both sampling.
 
 ### Use baseline and target model to calculate the energy
 
 Now we need to use both the baseline and target model to calculate the energy of the sampled frames.
 
 ```bash
-ai2-kit tool dpdata read 2000-dpdata/* - eval dp-baseline.pb - write 2000-baseline
-ai2-kit tool dpdata read 2000-dpdata/* - eval dp-target.pb - write 2000-target
+ai2-kit tool dpdata read 2000-dpdata/* --nolabel - eval dp-baseline.pb - write 2000-baseline
+ai2-kit tool dpdata read 2000-dpdata/* --nolabel - eval dp-target.pb - write 2000-target
 ```
+Note that we use `--nolabel` to ignore label in the dpdata file.
 
 ### Calculate reweighting FES
 

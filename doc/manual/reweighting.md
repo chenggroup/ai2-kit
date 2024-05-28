@@ -29,7 +29,7 @@ ai2-kit tool frame read COLVAR --frame_size 1 --header_size 1 - slice 100000: - 
 The reason of not using ase tool to sample is ase will take extra time to parse the trajectory file,
 by using frame tool to sample and then use ase tool to convert the data to dpdata format will save time.
 
-Note that we need to ensure `traj.lammpstrj` and `COLVAR` are aligned, so we have to use the same slice and random seed for both sampling.
+Here we use the same `slice` and `sample` parameters for both `traj.lammpstrj` and `COLVAR` to ensure they are aligned.
 
 ### Use baseline and target model to calculate the energy
 

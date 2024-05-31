@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.19.2
+* fix: dpdata eval wrong type mapping
+* improve：add label to fes graph and dump result to json file
+
 ## v0.19.1
 * fix cp2k-inc for ase write_frames
 * fix out of date documents

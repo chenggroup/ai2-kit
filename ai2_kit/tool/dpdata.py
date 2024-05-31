@@ -1,5 +1,5 @@
 from ai2_kit.feat.spectrum.viber import dpdata_read_cp2k_viber_data
-from ai2_kit.core.util import ensure_dir, expand_globs, list_sample, SAMPLE_METHOD, perf_log, slice_from_str
+from ai2_kit.core.util import ensure_dir, expand_globs, list_sample, SAMPLE_METHOD, slice_from_str
 from ai2_kit.core.log import get_logger
 
 from typing import Optional
@@ -140,16 +140,21 @@ class DpdataTool:
         """
         from deepmd.infer import DeepPot
         systems = dpdata.System()
-        systems.extend(self._systems)
+        systems.extend(self._systems)  # merge systems to one
 
+        pot = DeepPot(dp_model, auto_batch_size=True)  # type: ignore
+
+        # remap atypes to pot's type
+        atom_names = systems.get_atom_names()
+        target_atom_names = pot.get_type_map()
+        mapping = {i: target_atom_names.index(name) for i, name in enumerate(atom_names)}
+        vectorized_mapping = np.vectorize(mapping.get)
+
+        atypes = vectorized_mapping(systems.data['atom_types'])
         coords = systems.data['coords']
         cells = None if systems.nopbc else systems.data['cells']
-        atypes = systems.data['atom_types']
 
-        perf_log('before deepmd label')
-        pot = DeepPot(dp_model, auto_batch_size=True)  # type: ignore
         e, f, v = pot.eval(coords=coords, cells=cells, atom_types=atypes)  # type: ignore
-        perf_log('after deepmd label')
 
         n_atoms = systems.get_natoms()
         n_frames = systems.get_nframes()
@@ -162,7 +167,6 @@ class DpdataTool:
         # replace system files
         self._systems = []
         self._systems.extend(dpdata.LabeledSystem.from_dict({'data':data}))  # type: ignore
-        perf_log('after update data')
         return self
 
     def to_ase(self):

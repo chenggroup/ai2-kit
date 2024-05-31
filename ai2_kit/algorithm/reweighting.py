@@ -2,8 +2,8 @@ from typing import Optional, Dict
 from collections import namedtuple
 
 from scipy.stats import gaussian_kde
-import pandas as pd
 import numpy as np
+import json
 
 from ai2_kit.core.util import expand_globs, ensure_dir
 from ai2_kit.core.log import get_logger
@@ -140,6 +140,7 @@ class ReweightingTool:
 
     def reweighting(self, cv: str, bias: str, temp: float,
                     grid_size=0.01, save_fig_to: Optional[str]=None,
+                    save_json_to: Optional[str]=None,
                     baseline_tag='baseline', target_tag='target'):
         """
         run reweighting against loaded data
@@ -172,8 +173,23 @@ class ReweightingTool:
         # use matplot to draw baseline and target 1D FES on the image
         plt.plot(grid, baseline_fes.fes, label='Baseline FES')
         plt.plot(grid, target_fes.fes, label='Target FES')
+
+        plt.xlabel('CV')
+        plt.ylabel('Free Energy/$kJ\cdot mol^{-1}$')
+
         plt.legend()
         fig = plt.gcf()
+
+        if save_json_to is not None:
+            data = {
+                'baseline_fes': baseline_fes.fes.tolist(),
+                'target_fes': target_fes.fes.tolist(),
+                'weight': w.tolist(),
+                'grid': grid.tolist(),
+                'extend': baseline_fes.extend,
+            }
+            with open(save_json_to, 'w') as f:
+                json.dump(data, f)
 
         if save_fig_to is None:
             fig.canvas.draw()

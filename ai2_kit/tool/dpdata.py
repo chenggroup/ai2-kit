@@ -198,18 +198,24 @@ def read(*file_path_or_glob: str, **kwargs):
     :param file_path_or_glob: path or glob pattern to locate data path
     :param fmt: format to read, default is deepmd/npy
     :param label: default is True, use dpdata.LabeledSystem if True, else use dpdata.System
+    :parse ignore_error: if True, ignore error when read data, default is False
     :param kwargs: arguments to pass to dpdata.System or dpdata.LabeledSystem
     """
     kwargs.setdefault('fmt', 'deepmd/npy')
+    ignore_error = kwargs.setdefault('ignore_error', False)
     files = expand_globs(file_path_or_glob)
     if len(files) == 0:
         raise FileNotFoundError(f'No file found in {file_path_or_glob}')
-
     systems = []
     for file in files:
-        system = _read(file, **kwargs)
-        if system is not None:
-            systems.extend(system)
+        try:
+            system = _read(file, **kwargs)
+            if system is not None:
+                systems.extend(system)
+        except Exception:
+            logger.exception(f'Fail to process file {file}, ignore and continue')
+            if not ignore_error:
+                raise
     return systems
 
 

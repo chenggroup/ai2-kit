@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.19.3
+* improve: dpdata: allow user to ignore broken data
+
 ## v0.19.2
 * fix: dpdata eval wrong type mapping
 * improve：add label to fes graph and dump result to json file

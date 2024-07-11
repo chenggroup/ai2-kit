@@ -115,7 +115,7 @@ class BatchTool:
             ])
             if checkpoint:
                 batch.extend([
-                    f'    if [ -f {checkpoint_file}]; then',
+                    f'    if [ -f {checkpoint_file} ]; then',
                     f'      echo "hit checkpoint, skip"',
                     f'      continue',
                     f'    fi',

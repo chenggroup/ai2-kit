@@ -116,15 +116,15 @@
         "x-designable-id": "rn8rfxk5tyj",
         "x-index": 5
       },
-      "basic_set_file": {
+      "basis_set_file": {
         "type": "string",
-        "title": "Basic Set File",
+        "title": "Basis Set File",
         "x-decorator": "FormItem",
         "x-component": "Input",
         "x-validator": [],
         "x-component-props": {},
         "x-decorator-props": {},
-        "name": "basic_set_file",
+        "name": "basis_set_file",
         "x-designable-id": "5czwq9wajpu",
         "x-index": 6,
         "description": "CP2K basic set file.",

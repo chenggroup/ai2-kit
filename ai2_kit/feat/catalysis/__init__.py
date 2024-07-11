@@ -10,9 +10,8 @@ from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import parse_path_list, nested_set
 from ai2_kit.domain.cp2k import dump_coord_n_cell
 from ai2_kit.domain.lammps import get_ensemble
-from ai2_kit import res
 
-from typing import Optional, Literal, List
+from typing import Optional, Literal, List, Union
 from ase import Atoms, Atom
 from string import Template
 import random
@@ -21,112 +20,9 @@ import os
 import json
 import io
 
+from .constant import *
 
 logger = get_logger(__name__)
-
-AI2CAT_RES_DIR = os.path.join(res.DIR_PATH, 'catalysis')
-
-DEEPMD_DEFAULT_TEMPLATE = os.path.join(AI2CAT_RES_DIR, 'deepmd.json')
-MLP_TRAINING_TEMPLATE   = os.path.join(AI2CAT_RES_DIR, 'mlp-training.yml')
-CP2K_DEFAULT_TEMPLATE   = os.path.join(AI2CAT_RES_DIR, 'cp2k.inp')
-
-CP2K_SCF_SEMICONDUCTOR = """\
-        # CONFIGURATION FOR SEMICONDUCTOR
-        &SCF
-            SCF_GUESS RESTART
-            EPS_SCF 3e-07
-            MAX_SCF 50
-            &OUTER_SCF
-                EPS_SCF 3e-07
-                MAX_SCF 20
-            &END OUTER_SCF
-            &OT
-                MINIMIZER CG
-                PRECONDITIONER FULL_SINGLE_INVERSE
-                ENERGY_GAP 0.1
-            &END OT
-        &END SCF
-        # END CONFIGURATION FOR SEMICONDUCTOR"""
-
-CP2K_SCF_METAL = """\
-        # CONFIGURATION FOR METAL
-        &SCF
-            SCF_GUESS RESTART
-            EPS_SCF 3e-07
-            MAX_SCF 500
-            ADDED_MOS 500
-            CHOLESKY INVERSE
-            &SMEAR
-                METHOD FERMI_DIRAC
-                ELECTRONIC_TEMPERATURE [K] 300
-            &END SMEAR
-            &DIAGONALIZATION
-                ALGORITHM STANDARD
-            &END DIAGONALIZATION
-            &MIXING
-                METHOD BROYDEN_MIXING
-                ALPHA 0.3
-                BETA 1.5
-                NBROYDEN 14
-            &END MIXING
-        &END SCF
-        # END CONFIGURATION FOR METAL"""
-
-CP2K_MOTION_TEMPLATE = """\
-&MOTION
-  &MD
-    ENSEMBLE NVT
-    STEPS       $steps
-    TIMESTEP    $timestep
-    TEMPERATURE $temp
-    &THERMOSTAT
-       TYPE CSVR
-       REGION MASSIVE
-       &CSVR
-          TIMECON [fs] 100.0
-       &END
-    &END
-  &END MD
-  &PRINT
-   &TRAJECTORY
-     &EACH
-       MD 1
-     &END EACH
-   &END TRAJECTORY
-   &VELOCITIES
-     &EACH
-       MD 1
-     &END EACH
-   &END VELOCITIES
-   &FORCES
-     &EACH
-       MD 1
-     &END EACH
-   &END FORCES
-   &RESTART_HISTORY
-     &EACH
-       MD 1000
-     &END EACH
-   &END RESTART_HISTORY
-   &RESTART
-     BACKUP_COPIES 3
-     &EACH
-       MD 1
-     &END EACH
-   &END RESTART
-  &END PRINT
-&END MOTION"""
-
-CP2K_SCF_TABLE = {
-    'metal': CP2K_SCF_METAL,
-    'semi': CP2K_SCF_SEMICONDUCTOR,
-}
-
-CP2K_ACCURACY_TABLE = {
-    'high': {'cutoff': 1000, 'rel_cutoff': 90 },
-    'medium': {'cutoff': 800, 'rel_cutoff': 70 },
-    'low': {'cutoff': 600, 'rel_cutoff': 50 },
-}
 
 
 class ConfigBuilder:
@@ -222,7 +118,7 @@ class ConfigBuilder:
         with open(plumed_input_path, 'w', encoding='utf-8') as fp:
             fp.write('\n'.join(plumed_input))
 
-    def gen_lammps_input(self, out_dir='./out', **kwargs):
+    def gen_lammps_input(self, out_dir='./out', abs_path=True, **kwargs):
         assert self._atoms is not None, 'atoms must be loaded first'
         kwargs = {
             'nsteps': 20000,
@@ -244,7 +140,7 @@ class ConfigBuilder:
         }
 
         template_file  = kwargs.pop('template_file', os.path.join(AI2CAT_RES_DIR, 'lammps-post.inp'))
-        dp_models = parse_path_list(kwargs.pop('dp_models'), to_abs=True)
+        dp_models = parse_path_list(kwargs.pop('dp_models'), to_abs=abs_path)
         ensemble = kwargs.pop('ensemble')
 
         type_map, mass_map = get_type_map(self._atoms)
@@ -279,8 +175,8 @@ class ConfigBuilder:
 
     def gen_cp2k_input(self,
                        out_dir: str = 'out',
-                       basic_set_file: str = 'BASIS_MOLOPT',
-                       potential_file: str = 'GTH_POTENTIALS',
+                       basis_set_file: Union[List[str], str] = 'BASIS_MOLOPT',
+                       potential_file: Union[List[str], str] = 'GTH_POTENTIALS',
                        style: Literal['metal', 'semi'] = 'metal',
                        accuracy: Literal['high', 'medium', 'low'] = 'medium',
                        aimd: bool = False,
@@ -298,8 +194,8 @@ class ConfigBuilder:
         or else you have to specify the full path instead of their file name.
 
         Args:
-            basic_set_file: basic set file, can be path or file in CP2K_DATA_DIR
-            potential_file: potential file, can be path or file in CP2K_DATA_DIR
+            basis_set_file: basic set file, can be path or file in CP2K_DATA_DIR, use list to specify multiple files
+            potential_file: potential file, can be path or file in CP2K_DATA_DIR, use list to specify multiple files
             out_dir: output directory, cp2k.inp and coord_n_cell.inc will be generated in this directory
             style: 'metal' or 'semi'
             accuracy: 'high', 'medium' or 'low'
@@ -312,13 +208,29 @@ class ConfigBuilder:
         """
 
         assert self._atoms is not None, 'atoms must be loaded first'
+
+        # make sure basis_set_file and potential_file are list
+        if isinstance(basis_set_file, str):
+            basis_set_file = [basis_set_file]
+        if isinstance(potential_file, str):
+            potential_file = [potential_file]
+
         # get available basic set and potential
-        with open(find_cp2k_data_file(basic_set_file), 'r') as fp:
-            basic_set_table = parse_cp2k_data_file(fp)
-        with open(find_cp2k_data_file(potential_file), 'r') as fp:
-            potential_table = parse_cp2k_data_file(fp)
+        basis_set_table = {}
+        for f in basis_set_file:
+            f = find_cp2k_data_file(f)
+            with open(f, 'r') as fp:
+                basis_set_table = parse_cp2k_data_file(fp, basis_set_table)
+        potential_table = {}
+        for f in potential_file:
+            f = find_cp2k_data_file(f)
+            with open(f, 'r') as fp:
+                potential_table = parse_cp2k_data_file(fp, potential_table)
+
+        # read template file
         with open(template_file, 'r') as fp:
             template = fp.read()
+
         # build kinds
         elements = set(self._atoms.get_chemical_symbols())
 
@@ -326,28 +238,28 @@ class ConfigBuilder:
         total_ve = 0  # Valence Electron
 
         for element in elements:
-            basic_set_all = basic_set_table.get(element)
-            basic_set = basic_set_all[-1]
-            logger.info(f'BASIC_SET {basic_set} is selected for {element}')
-
-            potential_all = potential_table.get(element)
-            potential = next(p for p in potential_all if 'PBE' in p)
-            logger.info(f'POTENTIAL {potential} is selected for {element}')
-            kinds += '\n'.join([
-                f'    &KIND {element}',
-                f'        BASIS_SET {basic_set}',
-                f'        # All available BASIS_SET:',
-                f'        # {" ".join(basic_set_all)}',
-                f'        POTENTIAL {potential}',
-                f'        # All available POTENTIAL:',
-                f'        # {" ".join(potential_all)}',
-                f'    &END KIND',
-                '', # This empty line is required
-            ])
+            basis_set_all = basis_set_table.get(element)
+            basis_set = select_basis_set(basis_set_all)  # type: ignore
+            logger.info(f'BASIC_SET {basis_set} is selected for {element}')
             # get ve from the last number of potential
             # for example, if the potential is GTH-OLYP-q6
             # then the ve is 6
-            ve = int(re.match(r'.*?(\d+)$', potential).group(1))
+            ve = get_valence_electron(basis_set)
+            potential_all = potential_table.get(element)
+            potential = select_potential(potential_all, ve, 'PBE')  # type: ignore
+
+            logger.info(f'POTENTIAL {potential} is selected for {element}')
+            kinds += '\n'.join([
+                f'    &KIND {element}',
+                f'        BASIS_SET {basis_set}',
+                f'        # All available BASIS_SET:',
+                f'        # {" ".join(basis_set_all)}',  # type: ignore
+                f'        POTENTIAL {potential}',
+                f'        # All available POTENTIAL:',
+                f'        # {" ".join(potential_all)}',  # type: ignore
+                f'    &END KIND',
+                '', # This empty line is required
+            ])
             total_ve += ve * self._atoms.get_chemical_symbols().count(element)
         logger.info("total valence electron of the system: %d" % total_ve)
 
@@ -361,8 +273,7 @@ class ConfigBuilder:
 
         template_vars = {
             'run_type': 'MD' if aimd else 'ENERGY_FORCE',
-            'basic_set_file': os.path.abspath(basic_set_file),
-            'potential_file': os.path.abspath(potential_file),
+            'basis_n_potential': get_basis_n_potential(basis_set_file, potential_file),
             'parameter_file': parameter_file,
             'uks': 'T' if total_ve % 2 else 'F',
             'kinds': kinds,
@@ -406,6 +317,43 @@ def get_type_map(atoms: Atoms):
     return type_map, mass_map
 
 
+def get_basis_n_potential(basis_set_files: List[str], potential_files: List[str]):
+    lines = []
+    for f in basis_set_files:
+        lines.append(f'BASIS_SET_FILE_NAME {f}')
+    for f in potential_files:
+        lines.append(f'POTENTIAL_FILE_NAME {f}')
+    return '\n'.join(lines)
+
+
+def select_basis_set(choices: List[str], preferred: Optional[str] = None):
+    """
+    select basis set by matching preferred basis set
+    """
+    order = ['TZV2P', 'TZVP', 'DZVP', 'SZV']  # default preferred order
+    if preferred is not None:
+        order = [preferred]
+    for o in order:
+        for c in choices:
+            if o in c:
+                return c
+    raise ValueError(f'Cannot find preferred basis set {preferred} in {choices}')
+
+
+def select_potential(choices: List[str], ve: int, xc_function='PBE'):
+    """
+    select potential by matching valence electron and xc_function
+    """
+    for c in choices:
+        if xc_function in c and c.endswith(f'q{ve}'):
+            return c
+    raise ValueError(f'Cannot find potential for ve {ve} and xc_function {xc_function} in {choices}')
+
+
+def get_valence_electron(name: str) -> int:
+    return int(re.match(r'.*?(\d+)$', name).group(1))  # type: ignore
+
+
 def find_cp2k_data_file(file: str):
     """
     find CP2K data file in CP2K_DATA_DIR
@@ -420,20 +368,21 @@ def find_cp2k_data_file(file: str):
     return file
 
 
-def parse_cp2k_data_file(fp):
+def parse_cp2k_data_file(fp, parsed=None):
     """
     get all available basic set and potential from CP2K data file
     """
-    parsed = {}
+    if parsed is None:
+        parsed = {}
     for line in fp:
         line: str = line.strip()
-        if line.startswith('#'):
-            continue # skip comment
+        if not line or line.startswith('#'):
+            continue # skip comment and empty line
         tokens = line.split()
-        if 0 == len(tokens):
-            continue  # skip empty line
         if re.match(r'^[A-Z][a-z]*$', tokens[0]):
-            parsed.setdefault(tokens[0], []).append(tokens[1])
+            # only keep tokens that end with q\d+, for example: GTH-PBE-q6
+            selected = [t for t in tokens if re.match(r'.+q\d+$', t)]
+            parsed.setdefault(tokens[0], []).extend(selected)
     return parsed
 
 
@@ -513,10 +462,11 @@ class CmdEntries:
         """
         return ConfigBuilder
 
-# TODO: move this to dedicated ui module
-
 
 def cli_main():
+    """
+    Command line entry for ai2-cat command
+    """
     fire.Fire(CmdEntries)
 
 

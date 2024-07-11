@@ -1,19 +1,20 @@
+from typing import Tuple, List, TypeVar, Union, Iterable, Literal
 from ruamel.yaml import YAML, ScalarNode, SequenceNode
-from pathlib import Path
-from typing import Tuple, List, TypeVar, Union, Iterable
-from dataclasses import field
+from collections import namedtuple
 from itertools import zip_longest
-import asyncio
+from pathlib import Path
 
 import shortuuid
+import asyncio
 import hashlib
+import inspect
 import base64
-import shlex
-import copy
-import os
+import psutil
 import random
+import shlex
 import json
 import glob
+import os
 
 from .log import get_logger
 
@@ -21,6 +22,7 @@ logger = get_logger(__name__)
 
 EMPTY = object()
 
+SAMPLE_METHOD = Literal['even', 'random', 'truncate']
 
 def load_json(path: Union[Path, str], encoding: str = 'utf-8'):
     if isinstance(path, str):
@@ -64,10 +66,6 @@ def wait_for_change(widget, attribute):
     return future
 
 
-def default_mutable_field(obj):
-    return field(default_factory=lambda: copy.copy(obj))
-
-
 def get_yaml():
     yaml = YAML(typ='safe')
     JoinTag.register(yaml)
@@ -83,11 +81,11 @@ def load_yaml_file(path: Union[Path, str]):
     return yaml.load(path)
 
 
-def load_yaml_files(*paths: Tuple[Path], quiet: bool = False, purge_anonymous = True):
+def load_yaml_files(*paths: Union[Path, str], quiet: bool = False, purge_anonymous = True):
     d = {}
     for path in paths:
         print('load yaml file: ', path)
-        d = merge_dict(d, load_yaml_file(Path(path)), quiet=quiet)  # type: ignore
+        d = merge_dict(d, load_yaml_file(path), quiet=quiet)
     if purge_anonymous:
         dict_remove_dot_keys(d)
     return d
@@ -241,161 +239,162 @@ def cmd_with_checkpoint(cmd: str, checkpoint: str, ignore_error: bool = False):
     ])
 
 
-def __export_remote_functions():
-    """cloudpickle compatible: https://stackoverflow.com/questions/75292769"""
-
-    def merge_dict(lo: dict, ro: dict, path=None, ignore_none=True, quiet=False):
-        """
-        Merge two dict, the left dict will be overridden.
-        Note: list will be replaced instead of merged.
-        """
-        if path is None:
-            path = []
-        for key, value in ro.items():
-            if ignore_none and value is None:
-                continue
-            if key in lo:
-                current_path = path + [str(key)]
-                if isinstance(lo[key], dict) and isinstance(value, dict):
-                    merge_dict(lo[key], value, path=current_path, ignore_none=ignore_none, quiet=quiet)
-                else:
-                    if not quiet:
-                        print('.'.join(current_path) + ' has been overridden')
-                    lo[key] = value
+def merge_dict(lo: dict, ro: dict, path=None, ignore_none=True, quiet=False):
+    """
+    Merge two dict, the left dict will be overridden.
+    Note: list will be replaced instead of merged.
+    """
+    if path is None:
+        path = []
+    for key, value in ro.items():
+        if ignore_none and value is None:
+            continue
+        if key in lo:
+            current_path = path + [str(key)]
+            if isinstance(lo[key], dict) and isinstance(value, dict):
+                merge_dict(lo[key], value, path=current_path, ignore_none=ignore_none, quiet=quiet)
             else:
+                if not quiet:
+                    print('.'.join(current_path) + ' has been overridden')
                 lo[key] = value
-        return lo
-
-    def dict_nested_get(d: dict, keys: List[str], default=EMPTY):
-        """get value from nested dict"""
-        for key in keys:
-            if key not in d and default is not EMPTY:
-                return default
-            d = d[key]
-        return d
-
-    def dict_nested_set(d: dict, keys: List[str], value):
-        """set value to nested dict"""
-        for key in keys[:-1]:
-            d = d[key]
-        d[keys[-1]] = value
-
-    def list_even_sample(l, size):
-        if size <= 0 or size > len(l):
-            return l
-        # calculate the sample interval
-        interval = len(l) / size
-        return [l[int(i * interval)] for i in range(size)]
-
-    def list_random_sample(l, size, seed = None):
-        if seed is None:
-            seed = len(l)
-        random.seed(seed)
-        return random.sample(l, size)
-
-    def list_sample(l, size, method='even', **kwargs):
-        if method == 'even':
-            return list_even_sample(l, size)
-        elif method == 'random':
-            return list_random_sample(l, size, **kwargs)
-        elif method == 'truncate':
-            return l[:size]
         else:
-            raise ValueError(f'Unknown sample method {method}')
+            lo[key] = value
+    return lo
 
-    def flat_evenly(list_of_lists):
-        """
-        flat a list of lists and ensure the output result distributed evenly
-        >>> flat_evenly([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-        [1, 4, 7, 2, 5, 8, 3, 6, 9]
-        Ref: https://stackoverflow.com/questions/76751171/how-to-flat-a-list-of-lists-and-ensure-the-output-result-distributed-evenly-in-p
-        """
-        return [e for tup in zip_longest(*list_of_lists) for e in tup if e is not None]
+def dict_nested_get(d: dict, keys: List[str], default=EMPTY):
+    """get value from nested dict"""
+    for key in keys:
+        if key not in d and default is not EMPTY:
+            return default
+        d = d[key]
+    return d
 
+def dict_nested_set(d: dict, keys: List[str], value):
+    """set value to nested dict"""
+    for key in keys[:-1]:
+        d = d[key]
+    d[keys[-1]] = value
 
-    def limit(it, size=-1):
-        """
-        limit the size of an iterable
-        """
-        if size <= 0:
-            yield from it
-        else:
-            for i, x in enumerate(it):
-                if i >= size:
-                    break
-                yield x
+def list_even_sample(l, size):
+    if size <= 0 or size > len(l):
+        return l
+    # calculate the sample interval
+    interval = len(l) / size
+    return [l[int(i * interval)] for i in range(size)]
 
+def list_random_sample(l, size, seed = None):
+    if seed is None:
+        seed = len(l)
+    random.seed(seed)
+    return random.sample(l, size)
 
-    def dump_json(obj, path: str):
-        default = lambda o: f"<<non-serializable: {type(o).__qualname__}>>"
-        with open(path, 'w', encoding='utf-8') as f:
-            json.dump(obj, f, indent=2, default=default)
+def list_sample(l, size: int, method: SAMPLE_METHOD='even', **kwargs):
+    """
+    sample list
 
+    :param size: size of sample, if size is larger than data size, return all data
+    :param method: method to sample, can be 'even', 'random', 'truncate', default is 'even'
+    :param seed: seed for random sample, only used when method is 'random'
 
-    def dump_text(text: str, path: str, **kwargs):
-        with open(path, 'w', **kwargs) as f:
-            f.write(text)
+    Note that by default the seed is length of input list,
+    if you want to generate different sample each time, you should set random seed manually
+    """
 
+    if method == 'even':
+        return list_even_sample(l, size)
+    elif method == 'random':
+        return list_random_sample(l, size, **kwargs)
+    elif method == 'truncate':
+        return l[:size]
+    else:
+        raise ValueError(f'Unknown sample method {method}')
 
-    def flush_stdio():
-        import sys
-        sys.stdout.flush()
-        sys.stderr.flush()
-
-
-    def ensure_dir(path: str):
-        dirname = os.path.dirname(path)
-        if dirname:
-            os.makedirs(dirname, exist_ok=True)
-
-
-    def expand_globs(patterns: Iterable[str], raise_invalid=False) -> List[str]:
-        """
-        Expand glob patterns in paths
-
-        :param patterns: list of paths or glob patterns
-        :param raise_invalid: if True, will raise error if no file found for a glob pattern
-        :return: list of expanded paths
-        """
-        paths = []
-        for pattern in patterns:
-            result = glob.glob(pattern, recursive=True) if '*' in pattern else [pattern]
-            if raise_invalid and len(result) == 0:
-                raise FileNotFoundError(f'No file found for {pattern}')
-            paths += result
-        return sort_unique_str_list(paths)
+def flat_evenly(list_of_lists):
+    """
+    flat a list of lists and ensure the output result distributed evenly
+    >>> flat_evenly([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+    [1, 4, 7, 2, 5, 8, 3, 6, 9]
+    Ref: https://stackoverflow.com/questions/76751171/how-to-flat-a-list-of-lists-and-ensure-the-output-result-distributed-evenly-in-p
+    """
+    return [e for tup in zip_longest(*list_of_lists) for e in tup if e is not None]
 
 
-    # export functions
-    return (
-        merge_dict,
-        dict_nested_get,
-        dict_nested_set,
-        list_even_sample,
-        list_random_sample,
-        list_sample,
-        flat_evenly,
-        limit,
-        dump_json,
-        dump_text,
-        flush_stdio,
-        ensure_dir,
-        expand_globs,
-    )
+def limit(it, size=-1):
+    """
+    limit the size of an iterable
+    """
+    if size <= 0:
+        yield from it
+    else:
+        for i, x in enumerate(it):
+            if i >= size:
+                break
+            yield x
 
 
-(
-    merge_dict,
-    dict_nested_get,
-    dict_nested_set,
-    list_even_sample,
-    list_random_sample,
-    list_sample,
-    flat_evenly,
-    limit,
-    dump_json,
-    dump_text,
-    flush_stdio,
-    ensure_dir,
-    expand_globs,
-) = __export_remote_functions()
+def dump_json(obj, path: str):
+    default = lambda o: f"<<non-serializable: {type(o).__qualname__}>>"
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(obj, f, indent=2, default=default)
+
+
+def dump_text(text: str, path: str, **kwargs):
+    with open(path, 'w', **kwargs) as f:
+        f.write(text)
+
+
+def flush_stdio():
+    import sys
+    sys.stdout.flush()
+    sys.stderr.flush()
+
+
+def ensure_dir(path: str):
+    dirname = os.path.dirname(path)
+    if dirname:
+        os.makedirs(dirname, exist_ok=True)
+
+
+def expand_globs(patterns: Iterable[str], raise_invalid=False) -> List[str]:
+    """
+    Expand glob patterns in paths
+
+    :param patterns: list of paths or glob patterns
+    :param raise_invalid: if True, will raise error if no file found for a glob pattern
+    :return: list of expanded paths
+    """
+    paths = []
+    for pattern in patterns:
+        result = glob.glob(pattern, recursive=True) if '*' in pattern else [pattern]
+        if raise_invalid and len(result) == 0:
+            raise FileNotFoundError(f'No file found for {pattern}')
+        for p in result:
+            if p not in paths:
+                paths.append(p)
+            else:
+                logger.warn(f'path {p} already exists in the list')
+    return paths
+
+
+def slice_from_str(index: str):
+    """
+    get slice object from a string expression,
+    for example: "1:10" -> slice(1, 10), ":10" -> slice(None, 10), etc
+    """
+    parse = lambda s: int(s) if s else None
+    parts = index.split(':')
+    return slice(*(parse(s) for s in parts))
+
+
+def perf_log(msg):
+    process = psutil.Process()
+    mem_info = process.memory_info()
+    logger.info('perf: rss: %s M %s', mem_info.rss / 1024 ** 2, msg)
+
+
+def create_fn(func_str: str, fn_name: str):
+    _locals = {}
+    exec(func_str, _locals)
+    if fn_name not in _locals:
+        raise ValueError(f'Function {fn_name} not found in {func_str}')
+    return _locals[fn_name]

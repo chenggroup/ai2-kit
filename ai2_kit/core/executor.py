@@ -1,3 +1,14 @@
+from typing import Optional, Dict, List, TypeVar, Callable, Mapping, Union
+from abc import ABC, abstractmethod
+from invoke import Result
+import cloudpickle as cp
+import tempfile
+import tarfile
+import os
+import shlex
+import base64
+import bz2
+
 from .queue_system import QueueSystemConfig, BaseQueueSystem, Slurm, Lsf, PBS
 from .job import JobFuture
 from .artifact import Artifact
@@ -6,18 +17,8 @@ from .util import s_uuid
 from .log import get_logger
 from .pydantic import BaseModel
 
+
 logger = get_logger(__name__)
-
-
-from typing import Optional, Dict, List, TypeVar, Callable, Mapping, Union
-from abc import ABC, abstractmethod
-from invoke import Result
-import os
-import shlex
-import base64
-import bz2
-import cloudpickle
-
 
 class BaseExecutorConfig(BaseModel):
     ssh: Optional[SshConfig]
@@ -48,7 +49,7 @@ class Executor(ABC):
         ...
 
     @abstractmethod
-    def run_python_fn(self, fn: FnType, python_cmd=None) -> FnType:
+    def run_python_fn(self, fn: FnType, python_cmd=None, cwd=None) -> FnType:
         ...
 
     @abstractmethod
@@ -72,11 +73,11 @@ class Executor(ABC):
         ...
 
     @abstractmethod
-    def upload(self, from_artifact: Artifact, to_dir: str) -> Artifact:
+    def upload(self, from_path: str, to_dir: str) -> str:
         ...
 
     @abstractmethod
-    def download(self, from_artifact: Artifact, to_dir: str) -> Artifact:
+    def download(self, from_path: str, to_dir: str) -> str:
         ...
 
     @abstractmethod
@@ -125,7 +126,8 @@ class HpcExecutor(Executor):
         self.queue_system = queue_system
         self.work_dir = work_dir
         self.python_cmd = python_cmd
-        self.tmp_dir = os.path.join(self.work_dir, '.tmp')  # TODO: make it configurable
+        self.tmp_dir = os.path.join(self.work_dir, '.tmp')
+        self.python_pkgs_dir = os.path.join(self.tmp_dir, 'python_pkgs')
 
     def init(self):
         # if work_dir is relative path, it will be relative to user home
@@ -135,6 +137,22 @@ class HpcExecutor(Executor):
 
         self.mkdir(self.work_dir)
         self.mkdir(self.tmp_dir)
+        self.mkdir(self.python_pkgs_dir)
+        self.upload_python_pkg('ai2_kit')
+
+    def upload_python_pkg(self, pkg: str):
+        """
+        upload python package to remote server
+        """
+        pkg_path = os.path.dirname(__import__(pkg).__file__)
+        with tempfile.NamedTemporaryFile(suffix='.tar.gz') as fp:
+            with tarfile.open(fp.name, 'w:gz') as tar_fp:
+                tar_fp.add(pkg_path, arcname=os.path.basename(pkg_path), filter=_filter_pyc_files)
+            fp.flush()
+            self.upload(fp.name, self.python_pkgs_dir)
+            file_name = os.path.basename(fp.name)
+        self.run(f'cd {shlex.quote(self.python_pkgs_dir)} && tar -xf {shlex.quote(file_name)}')
+        logger.info('add python package: %s', pkg_path)
 
     def mkdir(self, path: str):
         return self.connector.run('mkdir -p {}'.format(shlex.quote(path)))
@@ -157,24 +175,24 @@ class HpcExecutor(Executor):
             python_cmd = self.python_cmd
         if cwd is None:
             cwd = self.work_dir
-        cd_cwd = f'cd {shlex.quote(cwd)}  &&'
+        base_cmd = f'cd {shlex.quote(cwd)} && PYTHONPATH={shlex.quote(self.python_pkgs_dir)} '
         script_len = len(script)
         logger.info('the size of generated python script is %s', script_len)
         if script_len < 100_000: # ssh connection will be closed of the size of command is too large
-            return self.connector.run(f'{cd_cwd} {python_cmd} -c {shlex.quote(script)}', hide=True)
+            return self.connector.run(f'{base_cmd} {python_cmd} -c {shlex.quote(script)}', hide=True)
         else:
             script_path = os.path.join(self.tmp_dir, f'run_python_script_{s_uuid()}.py')
             self.dump_text(script, script_path)
-            ret = self.connector.run(f'{cd_cwd} {python_cmd} {shlex.quote(script_path)}', hide=True)
+            ret = self.connector.run(f'{base_cmd} {python_cmd} {shlex.quote(script_path)}', hide=True)
             self.connector.run(f'rm {shlex.quote(script_path)}')
             return ret
 
     def run_python_fn(self, fn: FnType, python_cmd=None, cwd=None) -> FnType:
         def remote_fn(*args, **kwargs):
-            script = fn_to_script(lambda: fn(*args, **kwargs), delimiter='@')
-            ret = self.run_python_script(script=script, python_cmd=python_cmd, cwd=None)
+            script = fn_to_script(fn, args, kwargs, delimiter='@')
+            ret = self.run_python_script(script=script, python_cmd=python_cmd, cwd=cwd)
             _, r = ret.stdout.rsplit('@', 1)
-            return cloudpickle.loads(bz2.decompress(base64.b64decode(r)))
+            return cp.loads(bz2.decompress(base64.b64decode(r)))
         return remote_fn  # type: ignore
 
     def submit(self, script: str, cwd: str, **kwargs):
@@ -186,20 +204,11 @@ class HpcExecutor(Executor):
         pattern = os.path.join(artifact.url, artifact.includes)
         return self.glob(pattern)
 
-    def upload(self, from_artifact: Artifact, to_dir: str) -> Artifact:
-        dest_path = self.connector.upload(from_artifact.url, to_dir)
-        return Artifact(
-            executor=self.name,
-            url=dest_path,
-            attrs=from_artifact.attrs,
-        ) # type: ignore
+    def upload(self, from_path: str, to_dir: str):
+        return self.connector.upload(from_path, to_dir)
 
-    def download(self, from_artifact: Artifact, to_dir: str) -> Artifact:
-        dest_path = self.connector.download(from_artifact.url, to_dir)
-        return Artifact(
-            url=dest_path,
-            attrs=from_artifact.attrs,
-        ) # type: ignore
+    def download(self, from_path: str, to_dir: str):
+        return self.connector.download(from_path, to_dir)
 
 
 def create_executor(config: BaseExecutorConfig, name: str) -> Executor:
@@ -226,13 +235,29 @@ class ExecutorManager:
         return self._executors[name]
 
 
-def fn_to_script(fn: Callable, delimiter='@'):
-    dumped_fn = base64.b64encode(bz2.compress(cloudpickle.dumps(fn, protocol=cloudpickle.DEFAULT_PROTOCOL), 5))
+def fn_to_script(fn: Callable, args, kwargs, delimiter='@'):
     script = [
         f'''import base64,bz2,sys,cloudpickle as cp''',
-        f'''r=cp.loads(bz2.decompress(base64.b64decode({repr(dumped_fn)})))()''',
+        f'''fn,args,kwargs={pickle_converts((fn, args, kwargs))}''',
+        'r=fn(*args, **kwargs)',
         f'''sys.stdout.flush()''',  # ensure all output is printed
         f'''print({repr(delimiter)}+base64.b64encode(bz2.compress(cp.dumps(r, protocol=cp.DEFAULT_PROTOCOL),5)).decode('ascii'))''',
         f'''sys.stdout.flush()''',  # ensure all output is printed
     ]
     return ';'.join(script)
+
+
+def pickle_converts(obj, pickle_module='cp', bz2_module='bz2', base64_module='base64'):
+    """
+    convert an object to its pickle string form
+    """
+    obj_pkl = cp.dumps(obj, protocol=cp.DEFAULT_PROTOCOL)
+    compress_level = 5 if len(obj_pkl) > 4096 else 1
+    compressed = bz2.compress(obj_pkl, compress_level)
+    obj_b64 = base64.b64encode(compressed).decode('ascii')
+    return f'{pickle_module}.loads({bz2_module}.decompress({base64_module}.b64decode({repr(obj_b64)})))'
+
+def _filter_pyc_files(tarinfo):
+    if tarinfo.name.endswith('.pyc') or tarinfo.name.endswith('__pycache__'):
+        return None
+    return tarinfo

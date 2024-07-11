@@ -26,7 +26,7 @@ class UiHelper:
         self.lammps_args = None
 
         self.system_file = None
-        self.cp2k_basic_set_file = None
+        self.cp2k_basis_set_file = None
         self.cp2k_potential_file = None
         self.cp2k_parameter_file = None
 
@@ -41,20 +41,21 @@ class UiHelper:
         self.system_file = args.get('system_file', self.system_file)
 
     def _set_default_cp2k_basic_args(self, args: dict):
-        if self.cp2k_basic_set_file is not None:
-            args['basic_set_file'] = self.cp2k_basic_set_file
+        if self.cp2k_basis_set_file is not None:
+            args['basis_set_file'] = self.cp2k_basis_set_file
         if self.cp2k_potential_file is not None:
             args['potential_file'] = self.cp2k_potential_file
         if self.cp2k_parameter_file is not None:
             args['parameter_file'] = self.cp2k_parameter_file
 
     def _update_default_cp2k_basic_args(self, args: dict):
-        self.cp2k_basic_set_file = args.get('basic_set_file', self.cp2k_basic_set_file)
+        self.cp2k_basis_set_file = args.get('basis_set_file', self.cp2k_basis_set_file)
         self.cp2k_potential_file = args.get('potential_file', self.cp2k_potential_file)
         self.cp2k_parameter_file = args.get('parameter_file', self.cp2k_parameter_file)
 
 
     def gen_aimd_config(self, out_dir: str, **default_value):
+        os.makedirs(out_dir, exist_ok=True)
         if self.aimd_args is None:
             self.aimd_args = default_value
         self._set_default_system_file(self.aimd_args)
@@ -85,6 +86,7 @@ class UiHelper:
 
 
     def gen_train_vendors_config(self, out_dir: str, **default_value):
+        os.makedirs(out_dir, exist_ok=True)
         if self.label_explore_args is None:
             self.label_explore_args = default_value
         self._set_default_system_file(self.label_explore_args)
@@ -115,6 +117,7 @@ class UiHelper:
         asyncio.ensure_future(_task())
 
     def gen_train_config(self, out_dir: str, **default_value):
+        os.makedirs(out_dir, exist_ok=True)
         if self.train_args is None:
             self.train_args = default_value
         self._set_default_system_file(self.train_args)
@@ -148,6 +151,7 @@ class UiHelper:
         asyncio.ensure_future(_task())
 
     def gen_lammps_config(self, out_dir: str, work_dir: str, **default_value):
+        os.makedirs(out_dir, exist_ok=True)
         if self.lammps_args is None:
             self.lammps_args = default_value
         self._set_default_system_file(self.lammps_args)
@@ -231,7 +235,7 @@ class UiHelper:
         # patch for FilePicker
         return merge_dict(schema, {'schema': {'properties': {
             'system_file':    _get_file_picker(),
-            'basic_set_file': _get_file_picker(),
+            'basis_set_file': _get_file_picker(),
             'potential_file': _get_file_picker(),
             'parameter_file': _get_file_picker(),
         }}}, quiet=True)
@@ -242,7 +246,7 @@ class UiHelper:
         schema = load_json(schema_path)
         return merge_dict(schema, {'schema': {'properties': {
             'system_file':    _get_file_picker(),
-            'basic_set_file': _get_file_picker(),
+            'basis_set_file': _get_file_picker(),
             'potential_file': _get_file_picker(),
             'parameter_file': _get_file_picker(),
         }}}, quiet=True)

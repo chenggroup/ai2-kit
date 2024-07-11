@@ -26,6 +26,13 @@ class AlgorithmGroup:
         from ai2_kit.algorithm import aos_analysis
         return aos_analysis.cli_entry
 
+    def reweighting(self):
+        """
+        Reweightning toolkit
+        """
+        from ai2_kit.algorithm.reweighting import ReweightingTool
+        return ReweightingTool()
+
 
 class WorkflowGroup:
     """
@@ -49,13 +56,13 @@ class ToolGroup:
 
     @property
     def ase(self):
-        from ai2_kit.tool.ase import AseHelper
-        return AseHelper
+        from ai2_kit.tool.ase import AseTool
+        return AseTool
 
     @property
     def dpdata(self):
-        from ai2_kit.tool.dpdata import DpdataHelper
-        return DpdataHelper
+        from ai2_kit.tool.dpdata import DpdataTool
+        return DpdataTool
 
     @property
     def yaml(self):
@@ -63,18 +70,23 @@ class ToolGroup:
         return Yaml
 
     @property
-    def checkpoint(self):
-        from ai2_kit.core.checkpoint import CheckpointCmd
-        return CheckpointCmd
+    def batch(self):
+        from ai2_kit.tool.batch import BatchTool
+        return BatchTool
 
     @property
-    def batch(self):
-        from ai2_kit.tool.batch import BatchHelper
-        return BatchHelper
+    def frame(self):
+        from ai2_kit.tool.frame import FrameTool
+        return FrameTool
 
     @property
     def hpc(self):
         from ai2_kit.tool.hpc import cmd_entry
+        return cmd_entry
+
+    @property
+    def misc(self):
+        from ai2_kit.tool.misc import cmd_entry
         return cmd_entry
 
 class FeatureGroup:
@@ -103,7 +115,7 @@ class FeatureGroup:
         Spectrum specific tools.
         """
         from ai2_kit.feat.spectrum import CmdEntries
-        return CmdEntries
+        return CmdEntries()
 
 ai2_kit = Group({
     'workflow': WorkflowGroup(),

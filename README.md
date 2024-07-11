@@ -20,9 +20,11 @@ A toolkit featured _**a**rtificial **i**ntelligence × **a**b **i**nitio_ for co
 You can use the following command to install `ai2-kit`:
 
 ```bash
-pip install ai2-kit  
+# for users who just use most common features
+pip install ai2-kit
 
-ai2-kit --help
+# for users who want to use all features
+pip install ai2-kit[all]
 ```
 
 If you want to run `ai2-kit` from source, you can run the following commands in the project folder:

@@ -146,3 +146,5 @@ jupyter-book/_api
 # remove when it is ready
 tutorial/
 0*
+example/
+tests/

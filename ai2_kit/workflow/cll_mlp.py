@@ -3,7 +3,7 @@ from ai2_kit.core.artifact import ArtifactMap
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import load_yaml_files, merge_dict
 from ai2_kit.core.resource_manager import ResourceManager
-from ai2_kit.core.checkpoint import set_checkpoint_file, apply_checkpoint
+from ai2_kit.core.checkpoint import set_checkpoint_dir, apply_checkpoint
 from ai2_kit.core.pydantic import BaseModel
 from ai2_kit.domain import (
     deepmd,
@@ -15,6 +15,7 @@ from ai2_kit.domain import (
     vasp,
     constant as const,
     updater,
+    anyware,
 )
 
 from typing import Dict, List, Optional, Any
@@ -37,6 +38,7 @@ class CllWorkflowExecutorConfig(BaseExecutorConfig):
         class Explore(BaseModel):
             lammps: Optional[lammps.CllLammpsContextConfig]
             lasp: Optional[lasp.CllLaspContextConfig]
+            anyware: Optional[anyware.AnywareContextConfig]
 
         class Label(BaseModel):
             cp2k: Optional[cp2k.CllCp2kContextConfig]
@@ -69,6 +71,7 @@ class WorkflowConfig(BaseModel):
     class Explore(BaseModel):
         lammps: Optional[lammps.CllLammpsInputConfig]
         lasp: Optional[lasp.CllLaspInputConfig]
+        anyware: Optional[anyware.AnywareConfig]
 
     class Select(BaseModel):
         model_devi: selector.CllModelDeviSelectorInputConfig
@@ -105,7 +108,7 @@ def run_workflow(*config_files,
         checkpoint: checkpoint file
     """
     if checkpoint is not None:
-        set_checkpoint_file(checkpoint)
+        set_checkpoint_dir(checkpoint)
 
     config_data = load_yaml_files(*config_files)
     config = CllWorkflowConfig.parse_obj(config_data)
@@ -207,6 +210,7 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig,
                 old_dataset=[] if train_output is None else train_output.get_training_dataset(),
                 new_dataset=label_output.get_labeled_system_dataset(),
                 sel_type=shared_vars.dp_sel_type,
+                previous=[] if train_output is None else train_output.get_mlp_models(),
             )
             deepmd_context = deepmd.CllDeepmdContext(
                 path_prefix=os.path.join(iter_path_prefix, 'train-deepmd'),
@@ -256,6 +260,21 @@ async def cll_mlp_training_workflow(config: CllWorkflowConfig,
                 resource_manager=resource_manager,
             )
             explore_output = await apply_checkpoint(f'{cp_prefix}/explore-lasp')(lasp.cll_lasp)(lasp_input, lasp_context)
+
+        elif workflow_config.explore.anyware and context_config.explore.anyware:
+            anyware_input = anyware.AnywareInput(
+                config=workflow_config.explore.anyware,
+                type_map=type_map,
+                mass_map=mass_map,
+                new_system_files=new_explore_system_files,
+                dp_models={'': train_output.get_mlp_models()},
+            )
+            anyware_context = anyware.AnywareContext(
+                config=context_config.explore.anyware,
+                path_prefix=os.path.join(iter_path_prefix, 'explore-anyware'),
+                resource_manager=resource_manager,
+            )
+            explore_output = await apply_checkpoint(f'{cp_prefix}/explore-anyware')(anyware.anyware)(anyware_input, anyware_context)
 
         else:
             raise ValueError('No explore method is specified')
@@ -325,7 +344,7 @@ def precondition(workflow_cfg: WorkflowConfig) -> SharedVars:
             assert modifier is not None, 'modifier should be specified in deepmd input template for dpff mode'
             shared_vars.dp_modifier = modifier
         elif mode == 'fep-redox':
-            assert deepmd_cfg.input_template['model']['fitting_net']['numb_fparam'] == 2, 'numb_fparam should be 2 for fep-redox/fep-pka mode'
+            assert deepmd_cfg.input_template['model']['fitting_net']['numb_fparam'] == 1, 'numb_fparam should be 1 for fep-redox/fep-pka mode'
 
     lammps_cfg = workflow_cfg.explore.lammps
     if lammps_cfg is not None:
@@ -336,6 +355,7 @@ def precondition(workflow_cfg: WorkflowConfig) -> SharedVars:
             assert all([isinstance(item, list) for item in efield ]), 'EFIELD should be a list of vector'  # type: ignore
         elif mode in ['fep-redox', 'fep-pka']:
             lammps_cfg.assert_var('LAMBDA_f')
+
 
     return shared_vars
 

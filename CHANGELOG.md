@@ -1,4 +1,126 @@
 # Change Logs
+
+## v0.19.3
+* improve: dpdata: allow user to ignore broken data
+
+## v0.19.2
+* fix: dpdata eval wrong type mapping
+* improve：add label to fes graph and dump result to json file
+
+## v0.19.1
+* fix cp2k-inc for ase write_frames
+* fix out of date documents
+
+## v0.19.0
+* tesla: generate single dump file in lammps
+* tool: refactor frame tool
+
+## v0.18.5
+* frame file process command line tool
+* command line interface for reweighting algorithm
+
+## v0.18.4
+* deepmd: support `input_modifier_fn`
+
+## v0.18.3
+* lammps: use relative path to reference plumed input
+
+## v0.18.2
+* fix lammps data util for dplr
+* fix cp2k cell digit limit
+
+## v0.18.1
+* refactor: ase write_each_frame to write_frames
+
+## v0.18.0
+* feat: reweighting algorithm
+* feat: dpdata tool support eval
+* improve: support covert between ase and dpdata format
+* chore: replace `pylint` with `ruff`
+
+## v0.17.5
+* fix: redefine variable in for-loop
+
+## v0.17.4
+* fix: anyware execution
+
+## v0.17.3
+* fix: anyware output artifact
+
+## v0.17.2
+* fix: post_process_fn in anyware
+
+## v0.17.1
+* feat: cmd to write dplr lammps data
+
+## v0.17.0
+* feat: anyware for explore
+* breaking change: new checkpoint system
+
+## v0.16.1
+* cp2k: use fp32 for input data
+* lammps: support custom force field via `custom_ff` option
+
+## v0.16.0
+* ai2-cat: refine the basis set and potential selection
+* ai2-cat: support multiple basic set and potential files
+* ai2-spectr: fix wrong atom order
+
+## v0.15.11
+* fix hpc tool
+
+## v0.15.10
+* fix deepmd restart
+* improve gen lammps script tool
+
+## v0.15.9
+* fix loading cp2k viber data
+
+## v0.15.8
+* fix ai2cat cp2k data path
+
+## v0.15.7
+* fix ai2spectr entry
+
+## v0.15.6
+* fix dpdata tool
+
+## v0.15.5
+* fix dpdata read
+
+## v0.15.4
+* fix fep pka bugs
+* fix dpdata wrong arguments
+
+## v0.15.0
+* improve fep pka mode
+
+## v0.14.11
+* fix edge case of efield
+
+## v0.14.9
+* for dflow-galaxy: reference lammps data file use relative path
+
+## v0.14.8
+* feat: tool to format cp2k input
+
+## v0.14.7
+* hotfix: remove cp2k wfn if warmup step is failed
+
+## v0.14.4
+* hotfix: executor upload/download issue
+
+## v0.14.2
+* feat: temporary support for init from previous model
+
+## v0.14.1
+* refactor: make `asaplib` optional
+
+## v0.14.0
+* refactor: python remote execution solution
+* feat: upload local python package to remote
+* improvement: move some dependencies to optional 
+
 ## v0.13.2
 * improvement: refactor slurm done file
 

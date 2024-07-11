@@ -2,37 +2,31 @@ from ai2_kit.core.executor import HpcExecutor
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.util import list_split
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.checkpoint import set_checkpoint_file
+from ai2_kit.core.checkpoint import set_checkpoint_dir
 from typing import List
 import asyncio
 import os
 
-# Define remote executable functions
-def __export_remote_functions():
 
-    def process_input(n: int, base_dir: str):
-        import random
+def process_input(n: int, base_dir: str):
+    import random
 
-        task_dirs = []
-        for i in range(n):
-            task_dir = os.path.join(base_dir, str(i))
-            os.makedirs(task_dir, exist_ok=True)
-            with open(os.path.join(task_dir, 'input'), 'w') as f:
-                f.write(str(random.randint(0, 100)))
-            task_dirs.append(task_dir)
-        return task_dirs
-
-    def process_output(task_dirs: List[str]):
-        outputs = []
-        for task_dir in task_dirs:
-            with open(os.path.join(task_dir, 'output'), 'r') as f:
-                outputs.append(int(f.read().strip()))
-        return sum(outputs)
-
-    return (process_input, process_output)
+    task_dirs = []
+    for i in range(n):
+        task_dir = os.path.join(base_dir, str(i))
+        os.makedirs(task_dir, exist_ok=True)
+        with open(os.path.join(task_dir, 'input'), 'w') as f:
+            f.write(str(random.randint(0, 100)))
+        task_dirs.append(task_dir)
+    return task_dirs
 
 
-(process_input, process_output) = __export_remote_functions()
+def process_output(task_dirs: List[str]):
+    outputs = []
+    for task_dir in task_dirs:
+        with open(os.path.join(task_dir, 'output'), 'r') as f:
+            outputs.append(int(f.read().strip()))
+    return sum(outputs)
 
 
 # Define workflow
@@ -91,7 +85,7 @@ def main():
     ])
 
     # set checkpoint file so that the workflow can be resumed
-    set_checkpoint_file('square-sum-workflow.ckpt')
+    set_checkpoint_dir('square-sum-workflow.ckpt')
     # run workflow
     asyncio.run(workflow(n=10,
                          path_prefix='square-sum-workflow',

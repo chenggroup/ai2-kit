@@ -1,12 +1,9 @@
-
 class CmdEntries:
 
     @property
     def viber(self):
+        """
+        Viber specific tools.
+        """
         from .viber import cmd_entry
         return cmd_entry
-
-
-def cli_main():
-    import fire
-    fire.Fire(CmdEntries)

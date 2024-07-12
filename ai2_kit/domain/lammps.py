@@ -1,4 +1,4 @@
-from ai2_kit.core.script import BashTemplate, BashStep, BashScript
+from ai2_kit.core.script import BashTemplate, BashStep, BashScript, make_gpu_parallel_steps
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.job import gather_jobs
@@ -192,7 +192,7 @@ class CllLammpsContextConfig(BaseModel):
     script_template: BashTemplate
     lammps_cmd: str = 'lmp'
     concurrency: int = 5
-
+    multi_gpu_per_job: bool = False
 
 @dataclass
 class CllLammpsInput:
@@ -285,10 +285,16 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
     for i, steps_group in enumerate(list_split(steps, ctx.config.concurrency)):
         if not steps_group:
             continue
-        script = BashScript(
-            template=ctx.config.script_template,
-            steps=steps_group,
-        )
+        if ctx.config.multi_gpu_per_job:
+            script = BashScript(
+                template=ctx.config.script_template,
+                steps=make_gpu_parallel_steps(steps_group),
+            )
+        else:
+            script = BashScript(
+                template=ctx.config.script_template,
+                steps=steps_group,
+            )
         job = executor.submit(script.render(), cwd=tasks_dir)
         jobs.append(job)
 

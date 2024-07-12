@@ -1,5 +1,5 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
-from ai2_kit.core.script import BashScript, BashStep, BashTemplate, make_gpu_parallel_steps
+from ai2_kit.core.script import BashScript, BashStep, BashSteps, BashTemplate, make_gpu_parallel_steps
 from ai2_kit.core.job import gather_jobs
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import dict_nested_get, expand_globs, dump_json, list_split, flatten, create_fn
@@ -238,7 +238,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
         await gather_jobs([job], max_tries=2)
         logger.info(f'Deep wannier training job finished, output dir: {dw_task_dir}')
 
-    all_steps: List[list] = []
+    all_steps: List[BashSteps] = []
     # run dp training jobs
 
     for i, task_dir in enumerate(dp_task_dirs):
@@ -263,6 +263,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
 
     # submit jobs by the number of concurrency
     jobs = []
+
     for i, steps_group in enumerate(list_split(all_steps, ctx.config.concurrency)):
         if not steps_group:
             continue
@@ -271,14 +272,14 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
             script = BashScript(
                 template=ctx.config.script_template,
                 steps=make_gpu_parallel_steps(steps_group),
-            ).render()
+            )
         else:
             script = BashScript(
                 template=ctx.config.script_template,
                 steps=flatten(steps_group),
-            ).render()
+            )
 
-        job = executor.submit(script, cwd=tasks_dir)
+        job = executor.submit(script.render(), cwd=tasks_dir)
         jobs.append(job)
 
     await gather_jobs(jobs, max_tries=2)

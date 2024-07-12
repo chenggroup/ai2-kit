@@ -96,12 +96,16 @@ def _render_bash_steps(steps: BashSteps):
     return '\n\n'.join(rendered_steps)
 
 
-def make_gpu_parallel_steps(step_groups: List[BashSteps]):
+def make_gpu_parallel_steps(step_groups: List[Union[BashSteps, BashStep, str]]):
     p_steps = [
     'IFS="," read -r -a _GPUS<<< "$CUDA_VISIBLE_DEVICES"',
     '_TOTAL_GPUS=${#_GPUS[@]}',
     ]
     for i, steps in enumerate(step_groups):
+        if isinstance(steps, str) or isinstance(steps, BashStep):
+            steps = [steps]
+        assert isinstance(steps, list), f'expect list of steps, got {type(steps)}'
+
         p_steps += [
             f'_NTH_GPU=$(({i} % $_TOTAL_GPUS))',
             '_GPU=${_GPUS[$_NTH_GPU]}',

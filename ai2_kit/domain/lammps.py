@@ -192,7 +192,7 @@ class CllLammpsContextConfig(BaseModel):
     script_template: BashTemplate
     lammps_cmd: str = 'lmp'
     concurrency: int = 5
-    multi_gpu_per_job: bool = False
+    multi_gpus_per_job: bool = False
 
 @dataclass
 class CllLammpsInput:
@@ -285,7 +285,7 @@ async def cll_lammps(input: CllLammpsInput, ctx: CllLammpsContext):
     for i, steps_group in enumerate(list_split(steps, ctx.config.concurrency)):
         if not steps_group:
             continue
-        if ctx.config.multi_gpu_per_job:
+        if ctx.config.multi_gpus_per_job:
             script = BashScript(
                 template=ctx.config.script_template,
                 steps=make_gpu_parallel_steps(steps_group),

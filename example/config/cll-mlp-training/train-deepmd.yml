@@ -28,6 +28,9 @@ executors:
           # Optional, specify the command to run deepmd-kit, default: dp.
           dp_cmd:
 
+          # Optional, set this to true if you have multiple gpu cards in a batch job,  default: false
+          multi_gpus_per_job:
+
 workflow:
   train:
     deepmd:

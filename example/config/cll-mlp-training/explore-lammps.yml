@@ -30,6 +30,9 @@ executors:
           # Optional, specify the number of concurrent tasks, default: 0 (no limit)
           concurrency:
 
+          # Optional, set this to true if you have multiple gpu cards in a batch job,  default: false
+          multi_gpus_per_job:
+
 workflow:
   explore:
     lammps:

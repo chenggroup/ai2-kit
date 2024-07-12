@@ -93,7 +93,8 @@ def _render_bash_steps(steps: BashSteps):
         else:
             assert isinstance(step, BashStep)
             rendered_steps.append(step.render())
-    return '\n\n'.join(rendered_steps)
+    rendered_steps.append('')
+    return '\n'.join(rendered_steps)
 
 
 def make_gpu_parallel_steps(step_groups: List[Union[BashSteps, BashStep, str]]):

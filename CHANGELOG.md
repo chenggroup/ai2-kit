@@ -1,4 +1,7 @@
 # Change Logs
+## v0.19.4
+* fix: hpc tool typo
+* feat: support use multiple gpus in the same batch job
 
 ## v0.19.3
 * improve: dpdata: allow user to ignore broken data

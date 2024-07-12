@@ -1,6 +1,5 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
-from ai2_kit.core.script import BashTemplate
-from ai2_kit.core.script import BashScript, BashStep
+from ai2_kit.core.script import BashScript, BashStep, BashTemplate, make_gpu_parallel_steps
 from ai2_kit.core.job import gather_jobs
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.util import dict_nested_get, expand_globs, dump_json, list_split, flatten, create_fn
@@ -269,12 +268,14 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
             continue
 
         if ctx.config.multi_gpu_per_job:
-
-                ...
+            script = BashScript(
+                template=ctx.config.script_template,
+                steps=make_gpu_parallel_steps(steps_group),
+            ).render()
         else:
             script = BashScript(
                 template=ctx.config.script_template,
-                steps=flatten(steps_group)
+                steps=flatten(steps_group),
             ).render()
 
         job = executor.submit(script, cwd=tasks_dir)

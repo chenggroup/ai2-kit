@@ -94,3 +94,24 @@ def _render_bash_steps(steps: BashSteps):
             assert isinstance(step, BashStep)
             rendered_steps.append(step.render())
     return '\n\n'.join(rendered_steps)
+
+
+def make_gpu_parallel_steps(step_groups: List[BashSteps]):
+    p_steps = [
+    'IFS="," read -r -a _GPUS<<< "$CUDA_VISIBLE_DEVICES"',
+    '_TOTAL_GPUS=${#_GPUS[@]}',
+    ]
+    for i, steps in enumerate(step_groups):
+        p_steps += [
+            f'_NTH_GPU=$(({i} % $_TOTAL_GPUS))',
+            '_GPU=${_GPUS[$_NTH_GPU]}',
+            'touch "_gpu_$_GPU.lock"',
+            '{',
+            'export CUDA_VISIBLE_DEVICES=$_GPU',
+            'flock 3',
+            f'echo "run steps group {i} on $_GPU, CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"',
+            *steps,
+            '} 3<"_gpu_$_GPU.lock" &',
+        ]
+    p_steps.append('wait')
+    return p_steps

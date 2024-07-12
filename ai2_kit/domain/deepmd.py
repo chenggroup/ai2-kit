@@ -126,6 +126,7 @@ class CllDeepmdContextConfig(BaseModel):
     script_template: BashTemplate
     dp_cmd: str = 'dp'
     concurrency: int = 5
+    multi_gpu_per_job: bool = False
 
 
 @dataclass
@@ -266,11 +267,17 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
     for i, steps_group in enumerate(list_split(all_steps, ctx.config.concurrency)):
         if not steps_group:
             continue
-        script = BashScript(
-            template=ctx.config.script_template,
-            steps=flatten(steps_group)
-        )
-        job = executor.submit(script.render(), cwd=tasks_dir)
+
+        if ctx.config.multi_gpu_per_job:
+
+                ...
+        else:
+            script = BashScript(
+                template=ctx.config.script_template,
+                steps=flatten(steps_group)
+            ).render()
+
+        job = executor.submit(script, cwd=tasks_dir)
         jobs.append(job)
 
     await gather_jobs(jobs, max_tries=2)

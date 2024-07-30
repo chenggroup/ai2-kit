@@ -237,7 +237,12 @@ def _get_lumped_wacent_poses_rel(stc: Atoms, elem_symbol, wacent_symbol, cutoff=
     #each row get distance and select the candidates
     lumped_wacent_poses_rel = []
     for elem_entry, dist_vec in enumerate(dist_mat):
-        bool_vec = (dist_vec < cutoff)
+        if cutoff == None:
+            mindist_index = np.argpartition(np.array(dist_vec), elem_symbol)[elem_symbol:]
+            bool_vec = np.full(dist_vec.shape, False)
+            bool_vec[mindist_index] = True
+        else:
+            bool_vec = (dist_vec < cutoff)
         cn = np.sum(bool_vec)
 
         # modify neighbor wannier centers coords relative to the center element atom
@@ -250,9 +255,16 @@ def _get_lumped_wacent_poses_rel(stc: Atoms, elem_symbol, wacent_symbol, cutoff=
             logger.warning(f"Coordination number of {elem_symbol} is {cn}, expected {expected_cn}")
 
         lumped_wacent_poses_rel.append(lumped_wacent_pos_rel)
+
     lumped_wacent_poses_rel = np.stack(lumped_wacent_poses_rel)
     return lumped_wacent_poses_rel
 
+def _is_X(item):
+    if not isinstance(item,str): 
+        return False
+    if item == 'X': 
+        return True
+    return False
 
 def _can_retain(item,elem_symbol):
     if not isinstance(item, str):
@@ -260,7 +272,6 @@ def _can_retain(item,elem_symbol):
     if item != elem_symbol:
         return True
     return False
-
 
 def _set_lumped_wfc(stc_list, lumped_dict, cutoff, wacent_symbol, to_polar = True):
     """
@@ -278,7 +289,7 @@ def _set_lumped_wfc(stc_list, lumped_dict, cutoff, wacent_symbol, to_polar = Tru
                 out_elem_symbol = list(lumped_wacent_poses_rel)
                 x_symbol = [item if _can_retain(item,elem_symbol) else out_elem_symbol.pop(0) for item in x_symbol]
 
-            x_symbol = [item for item in x_symbol if item != 'X']
+            x_symbol = [item for item in x_symbol if not _is_X(item)]
             x_symbol = [np.array([0.,0.,0.]) if isinstance(item, str) else item for item in x_symbol]
             x_symbol = np.concatenate(x_symbol ,axis = 0)
             X_pos.append(np.array(x_symbol))

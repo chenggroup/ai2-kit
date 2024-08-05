@@ -16,7 +16,16 @@ from ai2_kit.domain import (
     constant as const,
     updater,
     anyware,
+
+    lammps as _lammps,
+    lasp as _lasp,
+    cp2k as _cp2k,
+    vasp as _vasp,
+    anyware as _anyware,
 )
+
+
+
 
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
@@ -36,13 +45,13 @@ class CllWorkflowExecutorConfig(BaseExecutorConfig):
             deepmd: deepmd.CllDeepmdContextConfig
 
         class Explore(BaseModel):
-            lammps: Optional[lammps.CllLammpsContextConfig]
-            lasp: Optional[lasp.CllLaspContextConfig]
-            anyware: Optional[anyware.AnywareContextConfig]
+            lammps: Optional[_lammps.CllLammpsContextConfig] = None
+            lasp: Optional[_lasp.CllLaspContextConfig] = None
+            anyware: Optional[_anyware.AnywareContextConfig] = None
 
         class Label(BaseModel):
-            cp2k: Optional[cp2k.CllCp2kContextConfig]
-            vasp: Optional[vasp.CllVaspContextConfig]
+            cp2k: Optional[_cp2k.CllCp2kContextConfig] = None
+            vasp: Optional[_vasp.CllVaspContextConfig] = None
 
         train: Train
         explore: Explore
@@ -55,23 +64,23 @@ class WorkflowConfig(BaseModel):
     class General(BaseModel):
         type_map: List[str]
         mass_map: List[float]
-        sel_type: Optional[List[str]]
+        sel_type: Optional[List[str]] = None
 
         max_iters: int = 1
         mode: iface.TRAINING_MODE = 'default'
         update_explore_systems: bool = False
 
     class Label(BaseModel):
-        cp2k: Optional[cp2k.CllCp2kInputConfig]
-        vasp: Optional[vasp.CllVaspInputConfig]
+        cp2k: Optional[_cp2k.CllCp2kInputConfig] = None
+        vasp: Optional[_vasp.CllVaspInputConfig] = None
 
     class Train(BaseModel):
         deepmd: deepmd.CllDeepmdInputConfig
 
     class Explore(BaseModel):
-        lammps: Optional[lammps.CllLammpsInputConfig]
-        lasp: Optional[lasp.CllLaspInputConfig]
-        anyware: Optional[anyware.AnywareConfig]
+        lammps: Optional[_lammps.CllLammpsInputConfig] = None
+        lasp: Optional[_lasp.CllLaspInputConfig] = None
+        anyware: Optional[_anyware.AnywareConfig] = None
 
     class Select(BaseModel):
         model_devi: selector.CllModelDeviSelectorInputConfig

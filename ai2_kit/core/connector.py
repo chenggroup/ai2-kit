@@ -13,7 +13,7 @@ import glob
 
 class SshConfig(BaseModel):
     host: str
-    gateway: Optional['SshConfig']
+    gateway: Optional['SshConfig'] = None
 
 
 class BaseConnector(ABC):

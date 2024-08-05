@@ -36,9 +36,9 @@ class QueueSystemConfig(BaseModel):
         qstat_bin: str = 'qstat'
         qdel_bin: str = 'qdel'
 
-    slurm: Optional[Slurm]
-    lsf: Optional[LSF]
-    pbs: Optional[PBS]
+    slurm: Optional[Slurm] = None
+    lsf: Optional[LSF] = None
+    pbs: Optional[PBS] = None
 
 
 class BaseQueueSystem(ABC):

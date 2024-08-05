@@ -21,7 +21,7 @@ from .pydantic import BaseModel
 logger = get_logger(__name__)
 
 class BaseExecutorConfig(BaseModel):
-    ssh: Optional[SshConfig]
+    ssh: Optional[SshConfig] = None
     queue_system: QueueSystemConfig
     work_dir: str
     python_cmd: str = 'python'

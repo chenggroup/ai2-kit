@@ -6,7 +6,7 @@ from ai2_kit.core.util import list_split, dict_nested_get, dump_json, dump_text
 from ai2_kit.core.pydantic import BaseModel
 
 from typing import List, Literal, Optional, Mapping, Sequence, Any
-from pydantic import validator, root_validator
+from pydantic import field_validator, model_validator
 from dataclasses import dataclass
 from string import Template
 from allpairspy import AllPairs
@@ -136,7 +136,7 @@ class CllLammpsInputConfig(BaseModel):
     fep_opts: FepOptions = FepOptions()
 
 
-    @validator('explore_vars', pre=True)
+    @field_validator('explore_vars')
     @classmethod
     def validate_explore_variants(cls, value):
         if not isinstance(value, dict):
@@ -156,7 +156,7 @@ class CllLammpsInputConfig(BaseModel):
         return result
 
 
-    @root_validator()
+    @model_validator(mode='before')
     @classmethod
     def validate_domain(cls, values):
         ensemble = values.get('ensemble')

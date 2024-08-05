@@ -1,4 +1,8 @@
 # Change Logs
+## v0.20.0
+* add netCDF
+* upgrade pydantic to 2.8.2
+
 ## v0.19.4
 * fix: hpc tool typo
 * feat: support use multiple gpus in the same batch job

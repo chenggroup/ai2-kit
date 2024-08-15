@@ -55,7 +55,7 @@ ai2-kit tool ase read h2o_64.aimd.xyz --index ':900:5' - set_cell "[12.42,12.42,
 ai2-kit tool ase read h2o_64.aimd.xyz --index '900::5' - set_cell "[12.42,12.42,12.42,90,90,90]" - write data/validation.xyz
 
 # 抽取用于初始结构搜索的数据，间隔 100 帧抽取
-ai2-kit tool ase read h2o_64.aimd.xyz --index '::100' - set_cell "[12.42,12.42,12.42,90,90,90]" - write_each_frame "./data/explore/POSCAR-{i:04d}" --format vasp
+ai2-kit tool ase read h2o_64.aimd.xyz --index '::100' - set_cell "[12.42,12.42,12.42,90,90,90]" - write_frames "./data/explore/POSCAR-{i:04d}" --format vasp
  ```
 
 

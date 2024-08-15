@@ -15,19 +15,19 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -38,9 +38,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -76,28 +76,23 @@ const thebe_selector_output = ".output, .cell_output"
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -119,12 +114,20 @@ const thebe_selector_output = ".output, .cell_output"
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -140,6 +143,8 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 
+  
+    
   
 
 <a class="navbar-brand logo" href="../intro.html">
@@ -195,16 +200,21 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../doc/manual/cll-workflow.zh.html">CLL 势函数训练工作流</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../doc/manual/hpc-executor.zh.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../doc/manual/references.html">References</a></li>
+</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">ai2_kit</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="ai2_kit.html">ai2_kit package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.algorithm.html">ai2_kit.algorithm package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">ai2_kit</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="ai2_kit.html">ai2_kit package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
 </ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.core.html">ai2_kit.core package</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.core.html">ai2_kit.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.artifact.html">ai2_kit.core.artifact module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.checkpoint.html">ai2_kit.core.checkpoint module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.cmd.html">ai2_kit.core.cmd module</a></li>
@@ -219,9 +229,10 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
-</li>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
-<li class="toctree-l3 current active has-children"><a class="reference internal" href="ai2_kit.domain.html">ai2_kit.domain package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="ai2_kit.domain.html">ai2_kit.domain package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
@@ -236,30 +247,39 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.vasp.html">ai2_kit.domain.vasp module</a></li>
 </ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.feat.html">ai2_kit.feat package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.feat.html">ai2_kit.feat package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.feat.catalysis.html">ai2_kit.feat.catalysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.feat.spectrum.html">ai2_kit.feat.spectrum package</a></li>
 </ul>
-</li>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.lib.html">ai2_kit.lib package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.lib.constant.html">ai2_kit.lib.constant module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.lib.plumed.html">ai2_kit.lib.plumed module</a></li>
+</ul>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="ai2_kit.res.html">ai2_kit.res package</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.tool.html">ai2_kit.tool package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.tool.html">ai2_kit.tool package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.batch.html">ai2_kit.tool.batch module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
 </ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.workflow.html">ai2_kit.workflow package</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.workflow.html">ai2_kit.workflow package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.workflow.cll_mlp.html">ai2_kit.workflow.cll_mlp module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.workflow.fep_mlp.html">ai2_kit.workflow.fep_mlp module</a></li>
 </ul>
-</li>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="ai2_kit.main.html">ai2_kit.main module</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
-</li>
+</details></li>
 </ul>
 
     </div>
@@ -275,7 +295,7 @@ const thebe_selector_output = ".output, .cell_output"
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -284,7 +304,7 @@ const thebe_selector_output = ".output, .cell_output"
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
@@ -416,10 +436,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -427,7 +447,7 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
@@ -455,195 +475,10 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
-  <section id="module-ai2_kit.domain.selector">
-<span id="ai2-kit-domain-selector-module"></span><h1>ai2_kit.domain.selector module<a class="headerlink" href="#module-ai2_kit.domain.selector" title="Permalink to this heading">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDevSelectorContext">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.selector.</span></span><span class="sig-name descname"><span class="pre">CllModelDevSelectorContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.core.resource_manager.html#ai2_kit.core.resource_manager.ResourceManager" title="ai2_kit.core.resource_manager.ResourceManager"><span class="pre">ai2_kit.core.resource_manager.ResourceManager</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/selector.html#CllModelDevSelectorContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDevSelectorContext" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ai2_kit.domain.iface.html#ai2_kit.domain.iface.BaseCllContext" title="ai2_kit.domain.iface.BaseCllContext"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCllContext</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDevSelectorContext.path_prefix">
-<span class="sig-name descname"><span class="pre">path_prefix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDevSelectorContext.path_prefix" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDevSelectorContext.resource_manager">
-<span class="sig-name descname"><span class="pre">resource_manager</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ai2_kit.core.resource_manager.html#ai2_kit.core.resource_manager.ResourceManager" title="ai2_kit.core.resource_manager.ResourceManager"><span class="pre">ResourceManager</span></a></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDevSelectorContext.resource_manager" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInput">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.selector.</span></span><span class="sig-name descname"><span class="pre">CllModelDeviSelectorInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig" title="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig"><span class="pre">ai2_kit.domain.selector.CllModelDeviSelectorInputConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_devi_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">ai2_kit.core.artifact.Artifact</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_devi_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/selector.html#CllModelDeviSelectorInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInput" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInput.config">
-<span class="sig-name descname"><span class="pre">config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig" title="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig"><span class="pre">CllModelDeviSelectorInputConfig</span></a></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInput.config" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInput.model_devi_data">
-<span class="sig-name descname"><span class="pre">model_devi_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInput.model_devi_data" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInput.model_devi_file">
-<span class="sig-name descname"><span class="pre">model_devi_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInput.model_devi_file" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInput.set_model_devi_dataset">
-<span class="sig-name descname"><span class="pre">set_model_devi_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/selector.html#CllModelDeviSelectorInput.set_model_devi_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInput.set_model_devi_dataset" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInput.type_map">
-<span class="sig-name descname"><span class="pre">type_map</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInput.type_map" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.selector.</span></span><span class="sig-name descname"><span class="pre">CllModelDeviSelectorInputConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_trust_lo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_trust_hi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">65535.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_explore_system_q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asap_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions" title="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions"><span class="pre">AsapOptions</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">screening_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_decent_per_traj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/selector.html#CllModelDeviSelectorInputConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ai2_kit.core.pydantic.html#ai2_kit.core.pydantic.BaseModel" title="ai2_kit.core.pydantic.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
-<dl class="py class">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AsapOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit_per_cluster</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_by_ssw_energy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'soap':</span> <span class="pre">{'crossover':</span> <span class="pre">False,</span> <span class="pre">'element_wise':</span> <span class="pre">False,</span> <span class="pre">'l_max':</span> <span class="pre">6,</span> <span class="pre">'n_max':</span> <span class="pre">6,</span> <span class="pre">'preset':</span> <span class="pre">'minimal',</span> <span class="pre">'r_cut':</span> <span class="pre">3.5,</span> <span class="pre">'rbf':</span> <span class="pre">'gto',</span> <span class="pre">'reducer_type':</span> <span class="pre">'average',</span> <span class="pre">'sigma':</span> <span class="pre">0.5,</span> <span class="pre">'zeta':</span> <span class="pre">1}}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_reducer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'pca':</span> <span class="pre">{'parameter':</span> <span class="pre">{'n_components':</span> <span class="pre">3,</span> <span class="pre">'scalecenter':</span> <span class="pre">True},</span> <span class="pre">'type':</span> <span class="pre">'PCA'}}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'dbscan':</span> <span class="pre">{}}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/selector.html#CllModelDeviSelectorInputConfig.AsapOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ai2_kit.core.pydantic.html#ai2_kit.core.pydantic.BaseModel" title="ai2_kit.core.pydantic.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.cluster">
-<span class="sig-name descname"><span class="pre">cluster</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.cluster" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.descriptor">
-<span class="sig-name descname"><span class="pre">descriptor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.descriptor" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.dim_reducer">
-<span class="sig-name descname"><span class="pre">dim_reducer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.dim_reducer" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.disable">
-<span class="sig-name descname"><span class="pre">disable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.disable" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.limit_per_cluster">
-<span class="sig-name descname"><span class="pre">limit_per_cluster</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.limit_per_cluster" title="Permalink to this definition">#</a></dt>
-<dd><p>limit the number of structures to be selected from the same cluster</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.sort_by_ssw_energy">
-<span class="sig-name descname"><span class="pre">sort_by_ssw_energy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions.sort_by_ssw_energy" title="Permalink to this definition">#</a></dt>
-<dd><p>sorted the structures by ssw_energy in each cluster</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.asap_options">
-<span class="sig-name descname"><span class="pre">asap_options</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions" title="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.AsapOptions"><span class="pre">AsapOptions</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.asap_options" title="Permalink to this definition">#</a></dt>
-<dd><p>options for ASAP to further select candidates</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.f_trust_hi">
-<span class="sig-name descname"><span class="pre">f_trust_hi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.f_trust_hi" title="Permalink to this definition">#</a></dt>
-<dd><p>the upper bound of model_devi score to select the structure for labeling</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.f_trust_lo">
-<span class="sig-name descname"><span class="pre">f_trust_lo</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.f_trust_lo" title="Permalink to this definition">#</a></dt>
-<dd><p>the lower bound of model_devi score to select the structure for labeling</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.max_decent_per_traj">
-<span class="sig-name descname"><span class="pre">max_decent_per_traj</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.max_decent_per_traj" title="Permalink to this definition">#</a></dt>
-<dd><p>limit the max number of decent structures per trajectory, -1 means unlimited</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.new_explore_system_q">
-<span class="sig-name descname"><span class="pre">new_explore_system_q</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.new_explore_system_q" title="Permalink to this definition">#</a></dt>
-<dd><p>the quantile of model_devi score to select the structure for next round of exploration</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.screening_fn">
-<span class="sig-name descname"><span class="pre">screening_fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.screening_fn" title="Permalink to this definition">#</a></dt>
-<dd><p>the function to screen the candidates, e.g
-“lambda x: x[‘ssw_energy’] &lt; -1000”</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.workers">
-<span class="sig-name descname"><span class="pre">workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig.workers" title="Permalink to this definition">#</a></dt>
-<dd><p>number of workers to run the analysis</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorOutput">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.selector.</span></span><span class="sig-name descname"><span class="pre">CllModelDeviSelectorOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">candidates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">ai2_kit.core.artifact.Artifact</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passing_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_explore_systems</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">ai2_kit.core.artifact.Artifact</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/selector.html#CllModelDeviSelectorOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorOutput" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ai2_kit.domain.iface.html#ai2_kit.domain.iface.ICllSelectorOutput" title="ai2_kit.domain.iface.ICllSelectorOutput"><code class="xref py py-class docutils literal notranslate"><span class="pre">ICllSelectorOutput</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorOutput.candidates">
-<span class="sig-name descname"><span class="pre">candidates</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorOutput.candidates" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorOutput.get_model_devi_dataset">
-<span class="sig-name descname"><span class="pre">get_model_devi_dataset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/selector.html#CllModelDeviSelectorOutput.get_model_devi_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorOutput.get_model_devi_dataset" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorOutput.get_new_explore_systems">
-<span class="sig-name descname"><span class="pre">get_new_explore_systems</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/ai2_kit/domain/selector.html#CllModelDeviSelectorOutput.get_new_explore_systems"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorOutput.get_new_explore_systems" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorOutput.get_passing_rate">
-<span class="sig-name descname"><span class="pre">get_passing_rate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/ai2_kit/domain/selector.html#CllModelDeviSelectorOutput.get_passing_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorOutput.get_passing_rate" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorOutput.new_explore_systems">
-<span class="sig-name descname"><span class="pre">new_explore_systems</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorOutput.new_explore_systems" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.CllModelDeviSelectorOutput.passing_rate">
-<span class="sig-name descname"><span class="pre">passing_rate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ai2_kit.domain.selector.CllModelDeviSelectorOutput.passing_rate" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.bulk_select_distinct_structures">
-<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.selector.</span></span><span class="sig-name descname"><span class="pre">bulk_select_distinct_structures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">candidates:</span> <span class="pre">~typing.List[~ai2_kit.core.artifact.__ArtifactDict.&lt;locals&gt;.ArtifactDict],</span> <span class="pre">descriptor_opt:</span> <span class="pre">dict,</span> <span class="pre">dim_reducer_opt:</span> <span class="pre">dict,</span> <span class="pre">cluster_opt:</span> <span class="pre">dict,</span> <span class="pre">type_map:</span> <span class="pre">~typing.List[str],</span> <span class="pre">work_dir:</span> <span class="pre">str,</span> <span class="pre">limit_per_cluster:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">-1,</span> <span class="pre">sort_by_energy:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">workers:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">4</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ArtifactDict]</span></span></span><a class="headerlink" href="#ai2_kit.domain.selector.bulk_select_distinct_structures" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.bulk_select_structures_by_model_devi">
-<span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.selector.</span></span><span class="sig-name descname"><span class="pre">bulk_select_structures_by_model_devi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model_devi_outputs:</span> <span class="pre">~typing.List[~ai2_kit.core.artifact.__ArtifactDict.&lt;locals&gt;.ArtifactDict],</span> <span class="pre">model_devi_file:</span> <span class="pre">str,</span> <span class="pre">f_trust_lo:</span> <span class="pre">float,</span> <span class="pre">f_trust_hi:</span> <span class="pre">float,</span> <span class="pre">new_explore_system_q:</span> <span class="pre">float,</span> <span class="pre">type_map:</span> <span class="pre">~typing.List[str],</span> <span class="pre">work_dir:</span> <span class="pre">str,</span> <span class="pre">max_decent_per_traj:</span> <span class="pre">int,</span> <span class="pre">screening_fn:</span> <span class="pre">~typing.Optional[str],</span> <span class="pre">workers:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">4</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ArtifactDict],</span> <span class="pre">dict]]</span></span></span><a class="headerlink" href="#ai2_kit.domain.selector.bulk_select_structures_by_model_devi" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ai2_kit.domain.selector.cll_model_devi_selector">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.domain.selector.</span></span><span class="sig-name descname"><span class="pre">cll_model_devi_selector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ai2_kit.domain.selector.CllModelDeviSelectorInput" title="ai2_kit.domain.selector.CllModelDeviSelectorInput"><span class="pre">CllModelDeviSelectorInput</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ai2_kit.domain.selector.CllModelDevSelectorContext" title="ai2_kit.domain.selector.CllModelDevSelectorContext"><span class="pre">CllModelDevSelectorContext</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/domain/selector.html#cll_model_devi_selector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.domain.selector.cll_model_devi_selector" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="ai2-kit-domain-selector-module">
+<h1>ai2_kit.domain.selector module<a class="headerlink" href="#ai2-kit-domain-selector-module" title="Permalink to this heading">#</a></h1>
 </section>
 
     <script type="text/x-thebe-config">
@@ -673,7 +508,7 @@ document.write(`
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -744,8 +579,8 @@ By weihong.xu
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

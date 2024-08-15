@@ -9,6 +9,7 @@ Submodules
 
    ai2_kit.algorithm.aos_analysis
    ai2_kit.algorithm.proton_transfer
+   ai2_kit.algorithm.reweighting
 
 Module contents
 ---------------

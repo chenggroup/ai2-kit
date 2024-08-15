@@ -14,19 +14,19 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -37,9 +37,9 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
@@ -73,28 +73,23 @@ const thebe_selector_output = ".output, .cell_output"
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -116,12 +111,22 @@ const thebe_selector_output = ".output, .cell_output"
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -137,6 +142,8 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 
+  
+    
   
 
 <a class="navbar-brand logo" href="../../../intro.html">
@@ -192,16 +199,21 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/cll-workflow.zh.html">CLL 势函数训练工作流</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/hpc-executor.zh.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/references.html">References</a></li>
+</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
 </ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.core.html">ai2_kit.core package</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.core.html">ai2_kit.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.artifact.html">ai2_kit.core.artifact module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.checkpoint.html">ai2_kit.core.checkpoint module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.cmd.html">ai2_kit.core.cmd module</a></li>
@@ -216,9 +228,10 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
-</li>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
@@ -233,30 +246,39 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.vasp.html">ai2_kit.domain.vasp module</a></li>
 </ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.feat.html">ai2_kit.feat package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.feat.html">ai2_kit.feat package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.feat.catalysis.html">ai2_kit.feat.catalysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.feat.spectrum.html">ai2_kit.feat.spectrum package</a></li>
 </ul>
-</li>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.lib.html">ai2_kit.lib package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.lib.constant.html">ai2_kit.lib.constant module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.lib.plumed.html">ai2_kit.lib.plumed module</a></li>
+</ul>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.res.html">ai2_kit.res package</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.tool.html">ai2_kit.tool package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.tool.html">ai2_kit.tool package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.batch.html">ai2_kit.tool.batch module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
 </ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.workflow.html">ai2_kit.workflow package</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.workflow.html">ai2_kit.workflow package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.workflow.cll_mlp.html">ai2_kit.workflow.cll_mlp module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.workflow.fep_mlp.html">ai2_kit.workflow.fep_mlp module</a></li>
 </ul>
-</li>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.main.html">ai2_kit.main module</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
-</li>
+</details></li>
 </ul>
 
     </div>
@@ -272,7 +294,7 @@ const thebe_selector_output = ".output, .cell_output"
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -281,7 +303,7 @@ const thebe_selector_output = ".output, .cell_output"
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
@@ -365,10 +387,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -376,7 +398,7 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
@@ -404,25 +426,20 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <h1>Source code for ai2_kit.core.checkpoint</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">NamedTuple</span>
 <span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Lock</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">cloudpickle</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">fnmatch</span>
 
 <span class="kn">from</span> <span class="nn">.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">to_awaitable</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">to_awaitable</span><span class="p">,</span> <span class="n">ensure_dir</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-
-<span class="n">_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
-<span class="n">_checkpoint_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">_checkpoint_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 
 <div class="viewcode-block" id="FnInfo"><a class="viewcode-back" href="../../../_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.FnInfo">[docs]</a><span class="k">class</span> <span class="nc">FnInfo</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
@@ -431,19 +448,107 @@ document.write(`
     <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="n">call_site</span><span class="p">:</span> <span class="nb">str</span></div>
 
-
 <span class="n">KeyFn</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">FnInfo</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
-
 <span class="n">EMPTY</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
 
+<div class="viewcode-block" id="CheckpointService"><a class="viewcode-back" href="../../../_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.CheckpointService">[docs]</a><span class="k">class</span> <span class="nc">CheckpointService</span><span class="p">:</span>
 
-<div class="viewcode-block" id="set_checkpoint_file"><a class="viewcode-back" href="../../../_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.set_checkpoint_file">[docs]</a><span class="k">def</span> <span class="nf">set_checkpoint_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="k">global</span> <span class="n">_checkpoint_file</span>
-    <span class="k">if</span> <span class="n">_checkpoint_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-            <span class="s2">&quot;checkpoint path has been set to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_checkpoint_file</span><span class="p">))</span>
-    <span class="n">_checkpoint_file</span> <span class="o">=</span> <span class="n">path</span>
-    <span class="n">_load_checkpoint</span><span class="p">()</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_dir</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+
+<div class="viewcode-block" id="CheckpointService.set_checkpoint_dir"><a class="viewcode-back" href="../../../_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.CheckpointService.set_checkpoint_dir">[docs]</a>    <span class="k">def</span> <span class="nf">set_checkpoint_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checkpoint_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_dir</span> <span class="o">=</span> <span class="n">checkpoint_dir</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;ai2-kit use directory as checkpoint since 0.17.0&quot;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+<div class="viewcode-block" id="CheckpointService.apply_checkpoint"><a class="viewcode-back" href="../../../_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.CheckpointService.apply_checkpoint">[docs]</a>    <span class="k">def</span> <span class="nf">apply_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key_fn</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">KeyFn</span><span class="p">],</span> <span class="n">disable</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">call_site</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getframeinfo</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Callable</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">_checkpoint</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+
+            <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="n">fn_info</span> <span class="o">=</span> <span class="n">FnInfo</span><span class="p">(</span>
+                    <span class="n">fn_name</span><span class="o">=</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span>
+                    <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
+                    <span class="n">call_site</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">call_site</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">call_site</span><span class="o">.</span><span class="n">lineno</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">key</span> <span class="o">=</span> <span class="n">key_fn</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key_fn</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">key_fn</span><span class="p">(</span><span class="n">fn_info</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">disable</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+                <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_checkpoint</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ret</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">EMPTY</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hit checkpoint: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">ret</span>
+
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isawaitable</span><span class="p">(</span><span class="n">ret</span><span class="p">):</span>
+                    <span class="k">async</span> <span class="k">def</span> <span class="nf">_wrap_fn</span><span class="p">():</span>
+                        <span class="n">_ret</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ret</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_set_checkpoint</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">_ret</span><span class="p">,</span> <span class="n">fn_info</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_ret</span>
+                    <span class="k">return</span> <span class="n">_wrap_fn</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_set_checkpoint</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">ret</span><span class="p">,</span> <span class="n">fn_info</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">ret</span>
+
+            <span class="k">return</span> <span class="n">wrapper</span> <span class="c1"># type: ignore</span>
+        <span class="k">return</span> <span class="n">_checkpoint</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+                <span class="n">checkpoint_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_dir</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">checkpoint_file</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">EMPTY</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">checkpoint_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">cloudpickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;is_awaitable&#39;</span><span class="p">]:</span>
+                    <span class="k">return</span> <span class="n">to_awaitable</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s1">&#39;return&#39;</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;return&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fail to get checkpoint: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">EMPTY</span>
+
+
+    <span class="k">def</span> <span class="nf">_set_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">FnInfo</span><span class="p">,</span> <span class="n">is_awaitable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+                <span class="c1"># args, kwargs may contain unpickable objects</span>
+                <span class="n">_checkpoint_data</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;return&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+                    <span class="s1">&#39;is_awaitable&#39;</span><span class="p">:</span> <span class="n">is_awaitable</span><span class="p">,</span>
+                    <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s1">&#39;fn_name&#39;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">fn_name</span><span class="p">,</span>
+                        <span class="s1">&#39;call_site&#39;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">call_site</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="n">checkpoint_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_dir</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="n">ensure_dir</span><span class="p">(</span><span class="n">checkpoint_file</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">checkpoint_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">_checkpoint_data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Fail to set checkpoint&#39;</span><span class="p">)</span></div>
+
+
+<span class="n">checkpoint_service</span> <span class="o">=</span> <span class="n">CheckpointService</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="set_checkpoint_dir"><a class="viewcode-back" href="../../../_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.set_checkpoint_dir">[docs]</a><span class="k">def</span> <span class="nf">set_checkpoint_dir</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">checkpoint_service</span><span class="o">.</span><span class="n">set_checkpoint_dir</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="apply_checkpoint"><a class="viewcode-back" href="../../../_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.apply_checkpoint">[docs]</a><span class="k">def</span> <span class="nf">apply_checkpoint</span><span class="p">(</span><span class="n">key_fn</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">KeyFn</span><span class="p">],</span> <span class="n">disable</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
@@ -461,147 +566,7 @@ document.write(`
 <span class="sd">    &gt;&gt;&gt; checkpoint(&#39;task_1+2&#39;)(task_fn)(1, 2)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">call_site</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getframeinfo</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-
-    <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Callable</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">_checkpoint</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
-
-        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="n">fn_info</span> <span class="o">=</span> <span class="n">FnInfo</span><span class="p">(</span>
-                <span class="n">fn_name</span><span class="o">=</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span>
-                <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
-                <span class="n">call_site</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">call_site</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">call_site</span><span class="o">.</span><span class="n">lineno</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-            <span class="p">)</span>
-
-            <span class="n">key</span> <span class="o">=</span> <span class="n">key_fn</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key_fn</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">key_fn</span><span class="p">(</span><span class="n">fn_info</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">disable</span> <span class="ow">or</span> <span class="n">_checkpoint_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-            <span class="n">ret</span> <span class="o">=</span> <span class="n">_get_checkpoint</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">ret</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">EMPTY</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">ret</span>
-
-            <span class="n">ret</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isawaitable</span><span class="p">(</span><span class="n">ret</span><span class="p">):</span>
-                <span class="k">async</span> <span class="k">def</span> <span class="nf">_wrap_fn</span><span class="p">():</span>
-                    <span class="n">_ret</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ret</span>
-                    <span class="n">_set_checkpoint</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">_ret</span><span class="p">,</span> <span class="n">fn_info</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">_ret</span>
-                <span class="k">return</span> <span class="n">_wrap_fn</span><span class="p">()</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">_set_checkpoint</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">ret</span><span class="p">,</span> <span class="n">fn_info</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">ret</span>
-
-        <span class="k">return</span> <span class="n">wrapper</span> <span class="c1"># type: ignore</span>
-    <span class="k">return</span> <span class="n">_checkpoint</span></div>
-
-
-<span class="k">def</span> <span class="nf">_load_checkpoint</span><span class="p">():</span>
-    <span class="k">global</span> <span class="n">_checkpoint_data</span>
-    <span class="k">if</span> <span class="n">_checkpoint_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span>
-    <span class="k">assert</span> <span class="n">_checkpoint_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;_checkpoint_path should not be None!&#39;</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">_checkpoint_file</span><span class="p">):</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">_checkpoint_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">_checkpoint_data</span> <span class="o">=</span> <span class="n">cloudpickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">_checkpoint_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">_dump_checkpoint</span><span class="p">():</span>
-    <span class="k">assert</span> <span class="n">_checkpoint_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;_checkpoint_data should not be None!&#39;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">_checkpoint_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
-        <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">_checkpoint_data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">_get_checkpoint</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">_lock</span><span class="p">:</span>
-            <span class="n">_load_checkpoint</span><span class="p">()</span>
-            <span class="k">assert</span> <span class="n">_checkpoint_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="n">_checkpoint_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">EMPTY</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hit checkpoint: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;is_awaitable&#39;</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="n">to_awaitable</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s1">&#39;return&#39;</span><span class="p">])</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;return&#39;</span><span class="p">]</span>
-
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fail to get checkpoint: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">EMPTY</span>
-
-
-<span class="k">def</span> <span class="nf">_set_checkpoint</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">FnInfo</span><span class="p">,</span> <span class="n">is_awaitable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">_lock</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">_checkpoint_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="c1"># args, kwargs may contain unpickable objects</span>
-            <span class="n">_checkpoint_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;return&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
-                <span class="s1">&#39;is_awaitable&#39;</span><span class="p">:</span> <span class="n">is_awaitable</span><span class="p">,</span>
-                <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s1">&#39;fn_name&#39;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">fn_name</span><span class="p">,</span>
-                    <span class="s1">&#39;call_site&#39;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">call_site</span><span class="p">,</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="n">_dump_checkpoint</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Fail to set checkpoint&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="del_checkpoint"><a class="viewcode-back" href="../../../_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.del_checkpoint">[docs]</a><span class="k">def</span> <span class="nf">del_checkpoint</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">_lock</span><span class="p">:</span>
-            <span class="n">_load_checkpoint</span><span class="p">()</span>
-            <span class="k">assert</span> <span class="n">_checkpoint_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">_checkpoint_data</span><span class="p">:</span>
-                <span class="k">del</span> <span class="n">_checkpoint_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-                <span class="n">_dump_checkpoint</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Fail to delete checkpoint&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="CheckpointCmd"><a class="viewcode-back" href="../../../_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.CheckpointCmd">[docs]</a><span class="k">class</span> <span class="nc">CheckpointCmd</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;checkpoint command line interface&quot;&quot;&quot;</span>
-<div class="viewcode-block" id="CheckpointCmd.load"><a class="viewcode-back" href="../../../_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.CheckpointCmd.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
-        <span class="n">set_checkpoint_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span></div>
-
-<div class="viewcode-block" id="CheckpointCmd.ls"><a class="viewcode-back" href="../../../_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.CheckpointCmd.ls">[docs]</a>    <span class="k">def</span> <span class="nf">ls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;list all the checkpoint entries in the checkpoint file&#39;&#39;&#39;</span>
-        <span class="k">assert</span> <span class="n">_checkpoint_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">_checkpoint_data</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-                    <span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">,</span>
-                    <span class="sa">f</span><span class="s1">&#39;Key:        </span><span class="se">\t</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="sa">f</span><span class="s1">&#39;Call Site:  </span><span class="se">\t</span><span class="si">{</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">][</span><span class="s2">&quot;call_site&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="sa">f</span><span class="s1">&#39;Function:   </span><span class="se">\t</span><span class="si">{</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;info&quot;</span><span class="p">][</span><span class="s2">&quot;fn_name&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="p">]))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="CheckpointCmd.rm"><a class="viewcode-back" href="../../../_api/ai2_kit.core.checkpoint.html#ai2_kit.core.checkpoint.CheckpointCmd.rm">[docs]</a>    <span class="k">def</span> <span class="nf">rm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">glob_pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">yes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">exclude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;remove checkpoint entries with the given pattern&quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="n">_checkpoint_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-
-        <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">_checkpoint_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">glob_pattern</span><span class="p">)</span> <span class="p">]</span>
-        <span class="k">if</span> <span class="n">exclude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">exclude</span><span class="p">)</span> <span class="p">]</span>
-
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">yes</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Delete checkpoint </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">? [y/n]&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">input</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
-                    <span class="k">continue</span>
-            <span class="k">del</span> <span class="n">_checkpoint_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Delete checkpoint </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">_dump_checkpoint</span><span class="p">()</span></div></div>
+    <span class="k">return</span> <span class="n">checkpoint_service</span><span class="o">.</span><span class="n">apply_checkpoint</span><span class="p">(</span><span class="n">key_fn</span><span class="p">,</span> <span class="n">disable</span><span class="p">)</span></div>
 </pre></div>
 
                 </article>
@@ -611,7 +576,7 @@ document.write(`
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
 </div>
@@ -664,8 +629,8 @@ By weihong.xu
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

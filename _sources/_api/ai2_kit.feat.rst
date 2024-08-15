@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    ai2_kit.feat.catalysis
+   ai2_kit.feat.spectrum
 
 Module contents
 ---------------

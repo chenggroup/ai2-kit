@@ -7,6 +7,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   ai2_kit.feat.catalysis.constant
    ai2_kit.feat.catalysis.ui
 
 Module contents

@@ -1,0 +1,698 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Use ai2-spectr to Predict IR and Raman Spectrum on HPC &#8212; ai2-kit Reference</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'doc/manual/ai2-spectr-ir-raman';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">ai2-kit Reference</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    ai<sup>2</sup>-kit
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Featuring Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ai2cat.html">ai2-cat Toolkit</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Workflows</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cll-workflow.html">CLL Machine Learning Potential Training Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aos-analysis.html">Amorphous Oxides Structure Analysis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Build-in Functionalities</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="checkpoint.html">Checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hpc-executor.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ase.html">ASE Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dpdata.html">Dpdata Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tips.html">Tips</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebooks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../notebook/ai2cat.html">AI2-Cat Calculation Notebook</a></li>
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">中文文档</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cll-workflow.zh.html">CLL 势函数训练工作流</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hpc-executor.zh.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.core.html">ai2_kit.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.artifact.html">ai2_kit.core.artifact module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.checkpoint.html">ai2_kit.core.checkpoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.cmd.html">ai2_kit.core.cmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.connector.html">ai2_kit.core.connector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.executor.html">ai2_kit.core.executor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.future.html">ai2_kit.core.future module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.job.html">ai2_kit.core.job module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.log.html">ai2_kit.core.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.pydantic.html">ai2_kit.core.pydantic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.queue_system.html">ai2_kit.core.queue_system module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.resource_manager.html">ai2_kit.core.resource_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.dpff.html">ai2_kit.domain.dpff module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.selector.html">ai2_kit.domain.selector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.updater.html">ai2_kit.domain.updater module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.vasp.html">ai2_kit.domain.vasp module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.feat.html">ai2_kit.feat package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.feat.catalysis.html">ai2_kit.feat.catalysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.feat.spectrum.html">ai2_kit.feat.spectrum package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.lib.html">ai2_kit.lib package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.lib.constant.html">ai2_kit.lib.constant module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.lib.plumed.html">ai2_kit.lib.plumed module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../_api/ai2_kit.res.html">ai2_kit.res package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.tool.html">ai2_kit.tool package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.batch.html">ai2_kit.tool.batch module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.workflow.html">ai2_kit.workflow package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.workflow.cll_mlp.html">ai2_kit.workflow.cll_mlp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.workflow.fep_mlp.html">ai2_kit.workflow.fep_mlp module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../_api/ai2_kit.main.html">ai2_kit.main module</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/chenggroup/ai2-kit" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fdoc/manual/ai2-spectr-ir-raman.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/doc/manual/ai2-spectr-ir-raman.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Use ai2-spectr to Predict IR and Raman Spectrum on HPC</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-study">Case Study</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-a-shell-workflow-to-generate-dipole-and-polarizability-dataset">Build a shell workflow to generate dipole and polarizability dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-deepmd-kit-model">Training Deepmd-kit model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predict-dipole-and-polarizability">Predict Dipole and Polarizability</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-ir-and-raman-spectrum">Calculate IR and Raman Spectrum</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="use-ai2-spectr-to-predict-ir-and-raman-spectrum-on-hpc">
+<h1>Use <code class="docutils literal notranslate"><span class="pre">ai2-spectr</span></code> to Predict IR and Raman Spectrum on HPC<a class="headerlink" href="#use-ai2-spectr-to-predict-ir-and-raman-spectrum-on-hpc" title="Permalink to this heading">#</a></h1>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>feat<span class="w"> </span>spectr<span class="w"> </span>viber
+</pre></div>
+</div>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ai2-spectr</span></code> toolkit is a comprehensive suite tailored for the prediction and analysis of spectra. The <code class="docutils literal notranslate"><span class="pre">viber</span></code> toolkit, embedded within, specializes in the prediction of vibrational spectra, encompassing both infrared and Raman spectra. Unlike furnishing a fully integrated computational workflow, the toolkit presents an array of tools for job generation, dataset creation, data visualization, and similar functions. Users can effortlessly leverage these tools to construct workflows operational on High-Performance Computing (HPC) systems. This documentation is intended to elucidate the usage of the toolkit, employing concrete examples for a thorough understanding.</p>
+</section>
+<section id="case-study">
+<h2>Case Study<a class="headerlink" href="#case-study" title="Permalink to this heading">#</a></h2>
+<section id="build-a-shell-workflow-to-generate-dipole-and-polarizability-dataset">
+<h3>Build a shell workflow to generate dipole and polarizability dataset<a class="headerlink" href="#build-a-shell-workflow-to-generate-dipole-and-polarizability-dataset" title="Permalink to this heading">#</a></h3>
+<p>This case study illustrates the construction of a workflow using a straightforward shell script. The workflow, driven by input system and CP2K configuration files, autonomously generates jobs. These jobs are then submitted for execution on an HPC cluster, facilitating the production of the dataset essential for training in Deepmd-kit.</p>
+<p>To get started, you need to prepare the following files:</p>
+<ul class="simple">
+<li><p>System files for CP2K: They can be any format that supported by <code class="docutils literal notranslate"><span class="pre">ase.io</span></code>, for example <code class="docutils literal notranslate"><span class="pre">Al3O2.xyz</span></code>.</p></li>
+<li><p>CP2K input files: The CP2K input files for the system. You need to prepare a configuration for dipole calculation and 3 configurations for polarizability calculation. For example, <code class="docutils literal notranslate"><span class="pre">cp2k-dipole.inp</span></code> and <code class="docutils literal notranslate"><span class="pre">cp2k-polar-x.inp</span></code>, <code class="docutils literal notranslate"><span class="pre">cp2k-polar-y.inp</span></code>, <code class="docutils literal notranslate"><span class="pre">cp2k-polar-z.inp</span></code>.</p>
+<ul>
+<li><p>Note that you need to ensure the file names of the wannier output files are different in different CP2K configurations. A good conventions is to named them as <code class="docutils literal notranslate"><span class="pre">wannier.xyz</span></code> and <code class="docutils literal notranslate"><span class="pre">wannier_x.xyz</span></code>, <code class="docutils literal notranslate"><span class="pre">wannier_y.xyz</span></code>, <code class="docutils literal notranslate"><span class="pre">wannier_z.xyz</span></code>.</p></li>
+<li><p>You should use <code class="docutils literal notranslate"><span class="pre">&#64;include</span> <span class="pre">coord_n_cell.inc</span></code> to include the coordinate and cell section in the CP2K input files.</p></li>
+</ul>
+</li>
+</ul>
+<p>A good practice is to create a working directory and put all the files in it. For example, you can create a directory named <code class="docutils literal notranslate"><span class="pre">al3o2</span></code> and put all the files in it.</p>
+<p>Now we can start to build shell script <code class="docutils literal notranslate"><span class="pre">workflow.sh</span></code> to automate the calculation.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nb">set</span><span class="w"> </span>-e
+
+<span class="c1"># generate slurm template for CP2K</span>
+cat<span class="w"> </span><span class="s">&lt;&lt; EOF &gt; slurm-cp2k.template</span>
+<span class="s">#!/bin/bash</span>
+<span class="s">#SBATCH -J cp2k</span>
+<span class="s">#SBATCH -N 1</span>
+<span class="s">#SBATCH -n 24</span>
+<span class="s">#SBATCH -p cpu-large</span>
+<span class="s">#SBATCH --mem-per-cpu=4G</span>
+
+<span class="s">module load cp2k/7.1</span>
+<span class="s">EOF</span>
+
+<span class="c1"># generate CP2K labeling tasks</span>
+<span class="c1"># note that the tag decide the output file name, </span>
+<span class="c1"># for example, --tag dipole&#39;s output file will be dipole.out</span>
+ai2-kit<span class="w"> </span>feat<span class="w"> </span>spectr<span class="w"> </span>viber<span class="w"> </span>cp2k-labeling<span class="w"> </span><span class="se">\</span>
+-<span class="w"> </span>add_system<span class="w"> </span>Al3O2.xyz<span class="w"> </span><span class="se">\</span>
+-<span class="w"> </span>add_cp2k_input<span class="w"> </span>cp2k-dipole.inp<span class="w"> </span>--tag<span class="w"> </span>dipole<span class="w"> </span><span class="se">\</span>
+-<span class="w"> </span>add_cp2k_input<span class="w"> </span>cp2k-polar-x.inp<span class="w"> </span>--tag<span class="w"> </span>polar-x<span class="w"> </span><span class="se">\</span>
+-<span class="w"> </span>add_cp2k_input<span class="w"> </span>cp2k-polar-y.inp<span class="w"> </span>--tag<span class="w"> </span>polar-y<span class="w"> </span><span class="se">\</span>
+-<span class="w"> </span>add_cp2k_input<span class="w"> </span>cp2k-polar-z.inp<span class="w"> </span>--tag<span class="w"> </span>polar-z<span class="w"> </span><span class="se">\</span>
+-<span class="w"> </span>make_tasks<span class="w"> </span>./run-01<span class="w"> </span><span class="se">\</span>
+-<span class="w"> </span>make_scripts<span class="w"> </span><span class="s2">&quot;./run-01/cpk2-batch-{i:02d}.sub&quot;</span><span class="w"> </span><span class="se">\</span>
+--concurrency<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="se">\</span>
+--cp2k_cmd<span class="w"> </span><span class="s2">&quot;mpirun cp2k.popt&quot;</span><span class="w"> </span><span class="se">\</span>
+--template<span class="w"> </span>slurm-cp2k.template<span class="w"> </span><span class="se">\</span>
+-<span class="w"> </span><span class="k">done</span>
+
+<span class="c1"># show generated file</span>
+find<span class="w"> </span>./run-01<span class="w"> </span>
+
+<span class="c1"># submit batch scripts and wait for completion</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>hpc<span class="w"> </span>slurm<span class="w"> </span>submit<span class="w"> </span>./run-01/cpk2-batch-*.sub<span class="w"> </span>-<span class="w"> </span><span class="nb">wait</span>
+
+<span class="c1"># generate dataset</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>run-01/*<span class="w"> </span>--fmt<span class="w"> </span>cp2k/viber<span class="w"> </span>--lumped_dict<span class="w"> </span><span class="s1">&#39;{O:4}&#39;</span><span class="w"> </span>--output_file<span class="w"> </span>dipole.out<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--wannier<span class="w"> </span>wannier.xyz<span class="w"> </span>--wannier_x<span class="w"> </span>wannier_x.xyz<span class="w"> </span>--wannier_y<span class="w"> </span>wannier_y.xyz<span class="w"> </span>--wannier_z<span class="w"> </span>wannier_z.xyz<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-<span class="w"> </span>write<span class="w"> </span>./al2o3-dataset
+</pre></div>
+</div>
+<p>This script may take a long time to finish, you can run it with <code class="docutils literal notranslate"><span class="pre">nohup</span></code> and use <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> to put it in background. For example</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nohup<span class="w"> </span>bash<span class="w"> </span>workflow.sh<span class="w"> </span><span class="p">&amp;</span>&gt;&gt;<span class="w"> </span>workflow.log<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p>Note that you can view the help document of each command by running with <code class="docutils literal notranslate"><span class="pre">-h</span></code> option, for example</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>feat<span class="w"> </span>spectr<span class="w"> </span>viber<span class="w"> </span>cp2k-labeling<span class="w"> </span>-<span class="w"> </span>add_system<span class="w"> </span>-h
+</pre></div>
+</div>
+<p>After the script finished, you can find the generated dataset in <code class="docutils literal notranslate"><span class="pre">al2o3-dataset</span></code> directory.</p>
+</section>
+<section id="training-deepmd-kit-model">
+<h3>Training Deepmd-kit model<a class="headerlink" href="#training-deepmd-kit-model" title="Permalink to this heading">#</a></h3>
+</section>
+<section id="predict-dipole-and-polarizability">
+<h3>Predict Dipole and Polarizability<a class="headerlink" href="#predict-dipole-and-polarizability" title="Permalink to this heading">#</a></h3>
+<p>TODO</p>
+</section>
+<section id="calculate-ir-and-raman-spectrum">
+<h3>Calculate IR and Raman Spectrum<a class="headerlink" href="#calculate-ir-and-raman-spectrum" title="Permalink to this heading">#</a></h3>
+<p>TODO</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./doc/manual"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#case-study">Case Study</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-a-shell-workflow-to-generate-dipole-and-polarizability-dataset">Build a shell workflow to generate dipole and polarizability dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-deepmd-kit-model">Training Deepmd-kit model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predict-dipole-and-polarizability">Predict Dipole and Polarizability</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-ir-and-raman-spectrum">Calculate IR and Raman Spectrum</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By weihong.xu
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

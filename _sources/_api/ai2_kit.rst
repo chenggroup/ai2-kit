@@ -12,6 +12,7 @@ Subpackages
    ai2_kit.dflow
    ai2_kit.domain
    ai2_kit.feat
+   ai2_kit.lib
    ai2_kit.res
    ai2_kit.tool
    ai2_kit.workflow

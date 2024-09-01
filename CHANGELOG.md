@@ -1,4 +1,7 @@
 # Change Logs
+## v0.20.1
+* feat: extra options for dp train command
+
 ## v0.20.0
 * add netCDF
 * upgrade pydantic to 2.8.2

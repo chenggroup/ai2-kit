@@ -87,7 +87,7 @@ class CllLammpsInputConfig(BaseModel):
     Those vars can be referenced in the LAMMPS input template as $$VAR_NAME.
     """
 
-    plumed_config: Optional[str]
+    plumed_config: Optional[str] = None
     """Plumed config file content."""
 
     system_files: List[str]
@@ -136,7 +136,7 @@ class CllLammpsInputConfig(BaseModel):
     fep_opts: FepOptions = FepOptions()
 
 
-    @field_validator('explore_vars')
+    @field_validator('explore_vars', mode='before')
     @classmethod
     def validate_explore_variants(cls, value):
         if not isinstance(value, dict):

@@ -69,6 +69,9 @@ workflow:
             input_data['model']['descriptor']['auto_prob_style'] = 'auto'
             return input_data
 
+      # Optional, extra options that will be passed to dp train command.
+      dp_train_opts: "--skip-neighbor-stat"
+
       # The input template for deepmd-kit.
       # You can put the content of the input template here,
       # or you can put the input template in a file, for example, deepmd-input.json,

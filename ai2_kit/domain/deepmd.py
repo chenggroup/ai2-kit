@@ -120,6 +120,11 @@ class CllDeepmdInputConfig(BaseModel):
     Ignore non critical errors.
     """
 
+    dp_train_opts: str = ''
+    """
+    Extra options for dp train command
+    """
+
 
 class CllDeepmdContextConfig(BaseModel):
     script_template: BashTemplate
@@ -229,6 +234,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
             compress_model=input.config.compress_model,
             cwd=dw_task_dir,
             pretrained_model=input.config.pretrained_model,
+            dp_train_opts=input.config.dp_train_opts,
         )
         dw_train_script = BashScript(
             template=ctx.config.script_template,
@@ -324,10 +330,11 @@ def _build_deepmd_steps(dp_cmd: str,
                         compress_model: bool,
                         cwd: str,
                         previous_model: Optional[str] = None,
-                        pretrained_model: Optional[str] = None,):
+                        pretrained_model: Optional[str] = None,
+                        dp_train_opts: str = '',
+                        ):
     steps = []
-    dp_train_cmd = f'{dp_cmd} train {DP_INPUT_FILE}'
-
+    dp_train_cmd = f'{dp_cmd} train {dp_train_opts} {DP_INPUT_FILE}'
     if previous_model:
         dp_train_cmd = f'{dp_train_cmd} -f {previous_model}'
     if pretrained_model:

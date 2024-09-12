@@ -95,7 +95,7 @@ class CllLammpsInputConfig(BaseModel):
     Artifacts key of lammps input data
     """
 
-    ensemble: Optional[Literal['nvt', 'nvt-i', 'nvt-a', 'nvt-iso', 'nvt-aniso', 'npt', 'npt-t', 'npt-tri', 'nve', 'csvr']] = None
+    ensemble: Optional[Literal['nvt', 'npt', 'npt-i', 'npt-a', 'npt-iso', 'npt-aniso', 'npt-t', 'npt-tri', 'npt-x', 'npt-y', 'npt-z', 'nve', 'csvr']] = None
     fix_statement: Optional[str] = None
 
     no_pbc: bool = False
@@ -717,6 +717,12 @@ def get_ensemble(ensemble: str, group='all'):
         lines.append('fix 1 %(group)s npt temp ${TEMP} ${TEMP} ${TAU_T} aniso ${PRES} ${PRES} ${TAU_P}')
     elif ensemble in ('npt-t', 'npt-tri',):
         lines.append('fix 1 %(group)s npt temp ${TEMP} ${TEMP} ${TAU_T} tri ${PRES} ${PRES} ${TAU_P}')
+    elif ensemble in ('npt-x',):
+        lines.append('fix 1 %(group)s npt temp ${TEMP} ${TEMP} ${TAU_T} x ${PRES} ${PRES} ${TAU_P} y 0 0 ${TAU_P} z 0 0 ${TAU_P}')
+    elif ensemble in ('npt-y',):
+        lines.append('fix 1 %(group)s npt temp ${TEMP} ${TEMP} ${TAU_T} y ${PRES} ${PRES} ${TAU_P} x 0 0 ${TAU_P} z 0 0 ${TAU_P}')
+    elif ensemble in ('npt-z',):
+        lines.append('fix 1 %(group)s npt temp ${TEMP} ${TEMP} ${TAU_T} z ${PRES} ${PRES} ${TAU_P} x 0 0 ${TAU_P} y 0 0 ${TAU_P}')
     elif ensemble in ('nvt',):
         lines.append('fix 1 %(group)s nvt temp ${TEMP} ${TEMP} ${TAU_T}')
     elif ensemble in ('nve',):

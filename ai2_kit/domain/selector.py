@@ -51,7 +51,7 @@ class CllModelDeviSelectorInputConfig(BaseModel):
     """
     the quantile of model_devi score to select the structure for next round of exploration
     """
-    asap_options: Optional[AsapOptions]
+    asap_options: Optional[AsapOptions] = None
     """
     options for ASAP to further select candidates
     """

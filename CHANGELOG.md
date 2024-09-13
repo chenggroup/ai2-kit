@@ -1,4 +1,7 @@
 # Change Logs
+## v0.20.2
+* fix: pydantic 2 broken issue
+
 ## v0.20.1
 * feat: extra options for dp train command
 

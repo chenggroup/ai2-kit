@@ -195,9 +195,6 @@ def make_vasp_task_dirs(system_files: List[ArtifactDict],
                 }
             else:
                 raise ValueError('potcar_source should not be shorter than type_map')
-        else:
-            # TODO: support generate POTCAR from given path of potential.
-            raise ValueError('potcar_source should be either dict or list')
 
         assert potcar_source, 'potcar_source must be provided'
         with open(os.path.join(task_dir, 'POTCAR'), 'w') as out_file:

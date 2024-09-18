@@ -1,7 +1,7 @@
 from ai2_kit.core.artifact import Artifact, ArtifactDict
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.util import dict_nested_get, list_split, list_sample
+from ai2_kit.core.util import dict_nested_get, dump_json, list_split, list_sample
 from ai2_kit.core.log import get_logger
 from ai2_kit.core.pydantic import BaseModel
 
@@ -154,10 +154,11 @@ def make_vasp_task_dirs(system_files: List[ArtifactDict],
     if limit > 0:
         atoms_list = list_sample(atoms_list, limit, method=limit_method)
 
-    for i, (file, atoms) in enumerate(atoms_list):
+    for i, (data_file, atoms) in enumerate(atoms_list):
         # create task dir
         task_dir = os.path.join(base_dir, f'{str(i).zfill(6)}')
         os.makedirs(task_dir, exist_ok=True)
+        dump_json(data_file, os.path.join(task_dir, 'debug.data-file.json'))
 
         # load system-wise config from attrs
         overridable_params: dict = copy.deepcopy(dict_nested_get(data_file, ['attrs', 'vasp'], dict()))  # type: ignore
@@ -219,7 +220,7 @@ def make_vasp_task_dirs(system_files: List[ArtifactDict],
         # TODO: inherit only ancestor key should be enough
         task_dirs.append({
             'url': task_dir,
-            'attrs': file['attrs'],
+            'attrs': data_file['attrs'],
         })
 
     return task_dirs

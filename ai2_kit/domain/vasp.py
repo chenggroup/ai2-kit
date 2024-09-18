@@ -102,12 +102,7 @@ async def cll_vasp(input: CllVaspInput, ctx: CllVaspContext) -> GenericVaspOutpu
     # build commands
     steps = []
     for vasp_task_dir in vasp_task_dirs:
-        steps.append(BashStep(
-            cwd=vasp_task_dir['url'],
-            cmd=f'{ctx.config.vasp_cmd} &> output && {ctx.config.post_vasp_cmd}',
-            checkpoint='vasp',
-            exit_on_error=not input.config.ignore_error,
-        ))
+        cmd = f'{ctx.config.vasp_cmd} &> output && {ctx.config.post_vasp_cmd}'
         steps.append(BashStep(
             cwd=vasp_task_dir['url'],
             cmd=cmd,
@@ -154,10 +149,10 @@ def make_vasp_task_dirs(system_files: List[ArtifactDict],
     from ase.io.vasp import _symbol_count_from_symbols
 
     task_dirs = []
-    atoms_list: List[Tuple[ArtifactDict, Atoms]] = artifacts_to_ase_atoms(system_files, type_map)
+    atoms_list: List[Tuple[ArtifactDict, Atoms]] = artifacts_to_ase_atoms(system_files, type_map=type_map)
 
     if limit > 0:
-        atoms_list = list_sample(atoms_list, limit, method=sample_method)
+        atoms_list = list_sample(atoms_list, limit, method=limit_method)
 
     for i, (file, atoms) in enumerate(atoms_list):
         # create task dir

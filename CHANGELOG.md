@@ -1,4 +1,7 @@
 # Change Logs
+## v0.21.2
+* fix: vasp wrong params
+
 ## v0.21.1
 * fix: vasp wrong params
 

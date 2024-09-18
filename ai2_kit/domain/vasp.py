@@ -22,18 +22,33 @@ logger = get_logger(__name__)
 
 class CllVaspInputConfig(BaseModel):
     init_system_files: List[str] = []
-    input_template: Union[dict, str]
+    input_template: Optional[Union[dict, str]] = None
+    """
+    INCAR template for VASP. Could be a dict or content of a VASP input file.
+    """
     potcar_source: Union[dict, list]
+    """
+    POTCAR source for VASP. Could be a dict or list of paths.
+    """
     kpoints_template: Optional[Union[dict, str]] = None
     """
-    Input template for VASP. Could be a dict or content of a VASP input file.
+    KPOINTS template for VASP. Could be a dict or content of a VASP input file.
     """
     limit: int = 50
+    """
+    Limit of the number of systems to be labeled.
+    """
     limit_method: Literal["even", "random", "truncate"] = "even"
+
+    ignore_error: bool = False
+    """
+    Ignore error when running VASP.
+    """
 
 class CllVaspContextConfig(BaseModel):
     script_template: BashTemplate
     vasp_cmd: str = 'vasp_std'
+    post_vasp_cmd: str = 'echo "no post_vasp_cmd"'
     concurrency: int = 5
 
 @dataclass
@@ -41,7 +56,7 @@ class CllVaspInput:
     config: CllVaspInputConfig
     system_files: List[Artifact]
     type_map: List[str]
-    initiated: bool = False
+    initiated: bool = False  # FIXME: this seems to be a bad design idea
 
 
 @dataclass
@@ -61,6 +76,7 @@ async def cll_vasp(input: CllVaspInput, ctx: CllVaspContext) -> GenericVaspOutpu
     executor = ctx.resource_manager.default_executor
 
     # For the first round
+    # FIXME: move out from this function, this should be done in the workflow
     if not input.initiated:
         input.system_files += ctx.resource_manager.resolve_artifacts(input.config.init_system_files)
 
@@ -71,48 +87,16 @@ async def cll_vasp(input: CllVaspInput, ctx: CllVaspContext) -> GenericVaspOutpu
     work_dir = os.path.join(executor.work_dir, ctx.path_prefix)
     [tasks_dir] = executor.setup_workspace(work_dir, ['tasks'])
 
-    # prepare input template
-    if isinstance(input.config.input_template, str):
-        input_template = input.config.input_template
-        input_template = Incar.from_file(input_template).as_dict()
-    else:
-        input_template = copy.deepcopy(input.config.input_template)
-
-    # prepare potcar
-    if isinstance(input.config.potcar_source, dict):
-        potcar_source = input.config.potcar_source
-    elif isinstance(input.config.potcar_source, list):
-        # default: use same sequence as type_map
-        if len(input.config.potcar_source) >= len(input.type_map):
-            potcar_source = {
-                k: v for k, v in zip(input.type_map, input.config.potcar_source)
-            }
-        else:
-            raise ValueError('potcar_source should not be shorter than type_map')
-    else:
-        # TODO: support generate POTCAR from given path of potential.
-        raise ValueError('potcar_source should be either dict or list')
-
-    # prepare kpoints
-    kpoints_template = input.config.kpoints_template
-    if isinstance(kpoints_template, str):
-        kpoints_template = Kpoints.from_file(kpoints_template).as_dict()
-    elif isinstance(kpoints_template, dict):
-        kpoints_template = copy.deepcopy(kpoints_template)
-    else:
-        kpoints_template = None
-
-    system_files = ctx.resource_manager.resolve_artifacts(input.system_files)
-
     # create task dirs and prepare input files
     vasp_task_dirs = executor.run_python_fn(make_vasp_task_dirs)(
-        system_files=[a.to_dict() for a in system_files],
+        system_files=[a.to_dict() for a in input.system_files],
         type_map=input.type_map,
         base_dir=tasks_dir,
-        input_template=input_template,
-        potcar_source=potcar_source,
-        kpoints_template=kpoints_template,
+        input_template=input.config.input_template,
+        potcar_source=input.config.potcar_source,
+        kpoints_template=input.config.kpoints_template,
         limit=input.config.limit,
+        limit_method=input.config.limit_method,
     )
 
     # build commands
@@ -120,8 +104,15 @@ async def cll_vasp(input: CllVaspInput, ctx: CllVaspContext) -> GenericVaspOutpu
     for vasp_task_dir in vasp_task_dirs:
         steps.append(BashStep(
             cwd=vasp_task_dir['url'],
-            cmd=[ctx.config.vasp_cmd, ' 1>> output 2>> output'],
+            cmd=f'{ctx.config.vasp_cmd} &> output && {ctx.config.post_vasp_cmd}',
             checkpoint='vasp',
+            exit_on_error=not input.config.ignore_error,
+        ))
+        steps.append(BashStep(
+            cwd=vasp_task_dir['url'],
+            cmd=cmd,
+            checkpoint='vasp',
+            exit_on_error=not input.config.ignore_error,
         ))
 
     # submit tasks and wait for completion
@@ -149,12 +140,12 @@ async def cll_vasp(input: CllVaspInput, ctx: CllVaspContext) -> GenericVaspOutpu
 
 def make_vasp_task_dirs(system_files: List[ArtifactDict],
                         type_map: List[str],
-                        input_template: dict,
-                        potcar_source: dict,
+                        input_template: Optional[Union[dict, str]],
+                        potcar_source: Optional[Union[dict, list]],
                         base_dir: str,
-                        kpoints_template: Optional[dict] = None,
+                        kpoints_template: Optional[Union[dict, str]] = None,
                         limit: int = 0,
-                        sample_method: Literal["even", "random", "truncate"] = "even"
+                        limit_method: Literal["even", "random", "truncate"] = "even"
                         ) -> List[ArtifactDict]:
     """Generate VASP input files from LAMMPS dump files or XYZ files."""
 
@@ -173,12 +164,18 @@ def make_vasp_task_dirs(system_files: List[ArtifactDict],
         task_dir = os.path.join(base_dir, f'{str(i).zfill(6)}')
         os.makedirs(task_dir, exist_ok=True)
 
+        # load system-wise config from attrs
+        overridable_params: dict = copy.deepcopy(dict_nested_get(data_file, ['attrs', 'vasp'], dict()))  # type: ignore
+
         # create input file
-        input_data = copy.deepcopy(input_template)
-        input_data = dict_nested_get(
-            file, ['attrs', 'vasp', 'input_data'], input_data # type: ignore
-        )
-        incar = Incar.from_dict(input_data)
+        input_template = overridable_params.get('input_template', input_template)
+
+        # prepare input template
+        if isinstance(input_template, str):
+            input_template = Incar.from_file(input_template).as_dict()
+
+        assert input_template, 'input_template must be provided'
+        incar = Incar.from_dict(input_template)
         incar.write_file(os.path.join(task_dir, 'INCAR'))
 
         # create POSCAR
@@ -191,15 +188,34 @@ def make_vasp_task_dirs(system_files: List[ArtifactDict],
         )
 
         # create POTCAR
+        potcar_source = overridable_params.get('potcar_source', potcar_source)
+
+        # prepare potcar
+        if isinstance(potcar_source, list):
+            # default: use same sequence as type_map
+            if len(potcar_source) >= len(type_map):
+                potcar_source = {
+                    k: v for k, v in zip(type_map, potcar_source)
+                }
+            else:
+                raise ValueError('potcar_source should not be shorter than type_map')
+        else:
+            # TODO: support generate POTCAR from given path of potential.
+            raise ValueError('potcar_source should be either dict or list')
+
+        assert potcar_source, 'potcar_source must be provided'
         with open(os.path.join(task_dir, 'POTCAR'), 'w') as out_file:
             for element in elements:
                 with open(potcar_source[element], 'r') as in_file:
                     out_file.write(in_file.read())
 
         # create KPOINTS
-        kpoints_template = dict_nested_get(
-            file, ['attrs', 'vasp', 'kpoints_template'], None # type: ignore
-        )
+        kpoints_template = overridable_params.get('kpoints_template', kpoints_template)
+
+        # prepare kpoints template
+        if isinstance(kpoints_template, str):
+            kpoints_template = Kpoints.from_file(kpoints_template).as_dict()
+        
         if kpoints_template:
             kpoints = Kpoints.from_dict(kpoints_template)
             kpoints.write_file(os.path.join(task_dir, 'KPOINTS'))

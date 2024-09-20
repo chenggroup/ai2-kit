@@ -213,9 +213,9 @@ def read(*file_path_or_glob: str, **kwargs):
             if system is not None:
                 systems.extend(system)
         except Exception:
-            logger.exception(f'Fail to process file {file}, ignore and continue')
             if not ignore_error:
                 raise
+            logger.exception(f'Fail to process file {file}, ignore and continue')
     return systems
 
 

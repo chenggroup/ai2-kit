@@ -518,7 +518,7 @@ def make_deepmd_dataset(
         except Exception as e:
             if not ignore_error:
                 raise e
-            logger.exception(f'Failed to load data: {raw_data}, error: {e}')
+            logger.exception(f'Failed to load data: {raw_data}, ignore and continue')
         # one case of len(dp_system) == 0 is when the system is not converged
         if dp_system is None or 0 == len(dp_system):
             continue  # skip invalid data

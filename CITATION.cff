@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Xu
+    given-names: Wei-Hong
+  - family-names: Cheng
+    given-names: Jun
+    orcid: https://orcid.org/0000-0001-6971-0797
+title: "ai2-kit"
+version: 0.21.2
+date-released: 2023-02-06

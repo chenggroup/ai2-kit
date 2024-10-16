@@ -226,11 +226,7 @@ def _read(data_path: str, **kwargs):
     label = kwargs.pop('label', True)
 
     if fmt == 'cp2k/viber':
-        try:
-            system = dpdata_read_cp2k_viber_data(data_path, **kwargs)
-        except Exception:
-            logger.exception(f'Fail to read cp2k/viber from {data_path}, ignore and continue')
-            return None
+        system = dpdata_read_cp2k_viber_data(data_path, **kwargs)
     else:
         system = dpdata.LabeledSystem(data_path, fmt=fmt, **kwargs) if label else dpdata.System(data_path, fmt=fmt, **kwargs)
 

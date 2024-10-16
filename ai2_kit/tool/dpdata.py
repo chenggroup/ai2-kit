@@ -202,7 +202,7 @@ def read(*file_path_or_glob: str, **kwargs):
     :param kwargs: arguments to pass to dpdata.System or dpdata.LabeledSystem
     """
     kwargs.setdefault('fmt', 'deepmd/npy')
-    ignore_error = kwargs.setdefault('ignore_error', False)
+    ignore_error = kwargs.pop('ignore_error', False)
     files = expand_globs(file_path_or_glob)
     if len(files) == 0:
         raise FileNotFoundError(f'No file found in {file_path_or_glob}')

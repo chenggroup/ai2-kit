@@ -24,7 +24,7 @@ def dpdata_read_cp2k_dplr_data(
     model_charge_map: List[int],
     sel_type: List[int],
     wannier_cutoff: float = 1.0,
-    backend: str = "tf",
+    v3: bool = False,
 ):
     """
     Gnereate dpdata from cp2k output and wannier file for DPLR
@@ -37,7 +37,7 @@ def dpdata_read_cp2k_dplr_data(
     :param model_charge_map: the charge map of atom in model, for example, [-8]
     :param sel_type: the selected type of atom, for example, [0] means atom type 0, aka O is selected
     :param wannier_cutoff: the cutoff to allocate wannier centers around atoms
-    :param backend: the backend of dpdata, "tf" or "pt"
+    :param v3: in deepmd-kit v3, the atomic_dipole is reshaped to (nframes, natoms * 3) rather than (nframes, natoms_sel * 3)
 
     :return dp_sys: dpdata.LabeledSystem
         In addition to the common energy data, atomic_dipole data is added.
@@ -53,7 +53,7 @@ def dpdata_read_cp2k_dplr_data(
         model_charge_map,
         sel_type,
         wannier_cutoff,
-        backend,
+        v3,
     )
 
 
@@ -65,7 +65,7 @@ def set_dplr_ext_from_cp2k_output(
     model_charge_map: List[int],
     sel_type: List[int],
     wannier_cutoff: float = 1.0,
-    backend: str = "tf",
+    v3: bool = False,
 ):
 
     wannier_atoms = ase.io.read(wannier_file)
@@ -77,8 +77,10 @@ def set_dplr_ext_from_cp2k_output(
     symbols = np.array(dp_sys.data["atom_names"])[dp_sys.data["atom_types"]]
     sel_ids = get_sel_ids(dp_sys, type_map, sel_type)
 
-    atomic_dipole, extended_coords = get_atomic_dipole(dp_sys, sel_ids, wannier_atoms, wannier_cutoff)
-    if backend == "pt":
+    atomic_dipole, extended_coords = get_atomic_dipole(
+        dp_sys, sel_ids, wannier_atoms, wannier_cutoff
+    )
+    if v3:
         atomic_dipole_reformat = np.zeros((nframes, natoms, 3))
         atomic_dipole_reformat[:, sel_ids] = atomic_dipole
         atomic_dipole = atomic_dipole_reformat

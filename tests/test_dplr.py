@@ -35,20 +35,8 @@ class CP2kTestData:
 class TestDPLRDPData(unittest.TestCase, CP2kTestData):
     def setUp(self):
         CP2kTestData.__init__(self)
-        backend = "tf"
-        self.tf_data = dpdata_read_cp2k_dplr_data(
-            self.cp2k_dir,
-            self.cp2k_output,
-            self.wannier_file,
-            self.type_map,
-            self.sys_charge_map,
-            self.model_charge_map,
-            self.sel_type,
-            backend=backend,
-        )
 
-        backend = "pt"
-        self.pt_data = dpdata_read_cp2k_dplr_data(
+        self.v2_data = dpdata_read_cp2k_dplr_data(
             self.cp2k_dir,
             self.cp2k_output,
             self.wannier_file,
@@ -56,19 +44,29 @@ class TestDPLRDPData(unittest.TestCase, CP2kTestData):
             self.sys_charge_map,
             self.model_charge_map,
             self.sel_type,
-            backend=backend,
+            v3=False,
         )
-        self.sel_ids = get_sel_ids(self.pt_data, self.type_map, self.sel_type)
+        self.v3_data = dpdata_read_cp2k_dplr_data(
+            self.cp2k_dir,
+            self.cp2k_output,
+            self.wannier_file,
+            self.type_map,
+            self.sys_charge_map,
+            self.model_charge_map,
+            self.sel_type,
+            v3=True,
+        )
+        self.sel_ids = get_sel_ids(self.v3_data, self.type_map, self.sel_type)
 
     def test_shape(self):
-        natoms = self.pt_data.get_natoms()
+        natoms = self.v3_data.get_natoms()
 
-        assert self.pt_data.data["atomic_dipole"].shape[1] == natoms * 3
-        assert self.tf_data.data["atomic_dipole"].shape[1] == len(self.sel_ids) * 3
+        assert self.v3_data.data["atomic_dipole"].shape[1] == natoms * 3
+        assert self.v2_data.data["atomic_dipole"].shape[1] == len(self.sel_ids) * 3
 
     def test_consistent(self):
-        atomic_dipole_tf_reshape = self.tf_data.data["atomic_dipole"].reshape(-1, 3)
-        atomic_dipole_pt_reshape = self.pt_data.data["atomic_dipole"].reshape(-1, 3)
+        atomic_dipole_tf_reshape = self.v2_data.data["atomic_dipole"].reshape(-1, 3)
+        atomic_dipole_pt_reshape = self.v3_data.data["atomic_dipole"].reshape(-1, 3)
         diff = atomic_dipole_pt_reshape[self.sel_ids] - atomic_dipole_tf_reshape
         self.assertTrue(np.max(np.abs(diff)) < 1e-6)
 
@@ -76,23 +74,8 @@ class TestDPLRDPData(unittest.TestCase, CP2kTestData):
 class TestDPFFDPData(TestDPLRDPData):
     def setUp(self):
         CP2kTestData.__init__(self)
-        backend = "tf"
-        self.tf_data = dpdata_read_cp2k_dpff_data(
-            self.cp2k_dir,
-            self.cp2k_output,
-            self.wannier_file,
-            self.type_map,
-            self.sys_charge_map,
-            self.model_charge_map,
-            self.ewald_h,
-            self.ewald_beta,
-            self.ext_efield,
-            self.sel_type,
-            backend=backend,
-        )
 
-        backend = "pt"
-        self.pt_data = dpdata_read_cp2k_dpff_data(
+        self.v2_data = dpdata_read_cp2k_dpff_data(
             self.cp2k_dir,
             self.cp2k_output,
             self.wannier_file,
@@ -103,9 +86,22 @@ class TestDPFFDPData(TestDPLRDPData):
             self.ewald_beta,
             self.ext_efield,
             self.sel_type,
-            backend=backend,
+            v3=False,
         )
-        self.sel_ids = get_sel_ids(self.pt_data, self.type_map, self.sel_type)
+        self.v3_data = dpdata_read_cp2k_dpff_data(
+            self.cp2k_dir,
+            self.cp2k_output,
+            self.wannier_file,
+            self.type_map,
+            self.sys_charge_map,
+            self.model_charge_map,
+            self.ewald_h,
+            self.ewald_beta,
+            self.ext_efield,
+            self.sel_type,
+            v3=True,
+        )
+        self.sel_ids = get_sel_ids(self.v3_data, self.type_map, self.sel_type)
 
     def test_numerical(self):
         pass

@@ -26,7 +26,7 @@ def dpdata_read_cp2k_dpff_data(
     ext_efield,
     sel_type: List[int],
     wannier_cutoff: float = 1.0,
-    backend: str = "tf",
+    v3: bool = False,
 ):
     """
     Gnereate dpdata from cp2k output and wannier file for DPLR
@@ -42,7 +42,7 @@ def dpdata_read_cp2k_dpff_data(
     :param ext_efield: the external electric field
     :param sel_type: the selected type of atom, for example, [0] means atom type 0, aka O is selected
     :param wannier_cutoff: the cutoff to allocate wannier centers around atoms
-    :param backend: the backend of dpdata, "tf" or "pt"
+    :param v3: in deepmd-kit v3, the atomic_dipole is reshaped to (nframes, natoms * 3) rather than (nframes, natoms_sel * 3)
 
     :return dp_sys: dpdata.LabeledSystem
         In addition to the common energy data, the following data are added:
@@ -66,7 +66,7 @@ def dpdata_read_cp2k_dpff_data(
         ext_efield,
         sel_type,
         wannier_cutoff,
-        backend,
+        v3,
     )
 
 
@@ -82,7 +82,7 @@ def set_dpff_ext_from_cp2k_output(
     ext_efield,
     sel_type: List[int],
     wannier_cutoff: float = 1.0,
-    backend: str = "tf",
+    v3: bool = False,
 ):
     # with atomic_dipole
     # update energy
@@ -95,7 +95,7 @@ def set_dpff_ext_from_cp2k_output(
         model_charge_map,
         sel_type,
         wannier_cutoff,
-        backend,
+        v3,
     )
     atomic_dipole = dplr_dp_sys.data["atomic_dipole"].reshape(-1, 3)
 
@@ -111,14 +111,12 @@ def set_dpff_ext_from_cp2k_output(
     sel_ids = get_sel_ids(dp_sys, type_map, sel_type)
 
     ion_coords = dp_sys.data["coords"].reshape(-1, 3)
-    if backend == "tf":
-        # atomic_dipole.shape = (natoms_sel * 3)
-        wannier_coords = ion_coords[sel_ids].reshape(-1, 3) + atomic_dipole
-    elif backend == "pt":
+    if v3:
         # atomic_dipole.shape = (natoms * 3)
         wannier_coords = (ion_coords + atomic_dipole)[sel_ids].reshape(-1, 3)
     else:
-        raise ValueError(f"backend {backend} is not supported")
+        # atomic_dipole.shape = (natoms_sel * 3)
+        wannier_coords = ion_coords[sel_ids].reshape(-1, 3) + atomic_dipole
     extended_coords = np.concatenate((ion_coords, wannier_coords), axis=0)
 
     # get extended charges

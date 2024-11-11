@@ -1,4 +1,7 @@
 # Change Logs
+## v0.21.4
+* feat: handle cp2k/dplr in dpdata tool
+
 ## v0.21.3
 * fix: dpdata tool wrong params
 

@@ -52,5 +52,5 @@ ai2-kit tool dpdata read dp-h2o - slice 10: - sample 10 --method random - to_ase
 o
 
 # convert cp2k data to the format that can be used by deepmd dplr module
-ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="['H','O']" --sys_charge_map="[0,-2]" --model_charge_map="[0,-2]" --ewald_h=0.3 --ewald_beta=0.3 --ext_efield="[0.0, 0.0, 0.0]" --sel_type="[1, 2]" - write ./dataset
+ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[H,O]" --sys_charge_map="[0,-2]" --model_charge_map="[0,-2]" --ewald_h=0.3 --ewald_beta=0.3 --ext_efield="[0.0, 0.0, 0.0]" --sel_type="[1, 2]" - write ./dataset
 ```

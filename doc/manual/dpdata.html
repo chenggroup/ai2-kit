@@ -575,6 +575,10 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"
 
 <span class="c1"># Drop the first 10 frames and then sample 10 frames use random method, and save it as xyz format</span>
 ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>dp-h2o<span class="w"> </span>-<span class="w"> </span>slice<span class="w"> </span><span class="m">10</span>:<span class="w"> </span>-<span class="w"> </span>sample<span class="w"> </span><span class="m">10</span><span class="w"> </span>--method<span class="w"> </span>random<span class="w"> </span>-<span class="w"> </span>to_ase<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>h2o.xyz
+o
+
+<span class="c1"># convert cp2k data to the format that can be used by deepmd dplr module</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./path-to-cp2k-dir<span class="w"> </span>--fmt<span class="w"> </span>cp2k/dplr<span class="w"> </span>--cp2k_output<span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="w"> </span>--wannier_file<span class="o">=</span><span class="s2">&quot;wannier.xyz&quot;</span><span class="w"> </span>--type_map<span class="o">=</span><span class="s2">&quot;[H,O]&quot;</span><span class="w"> </span>--sys_charge_map<span class="o">=</span><span class="s2">&quot;[0,-2]&quot;</span><span class="w"> </span>--model_charge_map<span class="o">=</span><span class="s2">&quot;[0,-2]&quot;</span><span class="w"> </span>--ewald_h<span class="o">=</span><span class="m">0</span>.3<span class="w"> </span>--ewald_beta<span class="o">=</span><span class="m">0</span>.3<span class="w"> </span>--ext_efield<span class="o">=</span><span class="s2">&quot;[0.0, 0.0, 0.0]&quot;</span><span class="w"> </span>--sel_type<span class="o">=</span><span class="s2">&quot;[1, 2]&quot;</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./dataset
 </pre></div>
 </div>
 </section>

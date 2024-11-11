@@ -1,0 +1,874 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ai2_kit.workflow.cll_mlp &#8212; ai2-kit Reference</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/ai2_kit/workflow/cll_mlp';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">ai2-kit Reference</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../intro.html">
+                    ai<sup>2</sup>-kit
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Featuring Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/ai2cat.html">ai2-cat Toolkit</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Workflows</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/cll-workflow.html">CLL Machine Learning Potential Training Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/aos-analysis.html">Amorphous Oxides Structure Analysis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Build-in Functionalities</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/checkpoint.html">Checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/hpc-executor.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/ase.html">ASE Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/dpdata.html">Dpdata Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/tips.html">Tips</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebooks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../notebook/ai2cat.html">AI2-Cat Calculation Notebook</a></li>
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">中文文档</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/cll-workflow.zh.html">CLL 势函数训练工作流</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/hpc-executor.zh.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../doc/manual/references.html">References</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.core.html">ai2_kit.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.artifact.html">ai2_kit.core.artifact module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.checkpoint.html">ai2_kit.core.checkpoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.cmd.html">ai2_kit.core.cmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.connector.html">ai2_kit.core.connector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.executor.html">ai2_kit.core.executor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.future.html">ai2_kit.core.future module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.job.html">ai2_kit.core.job module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.log.html">ai2_kit.core.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.pydantic.html">ai2_kit.core.pydantic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.queue_system.html">ai2_kit.core.queue_system module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.resource_manager.html">ai2_kit.core.resource_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.dpff.html">ai2_kit.domain.dpff module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.selector.html">ai2_kit.domain.selector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.updater.html">ai2_kit.domain.updater module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.vasp.html">ai2_kit.domain.vasp module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.feat.html">ai2_kit.feat package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.feat.catalysis.html">ai2_kit.feat.catalysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.feat.spectrum.html">ai2_kit.feat.spectrum package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.lib.html">ai2_kit.lib package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.lib.constant.html">ai2_kit.lib.constant module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.lib.plumed.html">ai2_kit.lib.plumed module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.res.html">ai2_kit.res package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.tool.html">ai2_kit.tool package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.batch.html">ai2_kit.tool.batch module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.workflow.html">ai2_kit.workflow package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.workflow.cll_mlp.html">ai2_kit.workflow.cll_mlp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.workflow.fep_mlp.html">ai2_kit.workflow.fep_mlp module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.main.html">ai2_kit.main module</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/chenggroup/ai2-kit" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2F_modules/ai2_kit/workflow/cll_mlp.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for ai2_kit.workflow.cll_mlp</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.executor</span> <span class="kn">import</span> <span class="n">BaseExecutorConfig</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">ArtifactMap</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">load_yaml_files</span><span class="p">,</span> <span class="n">merge_dict</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.resource_manager</span> <span class="kn">import</span> <span class="n">ResourceManager</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.checkpoint</span> <span class="kn">import</span> <span class="n">set_checkpoint_dir</span><span class="p">,</span> <span class="n">apply_checkpoint</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.domain</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">deepmd</span><span class="p">,</span>
+    <span class="n">iface</span><span class="p">,</span>
+    <span class="n">lammps</span><span class="p">,</span>
+    <span class="n">lasp</span><span class="p">,</span>
+    <span class="n">selector</span><span class="p">,</span>
+    <span class="n">cp2k</span><span class="p">,</span>
+    <span class="n">vasp</span><span class="p">,</span>
+    <span class="n">constant</span> <span class="k">as</span> <span class="n">const</span><span class="p">,</span>
+    <span class="n">updater</span><span class="p">,</span>
+    <span class="n">anyware</span><span class="p">,</span>
+
+    <span class="n">lammps</span> <span class="k">as</span> <span class="n">_lammps</span><span class="p">,</span>
+    <span class="n">lasp</span> <span class="k">as</span> <span class="n">_lasp</span><span class="p">,</span>
+    <span class="n">cp2k</span> <span class="k">as</span> <span class="n">_cp2k</span><span class="p">,</span>
+    <span class="n">vasp</span> <span class="k">as</span> <span class="n">_vasp</span><span class="p">,</span>
+    <span class="n">anyware</span> <span class="k">as</span> <span class="n">_anyware</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">fire</span> <span class="kn">import</span> <span class="n">Fire</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CllWorkflowExecutorConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig">[docs]</a><span class="k">class</span> <span class="nc">CllWorkflowExecutorConfig</span><span class="p">(</span><span class="n">BaseExecutorConfig</span><span class="p">):</span>
+<div class="viewcode-block" id="CllWorkflowExecutorConfig.Context"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context">[docs]</a>    <span class="k">class</span> <span class="nc">Context</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllWorkflowExecutorConfig.Context.Train"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context.Train">[docs]</a>        <span class="k">class</span> <span class="nc">Train</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+            <span class="n">deepmd</span><span class="p">:</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdContextConfig</span></div>
+
+<div class="viewcode-block" id="CllWorkflowExecutorConfig.Context.Explore"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context.Explore">[docs]</a>        <span class="k">class</span> <span class="nc">Explore</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+            <span class="n">lammps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_lammps</span><span class="o">.</span><span class="n">CllLammpsContextConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">lasp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_lasp</span><span class="o">.</span><span class="n">CllLaspContextConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">anyware</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_anyware</span><span class="o">.</span><span class="n">AnywareContextConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="CllWorkflowExecutorConfig.Context.Label"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context.Label">[docs]</a>        <span class="k">class</span> <span class="nc">Label</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+            <span class="n">cp2k</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_cp2k</span><span class="o">.</span><span class="n">CllCp2kContextConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">vasp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_vasp</span><span class="o">.</span><span class="n">CllVaspContextConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+        <span class="n">train</span><span class="p">:</span> <span class="n">Train</span>
+        <span class="n">explore</span><span class="p">:</span> <span class="n">Explore</span>
+        <span class="n">label</span><span class="p">:</span> <span class="n">Label</span></div>
+
+    <span class="n">context</span><span class="p">:</span> <span class="n">Context</span></div>
+
+
+<div class="viewcode-block" id="WorkflowConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig">[docs]</a><span class="k">class</span> <span class="nc">WorkflowConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="WorkflowConfig.General"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.General">[docs]</a>    <span class="k">class</span> <span class="nc">General</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+        <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+        <span class="n">mass_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+        <span class="n">sel_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">max_iters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="n">iface</span><span class="o">.</span><span class="n">TRAINING_MODE</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+        <span class="n">update_explore_systems</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="WorkflowConfig.Label"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.Label">[docs]</a>    <span class="k">class</span> <span class="nc">Label</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+        <span class="n">cp2k</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_cp2k</span><span class="o">.</span><span class="n">CllCp2kInputConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">vasp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_vasp</span><span class="o">.</span><span class="n">CllVaspInputConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="WorkflowConfig.Train"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.Train">[docs]</a>    <span class="k">class</span> <span class="nc">Train</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+        <span class="n">deepmd</span><span class="p">:</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdInputConfig</span></div>
+
+<div class="viewcode-block" id="WorkflowConfig.Explore"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.Explore">[docs]</a>    <span class="k">class</span> <span class="nc">Explore</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+        <span class="n">lammps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_lammps</span><span class="o">.</span><span class="n">CllLammpsInputConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">lasp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_lasp</span><span class="o">.</span><span class="n">CllLaspInputConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">anyware</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_anyware</span><span class="o">.</span><span class="n">AnywareConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="WorkflowConfig.Select"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.Select">[docs]</a>    <span class="k">class</span> <span class="nc">Select</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+        <span class="n">model_devi</span><span class="p">:</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDeviSelectorInputConfig</span></div>
+
+<div class="viewcode-block" id="WorkflowConfig.Update"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.WorkflowConfig.Update">[docs]</a>    <span class="k">class</span> <span class="nc">Update</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+        <span class="n">walkthrough</span><span class="p">:</span> <span class="n">updater</span><span class="o">.</span><span class="n">CllWalkthroughUpdaterInputConfig</span></div>
+
+    <span class="n">general</span><span class="p">:</span> <span class="n">General</span>
+    <span class="n">train</span><span class="p">:</span> <span class="n">Train</span>
+    <span class="n">explore</span><span class="p">:</span> <span class="n">Explore</span>
+    <span class="n">select</span><span class="p">:</span> <span class="n">Select</span>
+    <span class="n">label</span><span class="p">:</span> <span class="n">Label</span>
+    <span class="n">update</span><span class="p">:</span> <span class="n">Update</span></div>
+
+
+<div class="viewcode-block" id="CllWorkflowConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowConfig">[docs]</a><span class="k">class</span> <span class="nc">CllWorkflowConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">executors</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">CllWorkflowExecutorConfig</span><span class="p">]</span>
+    <span class="n">artifacts</span><span class="p">:</span> <span class="n">ArtifactMap</span>
+    <span class="n">workflow</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># Keep it raw here, it should be parsed later in iteration</span></div>
+
+
+<div class="viewcode-block" id="run_workflow"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.run_workflow">[docs]</a><span class="k">def</span> <span class="nf">run_workflow</span><span class="p">(</span><span class="o">*</span><span class="n">config_files</span><span class="p">,</span>
+                 <span class="n">executor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">path_prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">checkpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run Closed-Loop Learning (CLL) workflow to train Machine Learning Potential (MLP) models.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config_files: path of config files, should be yaml files, can be multiple, support glob pattern</span>
+<span class="sd">        executor: name of executor, should be defined in config `executors` section</span>
+<span class="sd">        path_prefix: path prefix for output</span>
+<span class="sd">        checkpoint: checkpoint file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">checkpoint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">set_checkpoint_dir</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span>
+
+    <span class="n">config_data</span> <span class="o">=</span> <span class="n">load_yaml_files</span><span class="p">(</span><span class="o">*</span><span class="n">config_files</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">CllWorkflowConfig</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">config_data</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">executor</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">executors</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;executor </span><span class="si">{</span><span class="n">executor</span><span class="si">}</span><span class="s1"> is not found&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">path_prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;path_prefix should not be empty&#39;</span><span class="p">)</span>
+
+    <span class="n">iface</span><span class="o">.</span><span class="n">init_artifacts</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">artifacts</span><span class="p">)</span>
+    <span class="n">resource_manager</span> <span class="o">=</span> <span class="n">ResourceManager</span><span class="p">(</span>
+        <span class="n">executor_configs</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">executors</span><span class="p">,</span>
+        <span class="n">artifacts</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">artifacts</span><span class="p">,</span>
+        <span class="n">default_executor</span><span class="o">=</span><span class="n">executor</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cll_mlp_training_workflow</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">resource_manager</span><span class="p">,</span> <span class="n">executor</span><span class="p">,</span> <span class="n">path_prefix</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="cll_mlp_training_workflow"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.cll_mlp_training_workflow">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">cll_mlp_training_workflow</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">CllWorkflowConfig</span><span class="p">,</span>
+                                    <span class="n">resource_manager</span><span class="p">:</span> <span class="n">ResourceManager</span><span class="p">,</span>
+                                    <span class="n">executor</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                    <span class="n">path_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">context_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">executors</span><span class="p">[</span><span class="n">executor</span><span class="p">]</span><span class="o">.</span><span class="n">context</span>
+    <span class="n">raw_workflow_config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">workflow</span><span class="p">)</span>
+
+    <span class="c1"># output of each step</span>
+    <span class="n">label_output</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">iface</span><span class="o">.</span><span class="n">ICllLabelOutput</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">selector_output</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">iface</span><span class="o">.</span><span class="n">ICllSelectorOutput</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">train_output</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">iface</span><span class="o">.</span><span class="n">ICllTrainOutput</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">explore_output</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">iface</span><span class="o">.</span><span class="n">ICllExploreOutput</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># cursor of update table</span>
+    <span class="n">update_cursor</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Start iteration</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+
+        <span class="c1"># parse workflow config</span>
+        <span class="n">workflow_config</span> <span class="o">=</span> <span class="n">WorkflowConfig</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">raw_workflow_config</span><span class="p">)</span>
+        <span class="n">shared_vars</span> <span class="o">=</span> <span class="n">precondition</span><span class="p">(</span><span class="n">workflow_config</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">max_iters</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iteration </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> exceeds max_iters, stop iteration.&#39;</span><span class="p">)</span>
+            <span class="k">break</span>
+
+        <span class="c1"># shortcut for type_map and mass_map</span>
+        <span class="n">type_map</span> <span class="o">=</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">type_map</span>
+        <span class="n">mass_map</span> <span class="o">=</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">mass_map</span>
+
+        <span class="c1"># decide path prefix for each iteration</span>
+        <span class="n">iter_path_prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path_prefix</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;iters-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># prefix of checkpoint</span>
+        <span class="n">cp_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;iters-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="c1"># label</span>
+        <span class="k">if</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">cp2k</span> <span class="ow">and</span> <span class="n">context_config</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">cp2k</span><span class="p">:</span>
+            <span class="n">cp2k_input</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kInput</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">cp2k</span><span class="p">,</span>
+                <span class="n">mode</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+                <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
+                <span class="n">system_files</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="n">selector_output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">selector_output</span><span class="o">.</span><span class="n">get_model_devi_dataset</span><span class="p">(),</span>
+                <span class="n">initiated</span><span class="o">=</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">cp2k_context</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kContext</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">cp2k</span><span class="p">,</span>
+                <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;label-cp2k&#39;</span><span class="p">),</span>
+                <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">label_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/label-cp2k&#39;</span><span class="p">)(</span><span class="n">cp2k</span><span class="o">.</span><span class="n">cll_cp2k</span><span class="p">)(</span><span class="n">cp2k_input</span><span class="p">,</span> <span class="n">cp2k_context</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">vasp</span> <span class="ow">and</span> <span class="n">context_config</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">vasp</span><span class="p">:</span>
+            <span class="n">vasp_input</span> <span class="o">=</span> <span class="n">vasp</span><span class="o">.</span><span class="n">CllVaspInput</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">vasp</span><span class="p">,</span>
+                <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
+                <span class="n">system_files</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="n">selector_output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">selector_output</span><span class="o">.</span><span class="n">get_model_devi_dataset</span><span class="p">(),</span>
+                <span class="n">initiated</span><span class="o">=</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">vasp_context</span> <span class="o">=</span> <span class="n">vasp</span><span class="o">.</span><span class="n">CllVaspContext</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">vasp</span><span class="p">,</span>
+                <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;label-vasp&#39;</span><span class="p">),</span>
+                <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">label_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/label-vasp&#39;</span><span class="p">)(</span><span class="n">vasp</span><span class="o">.</span><span class="n">cll_vasp</span><span class="p">)(</span><span class="n">vasp_input</span><span class="p">,</span> <span class="n">vasp_context</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No label method is specified&#39;</span><span class="p">)</span>
+
+        <span class="c1"># return if no new data is generated</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">label_output</span><span class="o">.</span><span class="n">get_labeled_system_dataset</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No new data is generated, stop iteration.&quot;</span><span class="p">)</span>
+            <span class="k">break</span>
+
+        <span class="c1"># train</span>
+        <span class="k">if</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">deepmd</span><span class="p">:</span>
+            <span class="n">deepmd_input</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdInput</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">deepmd</span><span class="p">,</span>
+                <span class="n">mode</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+                <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
+                <span class="n">old_dataset</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="n">train_output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">train_output</span><span class="o">.</span><span class="n">get_training_dataset</span><span class="p">(),</span>
+                <span class="n">new_dataset</span><span class="o">=</span><span class="n">label_output</span><span class="o">.</span><span class="n">get_labeled_system_dataset</span><span class="p">(),</span>
+                <span class="n">sel_type</span><span class="o">=</span><span class="n">shared_vars</span><span class="o">.</span><span class="n">dp_sel_type</span><span class="p">,</span>
+                <span class="n">previous</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="n">train_output</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">(),</span>
+            <span class="p">)</span>
+            <span class="n">deepmd_context</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdContext</span><span class="p">(</span>
+                <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;train-deepmd&#39;</span><span class="p">),</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">deepmd</span><span class="p">,</span>
+                <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">train_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/train-deepmd&#39;</span><span class="p">)(</span><span class="n">deepmd</span><span class="o">.</span><span class="n">cll_deepmd</span><span class="p">)(</span><span class="n">deepmd_input</span><span class="p">,</span> <span class="n">deepmd_context</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No train method is specified&#39;</span><span class="p">)</span>
+
+        <span class="c1"># explore</span>
+        <span class="n">new_explore_system_files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">update_explore_systems</span> <span class="ow">and</span> <span class="n">selector_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">new_explore_system_files</span> <span class="o">=</span> <span class="n">selector_output</span><span class="o">.</span><span class="n">get_new_explore_systems</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lammps</span> <span class="ow">and</span> <span class="n">context_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lammps</span><span class="p">:</span>
+            <span class="n">lammps_input</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsInput</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lammps</span><span class="p">,</span>
+                <span class="n">mode</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+                <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
+                <span class="n">mass_map</span><span class="o">=</span><span class="n">mass_map</span><span class="p">,</span>
+                <span class="n">dp_models</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="n">train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">()},</span>
+                <span class="n">preset_template</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span>
+                <span class="n">new_system_files</span><span class="o">=</span><span class="n">new_explore_system_files</span><span class="p">,</span>
+                <span class="n">dp_modifier</span><span class="o">=</span><span class="n">shared_vars</span><span class="o">.</span><span class="n">dp_modifier</span><span class="p">,</span>
+                <span class="n">dp_sel_type</span><span class="o">=</span><span class="n">shared_vars</span><span class="o">.</span><span class="n">dp_sel_type</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">lammps_context</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsContext</span><span class="p">(</span>
+                <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;explore-lammps&#39;</span><span class="p">),</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lammps</span><span class="p">,</span>
+                <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">explore_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/explore-lammps&#39;</span><span class="p">)(</span><span class="n">lammps</span><span class="o">.</span><span class="n">cll_lammps</span><span class="p">)(</span><span class="n">lammps_input</span><span class="p">,</span> <span class="n">lammps_context</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lasp</span> <span class="ow">and</span> <span class="n">context_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lasp</span><span class="p">:</span>
+            <span class="n">lasp_input</span> <span class="o">=</span> <span class="n">lasp</span><span class="o">.</span><span class="n">CllLaspInput</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lasp</span><span class="p">,</span>
+                <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
+                <span class="n">mass_map</span><span class="o">=</span><span class="n">mass_map</span><span class="p">,</span>
+                <span class="n">models</span><span class="o">=</span><span class="n">train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">(),</span>
+                <span class="n">new_system_files</span><span class="o">=</span><span class="n">new_explore_system_files</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">lasp_context</span> <span class="o">=</span> <span class="n">lasp</span><span class="o">.</span><span class="n">CllLaspContext</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lasp</span><span class="p">,</span>
+                <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;explore-lasp&#39;</span><span class="p">),</span>
+                <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">explore_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/explore-lasp&#39;</span><span class="p">)(</span><span class="n">lasp</span><span class="o">.</span><span class="n">cll_lasp</span><span class="p">)(</span><span class="n">lasp_input</span><span class="p">,</span> <span class="n">lasp_context</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">anyware</span> <span class="ow">and</span> <span class="n">context_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">anyware</span><span class="p">:</span>
+            <span class="n">anyware_input</span> <span class="o">=</span> <span class="n">anyware</span><span class="o">.</span><span class="n">AnywareInput</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">anyware</span><span class="p">,</span>
+                <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
+                <span class="n">mass_map</span><span class="o">=</span><span class="n">mass_map</span><span class="p">,</span>
+                <span class="n">new_system_files</span><span class="o">=</span><span class="n">new_explore_system_files</span><span class="p">,</span>
+                <span class="n">dp_models</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="n">train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">()},</span>
+            <span class="p">)</span>
+            <span class="n">anyware_context</span> <span class="o">=</span> <span class="n">anyware</span><span class="o">.</span><span class="n">AnywareContext</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">anyware</span><span class="p">,</span>
+                <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;explore-anyware&#39;</span><span class="p">),</span>
+                <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">explore_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/explore-anyware&#39;</span><span class="p">)(</span><span class="n">anyware</span><span class="o">.</span><span class="n">anyware</span><span class="p">)(</span><span class="n">anyware_input</span><span class="p">,</span> <span class="n">anyware_context</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No explore method is specified&#39;</span><span class="p">)</span>
+
+        <span class="c1"># select</span>
+        <span class="k">if</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">select</span><span class="o">.</span><span class="n">model_devi</span><span class="p">:</span>
+            <span class="n">selector_input</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDeviSelectorInput</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">workflow_config</span><span class="o">.</span><span class="n">select</span><span class="o">.</span><span class="n">model_devi</span><span class="p">,</span>
+                <span class="n">model_devi_data</span><span class="o">=</span><span class="n">explore_output</span><span class="o">.</span><span class="n">get_model_devi_dataset</span><span class="p">(),</span>
+                <span class="n">model_devi_file</span><span class="o">=</span><span class="n">const</span><span class="o">.</span><span class="n">MODEL_DEVI_OUT</span><span class="p">,</span>
+                <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">selector_context</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDevSelectorContext</span><span class="p">(</span>
+                <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;selector-model-devi&#39;</span><span class="p">),</span>
+                <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">selector_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/selector-model-devi&#39;</span><span class="p">)(</span><span class="n">selector</span><span class="o">.</span><span class="n">cll_model_devi_selector</span><span class="p">)(</span><span class="n">selector_input</span><span class="p">,</span> <span class="n">selector_context</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No select method is specified&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Update</span>
+        <span class="n">update_config</span> <span class="o">=</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">walkthrough</span>
+
+        <span class="c1"># nothing to update because the table is empty</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">update_config</span><span class="o">.</span><span class="n">table</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="c1"># keep using the latest config when it reach the end of table</span>
+        <span class="k">if</span> <span class="n">update_cursor</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">update_config</span><span class="o">.</span><span class="n">table</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># move cursor to next row if passing rate pass threshold</span>
+        <span class="k">if</span> <span class="n">selector_output</span><span class="o">.</span><span class="n">get_passing_rate</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">update_config</span><span class="o">.</span><span class="n">passing_rate_threshold</span><span class="p">:</span>
+            <span class="n">raw_workflow_config</span> <span class="o">=</span> <span class="n">merge_dict</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">workflow</span><span class="p">),</span> <span class="n">update_config</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="n">update_cursor</span><span class="p">])</span>
+            <span class="n">update_cursor</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="SharedVars"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.SharedVars">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">SharedVars</span><span class="p">():</span>
+    <span class="n">dp_modifier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">dp_sel_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="precondition"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.precondition">[docs]</a><span class="k">def</span> <span class="nf">precondition</span><span class="p">(</span><span class="n">workflow_cfg</span><span class="p">:</span> <span class="n">WorkflowConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SharedVars</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    precondition of workflow config to raise error early,</span>
+<span class="sd">    and extra variables that may shared by multiple steps</span>
+
+<span class="sd">    The known shared variables are:</span>
+<span class="sd">      dp_modifier, which include vars sys_charge_map, model_charge_map, ewald_h, ewald_beta</span>
+<span class="sd">      sel_type, which is suppose to be used in dplr/dpff mode</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">shared_vars</span> <span class="o">=</span> <span class="n">SharedVars</span><span class="p">()</span>
+
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">workflow_cfg</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">mode</span>
+    <span class="n">type_map</span> <span class="o">=</span> <span class="n">workflow_cfg</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">type_map</span>
+    <span class="n">sel_type</span> <span class="o">=</span> <span class="n">workflow_cfg</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">sel_type</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;dpff&#39;</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">sel_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;sel_type should be specified in general config for dpff mode&#39;</span>
+        <span class="n">shared_vars</span><span class="o">.</span><span class="n">dp_sel_type</span> <span class="o">=</span> <span class="p">[</span> <span class="n">type_map</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>  <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sel_type</span> <span class="p">]</span>
+
+    <span class="n">deepmd_cfg</span> <span class="o">=</span> <span class="n">workflow_cfg</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">deepmd</span>
+    <span class="k">if</span> <span class="n">deepmd_cfg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;dpff&#39;</span><span class="p">:</span>
+            <span class="n">modifier</span> <span class="o">=</span> <span class="n">deepmd_cfg</span><span class="o">.</span><span class="n">input_template</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;modifier&#39;</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">modifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;modifier should be specified in deepmd input template for dpff mode&#39;</span>
+            <span class="n">shared_vars</span><span class="o">.</span><span class="n">dp_modifier</span> <span class="o">=</span> <span class="n">modifier</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;fep-redox&#39;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">deepmd_cfg</span><span class="o">.</span><span class="n">input_template</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;fitting_net&#39;</span><span class="p">][</span><span class="s1">&#39;numb_fparam&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;numb_fparam should be 1 for fep-redox/fep-pka mode&#39;</span>
+
+    <span class="n">lammps_cfg</span> <span class="o">=</span> <span class="n">workflow_cfg</span><span class="o">.</span><span class="n">explore</span><span class="o">.</span><span class="n">lammps</span>
+    <span class="k">if</span> <span class="n">lammps_cfg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;dpff&#39;</span><span class="p">:</span>
+            <span class="n">lammps_cfg</span><span class="o">.</span><span class="n">assert_var</span><span class="p">(</span><span class="s1">&#39;EFIELD&#39;</span><span class="p">)</span>
+            <span class="n">lammps_cfg</span><span class="o">.</span><span class="n">assert_var</span><span class="p">(</span><span class="s1">&#39;KMESH&#39;</span><span class="p">)</span>
+            <span class="n">efield</span> <span class="o">=</span> <span class="n">lammps_cfg</span><span class="o">.</span><span class="n">explore_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;EFIELD&#39;</span><span class="p">,</span> <span class="n">lammps_cfg</span><span class="o">.</span><span class="n">broadcast_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;EFIELD&#39;</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">efield</span> <span class="p">]),</span> <span class="s1">&#39;EFIELD should be a list of vector&#39;</span>  <span class="c1"># type: ignore</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;fep-redox&#39;</span><span class="p">,</span> <span class="s1">&#39;fep-pka&#39;</span><span class="p">]:</span>
+            <span class="n">lammps_cfg</span><span class="o">.</span><span class="n">assert_var</span><span class="p">(</span><span class="s1">&#39;LAMBDA_f&#39;</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">shared_vars</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># use python-fire to parse command line arguments</span>
+    <span class="n">Fire</span><span class="p">(</span><span class="n">run_workflow</span><span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By weihong.xu
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

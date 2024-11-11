@@ -477,8 +477,148 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="ai2-kit-tool-dpdata-module">
-<h1>ai2_kit.tool.dpdata module<a class="headerlink" href="#ai2-kit-tool-dpdata-module" title="Permalink to this heading">#</a></h1>
+  <section id="module-ai2_kit.tool.dpdata">
+<span id="ai2-kit-tool-dpdata-module"></span><h1>ai2_kit.tool.dpdata module<a class="headerlink" href="#module-ai2_kit.tool.dpdata" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataTool">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.tool.dpdata.</span></span><span class="sig-name descname"><span class="pre">DpdataTool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">systems</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataTool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataTool" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataTool.eval">
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dp_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataTool.eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataTool.eval" title="Permalink to this definition">#</a></dt>
+<dd><p>Use deepmd model to label energy, force and viral</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dp_model</strong> – path to deepmd frozen model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataTool.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lambda_expr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataTool.filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataTool.filter" title="Permalink to this definition">#</a></dt>
+<dd><p>filter data with lambda expression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lambda_expr</strong> – lambda expression to filter data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataTool.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">file_path_or_glob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataTool.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataTool.read" title="Permalink to this definition">#</a></dt>
+<dd><p>read data from multiple paths, support glob pattern
+default format is deepmd/npy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path_or_glob</strong> – path or glob pattern to locate data path</p></li>
+<li><p><strong>fmt</strong> – format to read, default is deepmd/npy</p></li>
+<li><p><strong>label</strong> – default is True, use dpdata.LabeledSystem if True, else use dpdata.System</p></li>
+<li><p><strong>kwargs</strong> – arguments to pass to dpdata.System or dpdata.LabeledSystem</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataTool.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'even'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'random'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'truncate'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'even'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataTool.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataTool.sample" title="Permalink to this definition">#</a></dt>
+<dd><p>sample data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>size</strong> – size of sample, if size is larger than data size, return all data</p></li>
+<li><p><strong>method</strong> – method to sample, can be ‘even’, ‘random’, ‘truncate’, default is ‘even’</p></li>
+<li><p><strong>seed</strong> – seed for random sample, only used when method is ‘random’</p></li>
+</ul>
+</dd>
+</dl>
+<p>Note that by default the seed is length of input list,
+if you want to generate different sample each time, you should set random seed manually</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataTool.set_fparam">
+<span class="sig-name descname"><span class="pre">set_fparam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fparam</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataTool.set_fparam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataTool.set_fparam" title="Permalink to this definition">#</a></dt>
+<dd><p>Set fparam for all systems</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fparam</strong> – fparam to set, should be a scalar or vector, e.g. 1.0 or [1.0, 2.0]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataTool.size">
+<span class="sig-name descname"><span class="pre">size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataTool.size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataTool.size" title="Permalink to this definition">#</a></dt>
+<dd><p>size of loaded data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataTool.slice">
+<span class="sig-name descname"><span class="pre">slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataTool.slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataTool.slice" title="Permalink to this definition">#</a></dt>
+<dd><p>slice systems by python slice expression, for example
+<cite>10:</cite>, <cite>:10</cite>, <cite>::2</cite>, etc</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> – start index</p></li>
+<li><p><strong>stop</strong> – stop index</p></li>
+<li><p><strong>step</strong> – step</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataTool.to_ase">
+<span class="sig-name descname"><span class="pre">to_ase</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataTool.to_ase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataTool.to_ase" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert dpdata format to ase format, and use ase tool to handle</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.DpdataTool.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'deepmd/npy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#DpdataTool.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.DpdataTool.write" title="Permalink to this definition">#</a></dt>
+<dd><p>write data to specific path, support deepmd/npy, deepmd/raw, deepmd/hdf5 formats
+:param out_path: path to write data
+:param fmt: format to write, default is deepmd/npy
+:param merge: if True, merge all data use dpdata.MultiSystems, else write data without merging</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.read">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.tool.dpdata.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">file_path_or_glob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.read" title="Permalink to this definition">#</a></dt>
+<dd><p>read data from multiple paths, support glob pattern
+default format is deepmd/npy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path_or_glob</strong> – path or glob pattern to locate data path</p></li>
+<li><p><strong>fmt</strong> – format to read, default is deepmd/npy</p></li>
+<li><p><strong>label</strong> – default is True, use dpdata.LabeledSystem if True, else use dpdata.System</p></li>
+<li><p><strong>kwargs</strong> – arguments to pass to dpdata.System or dpdata.LabeledSystem</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parse ignore_error<span class="colon">:</span></dt>
+<dd class="field-even"><p>if True, ignore error when read data, default is False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.register_data_types">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.tool.dpdata.</span></span><span class="sig-name descname"><span class="pre">register_data_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#register_data_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.register_data_types" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.tool.dpdata.set_fparam">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.tool.dpdata.</span></span><span class="sig-name descname"><span class="pre">set_fparam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fparam</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/dpdata.html#set_fparam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.dpdata.set_fparam" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
     <script type="text/x-thebe-config">

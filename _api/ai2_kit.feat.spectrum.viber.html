@@ -477,8 +477,85 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="ai2-kit-feat-spectrum-viber-module">
-<h1>ai2_kit.feat.spectrum.viber module<a class="headerlink" href="#ai2-kit-feat-spectrum-viber-module" title="Permalink to this heading">#</a></h1>
+  <section id="module-ai2_kit.feat.spectrum.viber">
+<span id="ai2-kit-feat-spectrum-viber-module"></span><h1>ai2_kit.feat.spectrum.viber module<a class="headerlink" href="#module-ai2_kit.feat.spectrum.viber" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.spectrum.viber.</span></span><span class="sig-name descname"><span class="pre">Cp2kLabelTaskBuilder</span></span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/viber.html#Cp2kLabelTaskBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This a builder class to generate cp2k labeling task.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.add_cp2k_input">
+<span class="sig-name descname"><span class="pre">add_cp2k_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/viber.html#Cp2kLabelTaskBuilder.add_cp2k_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.add_cp2k_input" title="Permalink to this definition">#</a></dt>
+<dd><p>Add cp2k input file for dipole or polarizability calculation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.add_system">
+<span class="sig-name descname"><span class="pre">add_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">file_path_or_glob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/viber.html#Cp2kLabelTaskBuilder.add_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.add_system" title="Permalink to this definition">#</a></dt>
+<dd><p>Add system files to label</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path_or_glob</strong> – system files or glob pattern</p></li>
+<li><p><strong>kwargs</strong> – kwargs for ase.io.read</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.done">
+<span class="sig-name descname"><span class="pre">done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/viber.html#Cp2kLabelTaskBuilder.done"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.done" title="Permalink to this definition">#</a></dt>
+<dd><p>Mark the end of commands chain</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.make_scripts">
+<span class="sig-name descname"><span class="pre">make_scripts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cp2k-batch-{i:02d}.sub'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concurrency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp2k_cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cp2k.psmp'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/viber.html#Cp2kLabelTaskBuilder.make_scripts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.make_scripts" title="Permalink to this definition">#</a></dt>
+<dd><p>Make batch script for cp2k labeling</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> – prefix of batch script</p></li>
+<li><p><strong>concurrency</strong> – concurrency of tasks</p></li>
+<li><p><strong>template</strong> – template of batch script</p></li>
+<li><p><strong>ignore_error</strong> – ignore error</p></li>
+<li><p><strong>cmd</strong> – command to run cp2k</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.make_tasks">
+<span class="sig-name descname"><span class="pre">make_tasks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/viber.html#Cp2kLabelTaskBuilder.make_tasks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.make_tasks" title="Permalink to this definition">#</a></dt>
+<dd><p>Make task dirs for cp2k labeling (prepare systems and cp2k input files)
+:param out_dir: output dir</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.viber.dpdata_read_cp2k_viber_data">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.spectrum.viber.</span></span><span class="sig-name descname"><span class="pre">dpdata_read_cp2k_viber_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lumped_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'output'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wannier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'wannier.xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wannier_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'wannier_x.xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wannier_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'wannier_y.xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wannier_z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'wannier_z.xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wacent_symbol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'X'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/viber.html#dpdata_read_cp2k_viber_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.viber.dpdata_read_cp2k_viber_data" title="Permalink to this definition">#</a></dt>
+<dd><p>read the cp2k output file and wannier functions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_dir</strong> – the directory of the data</p></li>
+<li><p><strong>lumped_dict</strong> – the dictionary of the element and the expected coordination number, e.g. {“O”: 4} (for water molecule)</p></li>
+<li><p><strong>output_file</strong> – the cp2k output file name</p></li>
+<li><p><strong>wannier</strong> – the wannier function file name</p></li>
+<li><p><strong>wannier_x</strong> – the wannier function file name of x direction electric field</p></li>
+<li><p><strong>wannier_y</strong> – the wannier function file name of y direction electric field</p></li>
+<li><p><strong>wannier_z</strong> – the wannier function file name of z direction electric field</p></li>
+<li><p><strong>wacent_symbol</strong> – the symbol of the wannier function centroid</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
     <script type="text/x-thebe-config">

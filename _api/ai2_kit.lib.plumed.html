@@ -477,8 +477,49 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="ai2-kit-lib-plumed-module">
-<h1>ai2_kit.lib.plumed module<a class="headerlink" href="#ai2-kit-lib-plumed-module" title="Permalink to this heading">#</a></h1>
+  <section id="module-ai2_kit.lib.plumed">
+<span id="ai2-kit-lib-plumed-module"></span><h1>ai2_kit.lib.plumed module<a class="headerlink" href="#module-ai2_kit.lib.plumed" title="Permalink to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.lib.plumed.get_cvs_bias_from_df">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.lib.plumed.</span></span><span class="sig-name descname"><span class="pre">get_cvs_bias_from_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/lib/plumed.html#get_cvs_bias_from_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.lib.plumed.get_cvs_bias_from_df" title="Permalink to this definition">#</a></dt>
+<dd><p>get collective variables and bias from pandas dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – pandas dataframe</p></li>
+<li><p><strong>cv_names</strong> – names of collective variable columns</p></li>
+<li><p><strong>bias_name</strong> – name of bias column</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>cvs, bias in numpy array for gaussian_kde</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.lib.plumed.load_colvar">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.lib.plumed.</span></span><span class="sig-name descname"><span class="pre">load_colvar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#!</span> <span class="pre">FIELDS'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/lib/plumed.html#load_colvar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.lib.plumed.load_colvar" title="Permalink to this definition">#</a></dt>
+<dd><p>load plumed colvar file as DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fp</strong> – file pointer</p></li>
+<li><p><strong>skip</strong> – skip the header line</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.lib.plumed.load_colvar_from_files">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.lib.plumed.</span></span><span class="sig-name descname"><span class="pre">load_colvar_from_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/lib/plumed.html#load_colvar_from_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.lib.plumed.load_colvar_from_files" title="Permalink to this definition">#</a></dt>
+<dd><p>load plumed colvar from multiple files and concatenate into a single DataFrame</p>
+</dd></dl>
+
 </section>
 
     <script type="text/x-thebe-config">

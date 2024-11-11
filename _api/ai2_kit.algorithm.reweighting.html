@@ -477,8 +477,104 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="ai2-kit-algorithm-reweighting-module">
-<h1>ai2_kit.algorithm.reweighting module<a class="headerlink" href="#ai2-kit-algorithm-reweighting-module" title="Permalink to this heading">#</a></h1>
+  <section id="module-ai2_kit.algorithm.reweighting">
+<span id="ai2-kit-algorithm-reweighting-module"></span><h1>ai2_kit.algorithm.reweighting module<a class="headerlink" href="#module-ai2_kit.algorithm.reweighting" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.algorithm.reweighting.ReweightingTool">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.algorithm.reweighting.</span></span><span class="sig-name descname"><span class="pre">ReweightingTool</span></span><a class="reference internal" href="../_modules/ai2_kit/algorithm/reweighting.html#ReweightingTool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.algorithm.reweighting.ReweightingTool" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.algorithm.reweighting.ReweightingTool.load_colvar">
+<span class="sig-name descname"><span class="pre">load_colvar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">path_or_glob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/algorithm/reweighting.html#ReweightingTool.load_colvar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.algorithm.reweighting.ReweightingTool.load_colvar" title="Permalink to this definition">#</a></dt>
+<dd><p>load PLUMED COLVAR files and concatenate into a single DataFrame
+you have to ensure the COLVAR data is aligned with energies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path_or_glob</strong> – path or glob pattern to locate data path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.algorithm.reweighting.ReweightingTool.load_energy">
+<span class="sig-name descname"><span class="pre">load_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">path_or_glob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/algorithm/reweighting.html#ReweightingTool.load_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.algorithm.reweighting.ReweightingTool.load_energy" title="Permalink to this definition">#</a></dt>
+<dd><p>read baseline data as dpdata.LabeledSystem</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_or_glob</strong> – path or glob pattern to locate data path</p></li>
+<li><p><strong>tag</strong> – a string tag to distinguish data, it is suggested to use <cite>baseline</cite> and <cite>target</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.algorithm.reweighting.ReweightingTool.reweighting">
+<span class="sig-name descname"><span class="pre">reweighting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_fig_to</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_json_to</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseline_tag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'baseline'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_tag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'target'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/algorithm/reweighting.html#ReweightingTool.reweighting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.algorithm.reweighting.ReweightingTool.reweighting" title="Permalink to this definition">#</a></dt>
+<dd><p>run reweighting against loaded data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cv</strong> – name of collective variable columns, for example d1</p></li>
+<li><p><strong>bias</strong> – name of bias column, for example opes.bias</p></li>
+<li><p><strong>temp</strong> – temperature</p></li>
+<li><p><strong>save_to</strong> – save th</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.algorithm.reweighting.compute_fes">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.algorithm.reweighting.</span></span><span class="sig-name descname"><span class="pre">compute_fes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cvs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0083144621</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100j</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/algorithm/reweighting.html#compute_fes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.algorithm.reweighting.compute_fes" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute free energy surface from biased sampling data using Gaussian KDE
+Support 1D and 2D collective variables</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cv</strong> – collective variable</p></li>
+<li><p><strong>bias</strong> – bias potential</p></li>
+<li><p><strong>temp</strong> – temperature</p></li>
+<li><p><strong>grid</strong> – grid points, if None, will use grid_size to generate automatically</p></li>
+<li><p><strong>w</strong> – weights</p></li>
+<li><p><strong>kB</strong> – Boltzmann constant</p></li>
+<li><p><strong>grid_size</strong> – grid size in np.mgrid style</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>free energy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.algorithm.reweighting.compute_kde_weight">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.algorithm.reweighting.</span></span><span class="sig-name descname"><span class="pre">compute_kde_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baseline_energy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_energy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0083144621</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ev_to_kjmol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">96.4853365</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/algorithm/reweighting.html#compute_kde_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.algorithm.reweighting.compute_kde_weight" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute KDE weights for reweighting</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>baseline_energy</strong> – baseline energy in eV, it’s the output of DeepMD evaluation</p></li>
+<li><p><strong>target_energy</strong> – target energy in eV, it’s the output of DeepMD evaluation</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.algorithm.reweighting.load_dp_energy">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.algorithm.reweighting.</span></span><span class="sig-name descname"><span class="pre">load_dp_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">path_or_glob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/algorithm/reweighting.html#load_dp_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.algorithm.reweighting.load_dp_energy" title="Permalink to this definition">#</a></dt>
+<dd><p>load dpdata energy data from npy files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path_or_glob</strong> – path or glob pattern to locate data path, for example dpdata/<a href="#id1"><span class="problematic" id="id2">**</span></a>/energy.npy</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
     <script type="text/x-thebe-config">

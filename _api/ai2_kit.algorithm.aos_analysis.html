@@ -477,8 +477,44 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="ai2-kit-algorithm-aos-analysis-module">
-<h1>ai2_kit.algorithm.aos_analysis module<a class="headerlink" href="#ai2-kit-algorithm-aos-analysis-module" title="Permalink to this heading">#</a></h1>
+  <section id="module-ai2_kit.algorithm.aos_analysis">
+<span id="ai2-kit-algorithm-aos-analysis-module"></span><h1>ai2_kit.algorithm.aos_analysis module<a class="headerlink" href="#module-ai2_kit.algorithm.aos_analysis" title="Permalink to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.algorithm.aos_analysis.count_shared_polyhedra">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.algorithm.aos_analysis.</span></span><span class="sig-name descname"><span class="pre">count_shared_polyhedra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_traj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ligand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/algorithm/aos_analysis.html#count_shared_polyhedra"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.algorithm.aos_analysis.count_shared_polyhedra" title="Permalink to this definition">#</a></dt>
+<dd><p>Count the number of shared polyhedra in each frame of the trajectory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_traj</strong> – path of input trajectory file</p></li>
+<li><p><strong>out_dir</strong> – path of output directory</p></li>
+<li><p><strong>center</strong> – central atoms, in the format of MDA atom selection string, e.g. ‘name In’</p></li>
+<li><p><strong>ligand</strong> – atoms that surround the central atoms, in the format of MDA atom selection string, e.g. ‘name O’</p></li>
+<li><p><strong>cell</strong> – cell dimensions</p></li>
+<li><p><strong>cutoff</strong> – cutoff distance</p></li>
+<li><p><strong>coord_num</strong> – coordination number</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.algorithm.aos_analysis.ecn_analysis">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.algorithm.aos_analysis.</span></span><span class="sig-name descname"><span class="pre">ecn_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_traj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ligand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/algorithm/aos_analysis.html#ecn_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.algorithm.aos_analysis.ecn_analysis" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate ECN (effective coordination number) and l_av (average bond length).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_traj</strong> – path of input trajectory file</p></li>
+<li><p><strong>out_dir</strong> – path of output directory</p></li>
+<li><p><strong>center</strong> – central atoms, in the format of MDA atom selection string, e.g. ‘name In’</p></li>
+<li><p><strong>ligand</strong> – atoms that surround the central atoms, in the format of MDA atom selection string, e.g. ‘name O’</p></li>
+<li><p><strong>cell</strong> – cell dimensions</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
     <script type="text/x-thebe-config">

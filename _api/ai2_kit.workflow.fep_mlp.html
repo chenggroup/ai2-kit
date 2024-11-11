@@ -477,8 +477,306 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="ai2-kit-workflow-fep-mlp-module">
-<h1>ai2_kit.workflow.fep_mlp module<a class="headerlink" href="#ai2-kit-workflow-fep-mlp-module" title="Permalink to this heading">#</a></h1>
+  <section id="module-ai2_kit.workflow.fep_mlp">
+<span id="ai2-kit-workflow-fep-mlp-module"></span><h1>ai2_kit.workflow.fep_mlp module<a class="headerlink" href="#module-ai2_kit.workflow.fep_mlp" title="Permalink to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepExecutorConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.workflow.fep_mlp.</span></span><span class="sig-name descname"><span class="pre">FepExecutorConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ai2_kit.core.connector.html#ai2_kit.core.connector.SshConfig" title="ai2_kit.core.connector.SshConfig"><span class="pre">SshConfig</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue_system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.QueueSystemConfig" title="ai2_kit.core.queue_system.QueueSystemConfig"><span class="pre">QueueSystemConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">python_cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'python'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context" title="ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context"><span class="pre">Context</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/workflow/fep_mlp.html#FepExecutorConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ai2_kit.core.executor.html#ai2_kit.core.executor.BaseExecutorConfig" title="ai2_kit.core.executor.BaseExecutorConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseExecutorConfig</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deepmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdContextConfig" title="ai2_kit.domain.deepmd.CllDeepmdContextConfig"><span class="pre">CllDeepmdContextConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lammps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsContextConfig" title="ai2_kit.domain.lammps.CllLammpsContextConfig"><span class="pre">CllLammpsContextConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp2k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kContextConfig" title="ai2_kit.domain.cp2k.CllCp2kContextConfig"><span class="pre">CllCp2kContextConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/workflow/fep_mlp.html#FepExecutorConfig.Context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context.cp2k">
+<span class="sig-name descname"><span class="pre">cp2k</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kContextConfig" title="ai2_kit.domain.cp2k.CllCp2kContextConfig"><span class="pre">CllCp2kContextConfig</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context.cp2k" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context.deepmd">
+<span class="sig-name descname"><span class="pre">deepmd</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdContextConfig" title="ai2_kit.domain.deepmd.CllDeepmdContextConfig"><span class="pre">CllDeepmdContextConfig</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context.deepmd" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context.lammps">
+<span class="sig-name descname"><span class="pre">lammps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsContextConfig" title="ai2_kit.domain.lammps.CllLammpsContextConfig"><span class="pre">CllLammpsContextConfig</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context.lammps" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context.model_computed_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context.model_config" title="Permalink to this definition">#</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'cp2k':</span> <span class="pre">FieldInfo(annotation=CllCp2kContextConfig,</span> <span class="pre">required=True),</span> <span class="pre">'deepmd':</span> <span class="pre">FieldInfo(annotation=CllDeepmdContextConfig,</span> <span class="pre">required=True),</span> <span class="pre">'lammps':</span> <span class="pre">FieldInfo(annotation=CllLammpsContextConfig,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context.model_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepExecutorConfig.context">
+<span class="sig-name descname"><span class="pre">context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context" title="ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context"><span class="pre">Context</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.context" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepExecutorConfig.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.model_computed_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepExecutorConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'forbid'}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.model_config" title="Permalink to this definition">#</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepExecutorConfig.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'context':</span> <span class="pre">FieldInfo(annotation=FepExecutorConfig.Context,</span> <span class="pre">required=True),</span> <span class="pre">'python_cmd':</span> <span class="pre">FieldInfo(annotation=str,</span> <span class="pre">required=False,</span> <span class="pre">default='python'),</span> <span class="pre">'queue_system':</span> <span class="pre">FieldInfo(annotation=QueueSystemConfig,</span> <span class="pre">required=True),</span> <span class="pre">'ssh':</span> <span class="pre">FieldInfo(annotation=Union[SshConfig,</span> <span class="pre">NoneType],</span> <span class="pre">required=False,</span> <span class="pre">default=None),</span> <span class="pre">'work_dir':</span> <span class="pre">FieldInfo(annotation=str,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig.model_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepWorkflowConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.workflow.fep_mlp.</span></span><span class="sig-name descname"><span class="pre">FepWorkflowConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig" title="ai2_kit.workflow.fep_mlp.FepExecutorConfig"><span class="pre">FepExecutorConfig</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">artifacts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/workflow/fep_mlp.html#FepWorkflowConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepWorkflowConfig" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepWorkflowConfig.artifacts">
+<span class="sig-name descname"><span class="pre">artifacts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact" title="ai2_kit.core.artifact.Artifact"><span class="pre">Artifact</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepWorkflowConfig.artifacts" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepWorkflowConfig.executors">
+<span class="sig-name descname"><span class="pre">executors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.FepExecutorConfig" title="ai2_kit.workflow.fep_mlp.FepExecutorConfig"><span class="pre">FepExecutorConfig</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepWorkflowConfig.executors" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepWorkflowConfig.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepWorkflowConfig.model_computed_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepWorkflowConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepWorkflowConfig.model_config" title="Permalink to this definition">#</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepWorkflowConfig.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'artifacts':</span> <span class="pre">FieldInfo(annotation=Mapping[str,</span> <span class="pre">ai2_kit.core.artifact.Artifact],</span> <span class="pre">required=True),</span> <span class="pre">'executors':</span> <span class="pre">FieldInfo(annotation=Dict[str,</span> <span class="pre">ai2_kit.workflow.fep_mlp.FepExecutorConfig],</span> <span class="pre">required=True),</span> <span class="pre">'workflow':</span> <span class="pre">FieldInfo(annotation=Any,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepWorkflowConfig.model_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.FepWorkflowConfig.workflow">
+<span class="sig-name descname"><span class="pre">workflow</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Any</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.FepWorkflowConfig.workflow" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.workflow.fep_mlp.</span></span><span class="sig-name descname"><span class="pre">WorkflowConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">general</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.General" title="ai2_kit.workflow.fep_mlp.WorkflowConfig.General"><span class="pre">General</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">neu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch" title="ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch"><span class="pre">Branch</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">red</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch" title="ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch"><span class="pre">Branch</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lammps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig" title="ai2_kit.domain.lammps.CllLammpsInputConfig"><span class="pre">CllLammpsInputConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Update" title="ai2_kit.workflow.fep_mlp.WorkflowConfig.Update"><span class="pre">Update</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/workflow/fep_mlp.html#WorkflowConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Branch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deepmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig" title="ai2_kit.domain.deepmd.CllDeepmdInputConfig"><span class="pre">CllDeepmdInputConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp2k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kInputConfig" title="ai2_kit.domain.cp2k.CllCp2kInputConfig"><span class="pre">CllCp2kInputConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig" title="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig"><span class="pre">CllModelDeviSelectorInputConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/workflow/fep_mlp.html#WorkflowConfig.Branch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.cp2k">
+<span class="sig-name descname"><span class="pre">cp2k</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kInputConfig" title="ai2_kit.domain.cp2k.CllCp2kInputConfig"><span class="pre">CllCp2kInputConfig</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.cp2k" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.deepmd">
+<span class="sig-name descname"><span class="pre">deepmd</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig" title="ai2_kit.domain.deepmd.CllDeepmdInputConfig"><span class="pre">CllDeepmdInputConfig</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.deepmd" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.model_computed_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.model_config" title="Permalink to this definition">#</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'cp2k':</span> <span class="pre">FieldInfo(annotation=CllCp2kInputConfig,</span> <span class="pre">required=True),</span> <span class="pre">'deepmd':</span> <span class="pre">FieldInfo(annotation=CllDeepmdInputConfig,</span> <span class="pre">required=True),</span> <span class="pre">'threshold':</span> <span class="pre">FieldInfo(annotation=CllModelDeviSelectorInputConfig,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.model_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.threshold">
+<span class="sig-name descname"><span class="pre">threshold</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ai2_kit.domain.selector.html#ai2_kit.domain.selector.CllModelDeviSelectorInputConfig" title="ai2_kit.domain.selector.CllModelDeviSelectorInputConfig"><span class="pre">CllModelDeviSelectorInputConfig</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch.threshold" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.General">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">General</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/workflow/fep_mlp.html#WorkflowConfig.General"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.General" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.General.mass_map">
+<span class="sig-name descname"><span class="pre">mass_map</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.General.mass_map" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.General.max_iters">
+<span class="sig-name descname"><span class="pre">max_iters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.General.max_iters" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.General.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.General.model_computed_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.General.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.General.model_config" title="Permalink to this definition">#</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.General.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'mass_map':</span> <span class="pre">FieldInfo(annotation=List[float],</span> <span class="pre">required=True),</span> <span class="pre">'max_iters':</span> <span class="pre">FieldInfo(annotation=int,</span> <span class="pre">required=False,</span> <span class="pre">default=10),</span> <span class="pre">'type_map':</span> <span class="pre">FieldInfo(annotation=List[str],</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.General.model_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.General.type_map">
+<span class="sig-name descname"><span class="pre">type_map</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.General.type_map" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.Update">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">walkthrough</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.domain.updater.html#ai2_kit.domain.updater.CllWalkthroughUpdaterInputConfig" title="ai2_kit.domain.updater.CllWalkthroughUpdaterInputConfig"><span class="pre">CllWalkthroughUpdaterInputConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/workflow/fep_mlp.html#WorkflowConfig.Update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Update" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.Update.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Update.model_computed_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.Update.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Update.model_config" title="Permalink to this definition">#</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.Update.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'walkthrough':</span> <span class="pre">FieldInfo(annotation=CllWalkthroughUpdaterInputConfig,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Update.model_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.Update.walkthrough">
+<span class="sig-name descname"><span class="pre">walkthrough</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ai2_kit.domain.updater.html#ai2_kit.domain.updater.CllWalkthroughUpdaterInputConfig" title="ai2_kit.domain.updater.CllWalkthroughUpdaterInputConfig"><span class="pre">CllWalkthroughUpdaterInputConfig</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Update.walkthrough" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.general">
+<span class="sig-name descname"><span class="pre">general</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.General" title="ai2_kit.workflow.fep_mlp.WorkflowConfig.General"><span class="pre">General</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.general" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.lammps">
+<span class="sig-name descname"><span class="pre">lammps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig" title="ai2_kit.domain.lammps.CllLammpsInputConfig"><span class="pre">CllLammpsInputConfig</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.lammps" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.model_computed_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.model_config" title="Permalink to this definition">#</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'general':</span> <span class="pre">FieldInfo(annotation=WorkflowConfig.General,</span> <span class="pre">required=True),</span> <span class="pre">'lammps':</span> <span class="pre">FieldInfo(annotation=CllLammpsInputConfig,</span> <span class="pre">required=True),</span> <span class="pre">'neu':</span> <span class="pre">FieldInfo(annotation=WorkflowConfig.Branch,</span> <span class="pre">required=True),</span> <span class="pre">'red':</span> <span class="pre">FieldInfo(annotation=WorkflowConfig.Branch,</span> <span class="pre">required=True),</span> <span class="pre">'update':</span> <span class="pre">FieldInfo(annotation=WorkflowConfig.Update,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.model_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.neu">
+<span class="sig-name descname"><span class="pre">neu</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch" title="ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch"><span class="pre">Branch</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.neu" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.red">
+<span class="sig-name descname"><span class="pre">red</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch" title="ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch"><span class="pre">Branch</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.red" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.WorkflowConfig.update">
+<span class="sig-name descname"><span class="pre">update</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.Update" title="ai2_kit.workflow.fep_mlp.WorkflowConfig.Update"><span class="pre">Update</span></a></em><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.WorkflowConfig.update" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.cll_mlp_training_workflow">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.workflow.fep_mlp.</span></span><span class="sig-name descname"><span class="pre">cll_mlp_training_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ai2_kit.workflow.fep_mlp.FepWorkflowConfig" title="ai2_kit.workflow.fep_mlp.FepWorkflowConfig"><span class="pre">FepWorkflowConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ai2_kit.core.resource_manager.html#ai2_kit.core.resource_manager.ResourceManager" title="ai2_kit.core.resource_manager.ResourceManager"><span class="pre">ResourceManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">executor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/workflow/fep_mlp.html#cll_mlp_training_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.cll_mlp_training_workflow" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.workflow.fep_mlp.run_workflow">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.workflow.fep_mlp.</span></span><span class="sig-name descname"><span class="pre">run_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">config_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/workflow/fep_mlp.html#run_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.workflow.fep_mlp.run_workflow" title="Permalink to this definition">#</a></dt>
+<dd><p>Training ML potential for FEP</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_files</strong> – path of config files, should be yaml files, can be multiple, support glob pattern</p></li>
+<li><p><strong>executor</strong> – name of executor, should be defined in config <cite>executors</cite> section</p></li>
+<li><p><strong>path_prefix</strong> – path prefix for output</p></li>
+<li><p><strong>checkpoint</strong> – checkpoint file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
     <script type="text/x-thebe-config">

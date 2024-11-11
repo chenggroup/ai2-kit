@@ -25,6 +25,7 @@ def dpdata_read_cp2k_dpff_data(
     ewald_beta: float,
     ext_efield,
     sel_type: List[int],
+    wannier_cutoff: float = 1.0,
     backend: str = "tf",
 ):
     """
@@ -40,6 +41,7 @@ def dpdata_read_cp2k_dpff_data(
     :param ewald_beta: the ewald_beta parameter used in dplr/dpff model
     :param ext_efield: the external electric field
     :param sel_type: the selected type of atom, for example, [0] means atom type 0, aka O is selected
+    :param wannier_cutoff: the cutoff to allocate wannier centers around atoms
     :param backend: the backend of dpdata, "tf" or "pt"
 
     :return dp_sys: dpdata.LabeledSystem
@@ -63,6 +65,7 @@ def dpdata_read_cp2k_dpff_data(
         ewald_beta,
         ext_efield,
         sel_type,
+        wannier_cutoff,
         backend,
     )
 
@@ -78,6 +81,7 @@ def set_dpff_ext_from_cp2k_output(
     ewald_beta: float,
     ext_efield,
     sel_type: List[int],
+    wannier_cutoff: float = 1.0,
     backend: str = "tf",
 ):
     # with atomic_dipole
@@ -90,6 +94,7 @@ def set_dpff_ext_from_cp2k_output(
         sys_charge_map,
         model_charge_map,
         sel_type,
+        wannier_cutoff,
         backend,
     )
     atomic_dipole = dplr_dp_sys.data["atomic_dipole"].reshape(-1, 3)

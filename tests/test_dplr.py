@@ -44,7 +44,7 @@ class TestDPLRDPData(unittest.TestCase, CP2kTestData):
             self.sys_charge_map,
             self.model_charge_map,
             self.sel_type,
-            backend,
+            backend=backend,
         )
 
         backend = "pt"
@@ -56,7 +56,7 @@ class TestDPLRDPData(unittest.TestCase, CP2kTestData):
             self.sys_charge_map,
             self.model_charge_map,
             self.sel_type,
-            backend,
+            backend=backend,
         )
         self.sel_ids = get_sel_ids(self.pt_data, self.type_map, self.sel_type)
 
@@ -88,7 +88,7 @@ class TestDPFFDPData(TestDPLRDPData):
             self.ewald_beta,
             self.ext_efield,
             self.sel_type,
-            backend,
+            backend=backend,
         )
 
         backend = "pt"
@@ -103,13 +103,13 @@ class TestDPFFDPData(TestDPLRDPData):
             self.ewald_beta,
             self.ext_efield,
             self.sel_type,
-            backend,
+            backend=backend,
         )
         self.sel_ids = get_sel_ids(self.pt_data, self.type_map, self.sel_type)
 
-    
     def test_numerical(self):
         pass
+
 
 if __name__ == "__main__":
     unittest.main()

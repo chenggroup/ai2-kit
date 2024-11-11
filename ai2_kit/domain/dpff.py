@@ -7,6 +7,7 @@ import numpy as np
 
 import ase.io
 import dpdata
+import os
 import re
 
 
@@ -14,6 +15,32 @@ from .util import LammpsData
 from ai2_kit.core.log import get_logger
 
 logger = get_logger(__name__)
+
+
+def dpdata_read_cp2k_dplr_data(cp2k_dir: str,
+                               cp2k_output: str,
+                               wannier_file: str,
+                               type_map: List[str],
+                               sys_charge_map: List[int],
+                               model_charge_map: List[int],
+                               ewald_h: float,
+                               ewald_beta: float,
+                               ext_efield,
+                               sel_type: List[int],
+                               ):
+    cp2k_output = os.path.join(cp2k_dir, cp2k_output)
+    wannier_file = os.path.join(cp2k_dir, wannier_file)
+    dp_sys = dpdata.LabeledSystem(cp2k_output, fmt='cp2k/output')
+    return set_dplr_ext_from_cp2k_output(dp_sys,
+                                         cp2k_output,
+                                         wannier_file,
+                                         type_map,
+                                         sys_charge_map,
+                                         model_charge_map,
+                                         ewald_h,
+                                         ewald_beta,
+                                         ext_efield,
+                                         sel_type)
 
 
 def set_dplr_ext_from_cp2k_output(dp_sys: dpdata.LabeledSystem,

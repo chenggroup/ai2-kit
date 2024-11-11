@@ -22,7 +22,7 @@ from .constant import (
     PRESET_LAMMPS_INPUT_TEMPLATE,
 )
 from .data import DataFormat, artifacts_to_ase_atoms
-from .dpff import dump_dplr_lammps_data
+from .dplr import dump_dplr_lammps_data
 
 logger = get_logger(__name__)
 

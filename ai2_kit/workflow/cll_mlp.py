@@ -121,6 +121,9 @@ def run_workflow(*config_files,
 
     config_data = load_yaml_files(*config_files)
     config = CllWorkflowConfig.parse_obj(config_data)
+    for key in config.artifacts:
+        if '/' in key:
+            raise ValueError(f'Artifact key {key} should not contain /')
 
     if executor not in config.executors:
         raise ValueError(f'executor {executor} is not found')

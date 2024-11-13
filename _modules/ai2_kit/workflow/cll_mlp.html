@@ -552,6 +552,9 @@ document.write(`
 
     <span class="n">config_data</span> <span class="o">=</span> <span class="n">load_yaml_files</span><span class="p">(</span><span class="o">*</span><span class="n">config_files</span><span class="p">)</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">CllWorkflowConfig</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">config_data</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">artifacts</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Artifact key </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> should not contain /&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">executor</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">executors</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;executor </span><span class="si">{</span><span class="n">executor</span><span class="si">}</span><span class="s1"> is not found&#39;</span><span class="p">)</span>

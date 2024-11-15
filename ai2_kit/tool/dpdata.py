@@ -1,5 +1,5 @@
 from ai2_kit.feat.spectrum.viber import dpdata_read_cp2k_viber_data
-from ai2_kit.domain.dpff import dpdata_read_cp2k_dplr_data
+from ai2_kit.domain.dplr import dpdata_read_cp2k_dplr_data
 from ai2_kit.core.util import ensure_dir, expand_globs, list_sample, SAMPLE_METHOD, slice_from_str
 from ai2_kit.core.log import get_logger
 

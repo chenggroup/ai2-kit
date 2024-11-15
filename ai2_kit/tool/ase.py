@@ -148,7 +148,7 @@ class AseTool:
         :param model_charge_map: the charge map of atom in model, for example, [-8]
         """
 
-        from ai2_kit.domain.dpff import dump_dplr_lammps_data
+        from ai2_kit.domain.dplr import dump_dplr_lammps_data
         ensure_dir(filename.format(i=0))
         for i, atoms in enumerate(self._atoms_list):
             with open(filename.format(i=i), 'w') as f:

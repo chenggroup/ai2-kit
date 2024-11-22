@@ -1,5 +1,5 @@
 from ai2_kit.feat.spectrum.viber import dpdata_read_cp2k_viber_data
-from ai2_kit.domain.dplr import dpdata_read_cp2k_dplr_data
+from ai2_kit.domain.dplr import dpdata_read_cp2k_dplr_data, dplr_v3_to_v2
 from ai2_kit.core.util import (
     ensure_dir,
     expand_globs,
@@ -139,34 +139,7 @@ class DpdataTool:
                 assert (
                     sel_symbol is not None
                 ), "sel_symbol must be provided when v2 is True"
-                atomic_data_fnames = [
-                    "atomic_dipole.npy",
-                    "atomic_polarizability.npy",
-                    "wannier_spread.npy",
-                ]
-                for atomic_data_fname in atomic_data_fnames:
-                    fnames = glob.glob(
-                        os.path.join(out_path, "**", atomic_data_fname), recursive=True
-                    )
-                    for fname in fnames:
-                        type_map = np.loadtxt(
-                            os.path.join(os.path.dirname(fname), "../type_map.raw"),
-                            dtype=str,
-                        )
-                        atype = np.loadtxt(
-                            os.path.join(os.path.dirname(fname), "../type.raw"),
-                            dtype=int,
-                        )
-                        symbols = np.array(type_map)[atype]
-                        sel_ids = np.where(np.isin(symbols, sel_symbol))[0]
-                        n_atoms = len(atype)
-
-                        full_data = np.load(fname)
-                        n_frames = full_data.shape[0]
-                        full_data_reshape = full_data.reshape([n_frames, n_atoms, -1])
-                        np.save(
-                            fname, full_data_reshape[:, sel_ids].reshape([n_frames, -1])
-                        )
+                dplr_v3_to_v2(out_path, sel_symbol)
 
         elif fmt == "deepmd/raw":
             systems.to_deepmd_raw(out_path)  # type: ignore

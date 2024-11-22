@@ -7,7 +7,7 @@ import numpy as np
 import ase.io
 import dpdata
 import os
-
+import glob
 
 from .util import LammpsData
 from ai2_kit.core.log import get_logger
@@ -279,3 +279,64 @@ def read_wannier_spread(fname: str):
         line = line.strip().split()
         wannier.append([float(line[1]), float(line[2])])
     return np.array(wannier)
+
+
+def dplr_v2_to_v3(data_path: str, sel_symbol: list):
+    atomic_data_fnames = [
+        "atomic_dipole.npy",
+        "atomic_polarizability.npy",
+        "wannier_spread.npy",
+    ]
+    for atomic_data_fname in atomic_data_fnames:
+        fnames = glob.glob(
+            os.path.join(data_path, "**", atomic_data_fname), recursive=True
+        )
+        for fname in fnames:
+            type_map = np.loadtxt(
+                os.path.join(os.path.dirname(fname), "../type_map.raw"),
+                dtype=str,
+            )
+            atype = np.loadtxt(
+                os.path.join(os.path.dirname(fname), "../type.raw"),
+                dtype=int,
+            )
+            symbols = np.array(type_map)[atype]
+            sel_ids = np.where(np.isin(symbols, sel_symbol))[0]
+            n_atoms = len(atype)
+
+            raw_data = np.load(fname).reshape([n_frames, len(sel_ids), -1])
+            n_frames = raw_data.shape[0]
+            n_dim = raw_data.shape[2]
+
+            full_data = np.zeros([n_frames, n_atoms, n_dim])
+            full_data[:, sel_ids] = raw_data
+            np.save(fname, full_data.reshape([n_frames, -1]))
+
+
+def dplr_v3_to_v2(data_path: str, sel_symbol: list):
+    atomic_data_fnames = [
+        "atomic_dipole.npy",
+        "atomic_polarizability.npy",
+        "wannier_spread.npy",
+    ]
+    for atomic_data_fname in atomic_data_fnames:
+        fnames = glob.glob(
+            os.path.join(data_path, "**", atomic_data_fname), recursive=True
+        )
+        for fname in fnames:
+            type_map = np.loadtxt(
+                os.path.join(os.path.dirname(fname), "../type_map.raw"),
+                dtype=str,
+            )
+            atype = np.loadtxt(
+                os.path.join(os.path.dirname(fname), "../type.raw"),
+                dtype=int,
+            )
+            symbols = np.array(type_map)[atype]
+            sel_ids = np.where(np.isin(symbols, sel_symbol))[0]
+            n_atoms = len(atype)
+
+            raw_data = np.load(fname)
+            n_frames = raw_data.shape[0]
+            raw_data_reshape = raw_data.reshape([n_frames, n_atoms, -1])
+            np.save(fname, raw_data_reshape[:, sel_ids].reshape([n_frames, -1]))

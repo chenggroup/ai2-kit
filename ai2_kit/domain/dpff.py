@@ -26,7 +26,7 @@ def dpdata_read_cp2k_dpff_data(
     ext_efield,
     sel_type: List[int],
     wannier_cutoff: float = 1.0,
-    v3: bool = False,
+    wannier_spread_file: Optional[str] = None,
 ):
     """
     Gnereate dpdata from cp2k output and wannier file for DPLR
@@ -43,7 +43,6 @@ def dpdata_read_cp2k_dpff_data(
     :param sel_type: the selected type of atom, for example, [0] means atom type 0, aka O is selected
     :param wannier_cutoff: the cutoff to allocate wannier centers around atoms
     :param wannier_spread_file: the wannier spread file, if provided, the spread data will be added to dp_sys
-    :param v3: in deepmd-kit v3, the atomic_dipole is reshaped to (nframes, natoms * 3) rather than (nframes, natoms_sel * 3)
 
     :return dp_sys: dpdata.LabeledSystem
         In addition to the common energy data, the following data are added:
@@ -54,6 +53,9 @@ def dpdata_read_cp2k_dpff_data(
     """
     cp2k_output = os.path.join(cp2k_dir, cp2k_output)
     wannier_file = os.path.join(cp2k_dir, wannier_file)
+    wannier_spread_file = (
+        os.path.join(cp2k_dir, wannier_spread_file) if wannier_spread_file else None
+    )
     dp_sys = dpdata.LabeledSystem(cp2k_output, fmt="cp2k/output")
     try:
         dp_sys = set_dpff_ext_from_cp2k_output(
@@ -68,7 +70,7 @@ def dpdata_read_cp2k_dpff_data(
             ext_efield,
             sel_type,
             wannier_cutoff,
-            v3,
+            wannier_spread_file,
         )
     except ValueError:
         dp_sys = None
@@ -89,7 +91,6 @@ def set_dpff_ext_from_cp2k_output(
     sel_type: List[int],
     wannier_cutoff: float = 1.0,
     wannier_spread_file: Optional[str] = None,
-    v3: bool = False,
 ):
     # with atomic_dipole
     # update energy
@@ -101,7 +102,6 @@ def set_dpff_ext_from_cp2k_output(
         sel_type,
         wannier_cutoff,
         wannier_spread_file,
-        v3,
     )
     atomic_dipole = dplr_dp_sys.data["atomic_dipole"].reshape(-1, 3)
 
@@ -117,12 +117,8 @@ def set_dpff_ext_from_cp2k_output(
     sel_ids = get_sel_ids(dp_sys, type_map, sel_type)
 
     ion_coords = dp_sys.data["coords"].reshape(-1, 3)
-    if v3:
-        # atomic_dipole.shape = (natoms * 3)
-        wannier_coords = (ion_coords + atomic_dipole)[sel_ids].reshape(-1, 3)
-    else:
-        # atomic_dipole.shape = (natoms_sel * 3)
-        wannier_coords = ion_coords[sel_ids].reshape(-1, 3) + atomic_dipole
+    # atomic_dipole.shape = (natoms * 3)
+    wannier_coords = (ion_coords + atomic_dipole)[sel_ids].reshape(-1, 3)
     extended_coords = np.concatenate((ion_coords, wannier_coords), axis=0)
 
     # get extended charges

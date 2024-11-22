@@ -23,7 +23,6 @@ def dpdata_read_cp2k_dplr_data(
     sel_type: List[int],
     wannier_cutoff: float = 1.0,
     wannier_spread_file: Optional[str] = None,
-    v3: bool = False,
 ):
     """
     Gnereate dpdata from cp2k output and wannier file for DPLR
@@ -35,7 +34,6 @@ def dpdata_read_cp2k_dplr_data(
     :param sel_type: the selected type of atom, for example, [0] means atom type 0, aka O is selected
     :param wannier_cutoff: the cutoff to allocate wannier centers around atoms
     :param wannier_spread_file: the wannier spread file, if provided, the spread data will be added to dp_sys
-    :param v3: in deepmd-kit v3, the atomic_dipole is reshaped to (nframes, natoms * 3) rather than (nframes, natoms_sel * 3)
 
     :return dp_sys: dpdata.LabeledSystem
         In addition to the common energy data, atomic_dipole data is added.
@@ -54,7 +52,6 @@ def dpdata_read_cp2k_dplr_data(
             sel_type,
             wannier_cutoff,
             wannier_spread_file,
-            v3,
         )
     except ValueError:
         dp_sys = None
@@ -69,9 +66,7 @@ def set_dplr_ext_from_cp2k_output(
     sel_type: List[int],
     wannier_cutoff: float = 1.0,
     wannier_spread_file: Optional[str] = None,
-    v3: bool = False,
 ):
-
     wannier_atoms = ase.io.read(wannier_file)
 
     natoms = dp_sys.get_natoms()
@@ -88,23 +83,25 @@ def set_dplr_ext_from_cp2k_output(
         wannier_cutoff,
         wannier_spread_file,
     )
-    if v3:
-        atomic_dipole_reformat = np.zeros((nframes, natoms, 3))
-        atomic_dipole_reformat[:, sel_ids] = atomic_dipole
-        atomic_dipole = atomic_dipole_reformat
-
-    dp_sys.data["atomic_dipole"] = atomic_dipole.reshape(nframes, -1)
+    atomic_dipole_reformat = np.zeros((nframes, natoms, 3))
+    atomic_dipole_reformat[:, sel_ids] = atomic_dipole
+    atomic_dipole = atomic_dipole_reformat
+    wannier_spread_reformat = np.zeros((nframes, natoms, 4))
     if len(wannier_spread) > 0:
-        dp_sys.data["wannier_spread"] = np.reshape(
-            wannier_spread, (nframes, len(sel_ids) * 4)
-        )
+        wannier_spread_reformat[:, sel_ids] = wannier_spread
+        wannier_spread = wannier_spread_reformat
+
+    dp_sys.data["atomic_dipole"] = atomic_dipole.reshape([nframes, natoms, 3])
+    if len(wannier_spread) > 0:
+        dp_sys.data["wannier_spread"] = np.reshape(wannier_spread, [nframes, natoms, 4])
     return dp_sys
 
 
 def get_sel_ids(dp_sys, type_map, sel_type):
     symbols = np.array(dp_sys.data["atom_names"])[dp_sys.data["atom_types"]]
-    sel_ids = [np.where(symbols == type_map[ii])[0] for ii in sel_type]
-    return np.concatenate(sel_ids)
+    # sel_ids = [np.where(symbols == type_map[ii])[0] for ii in sel_type]
+    sel_ids = np.where(np.isin(symbols, np.array(type_map)[sel_type]))[0]
+    return sel_ids
 
 
 def get_atomic_dipole(
@@ -148,7 +145,7 @@ def get_atomic_dipole(
     assert len(set(mlwc_ids.tolist())) == len(sel_ids) * 4
     atomic_dipole = np.reshape(atomic_dipole, (-1, 3))
     assert atomic_dipole.shape[0] == len(sel_ids)
-    return atomic_dipole, extended_coords, wannier_spread
+    return atomic_dipole, extended_coords, np.array(wannier_spread)
 
 
 def build_sel_type_assertion(sel_type, model_path: str, py_cmd="python"):

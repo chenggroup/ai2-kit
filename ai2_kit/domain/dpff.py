@@ -55,20 +55,25 @@ def dpdata_read_cp2k_dpff_data(
     cp2k_output = os.path.join(cp2k_dir, cp2k_output)
     wannier_file = os.path.join(cp2k_dir, wannier_file)
     dp_sys = dpdata.LabeledSystem(cp2k_output, fmt="cp2k/output")
-    return set_dpff_ext_from_cp2k_output(
-        dp_sys,
-        cp2k_output,
-        wannier_file,
-        type_map,
-        sys_charge_map,
-        model_charge_map,
-        ewald_h,
-        ewald_beta,
-        ext_efield,
-        sel_type,
-        wannier_cutoff,
-        v3,
-    )
+    try:
+        dp_sys = set_dpff_ext_from_cp2k_output(
+            dp_sys,
+            cp2k_output,
+            wannier_file,
+            type_map,
+            sys_charge_map,
+            model_charge_map,
+            ewald_h,
+            ewald_beta,
+            ext_efield,
+            sel_type,
+            wannier_cutoff,
+            v3,
+        )
+    except ValueError:
+        dp_sys = None
+
+    return dp_sys
 
 
 def set_dpff_ext_from_cp2k_output(

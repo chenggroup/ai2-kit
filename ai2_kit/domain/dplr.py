@@ -68,6 +68,11 @@ def set_dplr_ext_from_cp2k_output(
     wannier_spread_file: Optional[str] = None,
 ):
     wannier_atoms = ase.io.read(wannier_file)
+    # assert np.all(wannier_atoms.symbols == "X"), (
+    #     "%s should include Wannier centres only" % wannier_file
+    # )
+    mask = (wannier_atoms.symbols == "X")
+    wannier_atoms = wannier_atoms[mask]
 
     natoms = dp_sys.get_natoms()
     nframes = dp_sys.get_nframes()

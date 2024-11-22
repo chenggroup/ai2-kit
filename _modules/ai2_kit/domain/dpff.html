@@ -238,6 +238,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.dpff.html">ai2_kit.domain.dpff module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.dplr.html">ai2_kit.domain.dplr module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
@@ -430,75 +431,128 @@ document.write(`
                   
   <h1>Source code for ai2_kit.domain.dpff</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">dpdata.unit</span> <span class="kn">import</span> <span class="n">econvs</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">ase.geometry.cell</span> <span class="kn">import</span> <span class="n">cell_to_cellpar</span>
-<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">import</span> <span class="nn">ase.io</span>
 <span class="kn">import</span> <span class="nn">dpdata</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
 
-<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">LammpsData</span>
+<span class="kn">from</span> <span class="nn">.dplr</span> <span class="kn">import</span> <span class="n">set_dplr_ext_from_cp2k_output</span><span class="p">,</span> <span class="n">get_sel_ids</span>
 <span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="dpdata_read_cp2k_dplr_data"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.dpdata_read_cp2k_dplr_data">[docs]</a><span class="k">def</span> <span class="nf">dpdata_read_cp2k_dplr_data</span><span class="p">(</span><span class="n">cp2k_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                               <span class="n">cp2k_output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                               <span class="n">wannier_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                               <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-                               <span class="n">sys_charge_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-                               <span class="n">model_charge_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-                               <span class="n">ewald_h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                               <span class="n">ewald_beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                               <span class="n">ext_efield</span><span class="p">,</span>
-                               <span class="n">sel_type</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-                               <span class="p">):</span>
+<div class="viewcode-block" id="dpdata_read_cp2k_dpff_data"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.dpdata_read_cp2k_dpff_data">[docs]</a><span class="k">def</span> <span class="nf">dpdata_read_cp2k_dpff_data</span><span class="p">(</span>
+    <span class="n">cp2k_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">cp2k_output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">wannier_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">sys_charge_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">model_charge_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">ewald_h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ewald_beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ext_efield</span><span class="p">,</span>
+    <span class="n">sel_type</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">wannier_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">wannier_spread_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gnereate dpdata from cp2k output and wannier file for DPLR</span>
+
+<span class="sd">    :param cp2k_dir: the directory of cp2k output and wannier file</span>
+<span class="sd">    :param cp2k_output: the cp2k output file</span>
+<span class="sd">    :param wannier_file: the wannier file</span>
+<span class="sd">    :param type_map: the type map of atom type, for example, [O,H]</span>
+<span class="sd">    :param sys_charge_map: the charge map of atom in system, for example, [6, 1]</span>
+<span class="sd">    :param model_charge_map: the charge map of atom in model, for example, [-8]</span>
+<span class="sd">    :param ewald_h: the ewald_h parameter used in dplr/dpff model</span>
+<span class="sd">    :param ewald_beta: the ewald_beta parameter used in dplr/dpff model</span>
+<span class="sd">    :param ext_efield: the external electric field</span>
+<span class="sd">    :param sel_type: the selected type of atom, for example, [0] means atom type 0, aka O is selected</span>
+<span class="sd">    :param wannier_cutoff: the cutoff to allocate wannier centers around atoms</span>
+<span class="sd">    :param wannier_spread_file: the wannier spread file, if provided, the spread data will be added to dp_sys</span>
+
+<span class="sd">    :return dp_sys: dpdata.LabeledSystem</span>
+<span class="sd">        In addition to the common energy data, the following data are added:</span>
+<span class="sd">        - atomic_dipole: the atomic dipole of selected atoms</span>
+<span class="sd">        - ext_efield: the external electric field</span>
+<span class="sd">        - efield: the direction vector of atomic electric field</span>
+<span class="sd">        - aparam: the atomic electric field magnitude</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cp2k_output</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cp2k_dir</span><span class="p">,</span> <span class="n">cp2k_output</span><span class="p">)</span>
     <span class="n">wannier_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cp2k_dir</span><span class="p">,</span> <span class="n">wannier_file</span><span class="p">)</span>
-    <span class="n">dp_sys</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">cp2k_output</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;cp2k/output&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">set_dplr_ext_from_cp2k_output</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span>
-                                         <span class="n">cp2k_output</span><span class="p">,</span>
-                                         <span class="n">wannier_file</span><span class="p">,</span>
-                                         <span class="n">type_map</span><span class="p">,</span>
-                                         <span class="n">sys_charge_map</span><span class="p">,</span>
-                                         <span class="n">model_charge_map</span><span class="p">,</span>
-                                         <span class="n">ewald_h</span><span class="p">,</span>
-                                         <span class="n">ewald_beta</span><span class="p">,</span>
-                                         <span class="n">ext_efield</span><span class="p">,</span>
-                                         <span class="n">sel_type</span><span class="p">)</span></div>
+    <span class="n">wannier_spread_file</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cp2k_dir</span><span class="p">,</span> <span class="n">wannier_spread_file</span><span class="p">)</span> <span class="k">if</span> <span class="n">wannier_spread_file</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span>
+    <span class="n">dp_sys</span> <span class="o">=</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">(</span><span class="n">cp2k_output</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;cp2k/output&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dp_sys</span> <span class="o">=</span> <span class="n">set_dpff_ext_from_cp2k_output</span><span class="p">(</span>
+            <span class="n">dp_sys</span><span class="p">,</span>
+            <span class="n">cp2k_output</span><span class="p">,</span>
+            <span class="n">wannier_file</span><span class="p">,</span>
+            <span class="n">type_map</span><span class="p">,</span>
+            <span class="n">sys_charge_map</span><span class="p">,</span>
+            <span class="n">model_charge_map</span><span class="p">,</span>
+            <span class="n">ewald_h</span><span class="p">,</span>
+            <span class="n">ewald_beta</span><span class="p">,</span>
+            <span class="n">ext_efield</span><span class="p">,</span>
+            <span class="n">sel_type</span><span class="p">,</span>
+            <span class="n">wannier_cutoff</span><span class="p">,</span>
+            <span class="n">wannier_spread_file</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">dp_sys</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">dp_sys</span></div>
 
 
-<div class="viewcode-block" id="set_dplr_ext_from_cp2k_output"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.set_dplr_ext_from_cp2k_output">[docs]</a><span class="k">def</span> <span class="nf">set_dplr_ext_from_cp2k_output</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">:</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">,</span>
-                                  <span class="n">cp2k_output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                                  <span class="n">wannier_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                                  <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-                                  <span class="n">sys_charge_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-                                  <span class="n">model_charge_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-                                  <span class="n">ewald_h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                                  <span class="n">ewald_beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                                  <span class="n">ext_efield</span><span class="p">,</span>
-                                  <span class="n">sel_type</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-                                  <span class="p">):</span>
+<div class="viewcode-block" id="set_dpff_ext_from_cp2k_output"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.set_dpff_ext_from_cp2k_output">[docs]</a><span class="k">def</span> <span class="nf">set_dpff_ext_from_cp2k_output</span><span class="p">(</span>
+    <span class="n">dp_sys</span><span class="p">:</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">,</span>
+    <span class="n">cp2k_output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">wannier_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">sys_charge_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">model_charge_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">ewald_h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ewald_beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ext_efield</span><span class="p">,</span>
+    <span class="n">sel_type</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">wannier_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">wannier_spread_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="c1"># with atomic_dipole</span>
+    <span class="c1"># update energy</span>
+    <span class="c1"># add ext_efield, efield, aparam</span>
+    <span class="n">dplr_dp_sys</span> <span class="o">=</span> <span class="n">set_dplr_ext_from_cp2k_output</span><span class="p">(</span>
+        <span class="n">dp_sys</span><span class="p">,</span>
+        <span class="n">wannier_file</span><span class="p">,</span>
+        <span class="n">type_map</span><span class="p">,</span>
+        <span class="n">sel_type</span><span class="p">,</span>
+        <span class="n">wannier_cutoff</span><span class="p">,</span>
+        <span class="n">wannier_spread_file</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">atomic_dipole</span> <span class="o">=</span> <span class="n">dplr_dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atomic_dipole&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
-    <span class="n">wannier_atoms</span> <span class="o">=</span> <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">wannier_file</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cp2k_output</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cp2k_output</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
         <span class="n">raw_energy</span> <span class="o">=</span> <span class="n">get_cp2k_output_total_energy</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
 
     <span class="n">ext_efield</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">ext_efield</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
     <span class="n">natoms</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">get_natoms</span><span class="p">()</span>
     <span class="n">nframes</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">get_nframes</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="n">nframes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Only support one frame&#39;</span>
+    <span class="k">assert</span> <span class="n">nframes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Only support one frame&quot;</span>
 
     <span class="n">symbols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atom_names&quot;</span><span class="p">])[</span><span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atom_types&quot;</span><span class="p">]]</span>
     <span class="n">sel_ids</span> <span class="o">=</span> <span class="n">get_sel_ids</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">type_map</span><span class="p">,</span> <span class="n">sel_type</span><span class="p">)</span>
 
-    <span class="n">atomic_dipole</span><span class="p">,</span> <span class="n">extended_coords</span> <span class="o">=</span> <span class="n">get_atomic_dipole</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">sel_ids</span><span class="p">,</span> <span class="n">wannier_atoms</span><span class="p">)</span>
+    <span class="n">ion_coords</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="c1"># atomic_dipole.shape = (natoms * 3)</span>
+    <span class="n">wannier_coords</span> <span class="o">=</span> <span class="p">(</span><span class="n">ion_coords</span> <span class="o">+</span> <span class="n">atomic_dipole</span><span class="p">)[</span><span class="n">sel_ids</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">extended_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">ion_coords</span><span class="p">,</span> <span class="n">wannier_coords</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
     <span class="c1"># get extended charges</span>
     <span class="n">extended_charges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">extended_coords</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">ion_charge</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">type_map</span><span class="p">,</span> <span class="n">sys_charge_map</span><span class="p">):</span>
@@ -506,21 +560,25 @@ document.write(`
     <span class="n">sel_symbols</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">[</span><span class="n">sel_ids</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">wannier_charge</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sel_type</span><span class="p">,</span> <span class="n">model_charge_map</span><span class="p">):</span>
         <span class="n">sel_symbol</span> <span class="o">=</span> <span class="n">type_map</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
-        <span class="n">extended_charges</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sel_symbols</span> <span class="o">==</span> <span class="n">sel_symbol</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">natoms</span><span class="p">]</span> <span class="o">=</span> <span class="n">wannier_charge</span>
+        <span class="n">extended_charges</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sel_symbols</span> <span class="o">==</span> <span class="n">sel_symbol</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">natoms</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">wannier_charge</span>
+        <span class="p">)</span>
     <span class="n">total_dipole</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">extended_coords</span> <span class="o">*</span> <span class="n">extended_charges</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">energy</span> <span class="o">=</span> <span class="n">raw_energy</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">total_dipole</span><span class="p">,</span> <span class="n">ext_efield</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-    <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">pbc_efield</span> <span class="o">=</span> <span class="n">get_pbc_atomic_efield</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">extended_coords</span><span class="p">,</span> <span class="n">extended_charges</span><span class="p">,</span> <span class="n">ewald_h</span><span class="p">,</span> <span class="n">ewald_beta</span><span class="p">)</span>
+    <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;energies&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">pbc_efield</span> <span class="o">=</span> <span class="n">get_pbc_atomic_efield</span><span class="p">(</span>
+        <span class="n">dp_sys</span><span class="p">,</span> <span class="n">extended_coords</span><span class="p">,</span> <span class="n">extended_charges</span><span class="p">,</span> <span class="n">ewald_h</span><span class="p">,</span> <span class="n">ewald_beta</span>
+    <span class="p">)</span>
     <span class="c1"># natoms * 3</span>
     <span class="n">_efield</span> <span class="o">=</span> <span class="n">pbc_efield</span> <span class="o">+</span> <span class="n">ext_efield</span>
     <span class="n">aparam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">_efield</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">efield</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">_efield</span><span class="p">)</span> <span class="o">/</span> <span class="n">aparam</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">natoms</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-    <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ext_efield&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ext_efield</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nframes</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;efield&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">efield</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;aparam&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aparam</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;atomic_dipole&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atomic_dipole</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nframes</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;ext_efield&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ext_efield</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nframes</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;efield&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">efield</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;aparam&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aparam</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dp_sys</span></div>
+
 
 <div class="viewcode-block" id="get_cp2k_output_total_energy"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_cp2k_output_total_energy">[docs]</a><span class="k">def</span> <span class="nf">get_cp2k_output_total_energy</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
     <span class="n">start_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;  Total charge density g-space grids:&quot;</span>
@@ -532,7 +590,7 @@ document.write(`
     <span class="n">data_lines</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">nloop</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fp</span><span class="p">:</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">start_pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
             <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">elif</span> <span class="n">flag</span> <span class="ow">and</span> <span class="n">end_pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
@@ -543,161 +601,38 @@ document.write(`
             <span class="n">data_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
     <span class="n">data_lines</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data_lines</span><span class="p">,</span> <span class="p">(</span><span class="n">nloop</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 
-    <span class="n">tot_e</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">tot_e</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="c1"># grep the data from the last iteration</span>
     <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">data_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
         <span class="n">kw</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
-        <span class="n">k</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
         <span class="n">v</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">kw</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">econvs</span><span class="p">[</span><span class="s2">&quot;hartree&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;Fermi energy&quot;</span><span class="p">:</span>
             <span class="n">tot_e</span> <span class="o">+=</span> <span class="n">v</span>
     <span class="k">return</span> <span class="n">tot_e</span></div>
 
 
-<div class="viewcode-block" id="get_sel_ids"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_sel_ids">[docs]</a><span class="k">def</span> <span class="nf">get_sel_ids</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">type_map</span><span class="p">,</span> <span class="n">sel_type</span><span class="p">):</span>
-    <span class="n">symbols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atom_names&quot;</span><span class="p">])[</span><span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atom_types&quot;</span><span class="p">]]</span>
-    <span class="n">sel_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">symbols</span> <span class="o">==</span> <span class="n">type_map</span><span class="p">[</span><span class="n">ii</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">sel_type</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">sel_ids</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="get_atomic_dipole"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_atomic_dipole">[docs]</a><span class="k">def</span> <span class="nf">get_atomic_dipole</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">sel_ids</span><span class="p">,</span> <span class="n">wannier_atoms</span><span class="p">,</span> <span class="n">wannier_cutoff</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">MDAnalysis.lib.distances</span> <span class="kn">import</span> <span class="n">distance_array</span><span class="p">,</span> <span class="n">minimize_vectors</span>
-
-    <span class="n">coords</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;coords&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">cellpar</span> <span class="o">=</span> <span class="n">cell_to_cellpar</span><span class="p">(</span><span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-    <span class="n">extended_coords</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="n">ref_coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">sel_ids</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">e_coords</span> <span class="o">=</span> <span class="n">wannier_atoms</span><span class="o">.</span><span class="n">get_positions</span><span class="p">()</span>
-    <span class="n">dist_mat</span> <span class="o">=</span> <span class="n">distance_array</span><span class="p">(</span><span class="n">ref_coords</span><span class="p">,</span> <span class="n">e_coords</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">cellpar</span><span class="p">)</span>
-    <span class="n">atomic_dipole</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">dist_vec</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dist_mat</span><span class="p">):</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">dist_vec</span> <span class="o">&lt;</span> <span class="n">wannier_cutoff</span><span class="p">)</span>
-        <span class="n">cn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">cn</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;wannier atoms </span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s1"> has </span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s1"> atoms in the cutoff range&#39;</span><span class="p">)</span>
-        <span class="n">wc_coord_rel</span> <span class="o">=</span> <span class="n">e_coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">ref_coords</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
-        <span class="n">wc_coord_rel</span> <span class="o">=</span> <span class="n">minimize_vectors</span><span class="p">(</span><span class="n">wc_coord_rel</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">cellpar</span><span class="p">)</span>
-        <span class="n">_atomic_dipole</span> <span class="o">=</span> <span class="n">wc_coord_rel</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">atomic_dipole</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_atomic_dipole</span><span class="p">)</span>
-        <span class="n">wc_coord</span> <span class="o">=</span> <span class="n">_atomic_dipole</span> <span class="o">+</span> <span class="n">ref_coords</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
-        <span class="n">extended_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">extended_coords</span><span class="p">,</span> <span class="n">wc_coord</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">atomic_dipole</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">atomic_dipole</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="n">atomic_dipole</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_ids</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">atomic_dipole</span><span class="p">,</span> <span class="n">extended_coords</span></div>
-
-
-<div class="viewcode-block" id="get_pbc_atomic_efield"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_pbc_atomic_efield">[docs]</a><span class="k">def</span> <span class="nf">get_pbc_atomic_efield</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span>
-                          <span class="n">extended_coords</span><span class="p">,</span>
-                          <span class="n">extended_charges</span><span class="p">,</span>
-                          <span class="n">ewald_h</span><span class="p">,</span>
-                          <span class="n">ewald_beta</span><span class="p">,</span>
-                          <span class="p">):</span>
+<div class="viewcode-block" id="get_pbc_atomic_efield"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_pbc_atomic_efield">[docs]</a><span class="k">def</span> <span class="nf">get_pbc_atomic_efield</span><span class="p">(</span>
+    <span class="n">dp_sys</span><span class="p">,</span>
+    <span class="n">extended_coords</span><span class="p">,</span>
+    <span class="n">extended_charges</span><span class="p">,</span>
+    <span class="n">ewald_h</span><span class="p">,</span>
+    <span class="n">ewald_beta</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="kn">from</span> <span class="nn">deepmd.infer.ewald_recp</span> <span class="kn">import</span> <span class="n">EwaldRecp</span>
 
     <span class="n">er</span> <span class="o">=</span> <span class="n">EwaldRecp</span><span class="p">(</span><span class="n">ewald_h</span><span class="p">,</span> <span class="n">ewald_beta</span><span class="p">)</span>
     <span class="n">natoms</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">get_natoms</span><span class="p">()</span>
-    <span class="n">cell</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;cells&#39;</span><span class="p">]</span>
-    <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">er</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">extended_coords</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-                        <span class="n">extended_charges</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-                        <span class="n">cell</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">]</span>
+    <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">er</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span>
+        <span class="n">extended_coords</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">extended_charges</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
     <span class="n">extended_efield</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="n">extended_charges</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="c1"># natoms * 3</span>
     <span class="n">pbc_efield</span> <span class="o">=</span> <span class="n">extended_efield</span><span class="p">[:</span><span class="n">natoms</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">pbc_efield</span></div>
-
-
-<div class="viewcode-block" id="get_sel_type"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_sel_type">[docs]</a><span class="k">def</span> <span class="nf">get_sel_type</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">deepmd.infer</span> <span class="kn">import</span> <span class="n">DeepDipole</span>
-    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;deepmd-kit is not installed&#39;</span><span class="p">)</span>
-
-    <span class="n">dp</span> <span class="o">=</span> <span class="n">DeepDipole</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">dp</span><span class="o">.</span><span class="n">tselt</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="build_sel_type_assertion"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.build_sel_type_assertion">[docs]</a><span class="k">def</span> <span class="nf">build_sel_type_assertion</span><span class="p">(</span><span class="n">sel_type</span><span class="p">,</span> <span class="n">model_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">py_cmd</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="n">py_cmd</span><span class="si">}</span><span class="s1"> -c &quot;from deepmd.infer import DeepDipole;dp = DeepDipole(</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span><span class="si">}</span><span class="s1">);assert</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">sel_type</span><span class="p">)</span><span class="si">}</span><span class="s1">==[t for t in dp.tselt]&quot;&#39;&#39;&#39;</span></div>
-
-
-<div class="viewcode-block" id="dump_dplr_lammps_data"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.dump_dplr_lammps_data">[docs]</a><span class="k">def</span> <span class="nf">dump_dplr_lammps_data</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span> <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">sel_type</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-                          <span class="n">sys_charge_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">model_charge_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]):</span>
-
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    dump atoms to LAMMPS data file for DPLR</span>
-<span class="sd">    the naming convention of params follows Deepmd-Kit&#39;s</span>
-
-<span class="sd">    about dplr: https://docs.deepmodeling.com/projects/deepmd/en/master/model/dplr.html</span>
-<span class="sd">    about fitting tensor: https://docs.deepmodeling.com/projects/deepmd/en/master/model/train-fitting-tensor.html</span>
-
-<span class="sd">    :param fp: file pointer</span>
-<span class="sd">    :param type_map: the type map of atom type, for example, [O,H]</span>
-<span class="sd">    :param sel_type: the selected type of atom, for example, [0] means atom type 0, aka O is selected</span>
-<span class="sd">    :param sys_charge_map: the charge map of atom in system, for example, [6, 1]</span>
-<span class="sd">    :param model_charge_map: the charge map of atom in model, for example, [-8]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">type_map</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys_charge_map</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;type_map </span><span class="si">{</span><span class="n">type_map</span><span class="si">}</span><span class="s1"> and sys_charge_map </span><span class="si">{</span><span class="n">sys_charge_map</span><span class="si">}</span><span class="s1"> must have the same length&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_type</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">model_charge_map</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;sel_type </span><span class="si">{</span><span class="n">sel_type</span><span class="si">}</span><span class="s1"> and model_charge_map </span><span class="si">{</span><span class="n">model_charge_map</span><span class="si">}</span><span class="s1"> must have the same length&#39;</span><span class="p">)</span>
-
-    <span class="n">new_atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">vtypes</span> <span class="o">=</span> <span class="n">get_unused_symbols</span><span class="p">(</span><span class="n">type_map</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_type</span><span class="p">))</span>
-
-    <span class="n">r_atom_ids</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">v_atom_ids</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="c1"># add virtual atoms</span>
-    <span class="k">for</span> <span class="n">atype</span><span class="p">,</span> <span class="n">vtype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sel_type</span><span class="p">,</span> <span class="n">vtypes</span><span class="p">):</span>
-        <span class="c1"># create virtual atoms from the original atom type</span>
-        <span class="n">v_atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">[</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span> <span class="o">==</span> <span class="n">type_map</span><span class="p">[</span><span class="n">atype</span><span class="p">]]</span>
-        <span class="n">v_atoms</span><span class="o">.</span><span class="n">set_chemical_symbols</span><span class="p">([</span><span class="n">vtype</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">v_atoms</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
-
-        <span class="c1"># create bonds between atom and its virtual atoms</span>
-        <span class="n">r_atom_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span> <span class="o">==</span> <span class="n">type_map</span><span class="p">[</span><span class="n">atype</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">v_atom_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v_atoms</span><span class="p">))</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_atoms</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
-        <span class="c1"># this should be last</span>
-        <span class="n">new_atoms</span> <span class="o">+=</span> <span class="n">v_atoms</span>
-
-    <span class="c1"># build charges</span>
-    <span class="n">charges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_atoms</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">atype</span><span class="p">,</span> <span class="n">charge</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">type_map</span> <span class="o">+</span> <span class="n">vtypes</span><span class="p">,</span> <span class="n">sys_charge_map</span> <span class="o">+</span> <span class="n">model_charge_map</span><span class="p">):</span>
-        <span class="n">charges</span><span class="p">[</span><span class="n">new_atoms</span><span class="o">.</span><span class="n">symbols</span><span class="o">==</span><span class="n">atype</span><span class="p">]</span> <span class="o">=</span> <span class="n">charge</span>
-    <span class="c1"># build bonds</span>
-    <span class="n">n_bonds</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">r_atom_ids</span><span class="p">)</span>
-    <span class="c1"># note: the index of lammps start from 1</span>
-    <span class="n">bonds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_bonds</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># bond id</span>
-        <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_bonds</span><span class="p">,</span>  <span class="c1"># bond type</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r_atom_ids</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># bond left</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v_atom_ids</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># bond right</span>
-    <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-
-    <span class="c1"># write lammps data</span>
-    <span class="n">lmp_data</span> <span class="o">=</span> <span class="n">LammpsData</span><span class="p">(</span><span class="n">new_atoms</span><span class="p">)</span>
-    <span class="n">lmp_data</span><span class="o">.</span><span class="n">charges</span> <span class="o">=</span> <span class="n">charges</span>
-    <span class="n">lmp_data</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="n">bonds</span>
-    <span class="n">lmp_data</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">atom_style</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="n">specorder</span><span class="o">=</span><span class="n">type_map</span> <span class="o">+</span> <span class="n">vtypes</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="get_unused_symbols"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_unused_symbols">[docs]</a><span class="k">def</span> <span class="nf">get_unused_symbols</span><span class="p">(</span><span class="n">used_symbols</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get unused symbols from ase</span>
-
-<span class="sd">    :param used_symbols: symbols that are already used</span>
-<span class="sd">    :param size: number of unused symbols to get</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">ase.data</span> <span class="kn">import</span> <span class="n">chemical_symbols</span>
-
-    <span class="n">unused_symbols</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">chemical_symbols</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">symbol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used_symbols</span><span class="p">:</span>
-            <span class="n">unused_symbols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unused_symbols</span><span class="p">)</span> <span class="o">==</span> <span class="n">size</span><span class="p">:</span>
-            <span class="k">break</span>
-    <span class="k">return</span> <span class="n">unused_symbols</span></div>
 </pre></div>
 
                 </article>

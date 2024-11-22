@@ -238,6 +238,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.domain.dpff.html">ai2_kit.domain.dpff module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.domain.dplr.html">ai2_kit.domain.dplr module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
@@ -657,6 +658,13 @@ document.write(`
 </li>
       </ul></li>
       <li>
+    ai2_kit.domain.dplr
+
+      <ul>
+        <li><a href="_api/ai2_kit.domain.dplr.html#module-ai2_kit.domain.dplr">module</a>
+</li>
+      </ul></li>
+      <li>
     ai2_kit.domain.iface
 
       <ul>
@@ -975,7 +983,7 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.CmdEntries.build_config">build_config() (ai2_kit.feat.catalysis.CmdEntries method)</a>
 </li>
-      <li><a href="_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.build_sel_type_assertion">build_sel_type_assertion() (in module ai2_kit.domain.dpff)</a>
+      <li><a href="_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.build_sel_type_assertion">build_sel_type_assertion() (in module ai2_kit.domain.dplr)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.selector.html#ai2_kit.domain.selector.bulk_select_distinct_structures">bulk_select_distinct_structures() (in module ai2_kit.domain.selector)</a>
 </li>
@@ -1313,8 +1321,6 @@ document.write(`
         <li><a href="_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.done">(ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.BaseConnector.download">download() (ai2_kit.core.connector.BaseConnector method)</a>
 
       <ul>
@@ -1327,6 +1333,8 @@ document.write(`
         <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.HpcExecutor.download">(ai2_kit.core.executor.HpcExecutor method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdContextConfig.dp_cmd">dp_cmd (ai2_kit.domain.deepmd.CllDeepmdContextConfig attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.AnywareInput.dp_models">dp_models (ai2_kit.domain.anyware.AnywareInput attribute)</a>
@@ -1351,11 +1359,17 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ToolGroup.dpdata">dpdata (ai2_kit.main.ToolGroup property)</a>
 </li>
-      <li><a href="_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.dpdata_read_cp2k_dplr_data">dpdata_read_cp2k_dplr_data() (in module ai2_kit.domain.dpff)</a>
+      <li><a href="_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.dpdata_read_cp2k_dpff_data">dpdata_read_cp2k_dpff_data() (in module ai2_kit.domain.dpff)</a>
+</li>
+      <li><a href="_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.dpdata_read_cp2k_dplr_data">dpdata_read_cp2k_dplr_data() (in module ai2_kit.domain.dplr)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.dpdata_read_cp2k_viber_data">dpdata_read_cp2k_viber_data() (in module ai2_kit.feat.spectrum.viber)</a>
 </li>
       <li><a href="_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataTool">DpdataTool (class in ai2_kit.tool.dpdata)</a>
+</li>
+      <li><a href="_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.dplr_v2_to_v3">dplr_v2_to_v3() (in module ai2_kit.domain.dplr)</a>
+</li>
+      <li><a href="_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.dplr_v3_to_v2">dplr_v3_to_v2() (in module ai2_kit.domain.dplr)</a>
 </li>
       <li><a href="_api/ai2_kit.tool.yaml.html#ai2_kit.tool.yaml.Yaml.dump">dump() (ai2_kit.tool.yaml.Yaml method)</a>
 </li>
@@ -1363,7 +1377,7 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.dump_coord_n_cell">dump_coord_n_cell() (in module ai2_kit.domain.cp2k)</a>
 </li>
-      <li><a href="_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.dump_dplr_lammps_data">dump_dplr_lammps_data() (in module ai2_kit.domain.dpff)</a>
+      <li><a href="_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.dump_dplr_lammps_data">dump_dplr_lammps_data() (in module ai2_kit.domain.dplr)</a>
 </li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.dump_json">dump_json() (in module ai2_kit.core.util)</a>
 </li>
@@ -1557,7 +1571,7 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.core.resource_manager.html#ai2_kit.core.resource_manager.ResourceManager.get_artifacts">get_artifacts() (ai2_kit.core.resource_manager.ResourceManager method)</a>
 </li>
-      <li><a href="_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_atomic_dipole">get_atomic_dipole() (in module ai2_kit.domain.dpff)</a>
+      <li><a href="_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_atomic_dipole">get_atomic_dipole() (in module ai2_kit.domain.dplr)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.get_basis_n_potential">get_basis_n_potential() (in module ai2_kit.feat.catalysis)</a>
 </li>
@@ -1679,9 +1693,9 @@ document.write(`
         <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.Slurm.get_script_suffix">(ai2_kit.core.queue_system.Slurm method)</a>
 </li>
       </ul></li>
-      <li><a href="_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_sel_ids">get_sel_ids() (in module ai2_kit.domain.dpff)</a>
+      <li><a href="_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_sel_ids">get_sel_ids() (in module ai2_kit.domain.dplr)</a>
 </li>
-      <li><a href="_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_sel_type">get_sel_type() (in module ai2_kit.domain.dpff)</a>
+      <li><a href="_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_sel_type">get_sel_type() (in module ai2_kit.domain.dplr)</a>
 </li>
       <li><a href="_api/ai2_kit.core.queue_system.html#ai2_kit.core.queue_system.BaseQueueSystem.get_setup_script">get_setup_script() (ai2_kit.core.queue_system.BaseQueueSystem method)</a>
 
@@ -1711,7 +1725,7 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.get_types_template_vars">get_types_template_vars() (in module ai2_kit.domain.lammps)</a>
 </li>
-      <li><a href="_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_unused_symbols">get_unused_symbols() (in module ai2_kit.domain.dpff)</a>
+      <li><a href="_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_unused_symbols">get_unused_symbols() (in module ai2_kit.domain.dplr)</a>
 </li>
       <li><a href="_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.get_valence_electron">get_valence_electron() (in module ai2_kit.feat.catalysis)</a>
 </li>
@@ -2455,6 +2469,8 @@ document.write(`
 </li>
         <li><a href="_api/ai2_kit.domain.dpff.html#module-ai2_kit.domain.dpff">ai2_kit.domain.dpff</a>
 </li>
+        <li><a href="_api/ai2_kit.domain.dplr.html#module-ai2_kit.domain.dplr">ai2_kit.domain.dplr</a>
+</li>
         <li><a href="_api/ai2_kit.domain.iface.html#module-ai2_kit.domain.iface">ai2_kit.domain.iface</a>
 </li>
         <li><a href="_api/ai2_kit.domain.lammps.html#module-ai2_kit.domain.lammps">ai2_kit.domain.lammps</a>
@@ -2720,6 +2736,8 @@ document.write(`
         <li><a href="_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.read">(in module ai2_kit.tool.dpdata)</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.read_wannier_spread">read_wannier_spread() (in module ai2_kit.domain.dplr)</a>
+</li>
       <li><a href="_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.red">red (ai2_kit.workflow.fep_mlp.WorkflowConfig attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag.register">register() (ai2_kit.core.util.JoinTag class method)</a>
@@ -2900,7 +2918,9 @@ document.write(`
       </ul></li>
       <li><a href="_api/ai2_kit.domain.util.html#ai2_kit.domain.util.LammpsData.set_dihedral">set_dihedral() (ai2_kit.domain.util.LammpsData method)</a>
 </li>
-      <li><a href="_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.set_dplr_ext_from_cp2k_output">set_dplr_ext_from_cp2k_output() (in module ai2_kit.domain.dpff)</a>
+      <li><a href="_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.set_dpff_ext_from_cp2k_output">set_dpff_ext_from_cp2k_output() (in module ai2_kit.domain.dpff)</a>
+</li>
+      <li><a href="_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.set_dplr_ext_from_cp2k_output">set_dplr_ext_from_cp2k_output() (in module ai2_kit.domain.dplr)</a>
 </li>
       <li><a href="_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataTool.set_fparam">set_fparam() (ai2_kit.tool.dpdata.DpdataTool method)</a>
 

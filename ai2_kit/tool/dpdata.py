@@ -111,7 +111,7 @@ class DpdataTool:
         out_path: str,
         fmt="deepmd/npy",
         merge: bool = True,
-        v2: bool = True,
+        v2: bool = False,
         sel_symbol: Optional[list] = None,
     ):
         """
@@ -145,7 +145,9 @@ class DpdataTool:
                     "wannier_spread.npy",
                 ]
                 for atomic_data_fname in atomic_data_fnames:
-                    fnames = glob.glob(os.path.join(out_path, "**", atomic_data_fname), recursive=True)
+                    fnames = glob.glob(
+                        os.path.join(out_path, "**", atomic_data_fname), recursive=True
+                    )
                     for fname in fnames:
                         type_map = np.loadtxt(
                             os.path.join(os.path.dirname(fname), "../type_map.raw"),

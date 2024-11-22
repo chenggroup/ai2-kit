@@ -53,7 +53,7 @@ o
 
 # convert cp2k data to the format that can be used by deepmd dplr module
 # data used in v2
-ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H]" --sys_charge_map="[6,1]" --model_charge_map="[-8]" --sel_type="[0]" --v3="False" - write ./v2-dataset
+ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H]"  --sel_type="[0]" --v3="False" - write ./v2-dataset
 # data used in v3
-ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H]" --sys_charge_map="[6,1]" --model_charge_map="[-8]" --sel_type="[0]" --v3="True" - write ./v3-dataset
+ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H]"  --sel_type="[0]" --v3="True" - write ./v3-dataset
 ```

@@ -42,6 +42,7 @@ def dpdata_read_cp2k_dplr_data(
     """
     cp2k_output = os.path.join(cp2k_dir, cp2k_output)
     wannier_file = os.path.join(cp2k_dir, wannier_file)
+    wannier_spread_file = os.path.join(cp2k_dir, wannier_spread_file) if wannier_spread_file else None
     dp_sys = dpdata.LabeledSystem(cp2k_output, fmt="cp2k/output")
     return set_dplr_ext_from_cp2k_output(
         dp_sys,

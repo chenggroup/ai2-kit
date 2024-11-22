@@ -14,10 +14,12 @@ import sys
 import copy
 import random
 import dpdata
+import numpy as np
 
 from .iface import ICllTrainOutput, BaseCllContext, TRAINING_MODE
 from .data import DataFormat, get_data_format
-from .dpff import set_dplr_ext_from_cp2k_output
+from .dpff import set_dpff_ext_from_cp2k_output
+from .dplr import dplr_v3_to_v2
 
 from .constant import (
     DP_CHECKPOINT_FILE,
@@ -532,7 +534,7 @@ def make_deepmd_dataset(
                 # Arguments of DPLR model can be found here:
                 # https://github.com/deepmodeling/deepmd-kit/blob/master/doc/model/dplr.md
                 try:
-                    set_dplr_ext_from_cp2k_output(
+                    set_dpff_ext_from_cp2k_output(
                         dp_sys=dp_system,
                         cp2k_output=os.path.join(raw_data['url'], 'output'),
                         wannier_file=os.path.join(raw_data['url'], 'wannier.xyz'),
@@ -545,7 +547,7 @@ def make_deepmd_dataset(
                         sel_type=sel_type,
                     )
                 except Exception:
-                    logger.exception(f'dpff: failed to set dplr ext')
+                    logger.exception(f'dpff: failed to set dpff ext')
                     continue
             else:
                 raise ValueError(f"Unsupported data format: {data_format}")
@@ -562,14 +564,14 @@ def make_deepmd_dataset(
 
     _write_dp_dataset = _write_dp_dataset_by_formula if group_by_formula else _write_dp_dataset_by_ancestor
 
-    dataset_dirs = _write_dp_dataset(dp_system_list=dataset_collection, out_dir=dataset_dir, type_map=type_map)
-    outlier_dirs = _write_dp_dataset(dp_system_list=outlier_collection, out_dir=outlier_dir, type_map=type_map)
+    dataset_dirs = _write_dp_dataset(dp_system_list=dataset_collection, out_dir=dataset_dir, type_map=type_map, sel_type=sel_type)
+    outlier_dirs = _write_dp_dataset(dp_system_list=outlier_collection, out_dir=outlier_dir, type_map=type_map, sel_type=sel_type)
 
     return dataset_dirs, outlier_dirs
 
 
 def _write_dp_dataset_by_formula(dp_system_list: List[Tuple[ArtifactDict, dpdata.LabeledSystem]],
-                                 out_dir: str, type_map: List[str]):
+                                 out_dir: str, type_map: List[str], sel_type: Optional[List[int]] = None):
     """
     Write dp dataset that grouping by formula
     Use dpdata.MultipleSystems to merge systems with the same formula
@@ -585,6 +587,8 @@ def _write_dp_dataset_by_formula(dp_system_list: List[Tuple[ArtifactDict, dpdata
 
     # pylint: disable=no-member
     multi_systems.to_deepmd_npy(out_dir, type_map=type_map)  # type: ignore
+    if sel_type is not None:
+        dplr_v3_to_v2(out_dir, np.array(type_map)[sel_type].tolist())
 
     return [ {
         'url': os.path.join(out_dir, fname),
@@ -593,7 +597,7 @@ def _write_dp_dataset_by_formula(dp_system_list: List[Tuple[ArtifactDict, dpdata
     } for fname in os.listdir(out_dir)]
 
 
-def _write_dp_dataset_by_ancestor(dp_system_list: List[Tuple[ArtifactDict, dpdata.LabeledSystem]], out_dir: str, type_map: List[str]):
+def _write_dp_dataset_by_ancestor(dp_system_list: List[Tuple[ArtifactDict, dpdata.LabeledSystem]], out_dir: str, type_map: List[str], sel_type: Optional[List[int]] = None):
     """
     write dp dataset that grouping by ancestor
     """
@@ -612,6 +616,8 @@ def _write_dp_dataset_by_ancestor(dp_system_list: List[Tuple[ArtifactDict, dpdat
         for item in dp_system_group[1:]:
             dp_system += item[1]
         dp_system.to_deepmd_npy(group_out_dir, set_size=len(dp_system), type_map=type_map)  # type: ignore
+        if sel_type is not None:
+            dplr_v3_to_v2(out_dir, np.array(type_map)[sel_type].tolist())
         # inherit attrs key from input artifact
         output_dirs.append({'url': group_out_dir,
                             'format': DataFormat.DEEPMD_NPY,

@@ -31,6 +31,8 @@ If you want to run `ai2-kit` from source, you can run the following commands in 
 
 ```bash
 pip install poetry
+# If you meet ConnectionError:
+# poetry config installer.max-workers 4
 poetry install
 
 ./ai2-kit --help

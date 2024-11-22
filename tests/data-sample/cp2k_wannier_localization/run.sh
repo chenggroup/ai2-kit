@@ -1,0 +1,4 @@
+ai2-kit tool dpdata read ./task.*/ --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --wannier_spread_file="wannier_spread.out" --type_map="[O,H,K,F,Pt]" --sel_type="[0,2,3]" - write ./data_merged-v3 
+ai2-kit tool dpdata read ./task.*/ --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --wannier_spread_file="wannier_spread.out" --type_map="[O,H,K,F,Pt]" --sel_type="[0,2,3]" - write ./data_merged-v2 --v2="True" --sel_symbol="[O,K,F]"
+ai2-kit tool dpdata read ./task.001 --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --wannier_spread_file="wannier_spread.out" --type_map="[O,H,K,F,Pt]" --sel_type="[0,2,3]" - write ./data_test-v3
+ai2-kit tool dpdata read ./task.001 --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --wannier_spread_file="wannier_spread.out" --type_map="[O,H,K,F,Pt]" --sel_type="[0,2,3]" - write ./data_test-v2 --v2="True" --sel_symbol="[O,K,F]"

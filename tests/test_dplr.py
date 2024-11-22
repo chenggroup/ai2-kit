@@ -25,6 +25,7 @@ class CP2kTestData:
         self.sys_charge_map = [6.0, 1.0, 9.0, 7.0]
         self.model_charge_map = [-8.0, -8.0, -8.0]
         self.sel_type = [0, 2, 3]
+        self.wannier_file_with_ion = "wannier_with_ion.xyz"
 
         # dpff only
         self.ewald_h = 0.5
@@ -48,6 +49,13 @@ class TestDPLRDPData(unittest.TestCase, CP2kTestData):
             self.type_map,
             self.sel_type,
         )
+        self.data_with_ion = dpdata_read_cp2k_dplr_data(
+            self.cp2k_dir,
+            self.cp2k_output,
+            self.wannier_file_with_ion,
+            self.type_map,
+            self.sel_type,
+        )
         self.sel_ids = get_sel_ids(self.data, self.type_map, self.sel_type)
 
     def test_shape(self):
@@ -55,6 +63,12 @@ class TestDPLRDPData(unittest.TestCase, CP2kTestData):
 
         assert self.data.data["atomic_dipole"].shape[1] == natoms
         assert self.data.data["atomic_dipole"].shape[2] == 3
+
+    def test_consisitent(self):
+        np.testing.assert_allclose(
+            self.data.data["atomic_dipole"][0],
+            self.data_with_ion.data["atomic_dipole"][0],
+        )
 
 
 class TestDPFFDPData(TestDPLRDPData):

@@ -126,11 +126,13 @@ def get_atomic_dipole(
     dist_mat = distance_array(ref_coords, e_coords, box=cellpar)
     atomic_dipole = []
     wannier_spread = []
+    mlwc_ids = []
     for ii, dist_vec in enumerate(dist_mat):
         mask = dist_vec < wannier_cutoff
         cn = np.sum(mask)
         if cn != 4:
             raise ValueError(f"wannier atoms {ii} has {cn} atoms in the cutoff range")
+        mlwc_ids.append(np.where(mask)[0])
         wc_coord_rel = e_coords[mask] - ref_coords[ii]
         if full_wannier_spread is not None:
             wannier_spread.append(full_wannier_spread[mask])
@@ -141,6 +143,9 @@ def get_atomic_dipole(
         extended_coords = np.concatenate(
             (extended_coords, wc_coord.reshape(1, 3)), axis=0
         )
+    mlwc_ids = np.reshape(mlwc_ids, (-1))
+    # exclude double counting
+    assert len(set(mlwc_ids.tolist())) == len(sel_ids) * 4
     atomic_dipole = np.reshape(atomic_dipole, (-1, 3))
     assert atomic_dipole.shape[0] == len(sel_ids)
     return atomic_dipole, extended_coords, wannier_spread

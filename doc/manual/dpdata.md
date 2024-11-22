@@ -56,4 +56,6 @@ o
 ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H]"  --sel_type="[0]" --v3="False" - write ./v2-dataset
 # data used in v3
 ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H]"  --sel_type="[0]" --v3="True" - write ./v3-dataset
+# data with wannier spread (which works for both v2 and v3)
+ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --wannier_spread_file="wannier_spread.out" --type_map="[O,H]"  --sel_type="[0]" --v3="False" - write ./v2-dataset-with-spread
 ```

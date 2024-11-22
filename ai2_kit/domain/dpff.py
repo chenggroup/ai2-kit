@@ -1,5 +1,5 @@
 from dpdata.unit import econvs
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
@@ -42,6 +42,7 @@ def dpdata_read_cp2k_dpff_data(
     :param ext_efield: the external electric field
     :param sel_type: the selected type of atom, for example, [0] means atom type 0, aka O is selected
     :param wannier_cutoff: the cutoff to allocate wannier centers around atoms
+    :param wannier_spread_file: the wannier spread file, if provided, the spread data will be added to dp_sys
     :param v3: in deepmd-kit v3, the atomic_dipole is reshaped to (nframes, natoms * 3) rather than (nframes, natoms_sel * 3)
 
     :return dp_sys: dpdata.LabeledSystem
@@ -82,6 +83,7 @@ def set_dpff_ext_from_cp2k_output(
     ext_efield,
     sel_type: List[int],
     wannier_cutoff: float = 1.0,
+    wannier_spread_file: Optional[str] = None,
     v3: bool = False,
 ):
     # with atomic_dipole
@@ -91,15 +93,14 @@ def set_dpff_ext_from_cp2k_output(
         dp_sys,
         wannier_file,
         type_map,
-        sys_charge_map,
-        model_charge_map,
         sel_type,
         wannier_cutoff,
+        wannier_spread_file,
         v3,
     )
     atomic_dipole = dplr_dp_sys.data["atomic_dipole"].reshape(-1, 3)
 
-    with open(cp2k_output, "r") as fp:
+    with open(cp2k_output, "r", encoding="UTF-8") as fp:
         raw_energy = get_cp2k_output_total_energy(fp)
 
     ext_efield = np.reshape(ext_efield, [1, 3])

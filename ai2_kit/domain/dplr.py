@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from ase.geometry.cell import cell_to_cellpar
 from ase import Atoms
@@ -20,10 +20,9 @@ def dpdata_read_cp2k_dplr_data(
     cp2k_output: str,
     wannier_file: str,
     type_map: List[str],
-    sys_charge_map: List[int],
-    model_charge_map: List[int],
     sel_type: List[int],
     wannier_cutoff: float = 1.0,
+    wannier_spread_file: Optional[str] = None,
     v3: bool = False,
 ):
     """
@@ -33,10 +32,9 @@ def dpdata_read_cp2k_dplr_data(
     :param cp2k_output: the cp2k output file
     :param wannier_file: the wannier file
     :param type_map: the type map of atom type, for example, [O,H]
-    :param sys_charge_map: the charge map of atom in system, for example, [6, 1]
-    :param model_charge_map: the charge map of atom in model, for example, [-8]
     :param sel_type: the selected type of atom, for example, [0] means atom type 0, aka O is selected
     :param wannier_cutoff: the cutoff to allocate wannier centers around atoms
+    :param wannier_spread_file: the wannier spread file, if provided, the spread data will be added to dp_sys
     :param v3: in deepmd-kit v3, the atomic_dipole is reshaped to (nframes, natoms * 3) rather than (nframes, natoms_sel * 3)
 
     :return dp_sys: dpdata.LabeledSystem
@@ -49,10 +47,9 @@ def dpdata_read_cp2k_dplr_data(
         dp_sys,
         wannier_file,
         type_map,
-        sys_charge_map,
-        model_charge_map,
         sel_type,
         wannier_cutoff,
+        wannier_spread_file,
         v3,
     )
 
@@ -61,10 +58,9 @@ def set_dplr_ext_from_cp2k_output(
     dp_sys: dpdata.LabeledSystem,
     wannier_file: str,
     type_map: List[str],
-    sys_charge_map: List[int],
-    model_charge_map: List[int],
     sel_type: List[int],
     wannier_cutoff: float = 1.0,
+    wannier_spread_file: Optional[str] = None,
     v3: bool = False,
 ):
 
@@ -74,28 +70,20 @@ def set_dplr_ext_from_cp2k_output(
     nframes = dp_sys.get_nframes()
     assert nframes == 1, "Only support one frame"
 
-    symbols = np.array(dp_sys.data["atom_names"])[dp_sys.data["atom_types"]]
+    # symbols = np.array(dp_sys.data["atom_names"])[dp_sys.data["atom_types"]]
     sel_ids = get_sel_ids(dp_sys, type_map, sel_type)
 
-    atomic_dipole, extended_coords = get_atomic_dipole(
-        dp_sys, sel_ids, wannier_atoms, wannier_cutoff
+    atomic_dipole, extended_coords, wannier_spread = get_atomic_dipole(
+        dp_sys, sel_ids, wannier_atoms, wannier_cutoff, wannier_spread_file,
     )
     if v3:
         atomic_dipole_reformat = np.zeros((nframes, natoms, 3))
         atomic_dipole_reformat[:, sel_ids] = atomic_dipole
         atomic_dipole = atomic_dipole_reformat
-    # get extended charges
-    extended_charges = np.zeros(len(extended_coords))
-    for symbol, ion_charge in zip(type_map, sys_charge_map):
-        extended_charges[np.where(symbols == symbol)[0]] = ion_charge
-    sel_symbols = symbols[sel_ids]
-    for ii, wannier_charge in zip(sel_type, model_charge_map):
-        sel_symbol = type_map[ii]
-        extended_charges[np.where(sel_symbols == sel_symbol)[0] + natoms] = (
-            wannier_charge
-        )
-
+    
     dp_sys.data["atomic_dipole"] = atomic_dipole.reshape(nframes, -1)
+    if len(wannier_spread) > 0:
+        dp_sys.data["wannier_spread"] = np.reshape(wannier_spread, (nframes, len(sel_ids) * 4))
     return dp_sys
 
 
@@ -105,23 +93,31 @@ def get_sel_ids(dp_sys, type_map, sel_type):
     return np.concatenate(sel_ids)
 
 
-def get_atomic_dipole(dp_sys, sel_ids, wannier_atoms, wannier_cutoff=1.0):
+def get_atomic_dipole(dp_sys, sel_ids, wannier_atoms, wannier_cutoff=1.0, wannier_spread_file=None):
     from MDAnalysis.lib.distances import distance_array, minimize_vectors
 
     coords = dp_sys.data["coords"].reshape(-1, 3)
     cellpar = cell_to_cellpar(dp_sys.data["cells"].reshape(3, 3))
     extended_coords = coords.copy()
 
+    if wannier_spread_file:
+        full_wannier_spread = read_wannier_spread(wannier_spread_file)[:, -1]
+    else:
+        full_wannier_spread = None
+        
     ref_coords = coords[sel_ids].reshape(-1, 3)
     e_coords = wannier_atoms.get_positions()
     dist_mat = distance_array(ref_coords, e_coords, box=cellpar)
     atomic_dipole = []
+    wannier_spread = []
     for ii, dist_vec in enumerate(dist_mat):
         mask = dist_vec < wannier_cutoff
         cn = np.sum(mask)
         if cn != 4:
             raise ValueError(f"wannier atoms {ii} has {cn} atoms in the cutoff range")
         wc_coord_rel = e_coords[mask] - ref_coords[ii]
+        if full_wannier_spread is not None:
+            wannier_spread.append(full_wannier_spread[mask])
         wc_coord_rel = minimize_vectors(wc_coord_rel, box=cellpar)
         _atomic_dipole = wc_coord_rel.mean(axis=0)
         atomic_dipole.append(_atomic_dipole)
@@ -131,7 +127,7 @@ def get_atomic_dipole(dp_sys, sel_ids, wannier_atoms, wannier_cutoff=1.0):
         )
     atomic_dipole = np.reshape(atomic_dipole, (-1, 3))
     assert atomic_dipole.shape[0] == len(sel_ids)
-    return atomic_dipole, extended_coords
+    return atomic_dipole, extended_coords, wannier_spread
 
 
 def build_sel_type_assertion(sel_type, model_path: str, py_cmd="python"):
@@ -238,3 +234,29 @@ def get_sel_type(model_path) -> List[int]:
 
     dp = DeepDipole(model_path)
     return [t for t in dp.tselt]
+
+def read_wannier_spread(fname: str):
+    """
+    Read wannier spread file generated by cp2k
+
+    Parameters
+    ----------
+    fname : str
+        wannier_spread.out file name
+
+    Returns
+    -------
+    wannier_spread : numpy array
+        wannier spread data
+    """
+    # skip 1, 2, and the last lines
+    # save the others as array
+    with open(fname, "r", encoding="UTF-8") as f:
+        lines = f.readlines()[2:-1]
+
+    wannier = []
+    for line in lines:
+        # line to array
+        line = line.strip().split()
+        wannier.append([float(line[1]), float(line[2])])
+    return np.array(wannier)

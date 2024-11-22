@@ -23,6 +23,7 @@ def register_data_types():
         DataType("ext_efield", np.ndarray, (Axis.NFRAMES, 3), required=False), # type: ignore
         DataType("atomic_dipole", np.ndarray, (Axis.NFRAMES, -1), required=False), # type: ignore
         DataType("atomic_polarizability", np.ndarray, (Axis.NFRAMES, -1), required=False), # type: ignore
+        DataType("wannier_spread", np.ndarray, (Axis.NFRAMES, -1), required=False), # type: ignore
     ]
     dpdata.System.register_data_type(*DATA_TYPES) # type: ignore
     dpdata.LabeledSystem.register_data_type(*DATA_TYPES) # type: ignore

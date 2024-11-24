@@ -111,6 +111,8 @@ def set_dpff_ext_from_cp2k_output(
     ext_efield = np.reshape(ext_efield, [1, 3])
     natoms = dp_sys.get_natoms()
     nframes = dp_sys.get_nframes()
+    if nframes == 0:
+        return None
     assert nframes == 1, "Only support one frame"
 
     symbols = np.array(dp_sys.data["atom_names"])[dp_sys.data["atom_types"]]

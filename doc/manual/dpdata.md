@@ -3,6 +3,7 @@
 ```bash
 ai2-kit tool dpdata
 ```
+
 This toolkit is a command line wrapper of [dpdata](https://github.com/deepmodeling/dpdata) to allow user to process DeepMD dataset via command line.
 
 ## Usage
@@ -14,17 +15,16 @@ ai2-kit tool dpdata to_ase -h  # show doc of specific command
 
 This toolkit include the following commands:
 
-| Command | Description | Example | Reference |
-| --- | --- | --- | --- |
-| read | Read dataset into memory. This command by itself is useless, you should chain other command after reading data into memory. | `ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy` | Support wildcard, can be call multiple time |
-| write | Use MultiSystems to merge dataset and write to directory | `ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy - write ./path/to/merged_dataset` | |
-| filter | Use lambda expression to filter dataset by system data. | See in `Example` | |
-| set_fparam | add `fparam` to dataset, can be float or list of float | See in `Example` | |
-| slice | use slice expression to process systems | see in `Example` | |
-| sample | sample data by different methods, current supported method are `even` and `random` | see in `Example` | |
-| eval | use `deepmd DeepPot` to (re)label loaded data | see in `Example` | |
-| to_ase | convert dpdata format to ase format and use [ase tool](./ase.md) to process | see in `Example` |  |
-
+| Command    | Description                                                                                                                 | Example                                                                                        | Reference                                   |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| read       | Read dataset into memory. This command by itself is useless, you should chain other command after reading data into memory. | `ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy`                                  | Support wildcard, can be call multiple time |
+| write      | Use MultiSystems to merge dataset and write to directory                                                                    | `ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy - write ./path/to/merged_dataset` |                                             |
+| filter     | Use lambda expression to filter dataset by system data.                                                                     | See in `Example`                                                                               |                                             |
+| set_fparam | add `fparam` to dataset, can be float or list of float                                                                      | See in `Example`                                                                               |                                             |
+| slice      | use slice expression to process systems                                                                                     | see in `Example`                                                                               |                                             |
+| sample     | sample data by different methods, current supported method are `even` and `random`                                          | see in `Example`                                                                               |                                             |
+| eval       | use `deepmd DeepPot` to (re)label loaded data                                                                               | see in `Example`                                                                               |                                             |
+| to_ase     | convert dpdata format to ase format and use [ase tool](./ase.md) to process                                                 | see in `Example`                                                                               |                                             |
 
 Those commands are chainable and can be used to process trajectory in a pipeline fashion (separated by `-`). For more information, please refer to the following examples.
 
@@ -58,4 +58,26 @@ ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="outpu
 ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H,K,F]" --sel_type="[0,2,3]" - write ./v3-dataset
 # data with wannier spread (which works for both v2 and v3)
 ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --wannier_spread_file="wannier_spread.out" --type_map="[O,H,K,F]" --sel_type="[0,2,3]" - write ./v3-dataset-with-spread
+```
+
+## Note about data conversion between v2 and v3
+
+The format of `atomic_dipole` and `atomic_polarizability` data used in DeepMD-kit v2 and v3 are different.
+In v2, the required shape of the `atomic_*.npy` is `[n_frames, n_sel_atoms * n_dim]`, while in v3, the shape should be `[n_frames, n_atoms * n_dim]`. More details can be found in the [offcial doc](https://docs.deepmodeling.com/projects/deepmd/en/master/data/system.html). You can specify the version when generating the data:
+
+```bash
+# data used in v2
+ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H,K,F]" --sel_type="[0,2,3]" - write ./v2-dataset --v2="True" --sel_symbol="[O,K,F]"
+# data used in v3
+ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H,K,F]" --sel_type="[0,2,3]" - write ./v3-dataset
+```
+
+You can also convert the data between v2 and v3 by using the following command:
+
+```bash
+from ai2_kit.domain.dplr import dplr_v2_to_v3, dplr_v2_to_v3
+
+# change in place
+dplr_v2_to_v3("dataset-v2", sel_symbol=["O", "K", "F"])
+dplr_v3_to_v2("dataset-v3", sel_symbol=["O", "K", "F"])
 ```

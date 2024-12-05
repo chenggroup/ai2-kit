@@ -1,4 +1,7 @@
 # Change Logs
+## v0.22.1
+* allow to override potential in lasp
+
 ## v0.22.0
 * implement dplr and refactor dpff
 

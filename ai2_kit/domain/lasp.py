@@ -84,9 +84,7 @@ async def cll_lasp(input: CllLaspInput, ctx: CllLaspContext):
         systems = ctx.resource_manager.resolve_artifacts(input.config.system_files)
 
     # setup configuration
-    lasp_in_data = merge_dict(copy.deepcopy(DEFAULT_LASP_IN), input.config.input_template)
-    lasp_in_data['explore_type'] = 'ssw'
-    lasp_in_data['SSW.output'] = 'T'
+    lasp_in_data = copy.deepcopy(DEFAULT_LASP_IN)
 
     lammps_input_template = None
     if input.config.potential.lammps is not None:
@@ -94,6 +92,10 @@ async def cll_lasp(input: CllLaspInput, ctx: CllLaspContext):
         lammps_input_template = input.config.potential.lammps.input_template
     else:
         raise ValueError('At least one potential should be specified.')
+
+    lasp_in_data = merge_dict(lasp_in_data, input.config.input_template)
+    lasp_in_data['explore_type'] = 'ssw'
+    lasp_in_data['SSW.output'] = 'T'
 
     # make task dirs
     task_dirs = executor.run_python_fn(make_lasp_task_dirs)(

@@ -15,17 +15,21 @@ class AseTool:
     def __init__(self, atoms_arr: Optional[List[Atoms]] = None):
         self._atoms_arr: List[Atoms] = [] if atoms_arr is None else atoms_arr
 
-    def read(self, *file_path_or_glob: str, **kwargs):
-        files = expand_globs(file_path_or_glob)
+    def read(self, *file_path_or_glob: str, nat_sort=False, **kwargs):
+        """
+        read atoms from file, support multiple files and glob pattern
+
+        :param file_path_or_glob: path or glob pattern to locate data path
+        :param nat_sort: sort files by natural order, default is False
+        :param kwargs: other arguments for ase.io.read
+        """
+
+        files = expand_globs(file_path_or_glob, nature_sort=nat_sort)
         if len(files) == 0:
             raise FileNotFoundError(f'No file found for {file_path_or_glob}')
         for file in files:
             self._read(file, **kwargs)
         return self
-
-    def write(self, filename: str, **kwargs):
-        ensure_dir(filename.format(i=0))
-        self._write(filename, self._atoms_arr, **kwargs)
 
     def set_cell(self, cell, scale_atoms=False, apply_constraint=True):
         for atoms in self._atoms_arr:
@@ -100,9 +104,13 @@ class AseTool:
                 del atoms[i - start_id]
         return self
 
+    def write(self, filename: str, **kwargs):
+        ensure_dir(filename.format(i=0))
+        self._write(filename, self._atoms_arr, **kwargs)
+
     @property
     def write_each_frame(self):
-        logger.warn('write_each_frame has been deprecated, use write_frames instead')
+        logger.warning('write_each_frame has been deprecated, use write_frames instead')
         return self.write_frames
 
     def write_frames(self, filename: str, **kwargs):
@@ -158,7 +166,7 @@ class AseTool:
         """
         Hand over atoms array to model-devi tool
 
-        :param md_files: paths to model_devi file, support multiple and glob pattern
+        :param md_files: paths to model_devi file, support multiple files and glob pattern
         """
         from .model_devi import ModelDevi
         md_arr = ModelDevi.md_arr_load(*md_files)

@@ -12,8 +12,8 @@ logger = get_logger(__name__)
 
 class AseTool:
 
-    def __init__(self, atoms_list: Optional[List[Atoms]] = None):
-        self._atoms_list: List[Atoms] = [] if atoms_list is None else atoms_list
+    def __init__(self, atoms_arr: Optional[List[Atoms]] = None):
+        self._atoms_arr: List[Atoms] = [] if atoms_arr is None else atoms_arr
 
     def read(self, *file_path_or_glob: str, **kwargs):
         files = expand_globs(file_path_or_glob)
@@ -25,15 +25,15 @@ class AseTool:
 
     def write(self, filename: str, **kwargs):
         ensure_dir(filename.format(i=0))
-        self._write(filename, self._atoms_list, **kwargs)
+        self._write(filename, self._atoms_arr, **kwargs)
 
     def set_cell(self, cell, scale_atoms=False, apply_constraint=True):
-        for atoms in self._atoms_list:
+        for atoms in self._atoms_arr:
             atoms.set_cell(cell, scale_atoms=scale_atoms, apply_constraint=apply_constraint)
         return self
 
     def set_pbc(self, pbc):
-        for atoms in self._atoms_list:
+        for atoms in self._atoms_arr:
             atoms.set_pbc(pbc)
         return self
 
@@ -41,7 +41,7 @@ class AseTool:
         kwargs.setdefault('index', 0)
         ref_atoms = ase.io.read(ref_file, **kwargs)
         assert isinstance(ref_atoms, Atoms), 'Only support single frame reference'
-        for atoms in self._atoms_list:
+        for atoms in self._atoms_arr:
             try:
                 atoms.set_cell(ref_atoms.get_cell())
             except ValueError:
@@ -56,8 +56,7 @@ class AseTool:
         """
         size of loaded data
         """
-        print(len(self._atoms_list))
-        return self
+        return len(self._atoms_arr)
 
     def slice(self, expr: str):
         """
@@ -69,7 +68,7 @@ class AseTool:
         :param step: step
         """
         s = slice_from_str(expr)
-        self._atoms_list = self._atoms_list[s]
+        self._atoms_arr = self._atoms_arr[s]
         return self
 
     def sample(self, size: int, method: SAMPLE_METHOD='even', **kwargs):
@@ -83,19 +82,8 @@ class AseTool:
         Note that by default the seed is length of input list,
         if you want to generate different sample each time, you should set random seed manually
         """
-        self._atoms_list= list_sample(self._atoms_list, size, method, **kwargs)
+        self._atoms_arr= list_sample(self._atoms_arr, size, method, **kwargs)
         return self
-
-    def to_dpdata(self, labeled=False):
-        """
-        convert to dpdata format and use dpdata tool to handle
-
-        :param labeled: if True, use dpdata.LabeledSystem, else use dpdata.System
-        """
-        from .dpdata import dpdata, DpdataTool
-        System = dpdata.LabeledSystem if labeled else dpdata.System
-        systems = [System(atom, fmt='ase/structure') for atom in self._atoms_list]
-        return DpdataTool(systems=systems)
 
     def delete_atoms(self, id: Union[int, List[int]], start_id=0):
         """
@@ -106,7 +94,7 @@ class AseTool:
         """
 
         ids = [id] if isinstance(id, int) else id
-        for atoms in self._atoms_list:
+        for atoms in self._atoms_arr:
             for i in sorted(ids, reverse=True):
                 assert i >= start_id, f'Invalid id {i}'
                 del atoms[i - start_id]
@@ -124,7 +112,7 @@ class AseTool:
         :param filename: the filename template, use {i} to represent the index, for example, 'frame_{i}.xyz'
         :param kwargs: other arguments for ase.io.write
         """
-        for i, atoms in enumerate(self._atoms_list):
+        for i, atoms in enumerate(self._atoms_arr):
             _filename = filename.format(i=i)
             ensure_dir(_filename)
             self._write(_filename, atoms, **kwargs)
@@ -150,18 +138,38 @@ class AseTool:
 
         from ai2_kit.domain.dplr import dump_dplr_lammps_data
         ensure_dir(filename.format(i=0))
-        for i, atoms in enumerate(self._atoms_list):
+        for i, atoms in enumerate(self._atoms_arr):
             with open(filename.format(i=i), 'w') as f:
                 dump_dplr_lammps_data(f, atoms=atoms, type_map=type_map, sel_type=sel_type,
                                       sys_charge_map=sys_charge_map, model_charge_map=model_charge_map)
 
+    def to_dpdata(self, labeled=False):
+        """
+        convert to dpdata format and use dpdata tool to handle
+
+        :param labeled: if True, use dpdata.LabeledSystem, else use dpdata.System
+        """
+        from .dpdata import dpdata, DpdataTool
+        System = dpdata.LabeledSystem if labeled else dpdata.System
+        systems = [System(atom, fmt='ase/structure') for atom in self._atoms_arr]
+        return DpdataTool(systems=systems)
+
+    def to_model_devi(self, *md_files: str):
+        """
+        Hand over atoms array to model-devi tool
+
+        :param md_files: paths to model_devi file, support multiple and glob pattern
+        """
+        from .model_devi import ModelDevi
+        md_arr = ModelDevi.md_arr_load(*md_files)
+        return ModelDevi(self._atoms_arr, md_arr)
 
     def _read(self, filename: str, **kwargs):
         kwargs.setdefault('index', ':')
         data = ase.io.read(filename, **kwargs)
         if not isinstance(data, list):
             data = [data]
-        self._atoms_list += data
+        self._atoms_arr += data
 
     def _write(self, filename: str, atoms_list, **kwargs):
         assert len(atoms_list) > 0, 'No atoms to write'

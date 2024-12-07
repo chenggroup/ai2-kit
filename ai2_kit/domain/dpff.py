@@ -103,7 +103,7 @@ def set_dpff_ext_from_cp2k_output(
         wannier_cutoff,
         wannier_spread_file,
     )
-    atomic_dipole = dplr_dp_sys.data["atomic_dipole"].reshape(-1, 3)
+    atomic_dipole = dplr_dp_sys.data["atomic_dipole"].reshape(-1, 3)  # type: ignore
 
     with open(cp2k_output, "r", encoding="UTF-8") as fp:
         raw_energy = get_cp2k_output_total_energy(fp)

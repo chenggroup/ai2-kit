@@ -207,7 +207,7 @@ class DpdataTool:
         atoms_list = []
         for sys in self._systems:
             atoms_list.extend(sys.to_ase_structure())
-        return AseTool(atoms_list=atoms_list)
+        return AseTool(atoms_arr=atoms_list)
 
     def _verbose_log(self, msg, **kwargs):
         if self._verbose:

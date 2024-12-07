@@ -71,7 +71,7 @@ def set_dplr_ext_from_cp2k_output(
     # assert np.all(wannier_atoms.symbols == "X"), (
     #     "%s should include Wannier centres only" % wannier_file
     # )
-    mask = (wannier_atoms.symbols == "X")
+    mask = (wannier_atoms.symbols == "X")  # type: ignore
     wannier_atoms = wannier_atoms[mask]
 
     natoms = dp_sys.get_natoms()
@@ -311,6 +311,7 @@ def dplr_v2_to_v3(data_path: str, sel_symbol: list):
             sel_ids = np.where(np.isin(symbols, sel_symbol))[0]
             n_atoms = len(atype)
 
+            # FIXME: n_frame is undefined
             raw_data = np.load(fname).reshape([n_frames, len(sel_ids), -1])
             n_frames = raw_data.shape[0]
             n_dim = raw_data.shape[2]

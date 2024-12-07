@@ -369,7 +369,7 @@ def expand_globs(patterns: Iterable[str], raise_invalid=False) -> List[str]:
             logger.warning(f'No file found for {pattern}')
             if raise_invalid:
                 raise FileNotFoundError(f'No file found for {pattern}')
-
+        result = sorted(result)  # sort the result to make it deterministic
         for p in result:
             if p not in paths:
                 paths.append(p)

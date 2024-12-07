@@ -1,13 +1,11 @@
-from typing import Tuple, List, TypeVar, Union, Iterable, Literal
+from typing import List, TypeVar, Union, Iterable, Literal
 from ruamel.yaml import YAML, ScalarNode, SequenceNode
-from collections import namedtuple
 from itertools import zip_longest
 from pathlib import Path
 
 import shortuuid
 import asyncio
 import hashlib
-import inspect
 import base64
 import psutil
 import random
@@ -15,6 +13,7 @@ import shlex
 import json
 import glob
 import os
+import re
 
 from .log import get_logger
 
@@ -365,9 +364,12 @@ def expand_globs(patterns: Iterable[str], raise_invalid=False) -> List[str]:
     """
     paths = []
     for pattern in patterns:
-        result = glob.glob(pattern, recursive=True) if '*' in pattern else [pattern]
-        if raise_invalid and len(result) == 0:
-            raise FileNotFoundError(f'No file found for {pattern}')
+        result = glob.glob(pattern, recursive=True)
+        if len(result) == 0:
+            logger.warning(f'No file found for {pattern}')
+            if raise_invalid:
+                raise FileNotFoundError(f'No file found for {pattern}')
+
         for p in result:
             if p not in paths:
                 paths.append(p)
@@ -398,3 +400,10 @@ def create_fn(func_str: str, fn_name: str):
     if fn_name not in _locals:
         raise ValueError(f'Function {fn_name} not found in {func_str}')
     return _locals[fn_name]
+
+
+NUM_TEXT_PATTERN = re.compile(r'\d+|[^\d]+')
+
+
+def num_text_split(s):
+    return tuple(int(x) if x.isdigit() else x for x in NUM_TEXT_PATTERN.findall(s))

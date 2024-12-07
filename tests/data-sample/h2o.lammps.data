@@ -4,10 +4,9 @@ lmp.data (written by toolbox by Jia-Xin Zhu)
 3 atom types
 64 bonds
 1 bond types
-0.0000 12.4200 xlo xhi
-0.0000 12.4200 ylo yhi
-0.0000 12.4200 zlo zhi
-
+0.0 12.420000 xlo xhi
+0.0 12.420000 ylo yhi
+0.0 12.420000 zlo zhi
 
 Atoms
 
@@ -334,3 +333,4 @@ Bonds
 62 1 184 254
 63 1 187 255
 64 1 190 256
+256

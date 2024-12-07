@@ -1,6 +1,6 @@
 from ai2_kit.core.queue_system import inject_cmd_to_script
-from ai2_kit.core.util import dict_remove_dot_keys
-from ai2_kit.domain.dpff import dump_dplr_lammps_data
+from ai2_kit.core.util import dict_remove_dot_keys, num_text_split
+from ai2_kit.domain.dplr import dump_dplr_lammps_data
 from ai2_kit.domain.lammps import get_types_template_vars, get_ensemble
 from unittest import TestCase
 from pathlib import Path
@@ -78,15 +78,13 @@ class TestUtil(TestCase):
         atoms = ase.io.read(data_dir / 'h2o.xyz', index=0)
         fp = io.StringIO()
         setattr(fp, 'name', 'lmp.data')
-
         dump_dplr_lammps_data(fp, atoms, type_map = ['H', 'O'], sel_type=[1],  # type: ignore
                               sys_charge_map=[0.0, 0.843], model_charge_map=[-1])
-        with open(data_dir / 'h2o.lammps.data', 'r') as f:
-            # f.write(fp.getvalue())
-            self.assertEqual(fp.getvalue(), f.read())
+        with open(data_dir / 'h2o.lammps.data', 'r+' ) as f:
+            fp.seek(0)
+            self.assertMultiLineEqual(fp.read(), f.read())
 
     def test_get_type_template_vars(self):
-
         type_map = ['H', 'O']
         mass_map = [1., 16.]
         type_alias = {
@@ -94,7 +92,7 @@ class TestUtil(TestCase):
             'O': ['O_null'],
         }
         sel_type = [1]
-        ret = get_types_template_vars(type_map, mass_map, type_alias, sel_type)
+        ret = get_types_template_vars(type_map, mass_map, type_alias, sel_type,[], ['H_null', 'O_null'])
         self.assertEqual(ret['SPECORDER'], 'H O H H O')
         self.assertEqual(ret['FEP_INI_SPECORDER'], 'H O H H O')
         self.assertEqual(ret['FEP_FIN_SPECORDER'], 'H O H NULL NULL')
@@ -109,3 +107,13 @@ class TestUtil(TestCase):
         self.assertEqual(get_ensemble('npt', 'real_atom'), 'fix 1 real_atom npt temp ${TEMP} ${TEMP} ${TAU_T} iso ${PRES} ${PRES} ${TAU_P}')
         self.assertEqual(get_ensemble('npt', '{DEFAULT_GROUP}'), 'fix 1 {DEFAULT_GROUP} npt temp ${TEMP} ${TEMP} ${TAU_T} iso ${PRES} ${PRES} ${TAU_P}')
         self.assertTrue(get_ensemble('csvr').startswith('fix 1 all nve\nfix 2 all temp/csvr ${TEMP} ${TEMP} ${TIME_CONST}'))
+
+    def test_num_text_split(self):
+        cases = [
+            ('2 ft 3 in', (2, ' ft ', 3, ' in')),
+            ('2ft 3in', (2, 'ft ', 3, 'in')),
+            ('1.traj', (1, '.traj')),
+            ('v1.2.3', ('v', 1, '.', 2, '.', 3)),
+        ]
+        for s, expect in cases:
+            self.assertEqual(num_text_split(s), expect)

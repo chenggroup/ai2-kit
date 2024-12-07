@@ -508,6 +508,8 @@ document.write(`
 
     <span class="n">natoms</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">get_natoms</span><span class="p">()</span>
     <span class="n">nframes</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">get_nframes</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">nframes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
     <span class="k">assert</span> <span class="n">nframes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Only support one frame&quot;</span>
 
     <span class="c1"># symbols = np.array(dp_sys.data[&quot;atom_names&quot;])[dp_sys.data[&quot;atom_types&quot;]]</span>

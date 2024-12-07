@@ -543,6 +543,8 @@ document.write(`
     <span class="n">ext_efield</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">ext_efield</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
     <span class="n">natoms</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">get_natoms</span><span class="p">()</span>
     <span class="n">nframes</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">get_nframes</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">nframes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
     <span class="k">assert</span> <span class="n">nframes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Only support one frame&quot;</span>
 
     <span class="n">symbols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atom_names&quot;</span><span class="p">])[</span><span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atom_types&quot;</span><span class="p">]]</span>

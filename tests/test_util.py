@@ -80,8 +80,8 @@ class TestUtil(TestCase):
         setattr(fp, 'name', 'lmp.data')
         dump_dplr_lammps_data(fp, atoms, type_map = ['H', 'O'], sel_type=[1],  # type: ignore
                               sys_charge_map=[0.0, 0.843], model_charge_map=[-1])
+        fp.seek(0)
         with open(data_dir / 'h2o.lammps.data', 'r+' ) as f:
-            fp.seek(0)
             self.assertMultiLineEqual(fp.read(), f.read())
 
     def test_get_type_template_vars(self):

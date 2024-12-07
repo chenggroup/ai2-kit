@@ -1,5 +1,5 @@
 from ai2_kit.core.queue_system import inject_cmd_to_script
-from ai2_kit.core.util import dict_remove_dot_keys, num_text_split
+from ai2_kit.core.util import dict_remove_dot_keys, num_text_split, nat_sort
 from ai2_kit.domain.dplr import dump_dplr_lammps_data
 from ai2_kit.domain.lammps import get_types_template_vars, get_ensemble
 from unittest import TestCase
@@ -117,3 +117,11 @@ class TestUtil(TestCase):
         ]
         for s, expect in cases:
             self.assertEqual(num_text_split(s), expect)
+
+    def test_nat_sort(self):
+        cases = [
+            (['1', '10', '2'], ['1', '2', '10']),
+            (['a1', 'a10', 'a2'], ['a1', 'a2', 'a10']),
+        ]
+        for s, expect in cases:
+            self.assertListEqual(nat_sort(s), expect)

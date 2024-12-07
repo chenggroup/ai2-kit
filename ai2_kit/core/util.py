@@ -407,3 +407,7 @@ NUM_TEXT_PATTERN = re.compile(r'\d+|[^\d]+')
 
 def num_text_split(s):
     return tuple(int(x) if x.isdigit() else x for x in NUM_TEXT_PATTERN.findall(s))
+
+
+def nat_sort(l):
+    return sorted(l, key=num_text_split)

@@ -76,6 +76,8 @@ def set_dplr_ext_from_cp2k_output(
 
     natoms = dp_sys.get_natoms()
     nframes = dp_sys.get_nframes()
+    if nframes == 0:
+        return None
     assert nframes == 1, "Only support one frame"
 
     # symbols = np.array(dp_sys.data["atom_names"])[dp_sys.data["atom_types"]]

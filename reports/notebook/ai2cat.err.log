@@ -83,12 +83,12 @@ File [0;32m~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/s
 [1;32m    365[0m [38;5;66;03m# So avoid needing matplotlib attribute-lookup to access pyplot.[39;00m
 [1;32m    366[0m [38;5;28;01mfrom[39;00m [38;5;21;01mmatplotlib[39;00m [38;5;28;01mimport[39;00m pyplot [38;5;28;01mas[39;00m plt
 
-File [0;32m~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/matplotlib/__init__.py:738[0m, in [0;36mRcParams.__setitem__[0;34m(self, key, val)[0m
-[1;32m    736[0m         cval [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mvalidate[key](val)
-[1;32m    737[0m     [38;5;28;01mexcept[39;00m [38;5;167;01mValueError[39;00m [38;5;28;01mas[39;00m ve:
-[0;32m--> 738[0m         [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m([38;5;124mf[39m[38;5;124m"[39m[38;5;124mKey [39m[38;5;132;01m{[39;00mkey[38;5;132;01m}[39;00m[38;5;124m: [39m[38;5;132;01m{[39;00mve[38;5;132;01m}[39;00m[38;5;124m"[39m) [38;5;28;01mfrom[39;00m [38;5;28;01mNone[39;00m
-[1;32m    739[0m     [38;5;28mself[39m[38;5;241m.[39m_set(key, cval)
-[1;32m    740[0m [38;5;28;01mexcept[39;00m [38;5;167;01mKeyError[39;00m [38;5;28;01mas[39;00m err:
+File [0;32m~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/matplotlib/__init__.py:741[0m, in [0;36mRcParams.__setitem__[0;34m(self, key, val)[0m
+[1;32m    739[0m         cval [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mvalidate[key](val)
+[1;32m    740[0m     [38;5;28;01mexcept[39;00m [38;5;167;01mValueError[39;00m [38;5;28;01mas[39;00m ve:
+[0;32m--> 741[0m         [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m([38;5;124mf[39m[38;5;124m"[39m[38;5;124mKey [39m[38;5;132;01m{[39;00mkey[38;5;132;01m}[39;00m[38;5;124m: [39m[38;5;132;01m{[39;00mve[38;5;132;01m}[39;00m[38;5;124m"[39m) [38;5;28;01mfrom[39;00m [38;5;28;01mNone[39;00m
+[1;32m    742[0m     [38;5;28mself[39m[38;5;241m.[39m_set(key, cval)
+[1;32m    743[0m [38;5;28;01mexcept[39;00m [38;5;167;01mKeyError[39;00m [38;5;28;01mas[39;00m err:
 
 [0;31mValueError[0m: Key backend: 'module://ipympl.backend_nbagg' is not a valid value for backend; supported values are ['gtk3agg', 'gtk3cairo', 'gtk4agg', 'gtk4cairo', 'macosx', 'nbagg', 'notebook', 'qtagg', 'qtcairo', 'qt5agg', 'qt5cairo', 'tkagg', 'tkcairo', 'webagg', 'wx', 'wxagg', 'wxcairo', 'agg', 'cairo', 'pdf', 'pgf', 'ps', 'svg', 'template', 'inline']
 

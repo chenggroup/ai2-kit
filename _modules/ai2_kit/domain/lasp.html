@@ -516,9 +516,7 @@ document.write(`
         <span class="n">systems</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">system_files</span><span class="p">)</span>
 
     <span class="c1"># setup configuration</span>
-    <span class="n">lasp_in_data</span> <span class="o">=</span> <span class="n">merge_dict</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">DEFAULT_LASP_IN</span><span class="p">),</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">input_template</span><span class="p">)</span>
-    <span class="n">lasp_in_data</span><span class="p">[</span><span class="s1">&#39;explore_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ssw&#39;</span>
-    <span class="n">lasp_in_data</span><span class="p">[</span><span class="s1">&#39;SSW.output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;T&#39;</span>
+    <span class="n">lasp_in_data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">DEFAULT_LASP_IN</span><span class="p">)</span>
 
     <span class="n">lammps_input_template</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">lammps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -526,6 +524,10 @@ document.write(`
         <span class="n">lammps_input_template</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">lammps</span><span class="o">.</span><span class="n">input_template</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least one potential should be specified.&#39;</span><span class="p">)</span>
+
+    <span class="n">lasp_in_data</span> <span class="o">=</span> <span class="n">merge_dict</span><span class="p">(</span><span class="n">lasp_in_data</span><span class="p">,</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">input_template</span><span class="p">)</span>
+    <span class="n">lasp_in_data</span><span class="p">[</span><span class="s1">&#39;explore_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ssw&#39;</span>
+    <span class="n">lasp_in_data</span><span class="p">[</span><span class="s1">&#39;SSW.output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;T&#39;</span>
 
     <span class="c1"># make task dirs</span>
     <span class="n">task_dirs</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">make_lasp_task_dirs</span><span class="p">)(</span>

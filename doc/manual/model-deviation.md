@@ -29,7 +29,7 @@ ai2-kit tool ase read "./workdir/lammps/*/traj/*.lammpstrj" --nat_sort \
 ```
 
 Explanation of the command:
-* The double quotes are required to prevent shell expansion of `*`. You muse use double quotes with `ase read` and `to_model_devi` to avoid undetermined behavior.
+* The double quotes are required to prevent shell expansion of `*`. You must use double quotes with `ase read` and `to_model_devi` to avoid undetermined behavior.
 * The `--nat_sort` is used to sort the trajectory by the number of atoms in each frame. It's used to ensure the order of the trajectory is consistent with the model deviation file. 
 * The `to_model_devi` command is used to read the model deviation file. Note that the path of the model deviation file must be consistent with the trajectory file.
 * The `grade` command is used to grade the structures by the model deviation. The `--lo` and `--hi` are used to set the lower and upper bound of the model deviation. The structures whose  `max_devi_f` is below lo, between lo and hi, and above hi are graded as `good`, `bad`, and `ugly`, respectively.

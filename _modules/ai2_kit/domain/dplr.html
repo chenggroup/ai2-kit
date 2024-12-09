@@ -267,6 +267,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
 </ul>
 </details></li>
@@ -503,7 +504,7 @@ document.write(`
     <span class="c1"># assert np.all(wannier_atoms.symbols == &quot;X&quot;), (</span>
     <span class="c1">#     &quot;%s should include Wannier centres only&quot; % wannier_file</span>
     <span class="c1"># )</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">wannier_atoms</span><span class="o">.</span><span class="n">symbols</span> <span class="o">==</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">wannier_atoms</span><span class="o">.</span><span class="n">symbols</span> <span class="o">==</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
     <span class="n">wannier_atoms</span> <span class="o">=</span> <span class="n">wannier_atoms</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
 
     <span class="n">natoms</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">get_natoms</span><span class="p">()</span>
@@ -743,6 +744,7 @@ document.write(`
             <span class="n">sel_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">symbols</span><span class="p">,</span> <span class="n">sel_symbol</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">n_atoms</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atype</span><span class="p">)</span>
 
+            <span class="c1"># FIXME: n_frame is undefined</span>
             <span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">n_frames</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_ids</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">n_frames</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">n_dim</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>

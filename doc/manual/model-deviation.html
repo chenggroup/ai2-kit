@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Reweighting with ai2-kit &#8212; ai2-kit Reference</title>
+    <title>Model Deviation Toolkit &#8212; ai2-kit Reference</title>
   
   
   
@@ -62,7 +62,7 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'doc/manual/reweighting';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'doc/manual/model-deviation';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -353,7 +353,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fdoc/manual/reweighting.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2Fdoc/manual/model-deviation.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -383,7 +383,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../../_sources/doc/manual/reweighting.md" target="_blank"
+      <li><a href="../../_sources/doc/manual/model-deviation.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -467,7 +467,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Reweighting with ai2-kit</h1>
+    <h1>Model Deviation Toolkit</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -477,11 +477,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-2000-frames-from-the-trajectory-and-colvar-file">Sampling 2000 frames from the trajectory and COLVAR file</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-baseline-and-target-model-to-calculate-the-energy">Use baseline and target model to calculate the energy</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-reweighting-fes">Calculate reweighting FES</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-lammps-trajectory-by-model-deviation">Filter LAMMPS trajectory by model deviation</a></li>
 </ul>
 </li>
 </ul>
@@ -495,53 +493,44 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="reweighting-with-ai2-kit">
-<h1>Reweighting with ai2-kit<a class="headerlink" href="#reweighting-with-ai2-kit" title="Permalink to this heading">#</a></h1>
-<section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+  <section class="tex2jax_ignore mathjax_ignore" id="model-deviation-toolkit">
+<h1>Model Deviation Toolkit<a class="headerlink" href="#model-deviation-toolkit" title="Permalink to this heading">#</a></h1>
+<p>This toolkit is a command line tool to filter structures by model deviation.
+This toolkit is part of ase toolkit, you can use it to process trajectory via command line.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
 <p>TODO</p>
 </section>
-<section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading">#</a></h2>
-<p>Given we have the following data:</p>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h2>
+<section id="filter-lammps-trajectory-by-model-deviation">
+<h3>Filter LAMMPS trajectory by model deviation<a class="headerlink" href="#filter-lammps-trajectory-by-model-deviation" title="Permalink to this heading">#</a></h3>
+<p>When you run multiple LAMMPS simulations with deepmd-kit, you may want to filter out the structures with model deviation for the next round. Consider the following example:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">traj.lammpstrj</span></code>: a LAMMPS trajectory file</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">COLVAR</span></code>: a PLUMED COLVAR file, the COLVAR file should align with the trajectory file</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">dp-baseline.pb</span></code>: a DeepMD baseline model</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">dp-target.pb</span></code>: a DeepMD target model</p></li>
+<li><p>There are several LAMMPS jobs under path: <code class="docutils literal notranslate"><span class="pre">./workdir/lammps/*</span></code></p></li>
+<li><p>The trajectory of each job is stored in <code class="docutils literal notranslate"><span class="pre">./workdir/lammps/*/traj/*.lammpstrj</span></code></p></li>
+<li><p>The model deviation of each job is stored in <code class="docutils literal notranslate"><span class="pre">./workdir/lammps/*/model_devi.out</span></code></p></li>
+<li><p>You want to filter out the structures whose max_devi_f is between 0.1 and 0.2</p></li>
 </ul>
-<section id="sampling-2000-frames-from-the-trajectory-and-colvar-file">
-<h3>Sampling 2000 frames from the trajectory and COLVAR file<a class="headerlink" href="#sampling-2000-frames-from-the-trajectory-and-colvar-file" title="Permalink to this heading">#</a></h3>
-<p>We don’t need to use the full trajectory for reweighting, so here we will use <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> to sampling 2000 frames from the trajectory.  As the beginning frame may not be the best frame to start with, so we will also skip the first 100000 frames.</p>
-<p>Note that we need to ensure the frames in the COLVAR file are aligned with the trajectory file, so we need to use the same random seed for both sampling.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>frame<span class="w"> </span><span class="nb">read</span><span class="w"> </span>traj.lammpstrj<span class="w"> </span>--rp<span class="w"> </span><span class="s1">&#39;TIMESTEP&#39;</span><span class="w"> </span>-<span class="w"> </span>slice<span class="w"> </span><span class="m">100000</span>:<span class="w"> </span>-<span class="w"> </span>sample<span class="w"> </span><span class="m">2000</span><span class="w"> </span>--method<span class="w"> </span>random<span class="w"> </span>--seed<span class="w"> </span><span class="m">10</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span><span class="m">2000</span>.lammpstrj<span class="w"> </span>
-ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="m">2000</span>.lammpstrj<span class="w"> </span>--specorder<span class="w"> </span><span class="o">[</span>Ag,O<span class="o">]</span><span class="w"> </span>-<span class="w"> </span>to_dpdata<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span><span class="m">2000</span>-dpdata
-
-ai2-kit<span class="w"> </span>tool<span class="w"> </span>frame<span class="w"> </span><span class="nb">read</span><span class="w"> </span>COLVAR<span class="w"> </span>--frame_size<span class="w"> </span><span class="m">1</span><span class="w"> </span>--header_size<span class="w"> </span><span class="m">1</span><span class="w"> </span>-<span class="w"> </span>slice<span class="w"> </span><span class="m">100000</span>:<span class="w"> </span>-<span class="w"> </span>sample<span class="w"> </span><span class="m">2000</span><span class="w"> </span>--method<span class="w"> </span>random<span class="w"> </span>--seed<span class="w"> </span><span class="m">10</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span><span class="m">2000</span>-colvar<span class="w"> </span>--keep_header
+<p>Then you can use the following command to filter out the structures with model deviation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="s2">&quot;./workdir/lammps/*/traj/*.lammpstrj&quot;</span><span class="w"> </span>--nat_sort<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-<span class="w"> </span>to_model_devi<span class="w"> </span><span class="s2">&quot;./workdir/lammps/*/model_devi.out&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-<span class="w"> </span>grade<span class="w"> </span>--lo<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span>--hi<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>--col<span class="w"> </span>max_devi_f<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-<span class="w"> </span>dump_stats<span class="w"> </span>stats.tsv<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-<span class="w"> </span>to_ase<span class="w"> </span>--level<span class="w"> </span>bad<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-<span class="w"> </span>write<span class="w"> </span>bad.xyz
 </pre></div>
 </div>
-<p>The reason of not using ase tool to sample is ase will take extra time to parse the trajectory file,
-by using frame tool to sample and then use ase tool to convert the data to dpdata format will save time.</p>
-<p>Here we use the same <code class="docutils literal notranslate"><span class="pre">slice</span></code> and <code class="docutils literal notranslate"><span class="pre">sample</span></code> parameters for both <code class="docutils literal notranslate"><span class="pre">traj.lammpstrj</span></code> and <code class="docutils literal notranslate"><span class="pre">COLVAR</span></code> to ensure they are aligned.</p>
-</section>
-<section id="use-baseline-and-target-model-to-calculate-the-energy">
-<h3>Use baseline and target model to calculate the energy<a class="headerlink" href="#use-baseline-and-target-model-to-calculate-the-energy" title="Permalink to this heading">#</a></h3>
-<p>Now we need to use both the baseline and target model to calculate the energy of the sampled frames.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="m">2000</span>-dpdata/*<span class="w"> </span>--nolabel<span class="w"> </span>-<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>dp-baseline.pb<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span><span class="m">2000</span>-baseline
-ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="m">2000</span>-dpdata/*<span class="w"> </span>--nolabel<span class="w"> </span>-<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>dp-target.pb<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span><span class="m">2000</span>-target
-</pre></div>
-</div>
-<p>Note that we use <code class="docutils literal notranslate"><span class="pre">--nolabel</span></code> to ignore label in the dpdata file.</p>
-</section>
-<section id="calculate-reweighting-fes">
-<h3>Calculate reweighting FES<a class="headerlink" href="#calculate-reweighting-fes" title="Permalink to this heading">#</a></h3>
-<p>Now that we have all the data we need, we can calculate the reweighting FES.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>ai2-kit<span class="w"> </span>algorithm<span class="w"> </span>reweighting<span class="w"> </span>load_energy<span class="w"> </span><span class="m">2000</span>-baseline/**/energy.npy<span class="w"> </span>--tag<span class="w"> </span>baseline<span class="w">  </span>-<span class="w"> </span>load_energy<span class="w"> </span><span class="m">2000</span>-target/**/energy.npy<span class="w"> </span>--tag<span class="w"> </span>target<span class="w"> </span><span class="se">\</span>
-<span class="w">   </span>-<span class="w"> </span>load_colvar<span class="w"> </span><span class="m">2000</span>-COLVAR<span class="w"> </span><span class="se">\</span>
-<span class="w">   </span>-<span class="w"> </span>reweighting<span class="w"> </span>--cv<span class="w"> </span>d1<span class="w"> </span>--bias<span class="w"> </span>opes.bias<span class="w"> </span>--temp<span class="w"> </span><span class="m">800</span><span class="w"> </span>--save_fig_to<span class="w"> </span>fes.png<span class="w"> </span>--save_json_to<span class="w"> </span>result.json
-</pre></div>
-</div>
-<p>The above command will calculate the reweighting FES and save the FES to <code class="docutils literal notranslate"><span class="pre">fes.png</span></code> and reweighting result to <code class="docutils literal notranslate"><span class="pre">result.json</span></code>.</p>
+<p>Explanation of the command:</p>
+<ul class="simple">
+<li><p>The double quotes are required to prevent shell expansion of <code class="docutils literal notranslate"><span class="pre">*</span></code>. You muse use double quotes with <code class="docutils literal notranslate"><span class="pre">ase</span> <span class="pre">read</span></code> and <code class="docutils literal notranslate"><span class="pre">to_model_devi</span></code> to avoid undetermined behavior.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">--nat_sort</span></code> is used to sort the trajectory by the number of atoms in each frame. It’s used to ensure the order of the trajectory is consistent with the model deviation file.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">to_model_devi</span></code> command is used to read the model deviation file. Note that the path of the model deviation file must be consistent with the trajectory file.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">grade</span></code> command is used to grade the structures by the model deviation. The <code class="docutils literal notranslate"><span class="pre">--lo</span></code> and <code class="docutils literal notranslate"><span class="pre">--hi</span></code> are used to set the lower and upper bound of the model deviation. The structures whose  <code class="docutils literal notranslate"><span class="pre">max_devi_f</span></code> is below lo, between lo and hi, and above hi are graded as <code class="docutils literal notranslate"><span class="pre">good</span></code>, <code class="docutils literal notranslate"><span class="pre">bad</span></code>, and <code class="docutils literal notranslate"><span class="pre">ugly</span></code>, respectively.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">dump_stats</span></code> command is used to dump the statistics of the grading to a file. The statistics include the number of structures in each grade.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">to_ase</span></code> command is used to hand over selected structures back to <code class="docutils literal notranslate"><span class="pre">ase</span> <span class="pre">toolkit</span></code>. The <code class="docutils literal notranslate"><span class="pre">--level</span></code> is used to select the grade of the structures. The <code class="docutils literal notranslate"><span class="pre">bad</span></code> level is used to select the structures graded as <code class="docutils literal notranslate"><span class="pre">bad</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">write</span></code> command is used to write the selected structures to a file. The <code class="docutils literal notranslate"><span class="pre">bad.xyz</span></code> is the output file name.</p></li>
+</ul>
 </section>
 </section>
 </section>
@@ -592,11 +581,9 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sampling-2000-frames-from-the-trajectory-and-colvar-file">Sampling 2000 frames from the trajectory and COLVAR file</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-baseline-and-target-model-to-calculate-the-energy">Use baseline and target model to calculate the energy</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-reweighting-fes">Calculate reweighting FES</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-lammps-trajectory-by-model-deviation">Filter LAMMPS trajectory by model deviation</a></li>
 </ul>
 </li>
 </ul>

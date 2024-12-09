@@ -267,6 +267,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
 </ul>
 </details></li>
@@ -842,6 +843,13 @@ document.write(`
 </li>
       </ul></li>
       <li>
+    ai2_kit.tool.model_devi
+
+      <ul>
+        <li><a href="_api/ai2_kit.tool.model_devi.html#module-ai2_kit.tool.model_devi">module</a>
+</li>
+      </ul></li>
+      <li>
     ai2_kit.tool.yaml
 
       <ul>
@@ -1381,6 +1389,8 @@ document.write(`
 </li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.dump_json">dump_json() (in module ai2_kit.core.util)</a>
 </li>
+      <li><a href="_api/ai2_kit.tool.model_devi.html#ai2_kit.tool.model_devi.ModelDevi.dump_stats">dump_stats() (ai2_kit.tool.model_devi.ModelDevi method)</a>
+</li>
       <li><a href="_api/ai2_kit.core.connector.html#ai2_kit.core.connector.BaseConnector.dump_text">dump_text() (ai2_kit.core.connector.BaseConnector method)</a>
 
       <ul>
@@ -1743,6 +1753,8 @@ document.write(`
         <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.HpcExecutor.glob">(ai2_kit.core.executor.HpcExecutor method)</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.tool.model_devi.html#ai2_kit.tool.model_devi.ModelDevi.grade">grade() (ai2_kit.tool.model_devi.ModelDevi method)</a>
+</li>
       <li><a href="_api/ai2_kit.main.html#ai2_kit.main.Group">Group (class in ai2_kit.main)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.group_by_formula">group_by_formula (ai2_kit.domain.deepmd.CllDeepmdInputConfig attribute)</a>
@@ -2065,6 +2077,8 @@ document.write(`
         <li><a href="_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.General.max_iters">(ai2_kit.workflow.fep_mlp.WorkflowConfig.General attribute)</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.tool.model_devi.html#ai2_kit.tool.model_devi.ModelDevi.md_arr_load">md_arr_load() (ai2_kit.tool.model_devi.ModelDevi static method)</a>
+</li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.merge_dict">merge_dict() (in module ai2_kit.core.util)</a>
 </li>
       <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ToolGroup.misc">misc (ai2_kit.main.ToolGroup property)</a>
@@ -2405,6 +2419,8 @@ document.write(`
       </ul></li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.model_num">model_num (ai2_kit.domain.deepmd.CllDeepmdInputConfig attribute)</a>
 </li>
+      <li><a href="_api/ai2_kit.tool.model_devi.html#ai2_kit.tool.model_devi.ModelDevi">ModelDevi (class in ai2_kit.tool.model_devi)</a>
+</li>
       <li><a href="_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.models">models (ai2_kit.domain.deepmd.GenericDeepmdOutput attribute)</a>
 
       <ul>
@@ -2521,6 +2537,8 @@ document.write(`
 </li>
         <li><a href="_api/ai2_kit.tool.misc.html#module-ai2_kit.tool.misc">ai2_kit.tool.misc</a>
 </li>
+        <li><a href="_api/ai2_kit.tool.model_devi.html#module-ai2_kit.tool.model_devi">ai2_kit.tool.model_devi</a>
+</li>
         <li><a href="_api/ai2_kit.tool.yaml.html#module-ai2_kit.tool.yaml">ai2_kit.tool.yaml</a>
 </li>
         <li><a href="_api/ai2_kit.workflow.html#module-ai2_kit.workflow">ai2_kit.workflow</a>
@@ -2550,6 +2568,8 @@ document.write(`
         <li><a href="_api/ai2_kit.core.executor.html#ai2_kit.core.executor.HpcExecutor.name">(ai2_kit.core.executor.HpcExecutor attribute)</a>
 </li>
       </ul></li>
+      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.nat_sort">nat_sort() (in module ai2_kit.core.util)</a>
+</li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.nested_set">nested_set() (in module ai2_kit.core.util)</a>
 </li>
       <li><a href="_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.neu">neu (ai2_kit.workflow.fep_mlp.WorkflowConfig attribute)</a>
@@ -2573,6 +2593,8 @@ document.write(`
       <li><a href="_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig.no_pbc">no_pbc (ai2_kit.domain.lammps.CllLammpsInputConfig attribute)</a>
 </li>
       <li><a href="_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig.nsteps">nsteps (ai2_kit.domain.lammps.CllLammpsInputConfig attribute)</a>
+</li>
+      <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.num_text_split">num_text_split() (in module ai2_kit.core.util)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -3077,13 +3099,21 @@ document.write(`
 </li>
       </ul></li>
       <li><a href="_api/ai2_kit.tool.dpdata.html#ai2_kit.tool.dpdata.DpdataTool.to_ase">to_ase() (ai2_kit.tool.dpdata.DpdataTool method)</a>
+
+      <ul>
+        <li><a href="_api/ai2_kit.tool.model_devi.html#ai2_kit.tool.model_devi.ModelDevi.to_ase">(ai2_kit.tool.model_devi.ModelDevi method)</a>
 </li>
+      </ul></li>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.to_awaitable">to_awaitable() (in module ai2_kit.core.util)</a>
 </li>
       <li><a href="_api/ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact.to_dict">to_dict() (ai2_kit.core.artifact.Artifact method)</a>
 </li>
       <li><a href="_api/ai2_kit.tool.ase.html#ai2_kit.tool.ase.AseTool.to_dpdata">to_dpdata() (ai2_kit.tool.ase.AseTool method)</a>
 </li>
+      <li><a href="_api/ai2_kit.tool.ase.html#ai2_kit.tool.ase.AseTool.to_model_devi">to_model_devi() (ai2_kit.tool.ase.AseTool method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag.to_yaml">to_yaml() (ai2_kit.core.util.JoinTag class method)</a>
 
       <ul>
@@ -3092,8 +3122,6 @@ document.write(`
         <li><a href="_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag.to_yaml">(ai2_kit.core.util.LoadYamlTag class method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_api/ai2_kit.main.html#ai2_kit.main.ToolGroup">ToolGroup (class in ai2_kit.main)</a>
 </li>
       <li><a href="_api/ai2_kit.workflow.cll_mlp.html#ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context.train">train (ai2_kit.workflow.cll_mlp.CllWorkflowExecutorConfig.Context attribute)</a>

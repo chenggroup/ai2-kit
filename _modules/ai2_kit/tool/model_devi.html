@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ai2_kit.core.future &#8212; ai2-kit Reference</title>
+    <title>ai2_kit.tool.model_devi &#8212; ai2-kit Reference</title>
   
   
   
@@ -61,7 +61,7 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/ai2_kit/core/future';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/ai2_kit/tool/model_devi';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -352,7 +352,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2F_modules/ai2_kit/core/future.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2F_modules/ai2_kit/tool/model_devi.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -430,26 +430,119 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for ai2_kit.core.future</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+  <h1>Source code for ai2_kit.tool.model_devi</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">expand_globs</span>
+<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">MdArray</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
 
 
-<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="ModelDevi"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.model_devi.html#ai2_kit.tool.model_devi.ModelDevi">[docs]</a><span class="k">class</span> <span class="nc">ModelDevi</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A tool to analyze the deviation of model from model deviation file of deepmd-kit</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
+<div class="viewcode-block" id="ModelDevi.md_arr_load"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.model_devi.html#ai2_kit.tool.model_devi.ModelDevi.md_arr_load">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">md_arr_load</span><span class="p">(</span><span class="o">*</span><span class="n">files</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MdArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load model deviation files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">md_arr</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">expand_globs</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># skip the leading &#39;#&#39;</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">md_arr</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">df</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">md_arr</span></div>
 
-<div class="viewcode-block" id="IFuture"><a class="viewcode-back" href="../../../_api/ai2_kit.core.future.html#ai2_kit.core.future.IFuture">[docs]</a><span class="k">class</span> <span class="nc">IFuture</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms_arr</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Atoms</span><span class="p">],</span> <span class="n">md_arr</span><span class="p">:</span> <span class="n">MdArray</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_md_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span> <span class="k">for</span> <span class="n">df</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">md_arr</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_atoms_arr</span> <span class="o">=</span> <span class="n">atoms_arr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_md_arr</span> <span class="o">=</span> <span class="n">md_arr</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_arr</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_md_df</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The size of atoms and model deviation records should be the same&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grade</span> <span class="o">=</span> <span class="p">{}</span>
 
-<div class="viewcode-block" id="IFuture.done"><a class="viewcode-back" href="../../../_api/ai2_kit.core.future.html#ai2_kit.core.future.IFuture.done">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">pass</span></div>
+<div class="viewcode-block" id="ModelDevi.grade"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.model_devi.html#ai2_kit.tool.model_devi.ModelDevi.grade">[docs]</a>    <span class="k">def</span> <span class="nf">grade</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lo</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">hi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;max_devi_f&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Grade atoms based on the deviation of model: the good, the bad and the ugly</span>
+<span class="sd">        the grade is based on the column of max_devi_f by default,</span>
+<span class="sd">        if the value is below lo, the level is good,</span>
+<span class="sd">        if the value is above hi, the level is ugly,</span>
+<span class="sd">        otherwise, the level is bad</span>
 
-<div class="viewcode-block" id="IFuture.result"><a class="viewcode-back" href="../../../_api/ai2_kit.core.future.html#ai2_kit.core.future.IFuture.result">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
-        <span class="k">pass</span></div>
+<span class="sd">        :param lo: the lower bound of good level</span>
+<span class="sd">        :param hi: the upper bound of ugly level</span>
+<span class="sd">        :param col: the column of model deviation to grade, default is max_devi_f</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_md_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown model deviation column: </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">df</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_md_arr</span><span class="p">:</span>
+            <span class="n">good</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">lo</span>
+            <span class="n">bad</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lo</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="p">)</span>
+            <span class="n">ugly</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">hi</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span><span class="p">[</span><span class="n">file</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;g&#39;</span><span class="p">:</span> <span class="n">good</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+                <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">bad</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+                <span class="s1">&#39;u&#39;</span><span class="p">:</span> <span class="n">ugly</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+                <span class="s1">&#39;all&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
+            <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grade</span><span class="p">[</span><span class="s1">&#39;good&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_md_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">lo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grade</span><span class="p">[</span><span class="s1">&#39;bad&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_md_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lo</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_md_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grade</span><span class="p">[</span><span class="s1">&#39;ugly&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_md_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">hi</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="IFuture.result_async"><a class="viewcode-back" href="../../../_api/ai2_kit.core.future.html#ai2_kit.core.future.IFuture.result_async">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">result_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
-        <span class="o">...</span></div></div>
+<div class="viewcode-block" id="ModelDevi.dump_stats"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.model_devi.html#ai2_kit.tool.model_devi.ModelDevi.dump_stats">[docs]</a>    <span class="k">def</span> <span class="nf">dump_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tsv&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Dump the statistics of grading</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;total&#39;</span><span class="p">,</span> <span class="s1">&#39;good&#39;</span><span class="p">,</span> <span class="s1">&#39;bad&#39;</span><span class="p">,</span> <span class="s1">&#39;ugly&#39;</span><span class="p">,</span> <span class="s1">&#39;good%&#39;</span><span class="p">,</span> <span class="s1">&#39;bad%&#39;</span><span class="p">,</span> <span class="s1">&#39;ugly%&#39;</span><span class="p">]</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">overall</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;all&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_md_df</span><span class="p">),</span>
+            <span class="s1">&#39;g&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grade</span><span class="p">[</span><span class="s1">&#39;good&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+            <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grade</span><span class="p">[</span><span class="s1">&#39;bad&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+            <span class="s1">&#39;u&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grade</span><span class="p">[</span><span class="s1">&#39;ugly&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">file</span><span class="p">,</span> <span class="n">stats</span> <span class="ow">in</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_stats</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">overall</span><span class="p">)]:</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;g&#39;</span><span class="p">]</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span>
+            <span class="n">g_pct</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.2%}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span> <span class="o">/</span> <span class="n">total</span><span class="p">)</span>
+            <span class="n">b_pct</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.2%}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b</span> <span class="o">/</span> <span class="n">total</span><span class="p">)</span>
+            <span class="n">u_pct</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.2%}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">u</span> <span class="o">/</span> <span class="n">total</span><span class="p">)</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">file</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">g_pct</span><span class="p">,</span> <span class="n">b_pct</span><span class="p">,</span> <span class="n">u_pct</span><span class="p">])</span>
+        <span class="n">stats_report</span> <span class="o">=</span> <span class="n">tabulate</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">out_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">stats_report</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;model deviation statistics:</span><span class="se">\n</span><span class="si">{</span><span class="n">stats_report</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ModelDevi.to_ase"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.model_devi.html#ai2_kit.tool.model_devi.ModelDevi.to_ase">[docs]</a>    <span class="k">def</span> <span class="nf">to_ase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Hand over the atoms to ase tool</span>
+
+<span class="sd">        :param level: the grade level to hand over, valid values are good, bad, ugly</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">level</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grade</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown grade level: </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">atoms_arr</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_atoms_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grade</span><span class="p">[</span><span class="n">level</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+        <span class="kn">from</span> <span class="nn">.ase</span> <span class="kn">import</span> <span class="n">AseTool</span>
+        <span class="k">return</span> <span class="n">AseTool</span><span class="p">(</span><span class="n">atoms_arr</span><span class="p">)</span></div></div>
 </pre></div>
 
                 </article>

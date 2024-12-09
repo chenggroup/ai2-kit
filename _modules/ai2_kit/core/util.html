@@ -267,6 +267,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
 </ul>
 </details></li>
@@ -430,16 +431,14 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.core.util</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Literal</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Literal</span>
 <span class="kn">from</span> <span class="nn">ruamel.yaml</span> <span class="kn">import</span> <span class="n">YAML</span><span class="p">,</span> <span class="n">ScalarNode</span><span class="p">,</span> <span class="n">SequenceNode</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">zip_longest</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span> <span class="nn">shortuuid</span>
 <span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">psutil</span>
 <span class="kn">import</span> <span class="nn">random</span>
@@ -447,6 +446,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
 
@@ -787,7 +787,7 @@ document.write(`
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="expand_globs"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.expand_globs">[docs]</a><span class="k">def</span> <span class="nf">expand_globs</span><span class="p">(</span><span class="n">patterns</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">raise_invalid</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="expand_globs"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.expand_globs">[docs]</a><span class="k">def</span> <span class="nf">expand_globs</span><span class="p">(</span><span class="n">patterns</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">raise_invalid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nature_sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Expand glob patterns in paths</span>
 
@@ -797,14 +797,21 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">paths</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="s1">&#39;*&#39;</span> <span class="ow">in</span> <span class="n">pattern</span> <span class="k">else</span> <span class="p">[</span><span class="n">pattern</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">raise_invalid</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No file found for </span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No file found for </span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">raise_invalid</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No file found for </span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># sort the result to make it deterministic</span>
+        <span class="k">if</span> <span class="n">nature_sort</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">nat_sort</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
                 <span class="n">paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;path </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s1"> already exists in the list&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;path </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s1"> already exists in the list&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">paths</span></div>
 
 
@@ -830,6 +837,17 @@ document.write(`
     <span class="k">if</span> <span class="n">fn_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_locals</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Function </span><span class="si">{</span><span class="n">fn_name</span><span class="si">}</span><span class="s1"> not found in </span><span class="si">{</span><span class="n">func_str</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_locals</span><span class="p">[</span><span class="n">fn_name</span><span class="p">]</span></div>
+
+
+<span class="n">NUM_TEXT_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d+|[^\d]+&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="num_text_split"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.num_text_split">[docs]</a><span class="k">def</span> <span class="nf">num_text_split</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">NUM_TEXT_PATTERN</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">s</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="nat_sort"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.nat_sort">[docs]</a><span class="k">def</span> <span class="nf">nat_sort</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">num_text_split</span><span class="p">)</span></div>
 </pre></div>
 
                 </article>

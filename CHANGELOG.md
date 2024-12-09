@@ -1,4 +1,7 @@
 # Change Logs
+## v0.22.2
+* feat: model deviation toolkit
+
 ## v0.22.1
 * allow to override potential in lasp
 

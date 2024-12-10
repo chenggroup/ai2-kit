@@ -107,6 +107,6 @@ class ModelDevi:
         """
         if level not in self._grade:
             raise ValueError(f"Unknown grade level: {level}")
-        atoms_arr = [self._atoms_arr[i] for i in self._grade[level].index]
+        atoms_arr = [self._atoms_arr[i] for i in self._grade[level].index if self._grade[level][i]]
         from .ase import AseTool
         return AseTool(atoms_arr)

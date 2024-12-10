@@ -52,12 +52,14 @@ ai2-kit tool dpdata read dp-h2o - slice 10: - sample 10 --method random - to_ase
 o
 
 # convert cp2k data to the format that can be used by deepmd dplr module
-# data used in v2
-ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H,K,F]" --sel_type="[0,2,3]" - write ./v2-dataset --v2 --sel_symbol="[O,K,F]"
 # data used in v3
 ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H,K,F]" --sel_type="[0,2,3]" - write ./v3-dataset
+# data used in v2
+ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H,K,F]" --sel_type="[0,2,3]" - write ./v2-dataset --v2 --sel_symbol="[O,K,F]"
 # data with wannier spread (which works for both v2 and v3)
 ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --wannier_spread_file="wannier_spread.out" --type_map="[O,H,K,F]" --sel_type="[0,2,3]" - write ./v3-dataset-with-spread
+# if wannier charge is not -8
+ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="output" --wannier_file="wannier.xyz" --type_map="[O,H,Li]" --sel_type="[0,2]" --model_charge_map="[-8,-2]" - write ./LiOH-dataset
 ```
 
 ## Note about data conversion between v2 and v3

@@ -1,4 +1,8 @@
 # Change Logs
+
+## v0.22.3
+* fix: wrong filter in model devi tool
+
 ## v0.22.2
 * feat: model deviation toolkit
 

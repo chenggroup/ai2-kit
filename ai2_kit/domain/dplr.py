@@ -341,8 +341,9 @@ def dplr_v2_to_v3(data_path: str, sel_symbol: list):
             sel_ids = np.where(np.isin(symbols, sel_symbol))[0]
             n_atoms = len(atype)
 
-            raw_data = np.load(fname).reshape([n_frames, len(sel_ids), -1])
+            raw_data = np.load(fname)
             n_frames = raw_data.shape[0]
+            raw_data = np.reshape(raw_data, [n_frames, len(sel_ids), -1])
             n_dim = raw_data.shape[2]
 
             full_data = np.zeros([n_frames, n_atoms, n_dim])

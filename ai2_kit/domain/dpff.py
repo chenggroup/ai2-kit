@@ -36,7 +36,7 @@ def dpdata_read_cp2k_dpff_data(
     :param wannier_file: the wannier file
     :param type_map: the type map of atom type, for example, [O,H]
     :param sys_charge_map: the charge map of atom in system, for example, [6, 1]
-    :param model_charge_map: the charge map of atom in model, for example, [-8]
+    :param model_charge_map: the charge map of wannier in model, for example, [-8]
     :param ewald_h: the ewald_h parameter used in dplr/dpff model
     :param ewald_beta: the ewald_beta parameter used in dplr/dpff model
     :param ext_efield: the external electric field
@@ -102,6 +102,7 @@ def set_dpff_ext_from_cp2k_output(
         sel_type,
         wannier_cutoff,
         wannier_spread_file,
+        model_charge_map,
     )
     atomic_dipole = dplr_dp_sys.data["atomic_dipole"].reshape(-1, 3)  # type: ignore
 

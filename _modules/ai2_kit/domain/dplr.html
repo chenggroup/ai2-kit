@@ -456,6 +456,7 @@ document.write(`
     <span class="n">sel_type</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
     <span class="n">wannier_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">wannier_spread_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">model_charge_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gnereate dpdata from cp2k output and wannier file for DPLR</span>
@@ -467,6 +468,7 @@ document.write(`
 <span class="sd">    :param sel_type: the selected type of atom, for example, [0] means atom type 0, aka O is selected</span>
 <span class="sd">    :param wannier_cutoff: the cutoff to allocate wannier centers around atoms</span>
 <span class="sd">    :param wannier_spread_file: the wannier spread file, if provided, the spread data will be added to dp_sys</span>
+<span class="sd">    :param model_charge_map: the charge map of wannier in model, for example, [-8]</span>
 
 <span class="sd">    :return dp_sys: dpdata.LabeledSystem</span>
 <span class="sd">        In addition to the common energy data, atomic_dipole data is added.</span>
@@ -485,6 +487,7 @@ document.write(`
             <span class="n">sel_type</span><span class="p">,</span>
             <span class="n">wannier_cutoff</span><span class="p">,</span>
             <span class="n">wannier_spread_file</span><span class="p">,</span>
+            <span class="n">model_charge_map</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="n">dp_sys</span> <span class="o">=</span> <span class="kc">None</span>
@@ -499,6 +502,7 @@ document.write(`
     <span class="n">sel_type</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
     <span class="n">wannier_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">wannier_spread_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">model_charge_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="n">wannier_atoms</span> <span class="o">=</span> <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">wannier_file</span><span class="p">)</span>
     <span class="c1"># assert np.all(wannier_atoms.symbols == &quot;X&quot;), (</span>
@@ -515,25 +519,29 @@ document.write(`
 
     <span class="c1"># symbols = np.array(dp_sys.data[&quot;atom_names&quot;])[dp_sys.data[&quot;atom_types&quot;]]</span>
     <span class="n">sel_ids</span> <span class="o">=</span> <span class="n">get_sel_ids</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">type_map</span><span class="p">,</span> <span class="n">sel_type</span><span class="p">)</span>
-
+    <span class="n">cns_ref</span> <span class="o">=</span> <span class="n">get_ref_cns</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">type_map</span><span class="p">,</span> <span class="n">sel_type</span><span class="p">,</span> <span class="n">model_charge_map</span><span class="p">)</span>
     <span class="n">atomic_dipole</span><span class="p">,</span> <span class="n">extended_coords</span><span class="p">,</span> <span class="n">wannier_spread</span> <span class="o">=</span> <span class="n">get_atomic_dipole</span><span class="p">(</span>
         <span class="n">dp_sys</span><span class="p">,</span>
         <span class="n">sel_ids</span><span class="p">,</span>
         <span class="n">wannier_atoms</span><span class="p">,</span>
         <span class="n">wannier_cutoff</span><span class="p">,</span>
         <span class="n">wannier_spread_file</span><span class="p">,</span>
+        <span class="n">cns_ref</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">atomic_dipole_reformat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
     <span class="n">atomic_dipole_reformat</span><span class="p">[:,</span> <span class="n">sel_ids</span><span class="p">]</span> <span class="o">=</span> <span class="n">atomic_dipole</span>
     <span class="n">atomic_dipole</span> <span class="o">=</span> <span class="n">atomic_dipole_reformat</span>
-    <span class="n">wannier_spread_reformat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wannier_spread</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">wannier_spread_reformat</span><span class="p">[:,</span> <span class="n">sel_ids</span><span class="p">]</span> <span class="o">=</span> <span class="n">wannier_spread</span>
-        <span class="n">wannier_spread</span> <span class="o">=</span> <span class="n">wannier_spread_reformat</span>
-
     <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atomic_dipole&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atomic_dipole</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wannier_spread</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;wannier_spread&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">wannier_spread</span><span class="p">,</span> <span class="p">[</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">wannier_spread_reformat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wannier_spread</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">wannier_spread_reformat</span><span class="p">[:,</span> <span class="n">sel_ids</span><span class="p">]</span> <span class="o">=</span> <span class="n">wannier_spread</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">nframes</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+            <span class="n">wannier_spread</span> <span class="o">=</span> <span class="n">wannier_spread_reformat</span>
+            <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;wannier_spread&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="n">wannier_spread</span><span class="p">,</span> <span class="p">[</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+            <span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
     <span class="k">return</span> <span class="n">dp_sys</span></div>
 
 
@@ -544,8 +552,27 @@ document.write(`
     <span class="k">return</span> <span class="n">sel_ids</span></div>
 
 
+<div class="viewcode-block" id="get_ref_cns"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_ref_cns">[docs]</a><span class="k">def</span> <span class="nf">get_ref_cns</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">type_map</span><span class="p">,</span> <span class="n">sel_type</span><span class="p">,</span> <span class="n">model_charge_map</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">model_charge_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cns_ref</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">symbols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atom_names&quot;</span><span class="p">])[</span><span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atom_types&quot;</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">symbols</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sel_type</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="n">type_map</span><span class="p">[</span><span class="n">idx</span><span class="p">]:</span>
+                    <span class="n">cns_ref</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_charge_map</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span>
+        <span class="n">cns_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cns_ref</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cns_ref</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="get_atomic_dipole"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_atomic_dipole">[docs]</a><span class="k">def</span> <span class="nf">get_atomic_dipole</span><span class="p">(</span>
-    <span class="n">dp_sys</span><span class="p">,</span> <span class="n">sel_ids</span><span class="p">,</span> <span class="n">wannier_atoms</span><span class="p">,</span> <span class="n">wannier_cutoff</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">wannier_spread_file</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">dp_sys</span><span class="p">,</span>
+    <span class="n">sel_ids</span><span class="p">,</span>
+    <span class="n">wannier_atoms</span><span class="p">,</span>
+    <span class="n">wannier_cutoff</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">wannier_spread_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">cns_ref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="kn">from</span> <span class="nn">MDAnalysis.lib.distances</span> <span class="kn">import</span> <span class="n">distance_array</span><span class="p">,</span> <span class="n">minimize_vectors</span>
 
@@ -564,10 +591,12 @@ document.write(`
     <span class="n">atomic_dipole</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">wannier_spread</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">mlwc_ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">cns_ref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cns_ref</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_ids</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">dist_vec</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dist_mat</span><span class="p">):</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">dist_vec</span> <span class="o">&lt;</span> <span class="n">wannier_cutoff</span>
         <span class="n">cn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">cn</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cn</span> <span class="o">!=</span> <span class="n">cns_ref</span><span class="p">[</span><span class="n">ii</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;wannier atoms </span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s2"> atoms in the cutoff range&quot;</span><span class="p">)</span>
         <span class="n">mlwc_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">wc_coord_rel</span> <span class="o">=</span> <span class="n">e_coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">ref_coords</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
@@ -580,12 +609,13 @@ document.write(`
         <span class="n">extended_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
             <span class="p">(</span><span class="n">extended_coords</span><span class="p">,</span> <span class="n">wc_coord</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
         <span class="p">)</span>
-    <span class="n">mlwc_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mlwc_ids</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">mlwc_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">mlwc_ids</span><span class="p">)</span>
     <span class="c1"># exclude double counting</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">mlwc_ids</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_ids</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">mlwc_ids</span><span class="p">))</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cns_ref</span><span class="p">)</span>
     <span class="n">atomic_dipole</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">atomic_dipole</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
     <span class="k">assert</span> <span class="n">atomic_dipole</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_ids</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">atomic_dipole</span><span class="p">,</span> <span class="n">extended_coords</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wannier_spread</span><span class="p">)</span></div>
+    <span class="n">wannier_spread</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">wannier_spread</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">atomic_dipole</span><span class="p">,</span> <span class="n">extended_coords</span><span class="p">,</span> <span class="n">wannier_spread</span></div>
 
 
 <div class="viewcode-block" id="build_sel_type_assertion"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.build_sel_type_assertion">[docs]</a><span class="k">def</span> <span class="nf">build_sel_type_assertion</span><span class="p">(</span><span class="n">sel_type</span><span class="p">,</span> <span class="n">model_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">py_cmd</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">):</span>
@@ -744,9 +774,9 @@ document.write(`
             <span class="n">sel_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">symbols</span><span class="p">,</span> <span class="n">sel_symbol</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">n_atoms</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atype</span><span class="p">)</span>
 
-            <span class="c1"># FIXME: n_frame is undefined</span>
-            <span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">n_frames</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_ids</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
             <span class="n">n_frames</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="p">[</span><span class="n">n_frames</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_ids</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">n_dim</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
             <span class="n">full_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">n_frames</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">])</span>

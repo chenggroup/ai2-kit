@@ -469,7 +469,7 @@ document.write(`
 <span class="sd">    :param wannier_file: the wannier file</span>
 <span class="sd">    :param type_map: the type map of atom type, for example, [O,H]</span>
 <span class="sd">    :param sys_charge_map: the charge map of atom in system, for example, [6, 1]</span>
-<span class="sd">    :param model_charge_map: the charge map of atom in model, for example, [-8]</span>
+<span class="sd">    :param model_charge_map: the charge map of wannier in model, for example, [-8]</span>
 <span class="sd">    :param ewald_h: the ewald_h parameter used in dplr/dpff model</span>
 <span class="sd">    :param ewald_beta: the ewald_beta parameter used in dplr/dpff model</span>
 <span class="sd">    :param ext_efield: the external electric field</span>
@@ -535,6 +535,7 @@ document.write(`
         <span class="n">sel_type</span><span class="p">,</span>
         <span class="n">wannier_cutoff</span><span class="p">,</span>
         <span class="n">wannier_spread_file</span><span class="p">,</span>
+        <span class="n">model_charge_map</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">atomic_dipole</span> <span class="o">=</span> <span class="n">dplr_dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atomic_dipole&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 

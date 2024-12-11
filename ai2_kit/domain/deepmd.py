@@ -266,6 +266,7 @@ async def cll_deepmd(input: CllDeepmdInput, ctx: CllDeepmdContext):
             cwd=task_dir,
             pretrained_model=input.config.pretrained_model,
             previous_model=previous_model,
+            dp_train_opts=input.config.dp_train_opts,
         )
         all_steps.append(steps)
 

@@ -1,4 +1,7 @@
 # Change Logs
+## v0.22.4
+* feat: support wannier charge != -8 (via `model_charge_map`)
+* fix: broken dp_train_opts options
 
 ## v0.22.3
 * fix: wrong filter in model devi tool

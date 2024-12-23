@@ -64,7 +64,7 @@ class TestDPLRDPData(unittest.TestCase, CP2kTestData):
         assert self.data.data["atomic_dipole"].shape[1] == natoms
         assert self.data.data["atomic_dipole"].shape[2] == 3
 
-    def test_consisitent(self):
+    def test_consistent(self):
         np.testing.assert_allclose(
             self.data.data["atomic_dipole"][0],
             self.data_with_ion.data["atomic_dipole"][0],
@@ -198,6 +198,57 @@ class TestWriteDPData(unittest.TestCase):
 
         shutil.rmtree(".tmp_data-single")
         shutil.rmtree(".tmp_data-merged")
+
+
+class TestDPLRSorted(unittest.TestCase):
+    def setUp(self) -> None:
+        self.cp2k_output = "output"
+        self.wannier_file = "wannier.xyz"
+        self.type_map = [
+            "Na",
+            "S",
+            "O",
+            "N",
+            "Cl",
+            "H",
+        ]
+        self.sel_type = [0, 2]
+
+        self.data_sorted = dpdata_read_cp2k_dplr_data(
+            str(Path(__file__).parent / "data-sample/cp2k_wannier_sort_test/sorted"),
+            self.cp2k_output,
+            self.wannier_file,
+            self.type_map,
+            self.sel_type,
+        )
+        self.data_random = dpdata_read_cp2k_dplr_data(
+            str(Path(__file__).parent / "data-sample/cp2k_wannier_sort_test/random"),
+            self.cp2k_output,
+            self.wannier_file,
+            self.type_map,
+            self.sel_type,
+        )
+
+        self.random_ids = np.loadtxt(
+            str(
+                Path(__file__).parent
+                / "data-sample/cp2k_wannier_sort_test/random_ids.txt"
+            ),
+            dtype=int,
+        )
+
+    def test_coord(self):
+        np.testing.assert_allclose(
+            self.data_sorted.data["coords"][0][self.random_ids],
+            self.data_random.data["coords"][0],
+        )
+
+    def test_consistent(self):
+        np.testing.assert_allclose(
+            self.data_sorted.data["atomic_dipole"][0][self.random_ids],
+            self.data_random.data["atomic_dipole"][0],
+            atol=1e-7,
+        )
 
 
 if __name__ == "__main__":

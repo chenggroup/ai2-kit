@@ -1,4 +1,8 @@
 # Change Logs
+
+## v0.22.5
+* fix: make viber adapted for dp v3
+
 ## v0.22.4
 * feat: support wannier charge != -8 (via `model_charge_map`)
 * fix: broken dp_train_opts options

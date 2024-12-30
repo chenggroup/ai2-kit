@@ -181,7 +181,8 @@ def get_atomic_dipole(
     assert len(np.unique(mlwc_ids)) == np.sum(cns_ref)
     atomic_dipole = np.reshape(atomic_dipole, (-1, 3))
     assert atomic_dipole.shape[0] == len(sel_ids)
-    wannier_spread = np.concatenate(wannier_spread)
+    if full_wannier_spread is not None:
+        wannier_spread = np.concatenate(wannier_spread)
     return atomic_dipole, extended_coords, wannier_spread
 
 

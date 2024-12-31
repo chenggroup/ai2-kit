@@ -56,7 +56,7 @@ def dpdata_read_cp2k_dplr_data(
             wannier_spread_file,
             model_charge_map,
         )
-    except ValueError:
+    except:
         dp_sys = None
 
     return dp_sys

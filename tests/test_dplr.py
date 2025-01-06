@@ -7,10 +7,24 @@ import unittest
 from pathlib import Path
 import numpy as np
 from scipy import constants
+from ase import io
+from ase.geometry import cell_to_cellpar
 
 from ai2_kit.domain.dplr import dpdata_read_cp2k_dplr_data, get_sel_ids
 from ai2_kit.domain.dpff import dpdata_read_cp2k_dpff_data
 from ai2_kit.tool.dpdata import DpdataTool
+
+from MDAnalysis.lib.distances import distance_array
+
+
+def calc_coord_number(atoms, c_ids, neigh_ids, cutoff):
+    p = atoms.get_positions()
+    p_c = p[c_ids]
+    p_n = p[neigh_ids]
+    results = np.empty((len(c_ids), len(neigh_ids)), dtype=np.float64)
+    distance_array(p_c, p_n, box=atoms.cell.cellpar(), result=results)
+    out = np.count_nonzero(results <= cutoff, axis=1)
+    return out
 
 
 class CP2kTestData:
@@ -249,6 +263,62 @@ class TestDPLRSorted(unittest.TestCase):
             self.data_random.data["atomic_dipole"][0],
             atol=1e-7,
         )
+
+
+class TestDPLRZeroAtomicWeight(unittest.TestCase):
+    def setUp(self) -> None:
+        self.cp2k_output = "output"
+        self.wannier_file = "wannier.xyz"
+        self.type_map = [
+            "O",
+            "H",
+            "Pt",
+        ]
+        self.sel_type = [0]
+        self.cp2k_dir = str(
+            Path(__file__).parent / "data-sample/cp2k_wannier_zero_atomic_weight/"
+        )
+
+        self.data = dpdata_read_cp2k_dplr_data(
+            self.cp2k_dir,
+            self.cp2k_output,
+            self.wannier_file,
+            self.type_map,
+            self.sel_type,
+            export_atomic_weight=True,
+        )
+
+    def test_zero_atomic_weight(self):
+        cutoff = 1.0
+        coords = self.data.data["coords"].reshape(-1, 3)
+        sel_ids = get_sel_ids(self.data, self.type_map, self.sel_type)
+        cellpar = cell_to_cellpar(self.data.data["cells"].reshape(3, 3))
+        wannier_atoms = io.read(os.path.join(self.cp2k_dir, self.wannier_file))
+        wannier_coords = wannier_atoms.get_positions()[wannier_atoms.symbols == "X"]
+
+        results = np.empty((len(sel_ids), len(wannier_coords)), dtype=np.float64)
+        distance_array(coords[sel_ids], wannier_coords, box=cellpar, result=results)
+        cns = np.count_nonzero(results <= cutoff, axis=1)
+
+        np.testing.assert_array_almost_equal(
+            cns.reshape(-1) != 4,
+            self.data.data["atomic_weight"].reshape(-1)[sel_ids] == 0,
+        )
+
+    def test_assertion(self):
+        with self.assertRaises(AssertionError):
+            dpdata_read_cp2k_dplr_data(
+                str(
+                    Path(__file__).parent
+                    / "data-sample/cp2k_wannier_zero_atomic_weight/"
+                ),
+                self.cp2k_output,
+                self.wannier_file,
+                self.type_map,
+                self.sel_type,
+                wannier_spread_file="wannier_spread.out",
+                export_atomic_weight=True,
+            )
 
 
 if __name__ == "__main__":

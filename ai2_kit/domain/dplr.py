@@ -351,6 +351,7 @@ def dplr_v2_to_v3(data_path: str, sel_symbol: list):
         "atomic_dipole.npy",
         "atomic_polarizability.npy",
         "wannier_spread.npy",
+        "atomic_weight.npy",
     ]
     for atomic_data_fname in atomic_data_fnames:
         fnames = glob.glob(
@@ -371,7 +372,12 @@ def dplr_v2_to_v3(data_path: str, sel_symbol: list):
 
             raw_data = np.load(fname)
             n_frames = raw_data.shape[0]
-            raw_data = np.reshape(raw_data, [n_frames, len(sel_ids), -1])
+            try:
+                raw_data = np.reshape(raw_data, [n_frames, len(sel_ids), -1])
+            except ValueError:
+                raw_data.reshape([n_frames, n_atoms, -1])
+                print("Already in v3 format: ", fname)
+                continue
             n_dim = raw_data.shape[2]
 
             full_data = np.zeros([n_frames, n_atoms, n_dim])
@@ -384,6 +390,7 @@ def dplr_v3_to_v2(data_path: str, sel_symbol: list):
         "atomic_dipole.npy",
         "atomic_polarizability.npy",
         "wannier_spread.npy",
+        "atomic_weight.npy",
     ]
     for atomic_data_fname in atomic_data_fnames:
         fnames = glob.glob(
@@ -404,5 +411,10 @@ def dplr_v3_to_v2(data_path: str, sel_symbol: list):
 
             raw_data = np.load(fname)
             n_frames = raw_data.shape[0]
-            raw_data_reshape = raw_data.reshape([n_frames, n_atoms, -1])
+            try:
+                raw_data_reshape = raw_data.reshape([n_frames, n_atoms, -1])
+            except ValueError:
+                raw_data.reshape([n_frames, len(sel_ids), -1])
+                print("Already in v2 format: ", fname)
+                continue
             np.save(fname, raw_data_reshape[:, sel_ids].reshape([n_frames, -1]))

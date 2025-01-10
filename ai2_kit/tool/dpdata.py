@@ -240,7 +240,7 @@ def read(*file_path_or_glob: str, **kwargs):
     for file in files:
         try:
             system = _read(file, **kwargs)
-            if system is not None and len(system) > 1:
+            if system is not None and len(system) > 0:
                 systems.extend(system)
             else:
                 logger.warning(f'Ignore invalid system from {file}: {system}')

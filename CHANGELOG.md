@@ -1,4 +1,7 @@
 # Change Logs
+## v0.22.6
+* fix: filter in model deviation tool
+* fix: dplr in ase tool
 
 ## v0.22.5
 * fix: make viber adapted for dp v3

@@ -1,4 +1,7 @@
 # Change Logs
+## v0.22.8
+* fix: ignore error data in dpdata read
+
 ## v0.22.7
 * fix: ignore error data in dpdata read
 

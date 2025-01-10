@@ -1,4 +1,7 @@
 # Change Logs
+## v0.22.7
+* fix: ignore error data in dpdata read
+
 ## v0.22.6
 * fix: filter in model deviation tool
 * fix: dplr in ase tool

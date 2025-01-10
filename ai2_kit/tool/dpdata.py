@@ -240,8 +240,10 @@ def read(*file_path_or_glob: str, **kwargs):
     for file in files:
         try:
             system = _read(file, **kwargs)
-            if system is not None:
+            if system is not None and len(system) > 1:
                 systems.extend(system)
+            else:
+                logger.warning(f'Ignore invalid system from {file}: {system}')
         except Exception:
             if not ignore_error:
                 raise
@@ -262,8 +264,8 @@ def _read(data_path: str, **kwargs):
     else:
         system = (
             dpdata.LabeledSystem(data_path, fmt=fmt, **kwargs)
-            if label
-            else dpdata.System(data_path, fmt=fmt, **kwargs)
+            if label else
+            dpdata.System(data_path, fmt=fmt, **kwargs)
         )
 
     if fparam is not None:

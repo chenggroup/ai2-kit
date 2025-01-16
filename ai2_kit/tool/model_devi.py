@@ -125,3 +125,4 @@ class ModelDevi:
                 atoms_arr += atoms
         if not in_place:
             ase.io.write(file_path, atoms_arr, **kwargs)
+        return self

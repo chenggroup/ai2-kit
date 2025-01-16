@@ -41,10 +41,10 @@ class ModelDevi:
             raise FileNotFoundError(f'No file found for {dir_or_glob}')
         for data_dir in dirs:
             try:
-                traj_file = os.path.join(data_dir, traj_file)
-                atoms: Atoms = ase.io.read(traj_file, **kwargs)  # type: ignore
-                md_file = os.path.join(data_dir, md_file)
-                with open(md_file, 'r') as f:
+                traj_file_path = os.path.join(data_dir, traj_file)
+                atoms: Atoms = ase.io.read(traj_file_path, **kwargs)  # type: ignore
+                md_file_path = os.path.join(data_dir, md_file)
+                with open(md_file_path, 'r') as f:
                     f.seek(1)  # skip the leading '#'
                     md_df = pd.read_csv(f, delim_whitespace=True, header=0)
                 assert len(atoms) == len(md_df), 'The length of atoms and model deviation should be the same'
@@ -57,8 +57,8 @@ class ModelDevi:
                 'atoms': atoms,
                 'md_df': md_df,
                 'dir': data_dir,
-                'md_file': md_file,
-                'traj_file': traj_file,
+                'md_file': md_file_path,
+                'traj_file': traj_file_path,
             })
         return self
 

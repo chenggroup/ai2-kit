@@ -1,4 +1,7 @@
 # Change Logs
+## v0.23.6
+* refactor slice implementation
+
 ## v0.23.5
 * improvement: options to slice traj in model_devi
 

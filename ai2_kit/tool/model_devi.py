@@ -7,7 +7,7 @@ import os
 
 import pandas as pd
 
-from ai2_kit.core.util import expand_globs
+from ai2_kit.core.util import expand_globs, slice_from_str
 from ai2_kit.core.log import get_logger
 
 logger = get_logger(__name__)
@@ -61,6 +61,7 @@ class ModelDevi:
                 'traj_file': traj_file_path,
             })
         return self
+
 
     def grade(self, lo: float, hi: float, col: str = 'max_devi_f'):
         """
@@ -121,13 +122,15 @@ class ModelDevi:
             logger.info(f'model deviation statistics:\n{stats_report}')
         return self
 
-    def write(self, file_path: str, inplace=False, level='decent', ignore_error=False, **kwargs):
+    def write(self, file_path: str, inplace=False, level='decent',
+              ignore_error=False, slice: str='', **kwargs):
         """
         Write atoms to file based on the level of grading
 
         :param file_path: the file path to write
         :param inplace: if True, write to the original data directory
         :param level: the level of grading to write, default is decent
+        :param slice: the slice string to select the atoms, e.g. '0:10', note that the slice is against of the full atoms instead of the graded atoms
         :param ignore_error: ignore error when writing files
         :param kwargs: other arguments for ase.io.write
         """
@@ -138,6 +141,8 @@ class ModelDevi:
             out_file = os.path.join(data_dir, file_path)
             atoms = item['atoms']
             sel = item[level]
+            if slice:
+                sel = sel[slice_from_str(slice)]
             atoms = [atoms[i] for i in sel.index[sel]]
             if inplace:
                 try: # write in place

@@ -162,16 +162,6 @@ class AseTool:
         systems = [System(atom, fmt='ase/structure') for atom in self._atoms_arr]
         return DpdataTool(systems=systems)
 
-    def to_model_devi(self, *md_files: str):
-        """
-        Hand over atoms array to model-devi tool
-
-        :param md_files: paths to model_devi file, support multiple files and glob pattern
-        """
-        from .model_devi import ModelDevi
-        md_arr = ModelDevi.md_arr_load(*md_files)
-        return ModelDevi(self._atoms_arr, md_arr)
-
     def _read(self, filename: str, **kwargs):
         kwargs.setdefault('index', ':')
         data = ase.io.read(filename, **kwargs)

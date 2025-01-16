@@ -96,6 +96,9 @@ class ModelDevi:
     def dump_stats(self, out_file: str = '', fmt='tsv'):
         """
         Dump the statistics of grading
+
+        :param out_file: the file path to write the statistics
+        :param fmt: the format of table, default is tsv
         """
         from tabulate import tabulate
 
@@ -118,7 +121,17 @@ class ModelDevi:
             logger.info(f'model deviation statistics:\n{stats_report}')
         return self
 
-    def write(self, file_path: str, in_place=False, level='decent', **kwargs ):
+    def write(self, file_path: str, inplace=False, level='decent', ignore_error=False, **kwargs):
+        """
+        Write atoms to file based on the level of grading
+
+        :param file_path: the file path to write
+        :param inplace: if True, write to the original data directory
+        :param level: the level of grading to write, default is decent
+        :param ignore_error: ignore error when writing files
+        :param kwargs: other arguments for ase.io.write
+        """
+
         atoms_arr = []
         for item in self._items:
             data_dir = item['dir']
@@ -126,10 +139,16 @@ class ModelDevi:
             atoms = item['atoms']
             sel = item[level]
             atoms = [atoms[i] for i in sel.index[sel]]
-            if in_place:
-                ase.io.write(out_file, atoms, **kwargs)
+            if inplace:
+                try: # write in place
+                    ase.io.write(out_file, atoms, **kwargs)
+                except Exception as e:
+                    if ignore_error:
+                        logger.exception(f'Error when writing {out_file}: {e}')
+                    else:
+                        raise e
             else:
                 atoms_arr += atoms
-        if not in_place:
+        if not inplace:
             ase.io.write(file_path, atoms_arr, **kwargs)
         return self

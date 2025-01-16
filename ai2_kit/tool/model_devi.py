@@ -24,6 +24,7 @@ class ModelDevi:
     def __init__(self):
         self._items:List[dict] = []
         self._stats = {}
+        self._slice = None
 
     def read(self, *dir_or_glob: str, traj_file: str, md_file='model_devi.out', ignore_error=False, **kwargs):
         """
@@ -94,6 +95,15 @@ class ModelDevi:
             item['poor'] = poor
         return self
 
+    def slice(self, expr: str):
+        """
+        Slice the atoms based on the expression
+
+        :param expr: the expression to slice the atoms, e.g. '0:10'
+        """
+        self._slice = slice_from_str(expr)
+        return self
+
     def dump_stats(self, out_file: str = '', fmt='tsv'):
         """
         Dump the statistics of grading
@@ -123,26 +133,24 @@ class ModelDevi:
         return self
 
     def write(self, file_path: str, inplace=False, level='decent',
-              ignore_error=False, slice: str='', **kwargs):
+              ignore_error=False, **kwargs):
         """
         Write atoms to file based on the level of grading
 
         :param file_path: the file path to write
         :param inplace: if True, write to the original data directory
         :param level: the level of grading to write, default is decent
-        :param slice: the slice string to select the atoms, e.g. '0:10', note that the slice is against of the full atoms instead of the graded atoms
         :param ignore_error: ignore error when writing files
         :param kwargs: other arguments for ase.io.write
         """
-
         atoms_arr = []
         for item in self._items:
             data_dir = item['dir']
             out_file = os.path.join(data_dir, file_path)
             atoms = item['atoms']
             sel = item[level]
-            if slice:
-                sel = sel[slice_from_str(slice)]
+            if self._slice is not None:
+                sel = sel[self._slice]
             atoms = [atoms[i] for i in sel.index[sel]]
             if inplace:
                 try: # write in place

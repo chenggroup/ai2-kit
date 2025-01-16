@@ -1,4 +1,7 @@
 # Change Logs
+## v0.23.0
+* breaking: modify model deviation tool
+
 ## v0.22.8
 * fix: ignore error data in dpdata read
 

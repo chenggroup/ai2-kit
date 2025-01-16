@@ -1,4 +1,7 @@
 # Change Logs
+## v0.23.5
+* improvement: options to slice traj in model_devi
+
 ## v0.23.4
 * fix: inplace should support ignore_error
 

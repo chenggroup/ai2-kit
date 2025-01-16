@@ -1,4 +1,7 @@
 # Change Logs
+## v0.23.2
+* improvement: options to ignore model_devi error
+
 ## v0.23.1
 * fix: add model_devi tool to entry point
 

@@ -1,4 +1,7 @@
 # Change Logs
+## v0.23.4
+* fix: inplace should support ignore_error
+
 ## v0.23.3
 * fix: model_devi read file
 

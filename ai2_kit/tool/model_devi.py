@@ -25,13 +25,14 @@ class ModelDevi:
         self._items:List[dict] = []
         self._stats = {}
 
-    def read(self, *dir_or_glob: str, traj_file: str, md_file='model_devi.out', **kwargs):
+    def read(self, *dir_or_glob: str, traj_file: str, md_file='model_devi.out', ignore_error=False, **kwargs):
         """
         read model deviation from file, support multiple files and glob pattern
 
         :param dir_or_glob: path or glob pattern to locate data path
         :param traj_file: trajectory file name to read, relative to data path, e.g dump.lammpstrj
         :param md_file: model deviation file name to read, default is model_devi.out
+        :param ignore_error: ignore error when reading files
         :param kwargs: other arguments for ase.io.read
         """
         kwargs['index'] = ':'
@@ -39,13 +40,19 @@ class ModelDevi:
         if len(dirs) == 0:
             raise FileNotFoundError(f'No file found for {dir_or_glob}')
         for data_dir in dirs:
-            traj_file = os.path.join(data_dir, traj_file)
-            atoms: Atoms = ase.io.read(traj_file, **kwargs)  # type: ignore
-            md_file = os.path.join(data_dir, md_file)
-            with open(md_file, 'r') as f:
-                f.seek(1)  # skip the leading '#'
-                md_df = pd.read_csv(f, delim_whitespace=True, header=0)
-            assert len(atoms) == len(md_df), 'The length of atoms and model deviation should be the same'
+            try:
+                traj_file = os.path.join(data_dir, traj_file)
+                atoms: Atoms = ase.io.read(traj_file, **kwargs)  # type: ignore
+                md_file = os.path.join(data_dir, md_file)
+                with open(md_file, 'r') as f:
+                    f.seek(1)  # skip the leading '#'
+                    md_df = pd.read_csv(f, delim_whitespace=True, header=0)
+                assert len(atoms) == len(md_df), 'The length of atoms and model deviation should be the same'
+            except Exception as e:
+                if ignore_error:
+                    logger.exception(f'Error when reading {data_dir}: {e}')
+                    continue
+                raise e
             self._items.append({
                 'atoms': atoms,
                 'md_df': md_df,

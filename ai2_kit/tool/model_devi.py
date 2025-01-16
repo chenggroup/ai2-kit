@@ -152,3 +152,6 @@ class ModelDevi:
         if not inplace:
             ase.io.write(file_path, atoms_arr, **kwargs)
         return self
+
+    def done(self):
+        return None

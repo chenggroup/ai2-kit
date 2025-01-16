@@ -1,4 +1,7 @@
 # Change Logs
+## v0.23.1
+* fix: add model_devi tool to entry point
+
 ## v0.23.0
 * breaking: modify model deviation tool
 

@@ -65,6 +65,11 @@ class ToolGroup:
         return DpdataTool
 
     @property
+    def model_devi(self):
+        from ai2_kit.tool.model_devi import ModelDevi
+        return ModelDevi
+
+    @property
     def yaml(self):
         from ai2_kit.tool.yaml import Yaml
         return Yaml

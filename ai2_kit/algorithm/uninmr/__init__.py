@@ -1,5 +1,7 @@
-import importlib
-import uninmr.tasks
-import uninmr.data
-import uninmr.models
-import uninmr.losses
+from .infer import predict_cli
+
+class CmdEntries:
+
+    @property
+    def predict(self):
+        return predict_cli

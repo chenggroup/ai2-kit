@@ -250,6 +250,19 @@ def load_model(args, dictionary):
     return model
 
 
+def smiles_to_atoms(smiles):
+    from rdkit import Chem
+    from rdkit.Chem import AllChem
+    mol = Chem.MolFromSmiles(smiles)
+    mol = Chem.AddHs(mol)
+    AllChem.EmbedMolecule(mol)  # type: ignore
+    AllChem.UFFOptimizeMolecule(mol) # type: ignore
+    symbols = [atom.GetSymbol() for atom in mol.GetAtoms()]
+    positions = mol.GetConformer().GetPositions()
+    atoms = Atoms(symbols=symbols, positions=positions)
+    return atoms
+
+
 def predict(model: UniMatModel, dataloader: DataLoader,
             classification_head_name, num_classes, target_scaler: TargetScaler):
     """
@@ -270,11 +283,28 @@ def predict(model: UniMatModel, dataloader: DataLoader,
     return final_predicts.reshape(-1).reshape(-1,4).mean(axis=1)
 
 
-def predict_cli(data_file: str, model_path: str, dict_path: str, saved_dir: str,
-                selected_atom, nmr_type, use_cuda=False, cuda_device_id=None):
+def predict_cli(model_path: str, dict_path: str, saved_dir: str,
+                selected_atom: str, nmr_type: str, use_cuda=False, cuda_device_id=None,
+                smiles: str='', data_file: str = '', data_content: str = '', ase_format = None):
     """
     Command line interface for NMRNet prediction
+
+    :param model_path: path to the model checkpoint, e.g 'model.pt'
+    :param dict_path: path to the dictionary file, e.g 'dict.txt'
+    :param saved_dir: path to the saved directory, e.g 'saved_dir'
+    :param selected_atom: selected atom for prediction, e.g 'H'
+    :param nmr_type: type of NMR prediction, should be 'solid' or 'liquid'
+    :param use_cuda: whether to use GPU for prediction, default is False
+    :param cuda_device_id: GPU device id, default is None, required when use_cuda is True
+    :param data_file: path to the input data file, which should be able to parse by ASE
+    :param smiles: SMILES string for prediction, default is ''
     """
+    if data_file:
+        atoms = ase.io.read(data_file, index=0, format=ase_format)  # type: ignore
+    elif smiles:
+        atoms = smiles_to_atoms(smiles)
+    else:
+        raise ValueError("data_file or smiles must be provided")
 
     args = get_args(model_path, dict_path, saved_dir,
                     selected_atom=selected_atom, nmr_type=nmr_type)
@@ -284,9 +314,7 @@ def predict_cli(data_file: str, model_path: str, dict_path: str, saved_dir: str,
     dictionary = Dictionary.load(args.dict_path)
     target_scaler = TargetScaler(args.saved_dir)
 
-    atoms = ase.io.read(data_file, index=0)
     assert isinstance(atoms, Atoms), "data_file must be a single ASE Atoms object"
-
     dataset = load_dataset(atoms, args, dictionary, target_scaler)
     dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
 
@@ -301,3 +329,4 @@ def predict_cli(data_file: str, model_path: str, dict_path: str, saved_dir: str,
                      num_classes=args.num_classes,
                      target_scaler=target_scaler)
     print(result)
+

@@ -1,6 +1,10 @@
 from fire import Fire
+
 import logging
 import os
+
+
+logger = logging.getLogger(__name__)
 
 
 class Group:
@@ -132,7 +136,8 @@ class FeatureGroup:
         try:
             from ai2_kit.algorithm.uninmr import CmdEntries
         except ImportError:
-
+            logging.info('In order to use nmrnet, you need to ensure the following packages are installed: ')
+            logging.info('"rdkit", "scipy" and "unicore"')
             raise
         return CmdEntries
 

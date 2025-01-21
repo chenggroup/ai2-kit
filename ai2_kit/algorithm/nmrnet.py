@@ -1,3 +1,4 @@
+from argparse import Namespace
 from itertools import product
 from scipy.spatial import distance_matrix
 
@@ -79,25 +80,26 @@ def single_rcut(atoms: Atoms, rcut=6):
     pbc_pos = pbc_pos.reshape(-1, 3)
     dist_pbc = distance_matrix(pbc_pos, pos, 2).astype(np.float32)
 
-    for index, element in enumerate(atom):
-        dist_mask = (dist_pbc.reshape(-1, pos.shape[0])[:, index] < rcut)
+    for i, element in enumerate(atom):
+        dist_mask = (dist_pbc.reshape(-1, pos.shape[0])[:, i] < rcut)
         rcut_atoms.append(np.array(pbc_atoms)[dist_mask].tolist())
         rcut_coords.append(pbc_pos[dist_mask])
         rcut_target = [0] * (len(atoms) * pbc_repeat)
         rcut_targets.append(np.array(rcut_target)[dist_mask])
         rcut_mask = [0] * (len(atoms) * pbc_repeat)
-        rcut_mask[index] = 1
+        rcut_mask[i] = 1
         rcut_masks.append(np.array(rcut_mask)[dist_mask])
     return rcut_atoms, rcut_coords, rcut_targets, rcut_masks
 
 
-def get_args():
-    args = argparse.Namespace()
+def get_args(model_path, dict_path, saved_dir, selected_atom='H', nmr_type='solid'):
+    args = Namespace()
 
-    args.selected_atom = 'H'
-    args.model_path='./weight/cv_seed_42_fold_0/checkpoint_best.pt'
-    args.dict_path='./weight/oc_limit_dict.txt'
-    args.saved_dir='./weight'
+    args.model_path=model_path
+    args.dict_path=dict_path
+    args.selected_atom = selected_atom
+    args.nmr_type=nmr_type
+    args.saved_dir=saved_dir
 
     args.encoder_layers = 8
     args.encoder_embed_dim = 512
@@ -136,19 +138,16 @@ def get_args():
     return args
 
 
-def predict(atoms, nmr_mode, use_cuda, cuda_device_id):
-    args = get_args()
-    dictionary = Dictionary.load(args.dict_path)
-    mask_idx = dictionary.add_symbol("[MASK]", is_special=True)
+def load_dataset(atoms: Atoms, args: Namespace, dictionary:Dictionary, target_scaler:TargetScaler):
     selected_token = parse_select_atom(dictionary, args.selected_atom)
-    target_scaler=TargetScaler(args.saved_dir)
+    nmr_type = args.nmr_type
 
-    if nmr_mode == 'solid':
+    if nmr_type == 'solid':
         rcut_atoms, rcut_coords, rcut_targets, rcut_masks = single_rcut(atoms, rcut=6)
-    elif nmr_mode == 'liquid':
+    elif nmr_type == 'liquid':
         raise NotImplementedError("Liquid NMR prediction is not supported yet.")
     else:
-        raise ValueError(f"Invalid nmr_mode: {nmr_mode}")
+        raise ValueError(f"Invalid nmr_type: {nmr_type}")
 
     rcut_list = []
     for i in range(len(rcut_atoms)):
@@ -158,31 +157,6 @@ def predict(atoms, nmr_mode, use_cuda, cuda_device_id):
         ret['atoms_target'] = rcut_targets[i]
         ret['atoms_target_mask'] = rcut_masks[i]
         rcut_list.append(ret)
-
-    if use_cuda:
-        torch.cuda.set_device(cuda_device_id)
-
-    state = checkpoint_utils.load_checkpoint_to_cpu(args.model_path)
-
-    state['model'] = {
-        (key.replace('classification_heads', 'node_classification_heads')
-         if key.startswith('classification_heads') else key): value
-        for key, value in state['model'].items()
-    }
-    model = UniMatModel(args, dictionary)  # type: ignore
-    model.register_node_classification_head(
-        args.classification_head_name,
-        num_classes=args.num_classes,
-        extra_dim=args.atom_descriptor,
-    )
-    model.load_state_dict(state["model"], strict=False)
-
-    # Move models to GPU
-    model.half()
-    if use_cuda:
-        model.cuda()
-    else:
-        model.float()
 
     dataset = ListDataset(rcut_list)
     matid_dataset = IndexDataset(dataset)
@@ -221,14 +195,15 @@ def predict(atoms, nmr_mode, use_cuda, cuda_device_id):
         distance_dataset = DistanceDataset(coord_dataset)
         distance_dataset = PrependAndAppend2DDataset(distance_dataset, 0.0)
         distance_dataset = RightPadDataset2D(distance_dataset, pad_idx=0)
+
     coord_dataset = PrependAndAppend(coord_dataset, 0.0, 0.0)
     edge_type = EdgeTypeDataset(token_dataset, len(dictionary))
-
     tgt_dataset = KeyDataset(dataset, "atoms_target")
     tgt_dataset = TargetScalerDataset(tgt_dataset, target_scaler, args.num_classes)
     tgt_dataset = ToTorchDataset(tgt_dataset, dtype='float32')
     tgt_dataset = PrependAndAppend(tgt_dataset, dictionary.pad(), dictionary.pad())
-    nest_dataset = NestedDictionaryDataset(
+
+    return NestedDictionaryDataset(
             {
                 "net_input": {
                     "select_atom": RightPadDataset(
@@ -259,18 +234,67 @@ def predict(atoms, nmr_mode, use_cuda, cuda_device_id):
             },
         )
 
-    dataloader = DataLoader(nest_dataset, batch_size=1, shuffle=False)
+
+def load_model(args, dictionary):
+    state = checkpoint_utils.load_checkpoint_to_cpu(args.model_path)
+    state['model'] = {
+        (key.replace('classification_heads', 'node_classification_heads')
+         if key.startswith('classification_heads') else key): value
+        for key, value in state['model'].items()
+    }
+    model = UniMatModel(args, dictionary)  # type: ignore
+    model.register_node_classification_head(
+        args.classification_head_name,
+        num_classes=args.num_classes,
+        extra_dim=args.atom_descriptor,
+    )
+    model.load_state_dict(state["model"], strict=False)
+    return model
+
+
+def predict(model: UniMatModel, dataloader: DataLoader,
+            classification_head_name, num_classes, target_scaler: TargetScaler):
     model.eval()
     with torch.no_grad():
         all_predicts = []
         for batch in dataloader:
             net_output = model(**{k.replace('net_input.', ''): v for k, v in batch.items() if k.startswith('net_input.')},
                             features_only=True,
-                            classification_head_name=args.classification_head_name)
+                            classification_head_name=classification_head_name)
             predict = target_scaler.inverse_transform(
-                net_output[0].view(-1, args.num_classes).data.cpu()
+                net_output[0].view(-1, num_classes).data.cpu()
             ).astype('float32')
             all_predicts.append(predict)
         final_predicts = np.concatenate(all_predicts)
+    return final_predicts.reshape(-1).reshape(-1,4).mean(axis=1)
 
-    return final_predicts
+
+def predict_cli(data_file: str, model_path: str, dict_path: str, saved_dir: str,
+                selected_atom, nmr_type, use_cuda=False, cuda_device_id=None):
+
+    args = get_args(model_path, dict_path, saved_dir,
+                    selected_atom=selected_atom, nmr_type=nmr_type)
+    if use_cuda:
+        torch.cuda.set_device(cuda_device_id)
+
+    dictionary = Dictionary.load(args.dict_path)
+    target_scaler = TargetScaler(args.saved_dir)
+
+    atoms = ase.io.read(data_file, index=0)
+    assert isinstance(atoms, Atoms), "data_file must be a single ASE Atoms object"
+
+    dataset = load_dataset(atoms, args, dictionary, target_scaler)
+    dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
+
+    model = load_model(args, dictionary)
+    model.half()
+    if use_cuda:
+        model.cuda()
+    else:
+        model.float()
+    result = predict(model, dataloader,
+                     classification_head_name=args.classification_head_name,
+                     num_classes=args.num_classes,
+                     target_scaler=target_scaler)
+    print(result)
+

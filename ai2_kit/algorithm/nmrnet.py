@@ -3,7 +3,6 @@ from itertools import product
 from scipy.spatial import distance_matrix
 
 import numpy as np
-import argparse
 
 import ase.io
 from ase import Atoms
@@ -12,7 +11,6 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 
 from unicore import checkpoint_utils
-
 from unicore.data import (
     Dictionary,
     NestedDictionaryDataset,
@@ -60,14 +58,9 @@ class ListDataset(Dataset):
         return self.data_list[idx]
 
 
-def single_rcut(atoms: Atoms, rcut=6):
-    rcut_atoms = []
-    rcut_coords = []
-    rcut_targets = []
-    rcut_masks = []
-
+def extend_cells(atoms: Atoms, rcut=6):
     ks = [0, 1, -1, 2, -2]
-    pbc_repeat = 5 * 5 * 5
+    pbc_repeat = len(ks) ** 3
 
     atom = atoms.get_chemical_symbols()
     pbc_atoms = atom * pbc_repeat
@@ -80,16 +73,20 @@ def single_rcut(atoms: Atoms, rcut=6):
     pbc_pos = pbc_pos.reshape(-1, 3)
     dist_pbc = distance_matrix(pbc_pos, pos, 2).astype(np.float32)
 
-    for i, element in enumerate(atom):
+    cells = []
+    for i, e in enumerate(atom):
         dist_mask = (dist_pbc.reshape(-1, pos.shape[0])[:, i] < rcut)
-        rcut_atoms.append(np.array(pbc_atoms)[dist_mask].tolist())
-        rcut_coords.append(pbc_pos[dist_mask])
         rcut_target = [0] * (len(atoms) * pbc_repeat)
-        rcut_targets.append(np.array(rcut_target)[dist_mask])
         rcut_mask = [0] * (len(atoms) * pbc_repeat)
         rcut_mask[i] = 1
-        rcut_masks.append(np.array(rcut_mask)[dist_mask])
-    return rcut_atoms, rcut_coords, rcut_targets, rcut_masks
+        cell = {
+            'atoms': np.array(pbc_atoms)[dist_mask].tolist(),
+            'coordinates': pbc_pos[dist_mask],
+            'atoms_target': np.array(rcut_target)[dist_mask],
+            'atoms_target_mask': np.array(rcut_mask)[dist_mask],
+        }
+        cells.append(cell)
+    return cells
 
 
 def get_args(model_path, dict_path, saved_dir, selected_atom='H', nmr_type='solid'):
@@ -143,22 +140,13 @@ def load_dataset(atoms: Atoms, args: Namespace, dictionary:Dictionary, target_sc
     nmr_type = args.nmr_type
 
     if nmr_type == 'solid':
-        rcut_atoms, rcut_coords, rcut_targets, rcut_masks = single_rcut(atoms, rcut=6)
+        cells = extend_cells(atoms, rcut=6)
     elif nmr_type == 'liquid':
         raise NotImplementedError("Liquid NMR prediction is not supported yet.")
     else:
         raise ValueError(f"Invalid nmr_type: {nmr_type}")
 
-    rcut_list = []
-    for i in range(len(rcut_atoms)):
-        ret = {}
-        ret['atoms'] = rcut_atoms[i]
-        ret['coordinates'] = rcut_coords[i]
-        ret['atoms_target'] = rcut_targets[i]
-        ret['atoms_target_mask'] = rcut_masks[i]
-        rcut_list.append(ret)
-
-    dataset = ListDataset(rcut_list)
+    dataset = ListDataset(cells)
     matid_dataset = IndexDataset(dataset)
     dataset = CroppingDataset(dataset, args.seed, "atoms", "coordinates", args.max_atoms)
     dataset = NormalizeDataset(dataset, "coordinates")
@@ -297,4 +285,3 @@ def predict_cli(data_file: str, model_path: str, dict_path: str, saved_dir: str,
                      num_classes=args.num_classes,
                      target_scaler=target_scaler)
     print(result)
-

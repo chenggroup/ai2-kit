@@ -1,130 +1,303 @@
-#!/usr/bin/env python3 -u
-# Copyright (c) DP Techonology, Inc. and its affiliates.
-#
-# This source code is licensed under the MIT license found in the
-# LICENSE file in the root directory of this source tree.
+from argparse import Namespace
+from itertools import product
+from scipy.spatial import distance_matrix
 
-import logging
-import os
-import sys
-import pickle
+import numpy as np
+
+import ase.io
+from ase import Atoms
+
 import torch
-from unicore import checkpoint_utils, distributed_utils, options, utils
-from unicore.logging import progress_bar
-from unicore import tasks
+from torch.utils.data import Dataset, DataLoader
 
-logging.basicConfig(
-    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    level=os.environ.get("LOGLEVEL", "INFO").upper(),
-    stream=sys.stdout,
+from unicore import checkpoint_utils
+from unicore.data import (
+    Dictionary,
+    NestedDictionaryDataset,
+    AppendTokenDataset,
+    PrependTokenDataset,
+    RightPadDataset,
+    TokenizeDataset,
+    RightPadDataset2D,
 )
-logger = logging.getLogger("unimat.inference")
+
+from .utils import parse_select_atom, TargetScaler
+from .models import UniMatModel
+from .data import (
+    KeyDataset,
+    IndexDataset,
+    ToTorchDataset,
+    DistanceDataset,
+    GlobalDistanceDataset,
+    EdgeTypeDataset,
+    RightPadDataset3D,
+    PrependAndAppend2DDataset,
+    PrependAndAppend3DDataset,
+    RightPadDataset2D0,
+    LatticeMatrixNormalizeDataset,
+    CroppingDataset,
+    NormalizeDataset,
+    TargetScalerDataset,
+    SelectTokenDataset,
+    FilterDataset,
+)
 
 
-def main(args):
+from ai2_kit.core.log import get_logger
+logger = get_logger(__name__)
 
-    assert (
-        args.batch_size is not None
-    ), "Must specify batch size either with --batch-size"
 
-    use_fp16 = args.fp16
-    use_cuda = torch.cuda.is_available() and not args.cpu
+class ListDataset(Dataset):
+    def __init__(self, data_list):
+        self.data_list = data_list
 
-    if use_cuda:
-        torch.cuda.set_device(args.device_id)
+    def __len__(self):
+        return len(self.data_list)
 
-    if args.distributed_world_size > 1:
-        data_parallel_world_size = distributed_utils.get_data_parallel_world_size()
-        data_parallel_rank = distributed_utils.get_data_parallel_rank()
+    def __getitem__(self, idx):
+        return self.data_list[idx]
+
+
+def extend_cells(atoms: Atoms, rcut=6):
+    """
+    Extend cells for periodic boundary conditions
+    """
+
+    ks = [0, 1, -1, 2, -2]
+    pbc_repeat = len(ks) ** 3
+
+    atom = atoms.get_chemical_symbols()
+    pbc_atoms = atom * pbc_repeat
+
+    pos = atoms.get_positions()
+    pbc_pos = np.tile(pos, (pbc_repeat, 1, 1))
+    lattice_matrix = (atoms.cell)
+    pbc_matrix = np.array(list(product(ks, repeat=3)))
+    pbc_pos += np.dot(pbc_matrix, lattice_matrix).reshape(pbc_repeat, -1, 3)
+    pbc_pos = pbc_pos.reshape(-1, 3)
+    dist_pbc = distance_matrix(pbc_pos, pos, 2).astype(np.float32)
+
+    cells = []
+    for i, e in enumerate(atom):
+        dist_mask = (dist_pbc.reshape(-1, pos.shape[0])[:, i] < rcut)
+        rcut_target = [0] * (len(atoms) * pbc_repeat)
+        rcut_mask = [0] * (len(atoms) * pbc_repeat)
+        rcut_mask[i] = 1
+        cell = {
+            'atoms': np.array(pbc_atoms)[dist_mask].tolist(),
+            'coordinates': pbc_pos[dist_mask],
+            'atoms_target': np.array(rcut_target)[dist_mask],
+            'atoms_target_mask': np.array(rcut_mask)[dist_mask],
+        }
+        cells.append(cell)
+    return cells
+
+
+def get_args(model_path, dict_path, saved_dir, selected_atom='H', nmr_type='solid'):
+    args = Namespace()
+
+    args.model_path=model_path
+    args.dict_path=dict_path
+    args.selected_atom = selected_atom
+    args.nmr_type=nmr_type
+    args.saved_dir=saved_dir
+
+    args.encoder_layers = 8
+    args.encoder_embed_dim = 512
+    args.encoder_ffn_embed_dim = 2048
+    args.encoder_attention_heads = 64
+    args.dropout = 0.1
+    args.emb_dropout = 0.1
+    args.attention_dropout = 0.1
+    args.activation_dropout = 0.0
+    args.pooler_dropout = 0.0
+    args.max_seq_len = 1024
+    args.activation_fn = "gelu"
+    args.pooler_activation_fn = "tanh"
+    args.post_ln = False
+    args.masked_token_loss = -1.0
+    args.masked_coord_loss = -1.0
+    args.masked_dist_loss = -1.0
+    args.x_norm_loss = -1.0
+    args.delta_pair_repr_norm_loss = -1.0
+    args.lattice_loss = -1.0
+    args.encoder_layers = 15
+    args.num_classes=1
+    args.atom_descriptor=0
+    args.classification_head_name='nmr_head'
+    args.global_distance=0
+    args.gaussian_kernel = True
+    args.max_atoms=512
+    args.max_seq_len=1024
+    args.seed=1
+    args.batch_size=16
+    args.required_batch_size_multiple=1
+    args.num_workers=8
+    args.data_buffer_size=10
+    args.log_format='simple'
+    args.log_interval=50
+    return args
+
+
+def load_dataset(atoms: Atoms, args: Namespace, dictionary:Dictionary, target_scaler:TargetScaler):
+    """
+    Load dataset for NMRNet prediction
+    """
+    selected_token = parse_select_atom(dictionary, args.selected_atom)
+    nmr_type = args.nmr_type
+
+    if nmr_type == 'solid':
+        cells = extend_cells(atoms, rcut=6)
+    elif nmr_type == 'liquid':
+        raise NotImplementedError("Liquid NMR prediction is not supported yet.")
     else:
-        data_parallel_world_size = 1
-        data_parallel_rank = 0
+        raise ValueError(f"Invalid nmr_type: {nmr_type}")
 
-    # Load model
-    logger.info("loading model(s) from {}".format(args.path))
-    state = checkpoint_utils.load_checkpoint_to_cpu(args.path)
-    task = tasks.setup_task(args)
-    model = task.build_model(args)
+    dataset = ListDataset(cells)
+    matid_dataset = IndexDataset(dataset)
+    dataset = CroppingDataset(dataset, args.seed, "atoms", "coordinates", args.max_atoms)
+    dataset = NormalizeDataset(dataset, "coordinates")
+
+    token_dataset = KeyDataset(dataset, "atoms")
+    token_dataset = TokenizeDataset(token_dataset, dictionary, max_seq_len=args.max_seq_len)
+    atoms_target_mask_dataset = KeyDataset(dataset, "atoms_target_mask")
+    select_atom_dataset = SelectTokenDataset(token_dataset=token_dataset, token_mask_dataset=atoms_target_mask_dataset, selected_token=selected_token)
+    filter_list = [0 if torch.all(select_atom_dataset[i]==0) else 1 for i in range(len(select_atom_dataset))]
+
+    dataset = FilterDataset(dataset, filter_list)
+    matid_dataset = FilterDataset(matid_dataset, filter_list)
+    token_dataset = FilterDataset(token_dataset, filter_list)
+    select_atom_dataset = FilterDataset(select_atom_dataset, filter_list)
+
+    coord_dataset = KeyDataset(dataset, "coordinates")
+
+    def PrependAndAppend(dataset, pre_token, app_token):
+        dataset = PrependTokenDataset(dataset, pre_token)
+        return AppendTokenDataset(dataset, app_token)
+
+    token_dataset = PrependAndAppend(token_dataset, dictionary.bos(), dictionary.eos())
+    select_atom_dataset = PrependAndAppend(select_atom_dataset, dictionary.pad(), dictionary.pad())
+
+    coord_dataset = ToTorchDataset(coord_dataset, 'float32')
+
+    if args.global_distance:
+        lattice_matrix_dataset = LatticeMatrixNormalizeDataset(dataset, 'lattice_matrix')
+        logger.info("use global distance: {}".format(args.global_distance))
+        distance_dataset = GlobalDistanceDataset(coord_dataset, lattice_matrix_dataset)
+        distance_dataset = PrependAndAppend3DDataset(distance_dataset, 0.0)
+        distance_dataset = RightPadDataset3D(distance_dataset, pad_idx=0)
+    else:
+        distance_dataset = DistanceDataset(coord_dataset)
+        distance_dataset = PrependAndAppend2DDataset(distance_dataset, 0.0)
+        distance_dataset = RightPadDataset2D(distance_dataset, pad_idx=0)
+
+    coord_dataset = PrependAndAppend(coord_dataset, 0.0, 0.0)
+    edge_type = EdgeTypeDataset(token_dataset, len(dictionary))
+    tgt_dataset = KeyDataset(dataset, "atoms_target")
+    tgt_dataset = TargetScalerDataset(tgt_dataset, target_scaler, args.num_classes)
+    tgt_dataset = ToTorchDataset(tgt_dataset, dtype='float32')
+    tgt_dataset = PrependAndAppend(tgt_dataset, dictionary.pad(), dictionary.pad())
+
+    return NestedDictionaryDataset(
+            {
+                "net_input": {
+                    "select_atom": RightPadDataset(
+                        select_atom_dataset,
+                        pad_idx=dictionary.pad(),
+                    ),
+                    "src_tokens": RightPadDataset(
+                        token_dataset,
+                        pad_idx=dictionary.pad(),
+                    ),
+                    "src_coord": RightPadDataset2D0(
+                        coord_dataset,
+                        pad_idx=0,
+                    ),
+                    "src_distance": distance_dataset,
+                    "src_edge_type": RightPadDataset2D(
+                        edge_type,
+                        pad_idx=0,
+                    ),
+                },
+                "target": {
+                    "finetune_target": RightPadDataset(
+                        tgt_dataset,
+                        pad_idx=0,
+                    ),
+                },
+                "matid": matid_dataset,
+            },
+        )
+
+
+def load_model(args, dictionary):
+    """
+    Load model from checkpoint
+    """
+    state = checkpoint_utils.load_checkpoint_to_cpu(args.model_path)
+    state['model'] = {
+        (key.replace('classification_heads', 'node_classification_heads')
+         if key.startswith('classification_heads') else key): value
+        for key, value in state['model'].items()
+    }
+    model = UniMatModel(args, dictionary)  # type: ignore
+    model.register_node_classification_head(
+        args.classification_head_name,
+        num_classes=args.num_classes,
+        extra_dim=args.atom_descriptor,
+    )
     model.load_state_dict(state["model"], strict=False)
+    return model
 
-    # Move models to GPU
-    if use_fp16:
-        model.half()
+
+def predict(model: UniMatModel, dataloader: DataLoader,
+            classification_head_name, num_classes, target_scaler: TargetScaler):
+    """
+    Predict NMR Spectrum
+    """
+    model.eval()
+    with torch.no_grad():
+        all_predicts = []
+        for batch in dataloader:
+            net_output = model(**{k.replace('net_input.', ''): v for k, v in batch.items() if k.startswith('net_input.')},
+                            features_only=True,
+                            classification_head_name=classification_head_name)
+            predict = target_scaler.inverse_transform(
+                net_output[0].view(-1, num_classes).data.cpu()
+            ).astype('float32')
+            all_predicts.append(predict)
+        final_predicts = np.concatenate(all_predicts)
+    return final_predicts.reshape(-1).reshape(-1,4).mean(axis=1)
+
+
+def predict_cli(data_file: str, model_path: str, dict_path: str, saved_dir: str,
+                selected_atom, nmr_type, use_cuda=False, cuda_device_id=None):
+    """
+    Command line interface for NMRNet prediction
+    """
+
+    args = get_args(model_path, dict_path, saved_dir,
+                    selected_atom=selected_atom, nmr_type=nmr_type)
+    if use_cuda:
+        torch.cuda.set_device(cuda_device_id)
+
+    dictionary = Dictionary.load(args.dict_path)
+    target_scaler = TargetScaler(args.saved_dir)
+
+    atoms = ase.io.read(data_file, index=0)
+    assert isinstance(atoms, Atoms), "data_file must be a single ASE Atoms object"
+
+    dataset = load_dataset(atoms, args, dictionary, target_scaler)
+    dataloader = DataLoader(dataset, batch_size=1, shuffle=False)
+
+    model = load_model(args, dictionary)
+    model.half()
     if use_cuda:
         model.cuda()
-
-    # Print args
-    logger.info(args)
-
-    # Build loss
-    loss = task.build_loss(args)
-    loss.eval()
-
-    logger.info(model)
-    logger.info("task: {}".format(task.__class__.__name__))
-    logger.info("model: {}".format(model.__class__.__name__))
-    logger.info("loss: {}".format(loss.__class__.__name__))
-    logger.info(
-        "num. model params: {:,} (num. trained: {:,})".format(
-            sum(getattr(p, "_orig_size", p).numel() for p in model.parameters()),
-            sum(
-                getattr(p, "_orig_size", p).numel()
-                for p in model.parameters()
-                if p.requires_grad
-            ),
-        )
-    )
-    for subset in args.valid_subset.split(","):
-        try:
-            task.load_dataset(subset, combine=False, epoch=1)
-            dataset = task.dataset(subset)
-        except KeyError:
-            raise Exception("Cannot find dataset: " + subset)
-
-        if not os.path.exists(args.results_path):
-            os.makedirs(args.results_path)
-        fname = (args.path).split("/")[-2]
-        save_path = os.path.join(args.results_path, fname + "_" + subset + ".out.pkl")
-        # Initialize data iterator
-        itr = task.get_batch_iterator(
-            dataset=dataset,
-            batch_size=args.batch_size,
-            ignore_invalid_inputs=True,
-            required_batch_size_multiple=args.required_batch_size_multiple,
-            seed=args.seed,
-            num_shards=data_parallel_world_size,
-            shard_id=data_parallel_rank,
-            num_workers=args.num_workers,
-            data_buffer_size=args.data_buffer_size,
-        ).next_epoch_itr(shuffle=False)
-        progress = progress_bar.progress_bar(
-            itr,
-            log_format=args.log_format,
-            log_interval=args.log_interval,
-            prefix=f"valid on '{subset}' subset",
-            default_log_format=("tqdm" if not args.no_progress_bar else "simple"),
-        )
-        log_outputs = []
-        for i, sample in enumerate(progress):
-            sample = utils.move_to_cuda(sample) if use_cuda else sample
-            if len(sample) == 0:
-                continue
-            _, _, log_output = task.valid_step(sample, model, loss, test=True)
-            progress.log({}, step=i)
-            log_outputs.append(log_output)
-        pickle.dump(log_outputs, open(save_path, "wb"))
-        logger.info("Done inference! ")
-    return None
-
-
-def cli_main():
-    parser = options.get_validation_parser()
-    options.add_model_args(parser)
-    args = options.parse_args_and_arch(parser)
-
-    distributed_utils.call_main(args, main)
-
-
-if __name__ == "__main__":
-    cli_main()
+    else:
+        model.float()
+    result = predict(model, dataloader,
+                     classification_head_name=args.classification_head_name,
+                     num_classes=args.num_classes,
+                     target_scaler=target_scaler)
+    print(result)

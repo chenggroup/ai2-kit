@@ -1,25 +1,62 @@
-from ase import Atoms
 from itertools import product
-from collections import namedtuple
 from scipy.spatial import distance_matrix
 
 import numpy as np
 import argparse
+
+import ase.io
+from ase import Atoms
+
 import torch
+from torch.utils.data import Dataset, DataLoader
 
-from unicore import checkpoint_utils, distributed_utils, options, utils
-from unicore.logging import progress_bar
-from unicore import tasks
+from unicore import checkpoint_utils
 
-from unicore.data import Dictionary
+from unicore.data import (
+    Dictionary,
+    NestedDictionaryDataset,
+    AppendTokenDataset,
+    PrependTokenDataset,
+    RightPadDataset,
+    TokenizeDataset,
+    RightPadDataset2D,
+)
 
 from .uninmr.utils import parse_select_atom, TargetScaler
 from .uninmr.models import UniMatModel
+from .uninmr.data import (
+    KeyDataset,
+    IndexDataset,
+    ToTorchDataset,
+    DistanceDataset,
+    GlobalDistanceDataset,
+    EdgeTypeDataset,
+    RightPadDataset3D,
+    PrependAndAppend2DDataset,
+    PrependAndAppend3DDataset,
+    RightPadDataset2D0,
+    LatticeMatrixNormalizeDataset,
+    CroppingDataset,
+    NormalizeDataset,
+    TargetScalerDataset,
+    SelectTokenDataset,
+    FilterDataset,
+)
+
 
 from ai2_kit.core.log import get_logger
-
-
 logger = get_logger(__name__)
+
+
+class ListDataset(Dataset):
+    def __init__(self, data_list):
+        self.data_list = data_list
+
+    def __len__(self):
+        return len(self.data_list)
+
+    def __getitem__(self, idx):
+        return self.data_list[idx]
 
 
 def single_rcut(atoms: Atoms, rcut=6):
@@ -52,6 +89,7 @@ def single_rcut(atoms: Atoms, rcut=6):
         rcut_mask[index] = 1
         rcut_masks.append(np.array(rcut_mask)[dist_mask])
     return rcut_atoms, rcut_coords, rcut_targets, rcut_masks
+
 
 def get_args():
     args = argparse.Namespace()
@@ -146,4 +184,93 @@ def predict(atoms, nmr_mode, use_cuda, cuda_device_id):
     else:
         model.float()
 
+    dataset = ListDataset(rcut_list)
+    matid_dataset = IndexDataset(dataset)
+    dataset = CroppingDataset(dataset, args.seed, "atoms", "coordinates", args.max_atoms)
+    dataset = NormalizeDataset(dataset, "coordinates")
 
+    token_dataset = KeyDataset(dataset, "atoms")
+    token_dataset = TokenizeDataset(token_dataset, dictionary, max_seq_len=args.max_seq_len)
+    atoms_target_mask_dataset = KeyDataset(dataset, "atoms_target_mask")
+    select_atom_dataset = SelectTokenDataset(token_dataset=token_dataset, token_mask_dataset=atoms_target_mask_dataset, selected_token=selected_token)
+    filter_list = [0 if torch.all(select_atom_dataset[i]==0) else 1 for i in range(len(select_atom_dataset))]
+
+    dataset = FilterDataset(dataset, filter_list)
+    matid_dataset = FilterDataset(matid_dataset, filter_list)
+    token_dataset = FilterDataset(token_dataset, filter_list)
+    select_atom_dataset = FilterDataset(select_atom_dataset, filter_list)
+
+    coord_dataset = KeyDataset(dataset, "coordinates")
+
+    def PrependAndAppend(dataset, pre_token, app_token):
+        dataset = PrependTokenDataset(dataset, pre_token)
+        return AppendTokenDataset(dataset, app_token)
+
+    token_dataset = PrependAndAppend(token_dataset, dictionary.bos(), dictionary.eos())
+    select_atom_dataset = PrependAndAppend(select_atom_dataset, dictionary.pad(), dictionary.pad())
+
+    coord_dataset = ToTorchDataset(coord_dataset, 'float32')
+
+    if args.global_distance:
+        lattice_matrix_dataset = LatticeMatrixNormalizeDataset(dataset, 'lattice_matrix')
+        logger.info("use global distance: {}".format(args.global_distance))
+        distance_dataset = GlobalDistanceDataset(coord_dataset, lattice_matrix_dataset)
+        distance_dataset = PrependAndAppend3DDataset(distance_dataset, 0.0)
+        distance_dataset = RightPadDataset3D(distance_dataset, pad_idx=0)
+    else:
+        distance_dataset = DistanceDataset(coord_dataset)
+        distance_dataset = PrependAndAppend2DDataset(distance_dataset, 0.0)
+        distance_dataset = RightPadDataset2D(distance_dataset, pad_idx=0)
+    coord_dataset = PrependAndAppend(coord_dataset, 0.0, 0.0)
+    edge_type = EdgeTypeDataset(token_dataset, len(dictionary))
+
+    tgt_dataset = KeyDataset(dataset, "atoms_target")
+    tgt_dataset = TargetScalerDataset(tgt_dataset, target_scaler, args.num_classes)
+    tgt_dataset = ToTorchDataset(tgt_dataset, dtype='float32')
+    tgt_dataset = PrependAndAppend(tgt_dataset, dictionary.pad(), dictionary.pad())
+    nest_dataset = NestedDictionaryDataset(
+            {
+                "net_input": {
+                    "select_atom": RightPadDataset(
+                        select_atom_dataset,
+                        pad_idx=dictionary.pad(),
+                    ),
+                    "src_tokens": RightPadDataset(
+                        token_dataset,
+                        pad_idx=dictionary.pad(),
+                    ),
+                    "src_coord": RightPadDataset2D0(
+                        coord_dataset,
+                        pad_idx=0,
+                    ),
+                    "src_distance": distance_dataset,
+                    "src_edge_type": RightPadDataset2D(
+                        edge_type,
+                        pad_idx=0,
+                    ),
+                },
+                "target": {
+                    "finetune_target": RightPadDataset(
+                        tgt_dataset,
+                        pad_idx=0,
+                    ),
+                },
+                "matid": matid_dataset,
+            },
+        )
+
+    dataloader = DataLoader(nest_dataset, batch_size=1, shuffle=False)
+    model.eval()
+    with torch.no_grad():
+        all_predicts = []
+        for batch in dataloader:
+            net_output = model(**{k.replace('net_input.', ''): v for k, v in batch.items() if k.startswith('net_input.')},
+                            features_only=True,
+                            classification_head_name=args.classification_head_name)
+            predict = target_scaler.inverse_transform(
+                net_output[0].view(-1, args.num_classes).data.cpu()
+            ).astype('float32')
+            all_predicts.append(predict)
+        final_predicts = np.concatenate(all_predicts)
+
+    return final_predicts

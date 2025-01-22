@@ -41,6 +41,7 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 
 ## Manuals
 ### Featuring Tools
+* [NMRNet](doc/manual/nmrnet.md): A toolkit for predict NMR with deep learning network.
 * [ai2-cat](doc/manual/ai2cat.md): A toolkit for dynamic catalysis researching.
 
 ### Workflows

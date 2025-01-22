@@ -29,7 +29,6 @@ pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https
 
 wget https://github.com/dptech-corp/Uni-Core/releases/download/0.0.3/unicore-0.0.1+cu118torch2.0.0-cp39-cp39-linux_x86_64.whl
 pip install unicore-0.0.1+cu118torch2.0.0-cp39-cp39-linux_x86_64.whl
-
 ```
 
 ## Get started

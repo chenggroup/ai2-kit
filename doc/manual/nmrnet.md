@@ -6,8 +6,8 @@ ai2-kit feat nmrnet predict --help
 
 ## Install extra packages
 
-To run the NMRNet tool, you need to install extra packages besides `ai2-kit`
-since the extra dependencies are too large to be included in the `ai2-kit` package.
+To run the NMRNet tool, you need to install extra packags besides `ai2-kit`
+since the extra dependencies are too large to be included.
 You can install the extra packages by running the following command:
 
 ```bash

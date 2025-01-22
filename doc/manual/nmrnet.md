@@ -4,6 +4,8 @@
 ai2-kit feat nmrnet predict --help
 ```
 
+[Source code](../../ai2_kit/algorithm/uninmr)
+
 ## Install extra packages
 
 To run the NMRNet tool, you need to install extra packags besides `ai2-kit`

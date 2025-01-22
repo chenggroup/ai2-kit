@@ -7,7 +7,7 @@ ai2-kit feat nmrnet predict --help
 ## Install extra packages
 
 To run the NMRNet tool, you need to install extra packages besides `ai2-kit`
-since the extra dependecies are too large to be included in the `ai2-kit` package.
+since the extra dependencies are too large to be included in the `ai2-kit` package.
 You can install the extra packages by running the following command:
 
 ```bash
@@ -24,6 +24,8 @@ pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https
 # Install unicore
 # You should download the version that matches your CUDA and Python from:
 # https://github.com/dptech-corp/Uni-Core/releases
+# for example:
+
 wget https://github.com/dptech-corp/Uni-Core/releases/download/0.0.3/unicore-0.0.1+cu118torch2.0.0-cp39-cp39-linux_x86_64.whl
 pip install unicore-0.0.1+cu118torch2.0.0-cp39-cp39-linux_x86_64.whl
 

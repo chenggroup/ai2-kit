@@ -291,7 +291,7 @@ def predict_cli(model_path: str, dict_path: str, saved_dir: str,
 
     :param model_path: path to the model checkpoint, e.g 'model.pt'
     :param dict_path: path to the dictionary file, e.g 'dict.txt'
-    :param saved_dir: path to the saved directory, e.g 'saved_dir'
+    :param saved_dir: path to the saved directory
     :param selected_atom: selected atom for prediction, e.g 'H'
     :param nmr_type: type of NMR prediction, should be 'solid' or 'liquid'
     :param use_cuda: whether to use GPU for prediction, default is False
@@ -312,6 +312,7 @@ def predict_cli(model_path: str, dict_path: str, saved_dir: str,
         torch.cuda.set_device(cuda_device_id)
 
     dictionary = Dictionary.load(args.dict_path)
+    dictionary.add_symbol("[MASK]", is_special=True)
     target_scaler = TargetScaler(args.saved_dir)
 
     assert isinstance(atoms, Atoms), "data_file must be a single ASE Atoms object"

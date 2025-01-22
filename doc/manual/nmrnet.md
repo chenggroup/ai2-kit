@@ -68,9 +68,9 @@ The prediction result will be print to stdout as the below:
 ```
 
 Since `--fig_save_to` is specified, the prediction result will be saved to `nmr.png`.
-
+<p aligh="center">
 <img src="../res/nmr.png" width="80%" style="display: block; margin: 0 auto;">
-
+</p>
 
 
 ## Citation

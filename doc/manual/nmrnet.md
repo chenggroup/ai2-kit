@@ -52,6 +52,10 @@ ai2-kit feat nmrnet predict \
     --saved_dir  ./weight \
     --nmr_type solid --selected_atom H \
     --data_file tmp/nmr-demo.xyz
+```
+
+The above command will predict the NMR of the `H` atom in the `tmp/nmr-demo.xyz` file using the NMRNet model in the `./weight/cv_seed_42_fold_0/checkpoint_best.pt` file.
+
 
 ## Citation
 TODO

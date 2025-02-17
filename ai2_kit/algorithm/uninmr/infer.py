@@ -151,10 +151,10 @@ def load_dataset(atoms: Atoms, args: Namespace, dictionary:Dictionary, target_sc
         atoms_info = extend_cells(atoms, rcut=6)
     elif nmr_type == 'liquid':
        ret = {
-            'atoms': atoms.get_chemical_symbols().tolist(),
+            'atoms': atoms.get_chemical_symbols(),
             'coordinates': atoms.get_positions(),
-            'atoms_target': [0] * len(atoms),
-            'atoms_target_mask': [1] * len(atoms),
+            'atoms_target': np.array([0] * len(atoms)),
+            'atoms_target_mask': np.array([1] * len(atoms)),
         }
         atoms_info = [ret]
     else:
@@ -292,7 +292,7 @@ def predict(model: UniMatModel, dataloader: DataLoader,
 
 def predict_cli(model_path: str, dict_path: str, saved_dir: str,
                 selected_atom: str, nmr_type: str, use_cuda=False, cuda_device_id=None,
-                smiles: str = '', data_file: str = '', data: str = '', format=None, fig_save_to=None):
+                smiles: str = '', data_file: str = '', data: str = '', format=None):
     """
     Command line interface for NMRNet prediction.
 
@@ -309,7 +309,6 @@ def predict_cli(model_path: str, dict_path: str, saved_dir: str,
     :param data: input data string, default is '', you can provide data directly
     :param smiles: SMILES string for prediction, default is ''
     :param format: format of the input data file, default is None, you can find the supported format in ASE: https://wiki.fysik.dtu.dk/ase/ase/io/io.html
-    :param fig_save_to: path to save the plot, default is None, you can save the plot if provided
     """
     if data_file:
         atoms = ase.io.read(data_file, index=0, format=format)  # type: ignore
@@ -346,22 +345,3 @@ def predict_cli(model_path: str, dict_path: str, saved_dir: str,
 
     return d
 
-
-    ax.set_title('NMRNet Prediction (Lorentzian fit)', fontsize=20)
-    ax.set_xlim(x_max, 0)
-    ax.set_ylim(0, 2.1)
-    ax.set_xticks(np.arange(0, x_max, 1))
-    ax.xaxis.set_minor_locator(plt.MultipleLocator(0.5))  # type: ignore
-    ax.tick_params(axis='x', which='major', direction='out', length=6, width=1, labelsize=18)
-    ax.set_yticks([])
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.spines['left'].set_visible(False)
-    ax.spines['bottom'].set_linewidth(2)
-    ax.legend(fontsize=20, loc='upper left')
-    if fig_save_to:
-        fig.savefig(fig_save_to, dpi=300, bbox_inches='tight')
-    else:
-        fig.canvas.draw()
-        fig.canvas.flush_events
-    return x, peak

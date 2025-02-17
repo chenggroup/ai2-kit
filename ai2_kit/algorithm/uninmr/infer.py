@@ -344,12 +344,6 @@ def predict_cli(model_path: str, dict_path: str, saved_dir: str,
                 num_classes=args.num_classes,
                 target_scaler=target_scaler)
 
-    if nmr_type == 'solid':
-        
-    elif nmr_type == 'liquid':
-        
-    else:
-        raise ValueError(f"Invalid nmr_type: {nmr_type}")
     return d
 
 

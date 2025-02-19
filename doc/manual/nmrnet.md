@@ -58,8 +58,7 @@ ai2-kit feat nmrnet predict \
     --fig_save_to nmr.png
 ```
 
-The above command will predict the NMR of the `H` atom in the `tmp/nmr-demo.xyz` file.
-The prediction result will be print to stdout as the below:
+The above command will predict the NMR of the 'selected_atom' atom in the 'data_file' file. The prediction result will be printed to stdout, and the chemical shifts will be displayed in the same order as the corresponding atoms in the xyz file. And then you can follow it with a demo result like this: 
 
 ```
 [25.572277 29.441292 29.615028 29.896814 29.590061 30.400713 29.576017
@@ -67,11 +66,10 @@ The prediction result will be print to stdout as the below:
  14.738946 24.312784]
 ```
 
-Since `--fig_save_to` is specified, the prediction result will be saved to `nmr.png`.
-<p aligh="center">
-<img src="../res/nmr.png" width="80%" style="display: block; margin: 0 auto;">
-</p>
 
 
 ## Citation
-TODO
+
+1. Xu F, Guo W, Wang F, et al. Towards a Unified Benchmark and Framework for Deep Learning-Based Prediction of Nuclear Magnetic Resonance Chemical Shifts[J]. arXiv preprint arXiv:2408.15681, 2024.
+
+*Note: Our work has recently been accepted by *Nature Computational Science*, and we will update the reference once it is published.*

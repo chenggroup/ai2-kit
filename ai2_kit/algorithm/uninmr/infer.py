@@ -148,13 +148,19 @@ def load_dataset(atoms: Atoms, args: Namespace, dictionary:Dictionary, target_sc
     nmr_type = args.nmr_type
 
     if nmr_type == 'solid':
-        cells = extend_cells(atoms, rcut=6)
+        atoms_info = extend_cells(atoms, rcut=6)
     elif nmr_type == 'liquid':
-        raise NotImplementedError("Liquid NMR prediction is not supported yet.")
+       ret = {
+            'atoms': atoms.get_chemical_symbols(),
+            'coordinates': atoms.get_positions(),
+            'atoms_target': np.array([0] * len(atoms)),
+            'atoms_target_mask': np.array([1] * len(atoms)),
+        }
+        atoms_info = [ret]
     else:
         raise ValueError(f"Invalid nmr_type: {nmr_type}")
 
-    dataset = ListDataset(cells)
+    dataset = ListDataset(atoms_info)
     matid_dataset = IndexDataset(dataset)
     dataset = CroppingDataset(dataset, args.seed, "atoms", "coordinates", args.max_atoms)
     dataset = NormalizeDataset(dataset, "coordinates")
@@ -281,12 +287,12 @@ def predict(model: UniMatModel, dataloader: DataLoader,
             ).astype('float32')
             all_predicts.append(predict)
         final_predicts = np.concatenate(all_predicts)
-    return final_predicts.reshape(-1).reshape(-1,4).mean(axis=1)
+    return final_predicts
 
 
 def predict_cli(model_path: str, dict_path: str, saved_dir: str,
                 selected_atom: str, nmr_type: str, use_cuda=False, cuda_device_id=None,
-                smiles: str = '', data_file: str = '', data: str = '', format=None, fig_save_to=None):
+                smiles: str = '', data_file: str = '', data: str = '', format=None):
     """
     Command line interface for NMRNet prediction.
 
@@ -303,7 +309,6 @@ def predict_cli(model_path: str, dict_path: str, saved_dir: str,
     :param data: input data string, default is '', you can provide data directly
     :param smiles: SMILES string for prediction, default is ''
     :param format: format of the input data file, default is None, you can find the supported format in ASE: https://wiki.fysik.dtu.dk/ase/ase/io/io.html
-    :param fig_save_to: path to save the plot, default is None, you can save the plot if provided
     """
     if data_file:
         atoms = ase.io.read(data_file, index=0, format=format)  # type: ignore
@@ -337,51 +342,6 @@ def predict_cli(model_path: str, dict_path: str, saved_dir: str,
                 classification_head_name=args.classification_head_name,
                 num_classes=args.num_classes,
                 target_scaler=target_scaler)
-    if fig_save_to:
-        plot_nmr_peak(d, fig_save_to=fig_save_to)
+
     return d
 
-
-def lorentizian(x, H, gamma=0.01):
-    """
-    Lorentzian function
-    """
-    return 1 / (1 + ((x - H) / gamma) ** 2)
-
-
-def plot_nmr_peak(d, fig_ax=None, fig_save_to=None):
-    """
-    Plot NMR peak from prediction
-    """
-    import matplotlib.pyplot as plt
-    s3 = 29.91 - d * 0.987
-    s3 = np.concatenate([s3[:1], [s3[1:4].mean()], [s3[4:7].mean()], s3[7:8], [s3[8:11].mean()],  [s3[11:14].mean()], s3[14:15], s3[15:]])
-    x_max  = int(max(s3)) + 2  # for pretty plotting
-    x = np.linspace(0, x_max, 5000)
-    peak = np.sum(lorentizian(x[:, None], s3), axis=1)
-    if fig_ax is None:
-        fig, ax = plt.subplots(1, 1, figsize=(12, 4), constrained_layout=True)
-    else:
-        fig, ax = fig_ax
-
-    ax.plot(x, peak, linewidth=2, color='#d45556', label='NMRNet Prediction')
-    ax.set_xlabel('ppm', fontsize=20)
-    ax.set_ylabel('Intensity', fontsize=20)
-    ax.set_title('NMRNet Prediction (Lorentzian fit)', fontsize=20)
-    ax.set_xlim(x_max, 0)
-    ax.set_ylim(0, 2.1)
-    ax.set_xticks(np.arange(0, x_max, 1))
-    ax.xaxis.set_minor_locator(plt.MultipleLocator(0.5))  # type: ignore
-    ax.tick_params(axis='x', which='major', direction='out', length=6, width=1, labelsize=18)
-    ax.set_yticks([])
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.spines['left'].set_visible(False)
-    ax.spines['bottom'].set_linewidth(2)
-    ax.legend(fontsize=20, loc='upper left')
-    if fig_save_to:
-        fig.savefig(fig_save_to, dpi=300, bbox_inches='tight')
-    else:
-        fig.canvas.draw()
-        fig.canvas.flush_events
-    return x, peak

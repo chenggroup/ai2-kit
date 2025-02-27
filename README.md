@@ -12,7 +12,7 @@ A toolkit featured _**a**rtificial **i**ntelligence × **a**b **i**nitio_ for co
 
 ## Feature Highlights
 * Collection of tools to facilitate the development of automated workflows for computational chemistry research.
-* Use with [oh-my-batch](https://github.com/link89/oh-my-batch) to build customize workflow with shell script.
+* Use with [oh-my-batch](https://github.com/link89/oh-my-batch) to build your own workflow with shell script.
 
 
 ## Installation

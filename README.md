@@ -12,8 +12,8 @@ A toolkit featured _**a**rtificial **i**ntelligence × **a**b **i**nitio_ for co
 
 ## Feature Highlights
 * Collection of tools to facilitate the development of automated workflows for computational chemistry research.
-* Utilities to execute and manage jobs in local or remote HPC job scheduler.
-* Utilities to simplified automated workflows development with reusable components. 
+* Use with [oh-my-batch](https://github.com/link89/oh-my-batch) to build customize workflow with shell script.
+
 
 ## Installation
 
@@ -60,10 +60,6 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 
 ### Notebooks
 * [ai2cat](notebook/ai2cat.ipynb)
-
-### Miscellaneous
-* [HPC Executor Introduction](doc/manual//hpc-executor.md) ([zh](doc/manual/hpc-executor.zh.md)): a simple HPC executor for job submission and management
-* [Checkpoint Mechanism](doc/manual/checkpoint.md)
 
 
 ## Acknowledgement

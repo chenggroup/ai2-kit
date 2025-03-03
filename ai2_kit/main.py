@@ -165,8 +165,9 @@ def main():
 
 def rpc_main():
     from fire_rpc import make_fire_cmd
+    from ai2_kit.core.util import json_dumps
     _setup_logging()
-    Fire(make_fire_cmd(ai2_kit))
+    Fire(make_fire_cmd(ai2_kit, json_dumps=json_dumps))
 
 
 if __name__ == '__main__':

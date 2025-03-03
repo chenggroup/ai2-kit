@@ -3,6 +3,7 @@ from ruamel.yaml import YAML, ScalarNode, SequenceNode
 from itertools import zip_longest
 from pathlib import Path
 
+import numpy as np
 import shortuuid
 import asyncio
 import hashlib
@@ -22,6 +23,20 @@ logger = get_logger(__name__)
 EMPTY = object()
 
 SAMPLE_METHOD = Literal['even', 'random', 'truncate']
+
+
+def json_dumps(obj):
+    return json.dumps(obj, default=_json_dumps_default)
+
+
+def _json_dumps_default(obj):
+    if type(obj).__module__ == np.__name__:
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return obj.item()
+    raise TypeError('Unknown type:', type(obj))
+
 
 def load_json(path: Union[Path, str], encoding: str = 'utf-8'):
     if isinstance(path, str):

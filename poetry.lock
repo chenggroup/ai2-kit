@@ -1327,13 +1327,13 @@ reference = "ustc"
 
 [[package]]
 name = "fire-rpc"
-version = "0.1.1"
+version = "0.1.2"
 description = "turn fire command line to a rpc server"
 optional = true
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "fire_rpc-0.1.1-py3-none-any.whl", hash = "sha256:3cc55914e6487eb34cb44271cb25e3e07ad75b96928139c2e88902ae5d2fb806"},
-    {file = "fire_rpc-0.1.1.tar.gz", hash = "sha256:a22cabc909cd263d88978f2e1c049926849d43ec30ee65507afd9647ab28ae6e"},
+    {file = "fire_rpc-0.1.2-py3-none-any.whl", hash = "sha256:c551d273f1997eb15e3cf459b9f461bf0ede00f696dee0f6d91afccc3a8eabf9"},
+    {file = "fire_rpc-0.1.2.tar.gz", hash = "sha256:9a28a20d7ab073e808cde9e1c84cc8e75e9c11d4f7a4c464b58700f401df07ef"},
 ]
 
 [package.dependencies]
@@ -5982,4 +5982,4 @@ all = ["asaplib", "dscribe", "ipympl", "jupyter-formily"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "7102152b1f9cdac43811eb0d0c134cdd888ee5b9ef1ac306efb2bdd3d2283fe7"
+content-hash = "57020d884ba81f489510f71358bbd06ca62f54dfd419a55f2579a36b0a074f27"

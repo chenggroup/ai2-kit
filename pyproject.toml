@@ -37,7 +37,7 @@ scikit-learn = "^1.6.1"
 fire-rpc = {version = "^0.1.2", optional = true}
 [tool.poetry.extras]
 all = ["dscribe", "jupyter-formily", "ipympl", "asaplib", "fire-rpc"]
-
+rpc = ["fire-rpc"]
 
 [[tool.poetry.source]]
 name = "ustc"

@@ -31,10 +31,9 @@ If you want to run `ai2-kit` from source, you can run the following commands in 
 
 ```bash
 pip install poetry
-# If you meet ConnectionError:
+# If you meet ConnectionError, you can try to set the max-workers to a smaller number, e.g
 # poetry config installer.max-workers 4
 poetry install
-
 poetry run ai2-kit
 ```
 
@@ -49,6 +48,7 @@ poetry run ai2-kit
 ### Domain Specific Tools
 * [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
 * [Amorphous Oxides Structure Analysis Toolkit](doc/manual/aos-analysis.md)
+* [Reweighting Toolkit](doc/manual/reweighting.md)
 
 ### General Tools
 * [Tips](doc/manual/tips.md): useful tips for using `ai2-kit`

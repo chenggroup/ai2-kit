@@ -151,12 +151,22 @@ ai2_kit = Group({
 }, doc="Welcome to use ai2-kit!")
 
 
-def main():
+def _setup_logging():
     level_name = os.environ.get('LOG_LEVEL', 'INFO')
     level = logging._nameToLevel.get(level_name, logging.INFO)
     logging.basicConfig(format='%(asctime)s %(name)s: %(message)s', level=level)
     logging.getLogger('transitions.core').setLevel(logging.WARNING)
+
+
+def main():
+    _setup_logging()
     Fire(ai2_kit)
+
+
+def rpc_main():
+    from fire_rpc import make_fire_cmd
+    _setup_logging()
+    Fire(make_fire_cmd(ai2_kit))
 
 
 if __name__ == '__main__':

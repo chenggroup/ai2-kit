@@ -150,7 +150,7 @@ def load_dataset(atoms: Atoms, args: Namespace, dictionary:Dictionary, target_sc
     if nmr_type == 'solid':
         atoms_info = extend_cells(atoms, rcut=6)
     elif nmr_type == 'liquid':
-       ret = {
+        ret = {
             'atoms': atoms.get_chemical_symbols(),
             'coordinates': atoms.get_positions(),
             'atoms_target': np.array([0] * len(atoms)),

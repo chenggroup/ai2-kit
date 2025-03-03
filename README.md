@@ -35,9 +35,8 @@ pip install poetry
 # poetry config installer.max-workers 4
 poetry install
 
-./ai2-kit --help
+poetry run ai2-kit
 ```
-Note that instead of running global `ai2-kit` command, you should run `./ai2-kit` to run the command from source on Linux/MacOS or `.\ai2-kit.ps1` on Windows.
 
 ## Manuals
 ### Featuring Tools

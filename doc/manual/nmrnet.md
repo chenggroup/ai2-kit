@@ -22,7 +22,6 @@ pip install rdkit
 
 pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu118
 
-
 # Install unicore
 # You should download the version that matches your CUDA and Python from:
 # https://github.com/dptech-corp/Uni-Core/releases
@@ -43,7 +42,7 @@ To run the tool, you need to prepare extra files for the following parameters:
 
 * `model_path`: NMRNet model file.
 * `dict_path`: NMRNet dictionary file.
-* `saved_dir`: NMRNet saved directory, which must contain a `target_scaler.ss` file.
+* `scaler_path`: Scaler file, for example `target_scaler.ss`.
 
 An example of running the tool is as follows:
 
@@ -51,10 +50,9 @@ An example of running the tool is as follows:
 ai2-kit feat nmrnet predict \
     --model_path ./weight/cv_seed_42_fold_0/checkpoint_best.pt \
     --dict_path  ./weight/oc_limit_dict.txt \
-    --saved_dir  ./weight \
+    --scaler_path ./weight/target_scaler.ss \
     --nmr_type solid --selected_atom H \
     --data_file tmp/nmr-demo.xyz
-    --fig_save_to nmr.png
 ```
 
 The above command will predict the NMR of the 'selected_atom' atom in the 'data_file' file. The prediction result will be printed to stdout, and the chemical shifts will be displayed in the same order as the corresponding atoms in the xyz file. And then you can follow it with a demo result like this: 
@@ -64,8 +62,6 @@ The above command will predict the NMR of the 'selected_atom' atom in the 'data_
  15.920061 29.084885 29.069242 28.565197 28.77764  28.510954 28.849863
  14.738946 24.312784]
 ```
-
-
 
 ## Citation
 

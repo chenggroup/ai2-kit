@@ -2,6 +2,7 @@ from argparse import Namespace
 from io import StringIO
 from itertools import product
 from scipy.spatial import distance_matrix
+import os
 
 import numpy as np
 
@@ -101,7 +102,7 @@ def get_args(model_path, dict_path, saved_dir, selected_atom='H', nmr_type='soli
     args.dict_path=dict_path
     args.selected_atom = selected_atom
     args.nmr_type=nmr_type
-    args.saved_dir=saved_dir
+    args.saved_dir=saved_dir  # this turn out to be unused, just keep it for compatibility
 
     args.encoder_layers = 8
     args.encoder_embed_dim = 512
@@ -290,7 +291,7 @@ def predict(model: UniMatModel, dataloader: DataLoader,
     return final_predicts
 
 
-def predict_cli(model_path: str, dict_path: str, saved_dir: str,
+def predict_cli(model_path: str, dict_path: str, scaler_path: str,
                 selected_atom: str, nmr_type: str, use_cuda=False, cuda_device_id=None,
                 smiles: str = '', data_file: str = '', data: str = '', format=None):
     """
@@ -300,7 +301,7 @@ def predict_cli(model_path: str, dict_path: str, saved_dir: str,
 
     :param model_path: path to the model checkpoint, e.g 'model.pt'
     :param dict_path: path to the dictionary file, e.g 'dict.txt'
-    :param saved_dir: path to the saved directory
+    :param scaler_path: path to the scaler file, e.g 'target_scaler.ss'
     :param selected_atom: selected atom for prediction, e.g 'H'
     :param nmr_type: type of NMR prediction, should be 'solid' or 'liquid'
     :param use_cuda: whether to use GPU for prediction, default is False
@@ -319,14 +320,19 @@ def predict_cli(model_path: str, dict_path: str, saved_dir: str,
     else:
         raise ValueError("data_file or smiles must be provided")
 
-    args = get_args(model_path, dict_path, saved_dir,
+    scaler_path = os.path.abspath(scaler_path)
+
+    scaler_dir = os.path.dirname(scaler_path)
+    scaler_file = os.path.basename(scaler_path)
+
+    args = get_args(model_path, dict_path, scaler_dir,
                     selected_atom=selected_atom, nmr_type=nmr_type)
     if use_cuda:
         torch.cuda.set_device(cuda_device_id)
 
     dictionary = Dictionary.load(args.dict_path)
     dictionary.add_symbol("[MASK]", is_special=True)
-    target_scaler = TargetScaler(args.saved_dir)
+    target_scaler = TargetScaler(scaler_dir, scaler_file)
 
     assert isinstance(atoms, Atoms), "data_file must be a single ASE Atoms object"
     dataset = load_dataset(atoms, args, dictionary, target_scaler)

@@ -7,13 +7,13 @@ import torch
 import joblib
 import os
 from sklearn.preprocessing import (
-    StandardScaler, 
-    MinMaxScaler, 
-    MaxAbsScaler, 
-    RobustScaler, 
-    Normalizer, 
-    QuantileTransformer, 
-    PowerTransformer, 
+    StandardScaler,
+    MinMaxScaler,
+    MaxAbsScaler,
+    RobustScaler,
+    Normalizer,
+    QuantileTransformer,
+    PowerTransformer,
     FunctionTransformer,
 )
 
@@ -30,15 +30,15 @@ SCALER_MODE = {
 }
 
 class TargetScaler(object):
-    def __init__(self, load_dir=None):
-        if load_dir and os.path.exists(os.path.join(load_dir, 'target_scaler.ss')):
-            self.scaler = joblib.load(os.path.join(load_dir, 'target_scaler.ss'))
+    def __init__(self, load_dir=None, scaler_file = 'target_scaler.ss'):
+        if load_dir and os.path.exists(os.path.join(load_dir, scaler_file)):
+            self.scaler = joblib.load(os.path.join(load_dir, scaler_file))
         else:
             self.scaler = None
-    
+
     def fit(self, target, num_classes, dump_dir):
         if os.path.exists(os.path.join(dump_dir, 'target_scaler.ss')):
-            self.scaler = joblib.load(os.path.join(dump_dir, 'target_scaler.ss')) 
+            self.scaler = joblib.load(os.path.join(dump_dir, 'target_scaler.ss'))
         else:
             self.scaler = SCALER_MODE['standard']
             target_selected = target.reshape(-1, num_classes)
@@ -48,14 +48,14 @@ class TargetScaler(object):
 
     def transform(self, target):
         return self.scaler.transform(target)
-            
+
 
     def inverse_transform(self, target):
         return self.scaler.inverse_transform(target)
 
     # def fit(self, target, num_classes, dump_dir, mask=None):
     #     if os.path.exists(os.path.join(dump_dir, 'target_scaler.ss')):
-    #         return 
+    #         return
     #     else:
     #         self.scaler = SCALER_MODE['standard']
     #         if mask == None:
@@ -67,7 +67,7 @@ class TargetScaler(object):
     #     if mask == None:
     #         mask = torch.ones_like(target)
     #     return self.scaler.transform(target[mask==1].reshape(-1, num_classes)).reshape(target.shape)
-            
+
 
     # def inverse_transform(self, target, num_classes, mask=None):
     #     if mask == None:

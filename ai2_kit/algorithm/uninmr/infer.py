@@ -46,6 +46,8 @@ from .data import (
 
 
 from ai2_kit.core.log import get_logger
+from ai2_kit.core.util import resolve_path
+
 logger = get_logger(__name__)
 
 
@@ -312,7 +314,12 @@ def predict_cli(model_path: str, dict_path: str, scaler_path: str,
     :param smiles: SMILES string for prediction, default is ''
     :param format: format of the input data file, default is None, you can find the supported format in ASE: https://wiki.fysik.dtu.dk/ase/ase/io/io.html
     """
+    model_path = resolve_path(model_path)
+    dict_path = resolve_path(dict_path)
+    scaler_path = resolve_path(scaler_path)
+
     if data_file:
+        data_file = resolve_path(data_file)
         atoms = ase.io.read(data_file, index=0, format=format)  # type: ignore
     elif data:
         atoms = ase.io.read(StringIO(data), index=0, format=format)  # type: ignore
@@ -356,4 +363,3 @@ def predict_cli(model_path: str, dict_path: str, scaler_path: str,
         return d, xyz
     else:
         return d
-

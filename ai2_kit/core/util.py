@@ -443,11 +443,11 @@ def resolve_path(path: str) -> str:
     paths = glob.glob(path)
     if len(paths) > 1:
         raise ValueError(f'Wildcard expansion should result in only one path, got {paths}')
-    if not paths:
+    elif not paths:
         raise FileNotFoundError(f'No file found for {path}')
     path = paths[0]
-    # expand environment variables
-    path = os.path.expandvars(path)
     # expand user home
     path = os.path.expanduser(path)
+    # expand environment variables
+    path = os.path.expandvars(path)
     return path

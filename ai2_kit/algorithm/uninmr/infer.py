@@ -358,7 +358,7 @@ def predict_cli(model_path: str, dict_path: str, scaler_path: str,
                 target_scaler=target_scaler)
     if return_xyz:
         f = StringIO()
-        ase.io.write(f, atoms, format='xyz')
+        ase.io.write(f, atoms, format='extxyz')
         xyz = f.getvalue()
         return d, xyz
     else:

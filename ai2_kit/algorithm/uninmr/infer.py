@@ -293,7 +293,8 @@ def predict(model: UniMatModel, dataloader: DataLoader,
 
 def predict_cli(model_path: str, dict_path: str, scaler_path: str,
                 selected_atom: str, nmr_type: str, use_cuda=False, cuda_device_id=None,
-                smiles: str = '', data_file: str = '', data: str = '', format=None):
+                smiles: str = '', data_file: str = '', data: str = '', format=None,
+                return_xyz=False):
     """
     Command line interface for NMRNet prediction.
 
@@ -348,6 +349,11 @@ def predict_cli(model_path: str, dict_path: str, scaler_path: str,
                 classification_head_name=args.classification_head_name,
                 num_classes=args.num_classes,
                 target_scaler=target_scaler)
-
-    return d
+    if return_xyz:
+        f = StringIO()
+        ase.io.write(f, atoms, format='xyz')
+        xyz = f.getvalue()
+        return d, xyz
+    else:
+        return d
 

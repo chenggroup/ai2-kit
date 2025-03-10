@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.24.2
+* fix: the return data should be extxyz format
+
 ## v0.24.1
 * feat: refine nmr predict command line
 

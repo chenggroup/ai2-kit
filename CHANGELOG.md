@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.24.3
+* upgrade fire-rpc to 0.1.3
+
 ## v0.24.2
 * fix: the return data should be extxyz format
 

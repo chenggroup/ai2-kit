@@ -1,5 +1,8 @@
 # Change Logs
 
+## v0.24.1
+* feat: refine nmr predict command line
+
 ## v0.24.0
 * feat: allow to run ai2-kit as an rpc server
 * refine: command line options of nmrnet predict

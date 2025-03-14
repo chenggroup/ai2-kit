@@ -52,7 +52,6 @@ poetry run ai2-kit
 
 ### General Tools
 * [Tips](doc/manual/tips.md): useful tips for using `ai2-kit`
-* [Batch Toolkit](doc/manual/batch.md): a toolkit to generate batch scripts from files or directories
 * [ASE Toolkit](doc/manual/ase.md): commands to process trajectory files with [ASE](https://wiki.fysik.dtu.dk/ase/)
 * [DPData Toolkit](doc/manual/dpdata.md): commands to process system data with [dpdata](https://github.com/deepmodeling/dpdata/)
 * [Model Deviation Toolkit](doc/manual/model-deviation.md): a toolkit to filter structures by model deviation

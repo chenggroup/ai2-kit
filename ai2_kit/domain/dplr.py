@@ -24,6 +24,7 @@ def dpdata_read_cp2k_dplr_data(
     wannier_cutoff: float = 1.0,
     wannier_spread_file: Optional[str] = None,
     model_charge_map: Optional[List[int]] = None,
+    export_atomic_weight: bool = False,
 ):
     """
     Gnereate dpdata from cp2k output and wannier file for DPLR
@@ -36,12 +37,21 @@ def dpdata_read_cp2k_dplr_data(
     :param wannier_cutoff: the cutoff to allocate wannier centers around atoms
     :param wannier_spread_file: the wannier spread file, if provided, the spread data will be added to dp_sys
     :param model_charge_map: the charge map of wannier in model, for example, [-8]
+    :param export_atomic_weight: whether to export atomic weight rather than return None when getting exception
 
     :return dp_sys: dpdata.LabeledSystem
         In addition to the common energy data, atomic_dipole data is added.
     """
     cp2k_output = os.path.join(cp2k_dir, cp2k_output)
     wannier_file = os.path.join(cp2k_dir, wannier_file)
+    if wannier_spread_file is not None:
+        assert (
+            model_charge_map is None
+        ), "model_charge_map is not supported when collecting wannier_spread"
+        assert (
+            not export_atomic_weight
+        ), "export_atomic_weight is not supported when collecting wannier_spread"
+
     wannier_spread_file = (
         os.path.join(cp2k_dir, wannier_spread_file) if wannier_spread_file else None
     )
@@ -55,6 +65,7 @@ def dpdata_read_cp2k_dplr_data(
             wannier_cutoff,
             wannier_spread_file,
             model_charge_map,
+            export_atomic_weight,
         )
     except:
         dp_sys = None
@@ -70,12 +81,13 @@ def set_dplr_ext_from_cp2k_output(
     wannier_cutoff: float = 1.0,
     wannier_spread_file: Optional[str] = None,
     model_charge_map: Optional[List[int]] = None,
+    export_atomic_weight: bool = False,
 ):
     wannier_atoms = ase.io.read(wannier_file)
     # assert np.all(wannier_atoms.symbols == "X"), (
     #     "%s should include Wannier centres only" % wannier_file
     # )
-    mask = (wannier_atoms.symbols == "X")  # type: ignore
+    mask = wannier_atoms.symbols == "X"  # type: ignore
     wannier_atoms = wannier_atoms[mask]
 
     natoms = dp_sys.get_natoms()
@@ -83,6 +95,9 @@ def set_dplr_ext_from_cp2k_output(
     if nframes == 0:
         return None
     assert nframes == 1, "Only support one frame"
+
+    if export_atomic_weight:
+        dp_sys.data["atomic_weight"] = np.ones([nframes, natoms, 1])
 
     # symbols = np.array(dp_sys.data["atom_names"])[dp_sys.data["atom_types"]]
     sel_ids = get_sel_ids(dp_sys, type_map, sel_type)
@@ -96,13 +111,15 @@ def set_dplr_ext_from_cp2k_output(
         cns_ref,
     )
     atomic_dipole_reformat = np.zeros((nframes, natoms, 3))
-    atomic_dipole_reformat[:, sel_ids] = atomic_dipole
+    atomic_dipole_reformat[:, sel_ids, :] = atomic_dipole.reshape([nframes, -1, 3])
     atomic_dipole = atomic_dipole_reformat
     dp_sys.data["atomic_dipole"] = atomic_dipole.reshape([nframes, natoms, 3])
     try:
         wannier_spread_reformat = np.zeros((nframes, natoms, 4))
         if len(wannier_spread) > 0:
-            wannier_spread_reformat[:, sel_ids] = wannier_spread.reshape([nframes, -1, 4])
+            wannier_spread_reformat[:, sel_ids] = wannier_spread.reshape(
+                [nframes, -1, 4]
+            )
             wannier_spread = wannier_spread_reformat
             dp_sys.data["wannier_spread"] = np.reshape(
                 wannier_spread, [nframes, natoms, 4]
@@ -152,6 +169,8 @@ def get_atomic_dipole(
     else:
         full_wannier_spread = None
 
+    export_atomic_weight = "atomic_weight" in dp_sys.data
+
     ref_coords = coords[sel_ids].reshape(-1, 3)
     e_coords = wannier_atoms.get_positions()
     dist_mat = distance_array(ref_coords, e_coords, box=cellpar)
@@ -164,7 +183,11 @@ def get_atomic_dipole(
         mask = dist_vec < wannier_cutoff
         cn = np.sum(mask)
         if cn != cns_ref[ii]:
-            raise ValueError(f"wannier atoms {ii} has {cn} atoms in the cutoff range")
+            if not export_atomic_weight:
+                raise ValueError(
+                    f"wannier atoms {ii} has {cn} atoms in the cutoff range"
+                )
+            dp_sys.data["atomic_weight"][0, sel_ids[ii], 0] = 0
         mlwc_ids.append(np.where(mask)[0])
         wc_coord_rel = e_coords[mask] - ref_coords[ii]
         if full_wannier_spread is not None:
@@ -178,7 +201,7 @@ def get_atomic_dipole(
         )
     mlwc_ids = np.concatenate(mlwc_ids)
     # exclude double counting
-    assert len(np.unique(mlwc_ids)) == np.sum(cns_ref)
+    assert len(np.unique(mlwc_ids)) == len(mlwc_ids)
     atomic_dipole = np.reshape(atomic_dipole, (-1, 3))
     assert atomic_dipole.shape[0] == len(sel_ids)
     if full_wannier_spread is not None:
@@ -324,6 +347,7 @@ def dplr_v2_to_v3(data_path: str, sel_symbol: list):
         "atomic_dipole.npy",
         "atomic_polarizability.npy",
         "wannier_spread.npy",
+        "atomic_weight.npy",
     ]
     for atomic_data_fname in atomic_data_fnames:
         fnames = glob.glob(
@@ -344,7 +368,12 @@ def dplr_v2_to_v3(data_path: str, sel_symbol: list):
 
             raw_data = np.load(fname)
             n_frames = raw_data.shape[0]
-            raw_data = np.reshape(raw_data, [n_frames, len(sel_ids), -1])
+            try:
+                raw_data = np.reshape(raw_data, [n_frames, len(sel_ids), -1])
+            except ValueError:
+                raw_data.reshape([n_frames, n_atoms, -1])
+                logger.info(f"Already in v3 format: %s" % fname)
+                continue
             n_dim = raw_data.shape[2]
 
             full_data = np.zeros([n_frames, n_atoms, n_dim])
@@ -357,6 +386,7 @@ def dplr_v3_to_v2(data_path: str, sel_symbol: list):
         "atomic_dipole.npy",
         "atomic_polarizability.npy",
         "wannier_spread.npy",
+        "atomic_weight.npy",
     ]
     for atomic_data_fname in atomic_data_fnames:
         fnames = glob.glob(
@@ -377,5 +407,10 @@ def dplr_v3_to_v2(data_path: str, sel_symbol: list):
 
             raw_data = np.load(fname)
             n_frames = raw_data.shape[0]
-            raw_data_reshape = raw_data.reshape([n_frames, n_atoms, -1])
+            try:
+                raw_data_reshape = raw_data.reshape([n_frames, n_atoms, -1])
+            except ValueError:
+                raw_data.reshape([n_frames, len(sel_ids), -1])
+                logger.info(f"Already in v2 format: %s" % fname)
+                continue
             np.save(fname, raw_data_reshape[:, sel_ids].reshape([n_frames, -1]))

@@ -33,6 +33,7 @@ def register_data_types():
         DataType("atomic_dipole", np.ndarray, (Axis.NFRAMES, Axis.NATOMS, 3), required=False),  # type: ignore
         DataType("atomic_polarizability", np.ndarray, (Axis.NFRAMES, Axis.NATOMS, 9), required=False),  # type: ignore
         DataType("wannier_spread", np.ndarray, (Axis.NFRAMES, Axis.NATOMS, 4), required=False),  # type: ignore
+        DataType("atomic_weight", np.ndarray, (Axis.NFRAMES, Axis.NATOMS, 1), required=False),  # type: ignore
     ]
     dpdata.System.register_data_type(*DATA_TYPES)  # type: ignore
     dpdata.LabeledSystem.register_data_type(*DATA_TYPES)  # type: ignore

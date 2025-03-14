@@ -77,7 +77,7 @@ ai2-kit tool dpdata read ./path-to-cp2k-dir --fmt cp2k/dplr --cp2k_output="outpu
 You can also convert the data between v2 and v3 by using the following command:
 
 ```bash
-from ai2_kit.domain.dplr import dplr_v2_to_v3, dplr_v2_to_v3
+from ai2_kit.domain.dplr import dplr_v2_to_v3, dplr_v3_to_v2
 
 # change in place
 dplr_v2_to_v3("dataset-v2", sel_symbol=["O", "K", "F"])

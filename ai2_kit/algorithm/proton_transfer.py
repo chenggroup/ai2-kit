@@ -6,7 +6,7 @@ from ase import Atom
 from functools import partial
 
 from dataclasses import dataclass
-from typing import List, Tuple, NamedTuple
+from typing import List, Tuple, NamedTuple, Union
 
 import fire
 import numpy as np
@@ -156,31 +156,67 @@ class System(object):
         writer.flush()
 
 
-def proton_transfer_detection(
-        input_traj: str,
-        out_dir: str,
-        cell: List[float],
-        acceptor_elements: List[str],
-        initial_donors: List[int],
-        core_num: int = 4,
-        dt: float = 0.0005,
-        r_a: float = 4.0,
-        r_h: float = 1.3,
-        rho_0: float = 1 / 2.2,
-        rho_max: float = 0.5,
-        max_depth: int = 4,
-        g_threshold: float = 0.0001,
+def proton_transfer_detection_cli(
+    input_traj: str,
+    out_dir: str,
+    cell: List[float],
+    acceptor_elements: List[str],
+    initial_donors: List[int],
+    core_num: int = 4,
+    dt: float = 0.0005,
+    r_a: float = 4.0,
+    r_h: float = 1.3,
+    rho_0: float = 1 / 2.2,
+    rho_max: float = 0.5,
+    max_depth: int = 4,
+    g_threshold: float = 0.0001,
 ):
+    """
+    cli entry for proton transfer detection
+    """
+    # setup universe from trajectory
+    universe = Universe(input_traj)
+    universe.trajectory.ts.dt = dt
+    universe.dimensions = np.array(cell)
+
+    proton_transfer_detection(
+        universe,
+        out_dir,
+        acceptor_elements,
+        initial_donors,
+        core_num,
+        r_a,
+        r_h,
+        rho_0,
+        rho_max,
+        max_depth,
+        g_threshold,
+    )
+
+
+def proton_transfer_detection(
+    universe: Universe,
+    out_dir: str,
+    acceptor_elements: List[str],
+    initial_donors: Union[List[int], np.ndarray],
+    core_num: int = 4,
+    r_a: float = 4.0,
+    r_h: float = 1.3,
+    rho_0: float = 1 / 2.2,
+    rho_max: float = 0.5,
+    max_depth: int = 4,
+    g_threshold: float = 0.0001,
+):
+    assert universe.dimensions is not None, "Universe dimensions is None"
+
     os.makedirs(out_dir, exist_ok=True)
-    u = Universe(input_traj)
-    u.trajectory.ts.dt = dt
-    u.dimensions = np.array(cell)
 
     sys_info = SystemInfo(
         initial_donor=-1,
-        u=u,
-        cell=cell,
-        acceptor_elements=acceptor_elements)
+        u=universe,
+        cell=universe.dimensions,
+        acceptor_elements=acceptor_elements,
+    )
 
     parameter = AlgorithmParameter(
         r_a=r_a,
@@ -188,7 +224,8 @@ def proton_transfer_detection(
         rho_0=rho_0,
         rho_max=rho_max,
         max_depth=max_depth,
-        g_threshold=g_threshold)
+        g_threshold=g_threshold,
+    )
 
     system = System(
         sys_info,
@@ -238,7 +275,6 @@ def analysis_transfer_paths(analysis_result: str, initial_donor: int):
                 print(content)
         if proton:
             writer.write((json.dumps((proton, i+1)) + '\n').encode('utf-8'))
-
 
 
 def calculate_distances(analysis_result: str, input_traj: str, upper_index: List[int], lower_index: List[int], initial_donor: int, interval: int = 1):
@@ -336,7 +372,7 @@ def detect_type_change(analysis_result: str, atom_types: dict, donors: list):
 
 
 cli_entry = {
-    'analyze': proton_transfer_detection,
+    'analyze': proton_transfer_detection_cli,
     'visualize': visualize_transfer,
     'show-transfer-paths': analysis_transfer_paths,
     'show-type-change': detect_type_change,

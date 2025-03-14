@@ -156,7 +156,7 @@ class System(object):
         writer.flush()
 
 
-def proton_transfer_detection(
+def proton_transfer_detection_cli(
     input_traj: str,
     out_dir: str,
     cell: List[float],
@@ -179,7 +179,7 @@ def proton_transfer_detection(
     universe.trajectory.ts.dt = dt
     universe.dimensions = np.array(cell)
 
-    proton_transfer_detection_lower(
+    proton_transfer_detection(
         universe,
         out_dir,
         acceptor_elements,
@@ -194,7 +194,7 @@ def proton_transfer_detection(
     )
 
 
-def proton_transfer_detection_lower(
+def proton_transfer_detection(
     universe: Universe,
     out_dir: str,
     acceptor_elements: List[str],
@@ -372,7 +372,7 @@ def detect_type_change(analysis_result: str, atom_types: dict, donors: list):
 
 
 cli_entry = {
-    'analyze': proton_transfer_detection,
+    'analyze': proton_transfer_detection_cli,
     'visualize': visualize_transfer,
     'show-transfer-paths': analysis_transfer_paths,
     'show-type-change': detect_type_change,

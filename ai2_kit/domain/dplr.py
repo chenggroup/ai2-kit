@@ -169,10 +169,7 @@ def get_atomic_dipole(
     else:
         full_wannier_spread = None
 
-    if "atomic_weight" in dp_sys.data:
-        export_atomic_weight = True
-    else:
-        export_atomic_weight = False
+    export_atomic_weight = "atomic_weight" in dp_sys.data
 
     ref_coords = coords[sel_ids].reshape(-1, 3)
     e_coords = wannier_atoms.get_positions()
@@ -186,12 +183,11 @@ def get_atomic_dipole(
         mask = dist_vec < wannier_cutoff
         cn = np.sum(mask)
         if cn != cns_ref[ii]:
-            if export_atomic_weight:
-                dp_sys.data["atomic_weight"][0, sel_ids[ii], 0] = 0
-            else:
+            if not export_atomic_weight:
                 raise ValueError(
                     f"wannier atoms {ii} has {cn} atoms in the cutoff range"
                 )
+            dp_sys.data["atomic_weight"][0, sel_ids[ii], 0] = 0
         mlwc_ids.append(np.where(mask)[0])
         wc_coord_rel = e_coords[mask] - ref_coords[ii]
         if full_wannier_spread is not None:
@@ -376,7 +372,7 @@ def dplr_v2_to_v3(data_path: str, sel_symbol: list):
                 raw_data = np.reshape(raw_data, [n_frames, len(sel_ids), -1])
             except ValueError:
                 raw_data.reshape([n_frames, n_atoms, -1])
-                print("Already in v3 format: ", fname)
+                logger.info(f"Already in v3 format: %s" % fname)
                 continue
             n_dim = raw_data.shape[2]
 
@@ -415,6 +411,6 @@ def dplr_v3_to_v2(data_path: str, sel_symbol: list):
                 raw_data_reshape = raw_data.reshape([n_frames, n_atoms, -1])
             except ValueError:
                 raw_data.reshape([n_frames, len(sel_ids), -1])
-                print("Already in v2 format: ", fname)
+                logger.info(f"Already in v2 format: %s" % fname)
                 continue
             np.save(fname, raw_data_reshape[:, sel_ids].reshape([n_frames, -1]))

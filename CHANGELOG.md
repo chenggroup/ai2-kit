@@ -1,4 +1,18 @@
 # Change Logs
+
+## v0.24.3
+* upgrade fire-rpc to 0.1.3
+
+## v0.24.2
+* fix: the return data should be extxyz format
+
+## v0.24.1
+* feat: refine nmr predict command line
+
+## v0.24.0
+* feat: allow to run ai2-kit as an rpc server
+* refine: command line options of nmrnet predict
+
 ## v0.23.6
 * refactor slice implementation
 

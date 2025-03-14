@@ -3,6 +3,7 @@ from ruamel.yaml import YAML, ScalarNode, SequenceNode
 from itertools import zip_longest
 from pathlib import Path
 
+import numpy as np
 import shortuuid
 import asyncio
 import hashlib
@@ -22,6 +23,20 @@ logger = get_logger(__name__)
 EMPTY = object()
 
 SAMPLE_METHOD = Literal['even', 'random', 'truncate']
+
+
+def json_dumps(obj):
+    return json.dumps(obj, default=_json_dumps_default)
+
+
+def _json_dumps_default(obj):
+    if type(obj).__module__ == np.__name__:
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return obj.item()
+    raise TypeError('Unknown type:', type(obj))
+
 
 def load_json(path: Union[Path, str], encoding: str = 'utf-8'):
     if isinstance(path, str):
@@ -415,3 +430,24 @@ def num_text_split(s):
 
 def nat_sort(l):
     return sorted(l, key=num_text_split)
+
+
+def resolve_path(path: str) -> str:
+    """
+    Resolve path by expanding wildcard and environment variables
+
+    :param path: path with wildcard and environment variables
+    :return: resolved path
+    """
+    # expand wildcard
+    paths = glob.glob(path)
+    if len(paths) > 1:
+        raise ValueError(f'Wildcard expansion should result in only one path, got {paths}')
+    elif not paths:
+        raise FileNotFoundError(f'No file found for {path}')
+    path = paths[0]
+    # expand user home
+    path = os.path.expanduser(path)
+    # expand environment variables
+    path = os.path.expandvars(path)
+    return path

@@ -12,8 +12,8 @@ A toolkit featured _**a**rtificial **i**ntelligence × **a**b **i**nitio_ for co
 
 ## Feature Highlights
 * Collection of tools to facilitate the development of automated workflows for computational chemistry research.
-* Utilities to execute and manage jobs in local or remote HPC job scheduler.
-* Utilities to simplified automated workflows development with reusable components. 
+* Use with [oh-my-batch](https://github.com/link89/oh-my-batch) to build your own workflow with shell script.
+
 
 ## Installation
 
@@ -31,13 +31,11 @@ If you want to run `ai2-kit` from source, you can run the following commands in 
 
 ```bash
 pip install poetry
-# If you meet ConnectionError:
+# If you meet ConnectionError, you can try to set the max-workers to a smaller number, e.g
 # poetry config installer.max-workers 4
 poetry install
-
-./ai2-kit --help
+poetry run ai2-kit
 ```
-Note that instead of running global `ai2-kit` command, you should run `./ai2-kit` to run the command from source on Linux/MacOS or `.\ai2-kit.ps1` on Windows.
 
 ## Manuals
 ### Featuring Tools
@@ -50,6 +48,7 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 ### Domain Specific Tools
 * [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
 * [Amorphous Oxides Structure Analysis Toolkit](doc/manual/aos-analysis.md)
+* [Reweighting Toolkit](doc/manual/reweighting.md)
 
 ### General Tools
 * [Tips](doc/manual/tips.md): useful tips for using `ai2-kit`
@@ -60,10 +59,6 @@ Note that instead of running global `ai2-kit` command, you should run `./ai2-kit
 
 ### Notebooks
 * [ai2cat](notebook/ai2cat.ipynb)
-
-### Miscellaneous
-* [HPC Executor Introduction](doc/manual//hpc-executor.md) ([zh](doc/manual/hpc-executor.zh.md)): a simple HPC executor for job submission and management
-* [Checkpoint Mechanism](doc/manual/checkpoint.md)
 
 
 ## Acknowledgement

@@ -20,6 +20,7 @@ Note that we need to ensure the frames in the COLVAR file are aligned with the t
 
 
 ```bash
+# MUST use same random seed to ensure alignment
 ai2-kit tool frame read traj.lammpstrj --rp 'TIMESTEP' - slice 100000: - sample 2000 --method random --seed 10 - write 2000.lammpstrj 
 ai2-kit tool ase read 2000.lammpstrj --specorder [Ag,O] - to_dpdata - write 2000-dpdata
 
@@ -46,9 +47,11 @@ Note that we use `--nolabel` to ignore label in the dpdata file.
 Now that we have all the data we need, we can calculate the reweighting FES.
 
 ```bash
- ai2-kit algorithm reweighting load_energy 2000-baseline/**/energy.npy --tag baseline  - load_energy 2000-target/**/energy.npy --tag target \
-   - load_colvar 2000-COLVAR \
-   - reweighting --cv d1 --bias opes.bias --temp 800 --save_fig_to fes.png --save_json_to result.json
+ ai2-kit algorithm reweighting \
+   load_energy 2000-baseline/**/energy.npy --tag baseline - \
+   load_energy 2000-target/**/energy.npy   --tag target - \
+   load_colvar 2000-COLVAR - \
+   reweighting --cv d1 --bias opes.bias --temp 800 --save_fig_to fes.png --save_json_to result.json
 ```
 
 The above command will calculate the reweighting FES and save the FES to `fes.png` and reweighting result to `result.json`.

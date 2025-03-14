@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.24.4
+* refine proton transfer Python API
+* refine dplr data util
+
 ## v0.24.3
 * upgrade fire-rpc to 0.1.3
 

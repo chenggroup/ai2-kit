@@ -1,4 +1,34 @@
 # Change Logs
+## v0.23.6
+* refactor slice implementation
+
+## v0.23.5
+* improvement: options to slice traj in model_devi
+
+## v0.23.4
+* fix: inplace should support ignore_error
+
+## v0.23.3
+* fix: model_devi read file
+
+## v0.23.2
+* improvement: options to ignore model_devi error
+
+## v0.23.1
+* fix: add model_devi tool to entry point
+
+## v0.23.0
+* breaking: modify model deviation tool
+
+## v0.22.8
+* fix: ignore error data in dpdata read
+
+## v0.22.7
+* fix: ignore error data in dpdata read
+
+## v0.22.6
+* fix: filter in model deviation tool
+* fix: dplr in ase tool
 
 ## v0.22.5
 * fix: make viber adapted for dp v3

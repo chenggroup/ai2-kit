@@ -1,5 +1,11 @@
 from fire import Fire
 
+import logging
+import os
+
+
+logger = logging.getLogger(__name__)
+
 
 class Group:
     def __init__(self, items: dict, doc: str = '') -> None:
@@ -65,6 +71,11 @@ class ToolGroup:
         return DpdataTool
 
     @property
+    def model_devi(self):
+        from ai2_kit.tool.model_devi import ModelDevi
+        return ModelDevi
+
+    @property
     def yaml(self):
         from ai2_kit.tool.yaml import Yaml
         return Yaml
@@ -115,7 +126,21 @@ class FeatureGroup:
         Spectrum specific tools.
         """
         from ai2_kit.feat.spectrum import CmdEntries
-        return CmdEntries()
+        return CmdEntries
+
+    @property
+    def nmrnet(self):
+        """
+        NMRNet specific tools.
+        """
+        try:
+            from ai2_kit.algorithm.uninmr import CmdEntries
+        except ImportError:
+            logging.info('In order to use nmrnet, you need to ensure the following packages are installed: ')
+            logging.info('"rdkit", "scipy" and "unicore"')
+            raise
+        return CmdEntries
+
 
 ai2_kit = Group({
     'workflow': WorkflowGroup(),
@@ -127,6 +152,10 @@ ai2_kit = Group({
 
 
 def main():
+    level_name = os.environ.get('LOG_LEVEL', 'INFO')
+    level = logging._nameToLevel.get(level_name, logging.INFO)
+    logging.basicConfig(format='%(asctime)s %(name)s: %(message)s', level=level)
+    logging.getLogger('transitions.core').setLevel(logging.WARNING)
     Fire(ai2_kit)
 
 

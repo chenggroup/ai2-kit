@@ -4,7 +4,7 @@
 ai2-kit feat nmrnet predict --help
 ```
 
-[Source code](../../ai2_kit/algorithm/uninmr)
+[src](../../ai2_kit/algorithm/uninmr) | [Source code of original paper](https://github.com/Colin-Jay/NMRNet)
 
 ## Install extra packages
 

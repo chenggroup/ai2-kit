@@ -5,6 +5,7 @@ from ai2_kit.domain.cp2k import dump_coord_n_cell
 from typing import List, Union, Optional
 from ase import Atoms
 import ase.io
+import random
 
 
 logger = get_logger(__name__)
@@ -73,6 +74,17 @@ class AseTool:
         """
         s = slice_from_str(expr)
         self._atoms_arr = self._atoms_arr[s]
+        return self
+
+    def shuffle(self, seed=None):
+        """
+        shuffle data
+
+        :param seed: seed for random shuffle
+        """
+        if seed is not None:
+            random.seed(seed)
+        random.shuffle(self._atoms_arr)
         return self
 
     def sample(self, size: int, method: SAMPLE_METHOD='even', **kwargs):

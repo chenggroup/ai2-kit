@@ -104,26 +104,47 @@ class AseTool:
                 del atoms[i - start_id]
         return self
 
-    def write(self, filename: str, **kwargs):
+    def write(self, filename: str, slice=None, chain=False, **kwargs):
+        """
+        write atoms to file
+        :param filename: the filename to write
+        :param slice: slice expression to select data
+        :param chain: if True, return self, useful for chain operation
+        :param kwargs: other arguments for ase.io.write
+        """
+        atoms_arr = self._atoms_arr
+        if slice is not None:
+            atoms_arr = atoms_arr[slice_from_str(slice)]
+
         ensure_dir(filename.format(i=0))
-        self._write(filename, self._atoms_arr, **kwargs)
+        self._write(filename, atoms_arr, **kwargs)
+        if chain:
+            return self
+
+    def write_frames(self, filename: str, slice=None, chain=False, **kwargs):
+        """
+        write each frame to a separate file, useful to write to format only support single frame, POSCAR for example
+
+        :param filename: the filename template, use {i} to represent the index, for example, 'frame_{i}.xyz'
+        :param slice: slice expression to select data
+        :param chain: if True, return self, useful for chain operation
+        :param kwargs: other arguments for ase.io.write
+        """
+        atoms_arr = self._atoms_arr
+        if slice is not None:
+            atoms_arr = atoms_arr[slice_from_str(slice)]
+
+        for i, atoms in enumerate(atoms_arr):
+            _filename = filename.format(i=i)
+            ensure_dir(_filename)
+            self._write(_filename, atoms, **kwargs)
+        if chain:
+            return self
 
     @property
     def write_each_frame(self):
         logger.warning('write_each_frame has been deprecated, use write_frames instead')
         return self.write_frames
-
-    def write_frames(self, filename: str, **kwargs):
-        """
-        write each frame to a separate file, useful to write to format only support single frame, POSCAR for example
-
-        :param filename: the filename template, use {i} to represent the index, for example, 'frame_{i}.xyz'
-        :param kwargs: other arguments for ase.io.write
-        """
-        for i, atoms in enumerate(self._atoms_arr):
-            _filename = filename.format(i=i)
-            ensure_dir(_filename)
-            self._write(_filename, atoms, **kwargs)
 
     def write_dplr_lammps_data(self, filename: str,
                                type_map: List[str], sel_type: List[int],
@@ -177,7 +198,8 @@ class AseTool:
         if fmt == 'cp2k-inc' or (fmt is None and filename.endswith('.inc')):
             if not isinstance(atoms_list, list):
                 atoms_list = [atoms_list]
-            assert len(atoms_list) == 1, 'cp2k-inc only support single frame'
+            if len(atoms_list) != 1:
+                raise ValueError('cp2k-inc only support single frame')
             return self._write_cp2k_inc(filename, atoms_list[0])
         return ase.io.write(filename, atoms_list, **kwargs)
 

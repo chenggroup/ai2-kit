@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.25.0
+* ase tool write support slice and chain option
+* refine slice implementation in model_devi tool
+
 ## v0.24.4
 * refine proton transfer Python API
 * refine dplr data util

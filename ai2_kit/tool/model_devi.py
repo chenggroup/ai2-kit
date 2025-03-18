@@ -24,7 +24,6 @@ class ModelDevi:
     def __init__(self):
         self._items:List[dict] = []
         self._stats = {}
-        self._slice = None
 
     def read(self, *dir_or_glob: str, traj_file: str, md_file='model_devi.out', ignore_error=False, **kwargs):
         """
@@ -101,7 +100,16 @@ class ModelDevi:
 
         :param expr: the expression to slice the atoms, e.g. '0:10'
         """
-        self._slice = slice_from_str(expr)
+        _slice = slice_from_str(expr)
+        for item in self._items:
+            item['md_df'] = item['md_df'].iloc[_slice]
+            item['atoms'] = item['atoms'][_slice]
+            if 'good' in item:
+                item['good'] = item['good'].iloc[_slice]
+            if 'decent' in item:
+                item['decent'] = item['decent'].iloc[_slice]
+            if 'poor' in item:
+                item['poor'] = item['poor'].iloc[_slice]
         return self
 
     def dump_stats(self, out_file: str = '', fmt='tsv'):
@@ -149,8 +157,6 @@ class ModelDevi:
             out_file = os.path.join(data_dir, file_path)
             atoms = item['atoms']
             sel = item[level]
-            if self._slice is not None:
-                sel = sel[self._slice]
             atoms = [atoms[i] for i in sel.index[sel]]
             if inplace:
                 try: # write in place

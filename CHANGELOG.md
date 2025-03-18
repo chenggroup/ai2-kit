@@ -1,4 +1,9 @@
 # Change Logs
+## v0.25.2
+* fix code base status
+
+## v0.25.1
+* fix resolve conflict
 
 ## v0.25.0
 * ase tool write support slice and chain option

@@ -1,4 +1,7 @@
 # Change Logs
+## v0.25.3
+* ase tool implement shuffle method
+
 ## v0.25.2
 * fix code base status
 

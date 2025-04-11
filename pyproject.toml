@@ -24,13 +24,14 @@ mdanalysis = "^2.4.3"
 allpairspy = "^2.5.0"
 tabulate = "^0.9.0"
 joblib = "^1.2.0"
+scipy = "^1.13.0"
+psutil = "^5.9.8"
+numpy = "1.24.3"
 
 asaplib = {version = "^0.0.2", optional = true}
 dscribe = {version = "1.2.2", optional = true}
 jupyter-formily = {version = "0.0.7", optional = true}
 ipympl = {version = "^0.9.3", optional = true}
-scipy = "^1.13.0"
-psutil = "^5.9.8"
 
 netcdf4 = "^1.7.1.post1"
 scikit-learn = "^1.6.1"

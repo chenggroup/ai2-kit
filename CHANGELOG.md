@@ -1,4 +1,8 @@
 # Change Logs
+
+## v0.25.4
+* freeze numpy version to 1.24.3
+
 ## v0.25.3
 * ase tool implement shuffle method
 

@@ -1,5 +1,8 @@
 # Change Logs
 
+## v1.0.0
+* release version 1.0.0
+
 ## v0.25.4
 * freeze numpy version to 1.24.3
 

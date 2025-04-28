@@ -1,5 +1,9 @@
 # Change Logs
 
+## v1.0.1
+* fix slice method in model_devi
+
+
 ## v1.0.0
 * release version 1.0.0
 

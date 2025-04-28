@@ -103,7 +103,7 @@ class ModelDevi:
         _slice = slice_from_str(expr)
         for item in self._items:
             item['md_df'] = item['md_df'].iloc[_slice]
-            item['atoms'] = item['atoms'][_slice]
+            # item['atoms'] = item['atoms'][_slice]
             if 'good' in item:
                 item['good'] = item['good'].iloc[_slice]
             if 'decent' in item:
@@ -157,7 +157,7 @@ class ModelDevi:
             out_file = os.path.join(data_dir, file_path)
             atoms = item['atoms']
             sel = item[level]
-            atoms = [atoms[i] for i in sel.index[sel]]
+            atoms = [atoms[i] for i in sel.index]
             if inplace:
                 try: # write in place
                     ase.io.write(out_file, atoms, **kwargs)

@@ -157,7 +157,7 @@ class ModelDevi:
             out_file = os.path.join(data_dir, file_path)
             atoms = item['atoms']
             sel = item[level]
-            atoms = [atoms[i] for i in sel.index]
+            atoms = [atoms[i] for i in sel.index[sel]]
             if inplace:
                 try: # write in place
                     ase.io.write(out_file, atoms, **kwargs)

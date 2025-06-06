@@ -54,7 +54,6 @@ def compute_and_save_ir_spectrum(
     plt.title("IR spectra")
     if save_plot is not None:
         plt.savefig(save_plot, dpi=300, facecolor='white', bbox_inches='tight')
-        plt.show()
     if save_data is not None:
         np.savetxt(save_data, ir)
     return ir
@@ -114,7 +113,6 @@ def compute_and_save_raman_spectra(
     plt.title("Raman spectra (iso)")
     if save_plots is not None and len(save_plots) > 0 and save_plots[0]:
         plt.savefig(save_plots[0], dpi=300, facecolor='white', bbox_inches='tight')
-        plt.show()
     plt.close()
     if save_datas is not None and len(save_datas) > 0 and save_datas[0]:
         np.savetxt(save_datas[0], raman_iso)
@@ -129,7 +127,6 @@ def compute_and_save_raman_spectra(
     plt.title("Raman spectra (aniso)")
     if save_plots is not None and len(save_plots) > 1 and save_plots[1]:
         plt.savefig(save_plots[1], dpi=300, facecolor='white', bbox_inches='tight')
-        plt.show()
     plt.close()
     if save_datas is not None and len(save_datas) > 1 and save_datas[1]:
         np.savetxt(save_datas[1], raman_aniso)
@@ -144,7 +141,6 @@ def compute_and_save_raman_spectra(
     plt.title("Low-frequency Raman spectra (aniso)")
     if save_plots is not None and len(save_plots) > 2 and save_plots[2]:
         plt.savefig(save_plots[2], dpi=300, facecolor='white', bbox_inches='tight')
-        plt.show()
     plt.close()
     if save_datas is not None and len(save_datas) > 2 and save_datas[2]:
         np.savetxt(save_datas[2], raman_aniso_low)
@@ -363,7 +359,6 @@ def compute_surface_ir_spectra(
         plt.legend()
         plt.title("IR spectra")
         plt.savefig(save_plot, dpi=300, facecolor='white', bbox_inches='tight')
-        plt.show()
         plt.close()
 
     if save_data is not None:
@@ -474,7 +469,6 @@ def compute_and_save_surface_raman(
     plt.title("Raman spectra (iso)")
     if save_plots is not None and len(save_plots) > 0 and save_plots[0]:
         plt.savefig(save_plots[0], dpi=300, facecolor='white', bbox_inches='tight')
-        plt.show()
     plt.close()
     if save_datas is not None and len(save_datas) > 0 and save_datas[0]:
         np.savetxt(
@@ -505,7 +499,6 @@ def compute_and_save_surface_raman(
     plt.title("Raman spectra (aniso)")
     if save_plots is not None and len(save_plots) > 1 and save_plots[1]:
         plt.savefig(save_plots[1], dpi=300, facecolor='white', bbox_inches='tight')
-        plt.show()
     plt.close()
     if save_datas is not None and len(save_datas) > 1 and save_datas[1]:
         np.savetxt(
@@ -535,7 +528,6 @@ def compute_and_save_surface_raman(
     plt.title("Low-frequency Raman spectra (aniso)")
     if save_plots is not None and len(save_plots) > 2 and save_plots[2]:
         plt.savefig(save_plots[2], dpi=300, facecolor='white', bbox_inches='tight')
-        plt.show()
     plt.close()
     if save_datas is not None and len(save_datas) > 2 and save_datas[2]:
         np.savetxt(
@@ -628,7 +620,6 @@ def compute_surface_sfg(
         plt.legend()
         plt.title("SFG in xxz and yyz")
         plt.savefig(save_plot, dpi=100, facecolor='white', bbox_inches='tight')
-        plt.show()
         plt.close()
 
     if save_data is not None:

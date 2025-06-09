@@ -9,7 +9,7 @@ from .function_ft import calculate_ir, calculate_raman, calculate_sfg
 from .function_prepare import find_h2o, do_pbc, calculate_dipole, k_nearest
 
 
-def compute_and_save_ir_spectrum(
+def compute_ir_spectrum(
     atomic_dipole: np.ndarray,
     dt: float = 0.0005,
     window: int = 50000,
@@ -59,7 +59,7 @@ def compute_and_save_ir_spectrum(
     return ir
 
 
-def compute_and_save_raman_spectra(
+def compute_raman_spectra(
     atomic_polar: np.ndarray,
     dt: float = 0.0005,
     window: int = 50000,
@@ -148,7 +148,7 @@ def compute_and_save_raman_spectra(
     return raman_iso, raman_aniso, raman_aniso_low
 
 
-def compute_and_save_atomic_dipole(
+def compute_atomic_dipole(
     traj: "dpdata.System",
     wannier: np.ndarray,
     type_O: int = 1,
@@ -377,7 +377,7 @@ def compute_surface_ir_spectra(
     return (ir_range1_xy, ir_range2_xy, ir_range3_xy, ir_range1_z, ir_range2_z, ir_range3_z)
 
 
-def compute_and_save_surface_raman(
+def compute_surface_raman(
     h2o: np.ndarray,
     atomic_polar: np.ndarray,
     dt: float = 0.0005,

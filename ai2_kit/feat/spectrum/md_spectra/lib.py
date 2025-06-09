@@ -9,7 +9,7 @@ from .function_ft import calculate_ir, calculate_raman, calculate_sfg
 from .function_prepare import find_h2o, do_pbc, calculate_dipole, k_nearest
 
 
-def compute_ir_spectrum(
+def compute_ir_spectrum_h2o(
     atomic_dipole: np.ndarray,
     dt: float = 0.0005,
     window: int = 50000,
@@ -59,7 +59,7 @@ def compute_ir_spectrum(
     return ir
 
 
-def compute_raman_spectra(
+def compute_raman_spectra_h2o(
     atomic_polar: np.ndarray,
     dt: float = 0.0005,
     window: int = 50000,
@@ -148,7 +148,7 @@ def compute_raman_spectra(
     return raman_iso, raman_aniso, raman_aniso_low
 
 
-def compute_atomic_dipole(
+def compute_atomic_dipole_h2o(
     traj: "dpdata.System",
     wannier: np.ndarray,
     type_O: int = 1,
@@ -211,7 +211,7 @@ def compute_atomic_dipole(
     return h2o, atomic_dipole
 
 
-def extract_atomic_polar_from_traj(
+def extract_atomic_polar_from_traj_h2o(
     traj: dpdata.System,
     polar: np.ndarray,
     type_O: int = 1,
@@ -262,7 +262,7 @@ def extract_atomic_polar_from_traj(
     return atomic_polar
 
 
-def compute_surface_ir_spectra(
+def compute_surface_ir_spectra_h2o(
     h2o: np.ndarray,
     atomic_dipole: np.ndarray,
     dt: float = 0.0005,
@@ -377,7 +377,7 @@ def compute_surface_ir_spectra(
     return (ir_range1_xy, ir_range2_xy, ir_range3_xy, ir_range1_z, ir_range2_z, ir_range3_z)
 
 
-def compute_surface_raman(
+def compute_surface_raman_h2o(
     h2o: np.ndarray,
     atomic_polar: np.ndarray,
     dt: float = 0.0005,
@@ -547,7 +547,7 @@ def compute_surface_raman(
     )
 
 
-def compute_surface_sfg(
+def compute_surface_sfg_h2o(
     h2o: np.ndarray,
     atomic_dipole: np.ndarray,
     atomic_polar: np.ndarray,
@@ -631,7 +631,7 @@ def compute_surface_sfg(
 from ase import Atoms
 from typing import List, Dict
 
-def set_cells(stc_list: List[Atoms], cell: List[float]):
+def set_cells_h2o(stc_list: List[Atoms], cell: List[float]):
     """
     write the length and pbc conditions of box
 
@@ -653,7 +653,7 @@ def set_cells(stc_list: List[Atoms], cell: List[float]):
     return stc_list
 
 
-def get_lumped_wacent_poses_rel(
+def get_lumped_wacent_poses_rel_h2o(
     stc: Atoms,
     elem_symbol: str,
     cutoff: float = 1.0,
@@ -708,7 +708,7 @@ def get_lumped_wacent_poses_rel(
     return lumped_wacent_poses_rel
 
 
-def set_lumped_wfc(stc_list: List[Atoms], lumped_dict: Dict[str, int]):
+def set_lumped_wfc_h2o(stc_list: List[Atoms], lumped_dict: Dict[str, int]):
     """
     use get_lumped_wacent_poses_rel function every frame and return the coordinates file of wannier centroids in npy form
 
@@ -727,7 +727,7 @@ def set_lumped_wfc(stc_list: List[Atoms], lumped_dict: Dict[str, int]):
     X_pos = []
     for stc in stc_list:
         for elem_symbol, expected_cn in lumped_dict.items():
-            lumped_wacent_poses_rel = get_lumped_wacent_poses_rel(stc=stc, elem_symbol=elem_symbol, cutoff = 1.0, expected_cn=expected_cn)
+            lumped_wacent_poses_rel = get_lumped_wacent_poses_rel_h2o(stc=stc, elem_symbol=elem_symbol, cutoff = 1.0, expected_cn=expected_cn)
             elem_pos = stc.get_positions()[stc.symbols==elem_symbol]
             X_pos.append(elem_pos + lumped_wacent_poses_rel)
 

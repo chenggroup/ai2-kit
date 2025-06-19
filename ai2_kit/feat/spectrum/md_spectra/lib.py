@@ -250,11 +250,7 @@ def extract_atomic_polar_from_traj_h2o(
     coords_H = coords[:, types == type_H, :]
     h2o_mask = find_h2o(coords_O[0], coords_H[0], cells[0], r_bond=r_bond)
 
-    if polar.ndim == 4:
-        atomic_polar = -polar[:, h2o_mask, :, :]
-    else:
-        n_frames = coords.shape[0]
-        atomic_polar = -polar.reshape(n_frames, -1, 3, 3)[:, h2o_mask, :, :]
+    atomic_polar = polar[:, h2o_mask, :, :]
 
     if save_data is not None:
         np.save(save_data, atomic_polar)

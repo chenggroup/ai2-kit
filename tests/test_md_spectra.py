@@ -15,7 +15,8 @@ import dpdata  # noqa: E402
 
 from ai2_kit.feat.spectrum import md_spectra  # noqa: E402
 
-data_dir = Path(__file__).parent / "data-sample"
+input_dir = Path(__file__).parent / "data-sample" / "md_spectra_input"
+output_dir = Path(__file__).parent / "data-sample" / "md_spectra_output"
 
 
 class TestMdSpectra(unittest.TestCase):
@@ -41,8 +42,8 @@ class TestMdSpectra(unittest.TestCase):
 
     def test_extract_atomic_polar_from_traj_h2o(self):
         # corresponds to file cal_polar_wan.py
-        traj = dpdata.System(data_dir / "md_spectra_input/traj", fmt="deepmd/npy")
-        polar: np.ndarray = np.load(data_dir / "md_spectra_input/wannier_polar.npy")
+        traj = dpdata.System(input_dir / "traj", fmt="deepmd/npy")
+        polar: np.ndarray = np.load(input_dir / "wannier_polar.npy")
         polar = -polar.reshape(polar.shape[0], -1, 3, 3)
 
         atomic_polar = md_spectra.extract_atomic_polar_from_traj_h2o(
@@ -51,11 +52,11 @@ class TestMdSpectra(unittest.TestCase):
             type_O=0,
             type_H=1,
             r_bond=1.3,
-            save_data=data_dir / "md_spectra_output" / "atomic_polar_wan_out.npy",
+            save_data=output_dir / "atomic_polar_wan_out.npy",
         )
         assert self._is_files_identical(
-            data_dir / "md_spectra_output" / "atomic_polar_wan_out.npy",
-            data_dir / "md_spectra_output" / "atomic_polar_wan.npy",
+            output_dir / "atomic_polar_wan_out.npy",
+            output_dir / "atomic_polar_wan.npy",
         )
 
 

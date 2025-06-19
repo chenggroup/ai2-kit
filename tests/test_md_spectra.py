@@ -35,7 +35,7 @@ class TestMdSpectra(unittest.TestCase):
                     if block1 != block2:
                         return False
 
-        except (OSError, ValueError) as e:
+        except OSError as e:
             print(f"File Error: {e}")
             return False
 

@@ -624,8 +624,8 @@ def compute_surface_sfg_h2o(
     return sfg
 
 
-from ase import Atoms
-from typing import List, Dict
+from ase import Atoms  # noqa: E402
+from typing import List, Dict  # noqa: E402
 
 def set_cells_h2o(stc_list: List[Atoms], cell: List[float]):
     """

@@ -15,7 +15,7 @@ import dpdata  # noqa: E402
 
 from ai2_kit.feat.spectrum import md_spectra  # noqa: E402
 
-input_dir = Path(__file__).parent / "data-sample" / "md_spectra_input"
+sample_dir = Path(__file__).parent / "data-sample" / "md_spectra_sample"
 output_dir = Path(__file__).parent / "data-sample" / "md_spectra_output"
 
 
@@ -42,21 +42,44 @@ class TestMdSpectra(unittest.TestCase):
 
     def test_extract_atomic_polar_from_traj_h2o(self):
         # corresponds to file cal_polar_wan.py
-        traj = dpdata.System(input_dir / "traj", fmt="deepmd/npy")
-        polar: np.ndarray = np.load(input_dir / "wannier_polar.npy")
+        traj = dpdata.System(sample_dir / "traj", fmt="deepmd/npy")
+        polar: np.ndarray = np.load(sample_dir / "wannier_polar.npy")
         polar = -polar.reshape(polar.shape[0], -1, 3, 3)
 
-        atomic_polar = md_spectra.extract_atomic_polar_from_traj_h2o(
+        md_spectra.extract_atomic_polar_from_traj_h2o(
             traj=traj,
             polar=polar,
             type_O=0,
             type_H=1,
             r_bond=1.3,
-            save_data=output_dir / "atomic_polar_wan_out.npy",
+            save_data=output_dir / "atomic_polar_wan.npy",
         )
         assert self._is_files_identical(
-            output_dir / "atomic_polar_wan_out.npy",
+            sample_dir / "atomic_polar_wan.npy",
             output_dir / "atomic_polar_wan.npy",
+        )
+
+    def test_compute_atomic_dipole_h2o(self):
+        a0 = 0.52917721067
+        traj = dpdata.System(sample_dir / "traj", fmt="deepmd/npy")
+        wannier: np.ndarray = np.load(sample_dir / "wannier_dipole.npy")
+        wannier = wannier.reshape(traj.get_nframes(), -1, 3)
+        md_spectra.compute_atomic_dipole_h2o(
+            traj=traj,
+            wannier=wannier,
+            type_O=0,
+            type_H=1,
+            r_bond=1.3,
+            a0=a0,
+            save_datas=[output_dir / "h2o.npy", output_dir / "atomic_dipole_wan.npy"],
+        )
+        assert self._is_files_identical(
+            sample_dir / "h2o.npy",
+            output_dir / "h2o.npy",
+        )
+        assert self._is_files_identical(
+            sample_dir / "atomic_dipole_wan.npy",
+            output_dir / "atomic_dipole_wan.npy",
         )
 
 

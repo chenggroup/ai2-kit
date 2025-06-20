@@ -83,6 +83,48 @@ class TestMdSpectra(unittest.TestCase):
             output_dir / "atomic_dipole_wan.npy",
         )
 
+    def test_compute_surface_ir_spectra_h2o(self):
+        # corresponds to file cal_sur_ir.py
+        dt = 0.0005
+        window = 50000
+
+        h2o = np.load(sample_dir / "h2o.npy")
+        atomic_dipole = np.load(sample_dir / "atomic_dipole_wan.npy")
+        atomic_dipole = atomic_dipole.reshape(atomic_dipole.shape[0], -1, 3)
+
+        md_spectra.compute_surface_ir_spectra_h2o(
+            h2o=h2o,
+            atomic_dipole=atomic_dipole,
+            dt=dt,
+            window=window,
+            z1_min=16.0,
+            z1_max=17.4,
+            z2_min=20.0,
+            z2_max=25.0,
+            z3_min=27.6,
+            z3_max=29.0,
+            z_total_min=16.0,
+            z_total_max=29.0,
+            z_bin=0.4,
+            width=25,
+            temperature=330.0,
+            save_plot=output_dir / "ir_sp.png",
+            save_data=output_dir / "ir_sp.dat",
+        )
+
+        sample_data = np.loadtxt(sample_dir / "ir_sp.dat")
+        output_data = np.loadtxt(output_dir / "ir_sp.dat")
+
+        assert np.allclose(sample_data, output_data, atol=1.0e-5)
+
 
 if __name__ == "__main__":
     unittest.main()
+
+    # def test_specific(test_name: str):
+    #     suite = unittest.TestSuite()
+    #     suite.addTest(TestMdSpectra(test_name))
+    #     runner = unittest.TextTestRunner()
+    #     runner.run(suite)
+
+    # test_specific("test_extract_atomic_polar_from_traj_h2o")

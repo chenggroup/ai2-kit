@@ -361,13 +361,13 @@ def compute_surface_ir_spectra_h2o(
         # Save columns: wavenumber, surface_xy, bulk_xy, surface_z, bulk_z
         np.savetxt(
             save_data,
-            np.column_stack([
+            np.column_stack((
                 ir_range1_xy[:, 0],
                 s_surface_xy,
                 ir_range2_xy[:, 1],
                 s_surface_z,
                 ir_range2_z[:, 1]
-            ])
+            ))
         )
 
     return (ir_range1_xy, ir_range2_xy, ir_range3_xy, ir_range1_z, ir_range2_z, ir_range3_z)

@@ -49,8 +49,8 @@ class TestMdSpectra(unittest.TestCase):
         md_spectra.extract_atomic_polar_from_traj_h2o(
             traj=traj,
             polar=polar,
-            type_O=0,
-            type_H=1,
+            type_O=1,
+            type_H=2,
             r_bond=1.3,
             save_data=output_dir / "atomic_polar_wan.npy",
         )
@@ -68,8 +68,8 @@ class TestMdSpectra(unittest.TestCase):
         md_spectra.compute_atomic_dipole_h2o(
             traj=traj,
             wannier=wannier,
-            type_O=0,
-            type_H=1,
+            type_O=1,
+            type_H=2,
             r_bond=1.3,
             a0=a0,
             save_datas=[output_dir / "h2o.npy", output_dir / "atomic_dipole_wan.npy"],

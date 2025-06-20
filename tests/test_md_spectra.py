@@ -113,6 +113,33 @@ class TestMdSpectra(unittest.TestCase):
         # TODO: Confirm why data accuracy is lost
         np.testing.assert_allclose(np.loadtxt(sample_dir / name), np.loadtxt(output_dir / name), atol=1e-4)
 
+    def test_compute_surface_sfg_h2o(self):
+        dt = 0.0005
+        window = 50000
+
+        h2o = np.load(sample_dir / "h2o.npy")
+        atomic_dipole = np.load(sample_dir / "atomic_dipole_wan.npy").reshape(h2o.shape[0], -1, 3)
+        atomic_polar = np.load(sample_dir / "atomic_polar_wan.npy").reshape(h2o.shape[0], -1, 3, 3)
+        name = "SFG.dat"
+
+        md_spectra.compute_surface_sfg_h2o(
+            h2o=h2o,
+            atomic_dipole=atomic_dipole,
+            atomic_polar=atomic_polar,
+            dt=dt,
+            window=window,
+            z0=22.5,
+            zc=2.5,
+            zw=2.6,
+            rc=6.75,
+            width=50,
+            temperature=330.0,
+            save_plot=output_dir / "sfg.png",
+            save_data=output_dir / name,
+        )
+
+        np.testing.assert_allclose(np.loadtxt(sample_dir / name), np.loadtxt(output_dir / name),atol=1e-4)
+
 
 if __name__ == "__main__":
     unittest.main()
@@ -124,5 +151,5 @@ if __name__ == "__main__":
     #     runner.run(suite)
 
     # test_specific(
-    #     "test_compute_atomic_dipole_h2o",
+    #     "test_compute_surface_sfg_h2o",
     # )

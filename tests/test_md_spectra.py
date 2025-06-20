@@ -60,6 +60,7 @@ class TestMdSpectra(unittest.TestCase):
         )
 
     def test_compute_atomic_dipole_h2o(self):
+        # corresponds to file cal_dipole_wan.py
         a0 = 0.52917721067
         traj = dpdata.System(sample_dir / "traj", fmt="deepmd/npy")
         wannier: np.ndarray = np.load(sample_dir / "wannier_dipole.npy")

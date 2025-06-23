@@ -169,6 +169,39 @@ class TestMdSpectra(unittest.TestCase):
 
         np.testing.assert_allclose(np.load(sample_dir / name), np.load(output_dir / name), atol=1e-4)
 
+    def test_compute_bulk_raman_h2o(self):
+        dt = 0.0005
+        window = 2000
+
+        h2o = np.load(sample_dir / "traj/set.000/h2o.npy")
+        cells = np.load(sample_dir / "traj/set.000/box.npy").reshape(h2o.shape[0], 3, 3)
+        atomic_polar = np.load(sample_dir / "traj/set.000/atomic_polar_wan_h2o.npy").reshape(h2o.shape[0], -1, 3, 3)
+        name = "br.npy"
+
+        md_spectra.compute_bulk_raman_h2o(
+            h2o=h2o,
+            cells=cells,
+            atomic_polar=atomic_polar,
+            dt=dt,
+            window=window,
+            z0=21.5,
+            zc=5.0,
+            zw=0.5,
+            rc=6.0,
+            width=240,
+            temperature=330.0,
+            M=20000,
+            filter_type="lorenz",
+            save_plots=[
+                output_dir / "bulk_raman_iso.png",
+                output_dir / "bulk_raman_aniso.png",
+                output_dir / "bulk_raman_aniso_low.png",
+            ],
+            save_data=output_dir / name,
+        )
+
+        np.testing.assert_allclose(np.load(sample_dir / name), np.load(output_dir / name), atol=1e-4)
+
 
 if __name__ == "__main__":
     # unittest.main()
@@ -180,5 +213,5 @@ if __name__ == "__main__":
         runner.run(suite)
 
     test_specific(
-        "test_compute_bulk_ir_h2o",
+        "test_compute_bulk_raman_h2o",
     )

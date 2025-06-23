@@ -20,26 +20,6 @@ output_dir = Path(__file__).parent / "data-sample" / "md_spectra_output"
 
 
 class TestMdSpectra(unittest.TestCase):
-    def _is_files_identical(self, file1: str, file2: str, block_size: int = 655436):
-        try:
-            size1 = os.path.getsize(file1)
-            size2 = os.path.getsize(file2)
-            if size1 != size2:
-                return False
-
-            with open(file1, "rb") as f1, open(file2, "rb") as f2:
-                while True:
-                    block1 = f1.read(block_size)
-                    block2 = f2.read(block_size)
-                    if not block1 and not block2:
-                        return True
-                    if block1 != block2:
-                        return False
-
-        except OSError as e:
-            print(f"File Error: {e}")
-            return False
-
     def test_extract_atomic_polar_from_traj_h2o(self):
         # corresponds to file cal_polar_wan.py
         traj = dpdata.System(sample_dir / "traj", fmt="deepmd/npy")
@@ -202,6 +182,43 @@ class TestMdSpectra(unittest.TestCase):
 
         np.testing.assert_allclose(np.load(sample_dir / name), np.load(output_dir / name), atol=1e-4)
 
+    def test_compute_surface_raman_h2o(self):
+        dt = 0.0005
+        window = 2000
+
+        h2o = np.load(sample_dir / "traj/set.000/h2o.npy")
+        oh = np.load(sample_dir / "traj/set.000/oh.npy")
+        cells = np.load(sample_dir / "traj/set.000/box.npy").reshape(h2o.shape[0], 3, 3)
+        atomic_polar_h2o = np.load(sample_dir / "traj/set.000/atomic_polar_wan_h2o.npy").reshape(h2o.shape[0], -1, 3, 3)
+        atomic_polar_oh = np.load(sample_dir / "traj/set.000/atomic_polar_wan_oh.npy").reshape(h2o.shape[0], -1, 3, 3)
+        name = "sr.npy"
+
+        md_spectra.compute_surface_raman_h2o(
+            h2o=h2o,
+            oh=oh,
+            cells=cells,
+            atomic_polar_h2o=atomic_polar_h2o,
+            atomic_polar_oh=atomic_polar_oh,
+            dt=dt,
+            window=window,
+            z0=21.5,
+            zc=10.0,
+            zw=0.5,
+            rc=6.0,
+            width=240,
+            temperature=330.0,
+            M=20000,
+            filter_type="lorenz",
+            save_plots=[
+                output_dir / "sur_raman_iso.png",
+                output_dir / "sur_raman_aniso.png",
+                output_dir / "sur_raman_aniso_low.png",
+            ],
+            save_data=output_dir / name,
+        )
+
+        np.testing.assert_allclose(np.load(sample_dir / name), np.load(output_dir / name), atol=1e-4)
+
 
 if __name__ == "__main__":
     # unittest.main()
@@ -213,5 +230,5 @@ if __name__ == "__main__":
         runner.run(suite)
 
     test_specific(
-        "test_compute_bulk_raman_h2o",
+        "test_compute_surface_raman_h2o",
     )

@@ -138,18 +138,47 @@ class TestMdSpectra(unittest.TestCase):
             save_data=output_dir / name,
         )
 
-        np.testing.assert_allclose(np.loadtxt(sample_dir / name), np.loadtxt(output_dir / name),atol=1e-4)
+        np.testing.assert_allclose(np.loadtxt(sample_dir / name), np.loadtxt(output_dir / name), atol=1e-4)
+
+    def test_compute_bulk_ir_h2o(self):
+        dt = 0.0005
+        window = 2000
+
+        h2o = np.load(sample_dir / "traj/set.000/h2o.npy")
+        cells = np.load(sample_dir / "traj/set.000/box.npy").reshape(h2o.shape[0], 3, 3)
+        atomic_dipole = np.load(sample_dir / "traj/set.000/atomic_dipole_wan_h2o.npy").reshape(h2o.shape[0], -1, 3)
+        name = "ir_spectrum.npy"
+
+        md_spectra.compute_bulk_ir_h2o(
+            h2o=h2o,
+            cells=cells,
+            atomic_dipole=atomic_dipole,
+            dt=dt,
+            window=window,
+            z0=21.5,
+            zc=5.0,
+            zw=0.5,
+            rc=6.0,
+            width=240,
+            temperature=330.0,
+            M=20000,
+            filter_type="lorenz",
+            save_plot=output_dir / "bulk_ir.png",
+            save_data=output_dir / name,
+        )
+
+        np.testing.assert_allclose(np.load(sample_dir / name), np.load(output_dir / name), atol=1e-4)
 
 
 if __name__ == "__main__":
-    unittest.main()
+    # unittest.main()
 
-    # def test_specific(test_name: str):
-    #     suite = unittest.TestSuite()
-    #     suite.addTest(TestMdSpectra(test_name))
-    #     runner = unittest.TextTestRunner()
-    #     runner.run(suite)
+    def test_specific(test_name: str):
+        suite = unittest.TestSuite()
+        suite.addTest(TestMdSpectra(test_name))
+        runner = unittest.TextTestRunner()
+        runner.run(suite)
 
-    # test_specific(
-    #     "test_compute_surface_sfg_h2o",
-    # )
+    test_specific(
+        "test_compute_bulk_ir_h2o",
+    )

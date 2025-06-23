@@ -11,6 +11,7 @@ import unittest  # noqa: E402
 
 import numpy as np  # noqa: E402
 import dpdata  # noqa: E402
+from ase.io import read  # noqa: E402
 
 from ai2_kit.feat.spectrum import md_spectra  # noqa: E402
 
@@ -218,6 +219,34 @@ class TestMdSpectra(unittest.TestCase):
 
         np.testing.assert_allclose(np.load(sample_dir / name), np.load(output_dir / name), atol=1e-4)
 
+    def test_set_lumped_wfc_h2o(self):
+        names = ["coord.npy", "box.npy", "atomic_dipole.npy"]
+        stc_list_file = sample_dir / "wannier.xyz"
+        a = b = c = 12.42
+        stc_list = read(stc_list_file, index=":")
+        atom_pos = []
+        box = np.zeros((len(stc_list), 9))
+        box[:, 0] = a
+        box[:, 4] = b
+        box[:, 8] = c
+
+        for stc in stc_list:
+            for atom in stc:
+                if atom.symbol == "O" or atom.symbol == "H":
+                    atom_pos.append(atom.position)
+        convert_coord = np.reshape(atom_pos, (len(stc_list), -1))
+        np.save(output_dir / names[0], convert_coord)
+        np.save(output_dir / names[1], box)
+
+        cell = [a, b, c]
+        stc_list = md_spectra.set_cells_h2o(stc_list, cell)
+
+        lumped_dict = {"O": 4}
+        wfc_pos = md_spectra.set_lumped_wfc_h2o(stc_list, lumped_dict)
+        np.save(output_dir / names[2], wfc_pos)
+        for name in names:
+            np.testing.assert_array_equal(np.load(sample_dir / name), np.load(output_dir / name))
+
 
 if __name__ == "__main__":
     unittest.main()
@@ -229,5 +258,5 @@ if __name__ == "__main__":
     #     runner.run(suite)
 
     # test_specific(
-    #     "test_compute_surface_raman_h2o",
+    #     "test_set_lumped_wfc",
     # )

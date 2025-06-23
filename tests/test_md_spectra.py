@@ -8,7 +8,6 @@ current_dir = str(Path.cwd())
 sys.path.append(current_dir)
 
 import unittest  # noqa: E402
-import os  # noqa: E402
 
 import numpy as np  # noqa: E402
 import dpdata  # noqa: E402
@@ -221,14 +220,14 @@ class TestMdSpectra(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    # unittest.main()
+    unittest.main()
 
-    def test_specific(test_name: str):
-        suite = unittest.TestSuite()
-        suite.addTest(TestMdSpectra(test_name))
-        runner = unittest.TextTestRunner()
-        runner.run(suite)
+    # def test_specific(test_name: str):
+    #     suite = unittest.TestSuite()
+    #     suite.addTest(TestMdSpectra(test_name))
+    #     runner = unittest.TextTestRunner()
+    #     runner.run(suite)
 
-    test_specific(
-        "test_compute_surface_raman_h2o",
-    )
+    # test_specific(
+    #     "test_compute_surface_raman_h2o",
+    # )

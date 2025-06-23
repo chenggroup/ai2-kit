@@ -278,7 +278,7 @@ def cal_range_dipole_polar(z, atomic_dipole, z_lo, z_hi, r_smth):
     range_dipole = np.sum(weight * atomic_dipole, axis = 1) / np.sqrt(np.clip(np.sum(weight, axis = 1), 1, None))
     return range_dipole
 
-def calculate_corr_vdipole(atomic_dipole: np.ndarray, weight: np.ndarray, coords: np.ndarray, 
+def calculate_corr_vdipole_atomic(atomic_dipole: np.ndarray, weight: np.ndarray, coords: np.ndarray, 
                            cells: np.ndarray, dt_ps: float, window: int, rc: float = 6.75):
     nframes, natom = atomic_dipole.shape[:2]
     weight = weight[1:-1]
@@ -296,7 +296,7 @@ def calculate_corr_vdipole(atomic_dipole: np.ndarray, weight: np.ndarray, coords
     corr_inter = calculate_corr(dipole_cutoff, v_dipole, window)
     return corr_intra, corr_inter
 
-def calculate_corr_polar(atomic_polar: np.ndarray, weight: np.ndarray, coords: np.ndarray, 
+def calculate_corr_polar_atomic(atomic_polar: np.ndarray, weight: np.ndarray, coords: np.ndarray, 
                          cells: np.ndarray, window: int, rc: float = 6.75):
     nframes, natom = atomic_polar.shape[:2]
 
@@ -590,7 +590,7 @@ def change_unit_sfg(freq_ps, CHAT: np.ndarray, temperature: float):
     d_omega = 1e10 * freq_ps / cc
     return d_omega, CHAT
 
-def calculate_ir(corr: np.ndarray, width: float, dt_ps: float, temperature: float, 
+def calculate_ir_atomic(corr: np.ndarray, width: float, dt_ps: float, temperature: float, 
                  M: Optional[int] = None, filter_type: str = "gaussian"):
     nmax = corr.shape[0] - 1
     if nmax % 2 != 0:
@@ -614,7 +614,7 @@ def calculate_ir(corr: np.ndarray, width: float, dt_ps: float, temperature: floa
     d_omega, CHAT = change_unit_ir(freq_ps, CHAT, temperature)
     return np.arange(CHAT.shape[0]) * d_omega, CHAT
 
-def calculate_raman(corr: np.ndarray, width: float, dt_ps: float, temperature: float, 
+def calculate_raman_atomic(corr: np.ndarray, width: float, dt_ps: float, temperature: float, 
                     M: Optional[int] = None, filter_type: str = "gaussian"):
     nmax = corr.shape[0] - 1
     if nmax % 2 != 0:

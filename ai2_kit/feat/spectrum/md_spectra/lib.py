@@ -4,148 +4,258 @@ from typing import Optional, List
 import dpdata
 from MDAnalysis.lib.distances import distance_array, minimize_vectors
 
-from .function_cal_corr import calculate_corr_vdipole, cal_range_dipole_polar, cal_weighted_dipole, cal_weighted_polar, cal_corr_sfg, calculate_corr_polar
-from .function_ft import calculate_ir, calculate_raman, calculate_sfg
+from .function_cal_corr import (
+    calculate_corr_vdipole,
+    cal_range_dipole_polar,
+    cal_weighted_dipole,
+    cal_weighted_polar,
+    cal_corr_sfg,
+)
+from .function_ft import calculate_ir, calculate_sfg
 from .function_prepare import find_h2o, do_pbc, calculate_dipole, k_nearest
+from .function_atomic import (
+    calculate_corr_vdipole_atomic,
+    cutoff_z,
+    calculate_ir_atomic,
+    calculate_corr_polar_atomic,
+    calculate_raman_atomic,
+)
 
 
-def compute_ir_spectrum_h2o(
+def compute_bulk_ir_h2o(
+    h2o: np.ndarray,
+    cells: np.ndarray,
     atomic_dipole: np.ndarray,
     dt: float = 0.0005,
-    window: int = 50000,
-    width: int = 25,
+    window: int = 2000,
+    z0: float = 21.5,
+    zc: float = 5.0,
+    zw: float = 0.5,
+    rc: float = 6.0,
+    width: int = 240,
     temperature: float = 330.0,
+    M: int = 20000,
+    filter_type: str = "lorenz",
     save_plot: Optional[str] = None,
-    save_data: Optional[str] = None
+    save_data: Optional[str] = None,
 ):
     """
-    Compute the IR spectrum from preprocessed atomic dipole data, and optionally save the plot and data.
+    Compute and optionally save the bulk IR spectrum from atomic dipole and geometry data.
 
     Parameters
     ----------
+    h2o : np.ndarray
+        Water molecule coordinates, shape (n_frames, n_molecules, 3).
+    cells : np.ndarray
+        Simulation box array, shape (n_frames, 3, 3).
     atomic_dipole : np.ndarray
-        Atomic dipole array of shape (n_steps, n_atoms, 3), already preprocessed.
+        Atomic dipole array, shape (n_frames, n_molecules, 3).
     dt : float, optional
         Time step in picoseconds. Default is 0.0005.
     window : int, optional
-        Window size for correlation calculation. Default is 50000.
+        Window size for correlation calculation. Default is 2000.
+    z0 : float, optional
+        Z cutoff center for weight calculation. Default is 21.5.
+    zc : float, optional
+        Z cutoff width for weight calculation. Default is 5.0.
+    zw : float, optional
+        Z cutoff smoothing parameter. Default is 0.5.
+    rc : float, optional
+        Cutoff radius for correlation calculation. Default is 6.0.
     width : int, optional
-        Width parameter for IR calculation. Default is 25.
+        Width parameter for IR calculation. Default is 240.
     temperature : float, optional
         Temperature in Kelvin. Default is 330.0.
+    M : int, optional
+        Number of points for IR calculation. Default is 20000.
+    filter_type : str, optional
+        Filter type for IR calculation. Default is "lorenz".
     save_plot : Optional[str], optional
-        File path to save the IR plot. If None, the plot is not saved.
+        File path to save the plot. If None, the plot is not saved.
     save_data : Optional[str], optional
-        File path to save the IR data as text. If None, the data is not saved.
+        File path to save the data. If None, the data is not saved.
 
     Returns
     -------
-    ir : np.ndarray
-        The computed IR spectrum, shape (n_points, 2).
+    Tuple of (wavenumber, ir) as np.ndarray.
     """
-    corr_total = calculate_corr_vdipole(atomic_dipole, dt, window)
-    ir = calculate_ir(corr_total, width=width, dt_ps=dt, temperature=temperature)
 
-    plt.plot(ir[:, 0], ir[:, 1], label=r'$H_2O$', scalex=1.5, scaley=2.2)
-    plt.xlim((0, 4000.))
-    plt.xlabel(r'Wavenumber($\rm cm^{-1}$)', fontdict={'size': 12})
-    plt.ylabel(r'$n(\omega)\alpha(\omega) (10^3 cm^{-1})$', fontdict={'size': 12})
+    weight = cutoff_z(h2o[..., 2], z0, zc, zw)
+    weight = np.ones((h2o.shape[0], h2o.shape[1])) - weight
+
+    corr_intra, corr_inter = calculate_corr_vdipole_atomic(atomic_dipole, weight, h2o, cells, dt, window, rc=rc)
+    corr_intra = np.sum(corr_intra, axis=1)
+    corr_inter = np.sum(corr_inter, axis=1)
+
+    wavenumber = np.array(
+        calculate_ir_atomic(
+            np.sum(corr_intra, axis=1), width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type
+        )
+    )[0]
+    ir = np.array(
+        calculate_ir_atomic(
+            np.sum(corr_intra, axis=1) + np.sum(corr_inter, axis=1),
+            width=width,
+            dt_ps=dt,
+            temperature=temperature,
+            M=M,
+            filter_type=filter_type,
+        )
+    )[1]
+
+    plt.plot(wavenumber, ir, label=r"$H_2O$", scalex=1.5, scaley=2.2)
+    plt.xlim((0, 4000.0))
+    plt.xlabel(r"Wavenumber ($\rm cm^{-1}$)", fontdict={"size": 12})
+    plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
     plt.legend()
     plt.title("IR spectra")
     if save_plot is not None:
-        plt.savefig(save_plot, dpi=300, facecolor='white', bbox_inches='tight')
+        plt.savefig(save_plot, dpi=300, facecolor="white", bbox_inches="tight")
+    plt.close()
     if save_data is not None:
-        np.savetxt(save_data, ir)
-    return ir
+        np.save(save_data, np.array([wavenumber, ir]))
+
+    return wavenumber, ir
 
 
-def compute_raman_spectra_h2o(
+def compute_bulk_raman_h2o(
+    h2o: np.ndarray,
+    cells: np.ndarray,
     atomic_polar: np.ndarray,
     dt: float = 0.0005,
-    window: int = 50000,
-    width_iso: int = 25,
-    width_aniso: int = 240,
+    window: int = 2000,
+    z0: float = 21.5,
+    zc: float = 5.0,
+    zw: float = 0.5,
+    rc: float = 6.0,
+    width: int = 240,
     temperature: float = 330.0,
+    M: int = 20000,
+    filter_type: str = "lorenz",
     save_plots: Optional[List[str]] = None,
-    save_datas: Optional[List[str]] = None
+    save_data: Optional[str] = None,
 ):
     """
-    Compute isotropic and anisotropic Raman spectra from preprocessed atomic polarizability data,
-    and optionally save plots and data to files.
+    Compute and optionally save the bulk Raman spectra (isotropic, anisotropic, and low-frequency) from atomic polarizability and geometry data.
 
     Parameters
     ----------
+    h2o : np.ndarray
+        Water molecule coordinates, shape (n_frames, n_molecules, 3).
+    cells : np.ndarray
+        Simulation box array, shape (n_frames, 3, 3).
     atomic_polar : np.ndarray
-        Preprocessed atomic polarizability array of shape (n_steps, n_molecules, 3, 3).
+        Atomic polarizability tensor, shape (n_frames, n_molecules, 3, 3).
     dt : float, optional
         Time step in picoseconds. Default is 0.0005.
     window : int, optional
-        Window size for correlation calculation. Default is 50000.
-    width_iso : int, optional
-        Width parameter for isotropic Raman calculation. Default is 25.
-    width_aniso : int, optional
-        Width parameter for anisotropic Raman calculation. Default is 240.
+        Window size for correlation calculation. Default is 2000.
+    z0 : float, optional
+        Z cutoff center for weight calculation. Default is 21.5.
+    zc : float, optional
+        Z cutoff width for weight calculation. Default is 5.0.
+    zw : float, optional
+        Z cutoff smoothing parameter. Default is 0.5.
+    rc : float, optional
+        Cutoff radius for correlation calculation. Default is 6.0.
+    width : int, optional
+        Width parameter for Raman calculation. Default is 240.
     temperature : float, optional
         Temperature in Kelvin. Default is 330.0.
+    M : int, optional
+        Number of points for Raman calculation. Default is 20000.
+    filter_type : str, optional
+        Filter type for Raman calculation. Default is "lorenz".
     save_plots : Optional[List[str]], optional
-        List of file paths to save the plots: [iso_path, aniso_path, aniso_low_path].
+        List of file paths to save the plots.
         If None, plots are not saved.
-    save_datas : Optional[List[str]], optional
-        List of file paths to save the data: [iso_path, aniso_path, aniso_low_path].
+    save_data : Optional[str], optional
+        Path to save the data.
         If None, data is not saved.
 
     Returns
     -------
-    Tuple of (raman_iso, raman_aniso, raman_aniso_low) spectra as numpy arrays.
+    Tuple of (wavenumber, total_iso, total_aniso, low_range) as np.ndarray.
     """
-    corr_total = calculate_corr_polar(atomic_polar, window)
-    raman_iso = calculate_raman(corr_total[0], width=width_iso, dt_ps=dt, temperature=temperature)
-    raman_aniso = calculate_raman(corr_total[1], width=width_aniso, dt_ps=dt, temperature=temperature)
-    raman_aniso_low = np.column_stack((raman_aniso[:, 0], raman_aniso[:, 1] * raman_aniso[:, 0] / 1000))
 
-    # Plot and save isotropic Raman
-    plt.plot(raman_iso[:, 0], raman_iso[:, 1], label=r'$H_2O$, iso', scalex=1.5, scaley=2.2)
-    plt.xlim((2800, 4000.))
-    plt.ylim((0, 1))
-    plt.xlabel(r'Wavenumber($\rm cm^{-1}$)', fontdict={'size': 12})
-    plt.ylabel(r'Intensity', fontdict={'size': 12})
-    plt.legend()
-    plt.title("Raman spectra (iso)")
-    if save_plots is not None and len(save_plots) > 0 and save_plots[0]:
-        plt.savefig(save_plots[0], dpi=300, facecolor='white', bbox_inches='tight')
-    plt.close()
-    if save_datas is not None and len(save_datas) > 0 and save_datas[0]:
-        np.savetxt(save_datas[0], raman_iso)
+    weight = cutoff_z(h2o[..., 2], z0, zc, zw)
+    weight = np.ones((h2o.shape[0], h2o.shape[1])) - weight
 
-    # Plot and save anisotropic Raman
-    plt.plot(raman_aniso[:, 0], raman_aniso[:, 1], label=r'$H_2O$, aniso', scalex=1.5, scaley=2.2)
-    plt.xlim((2800, 4000.))
-    plt.ylim((0, 3))
-    plt.xlabel(r'Wavenumber($\rm cm^{-1}$)', fontdict={'size': 12})
-    plt.ylabel(r'Intensity', fontdict={'size': 12})
-    plt.legend()
-    plt.title("Raman spectra (aniso)")
-    if save_plots is not None and len(save_plots) > 1 and save_plots[1]:
-        plt.savefig(save_plots[1], dpi=300, facecolor='white', bbox_inches='tight')
-    plt.close()
-    if save_datas is not None and len(save_datas) > 1 and save_datas[1]:
-        np.savetxt(save_datas[1], raman_aniso)
+    corr_iso_intra, corr_aniso_intra, corr_iso_inter, corr_aniso_inter = calculate_corr_polar_atomic(
+        atomic_polar, weight, h2o, cells, window, rc=rc
+    )
+    corr_iso_intra = np.sum(corr_iso_intra, axis=1)
+    corr_aniso_intra = np.sum(corr_aniso_intra, axis=1)
+    corr_iso_inter = np.sum(corr_iso_inter, axis=1)
+    corr_aniso_inter = np.sum(corr_aniso_inter, axis=1)
 
-    # Plot and save low-frequency anisotropic Raman
-    plt.plot(raman_aniso_low[:, 0], raman_aniso_low[:, 1], label=r'$H_2O$, aniso_low', scalex=1.5, scaley=2.2)
-    plt.xlim((0, 2500.))
-    plt.ylim((0, 8))
-    plt.xlabel(r'Wavenumber($\rm cm^{-1}$)', fontdict={'size': 12})
-    plt.ylabel(r'intensity', fontdict={'size': 12})
-    plt.legend()
-    plt.title("Low-frequency Raman spectra (aniso)")
-    if save_plots is not None and len(save_plots) > 2 and save_plots[2]:
-        plt.savefig(save_plots[2], dpi=300, facecolor='white', bbox_inches='tight')
-    plt.close()
-    if save_datas is not None and len(save_datas) > 2 and save_datas[2]:
-        np.savetxt(save_datas[2], raman_aniso_low)
+    wavenumber = np.array(
+        calculate_raman_atomic(
+            corr_iso_intra, width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type
+        )
+    )[0]
+    raman_iso_intra = np.array(
+        calculate_raman_atomic(
+            corr_iso_intra, width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type
+        )
+    )[1]
+    raman_aniso_intra = np.array(
+        calculate_raman_atomic(
+            corr_aniso_intra, width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type
+        )
+    )[1]
+    raman_iso_inter = np.array(
+        calculate_raman_atomic(
+            corr_iso_inter, width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type
+        )
+    )[1]
+    raman_aniso_inter = np.array(
+        calculate_raman_atomic(
+            corr_aniso_inter, width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type
+        )
+    )[1]
 
-    return raman_iso, raman_aniso, raman_aniso_low
+    total_iso = raman_iso_intra + raman_iso_inter
+    total_aniso = raman_aniso_intra + raman_aniso_inter
+    low_range = wavenumber * total_aniso / 1000
+    if save_plots is not None:
+        # Isotropic Raman
+        plt.plot(wavenumber, total_iso, label=r"$H_2O$, iso", scalex=1.5, scaley=2.2)
+        plt.xlim((2800, 4000.0))
+        plt.xlabel(r"Wavenumber ($\rm cm^{-1}$)", fontdict={"size": 12})
+        plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
+        plt.legend()
+        plt.title("Raman spectra (iso)")
+        plt.savefig(save_plots[0], dpi=300, facecolor="white", bbox_inches="tight")
+        plt.close()
+
+        # Anisotropic Raman
+        plt.plot(wavenumber, total_aniso, label=r"$H_2O$, aniso", scalex=1.5, scaley=2.2)
+        plt.xlim((2800, 4000.0))
+        plt.xlabel(r"Wavenumber ($\rm cm^{-1}$)", fontdict={"size": 12})
+        plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
+        plt.legend()
+        plt.title("Raman spectra (aniso)")
+        plt.savefig(save_plots[1], dpi=300, facecolor="white", bbox_inches="tight")
+        plt.close()
+
+        # Low-frequency Raman
+        plt.plot(wavenumber, low_range, label=r"$H_2O$, aniso_low", scalex=1.5, scaley=2.2)
+        plt.xlim((0, 2500.0))
+        plt.xlabel(r"Wavenumber ($\rm cm^{-1}$)", fontdict={"size": 12})
+        plt.ylabel(r"intensity (a.u.)", fontdict={"size": 12})
+        plt.legend()
+        plt.title("Low-frequency Raman spectra (aniso)")
+        plt.savefig(save_plots[2], dpi=300, facecolor="white", bbox_inches="tight")
+        plt.close()
+
+    if save_data is not None:
+        np.save(save_data, np.array([wavenumber, total_iso]))
+
+    return (
+        wavenumber,
+        total_iso,
+    )
 
 
 def compute_atomic_dipole_h2o(
@@ -275,7 +385,7 @@ def compute_surface_ir_spectra_h2o(
     width: int = 25,
     temperature: float = 330.0,
     save_plot: Optional[str] = None,
-    save_data: Optional[str] = None
+    save_data: Optional[str] = None,
 ):
     """
     Compute and optionally plot/save surface and bulk IR spectra for different z-ranges.
@@ -345,29 +455,23 @@ def compute_surface_ir_spectra_h2o(
     s_surface_z = (ir_range1_z[:, 1] + ir_range3_z[:, 1]) / 2
 
     if save_plot is not None:
-        plt.plot(ir_range1_xy[:, 0], s_surface_xy, label=r'surface $H_2O$ with s-polarized', scalex=1.5, scaley=2.2)
-        plt.plot(ir_range2_xy[:, 0], ir_range2_xy[:, 1], label=r'bulk $H_2O$ with s-polarized', scalex=1.5, scaley=2.2)
-        plt.plot(ir_range1_z[:, 0], s_surface_z, label=r'surface $H_2O$ with p-polarized', scalex=1.5, scaley=2.2)
-        plt.plot(ir_range2_z[:, 0], ir_range2_z[:, 1], label=r'bulk $H_2O$ with p-polarized', scalex=1.5, scaley=2.2)
-        plt.xlim((0, 4000.))
-        plt.xlabel(r'Wavenumber($\rm cm^{-1}$)', fontdict={'size': 12})
-        plt.ylabel(r'$n(\omega)\alpha(\omega) (10^3 cm^{-1})$', fontdict={'size': 12})
+        plt.plot(ir_range1_xy[:, 0], s_surface_xy, label=r"surface $H_2O$ with s-polarized", scalex=1.5, scaley=2.2)
+        plt.plot(ir_range2_xy[:, 0], ir_range2_xy[:, 1], label=r"bulk $H_2O$ with s-polarized", scalex=1.5, scaley=2.2)
+        plt.plot(ir_range1_z[:, 0], s_surface_z, label=r"surface $H_2O$ with p-polarized", scalex=1.5, scaley=2.2)
+        plt.plot(ir_range2_z[:, 0], ir_range2_z[:, 1], label=r"bulk $H_2O$ with p-polarized", scalex=1.5, scaley=2.2)
+        plt.xlim((0, 4000.0))
+        plt.xlabel(r"Wavenumber($\rm cm^{-1}$)", fontdict={"size": 12})
+        plt.ylabel(r"$n(\omega)\alpha(\omega) (10^3 cm^{-1})$", fontdict={"size": 12})
         plt.legend()
         plt.title("IR spectra")
-        plt.savefig(save_plot, dpi=300, facecolor='white', bbox_inches='tight')
+        plt.savefig(save_plot, dpi=300, facecolor="white", bbox_inches="tight")
         plt.close()
 
     if save_data is not None:
         # Save columns: wavenumber, surface_xy, bulk_xy, surface_z, bulk_z
         np.savetxt(
             save_data,
-            np.column_stack((
-                ir_range1_xy[:, 0],
-                s_surface_xy,
-                ir_range2_xy[:, 1],
-                s_surface_z,
-                ir_range2_z[:, 1]
-            ))
+            np.column_stack((ir_range1_xy[:, 0], s_surface_xy, ir_range2_xy[:, 1], s_surface_z, ir_range2_z[:, 1])),
         )
 
     return (ir_range1_xy, ir_range2_xy, ir_range3_xy, ir_range1_z, ir_range2_z, ir_range3_z)
@@ -375,172 +479,148 @@ def compute_surface_ir_spectra_h2o(
 
 def compute_surface_raman_h2o(
     h2o: np.ndarray,
-    atomic_polar: np.ndarray,
+    oh: np.ndarray,
+    cells: np.ndarray,
+    atomic_polar_h2o: np.ndarray,
+    atomic_polar_oh: np.ndarray,
     dt: float = 0.0005,
-    window: int = 50000,
-    z_total_min: float = 16.0,
-    z_total_max: float = 29.0,
-    z1_min: float = 16.0,
-    z1_max: float = 17.4,
-    z2_min: float = 20.0,
-    z2_max: float = 25.0,
-    z3_min: float = 27.6,
-    z3_max: float = 29.0,
-    z_bin: float = 0.4,
-    width: int = 25,
+    window: int = 2000,
+    z0: float = 21.5,
+    zc: float = 10.0,
+    zw: float = 0.5,
+    rc: float = 6.0,
+    width: int = 240,
     temperature: float = 330.0,
+    M: int = 20000,
+    filter_type: str = "lorenz",
     save_plots: Optional[List[str]] = None,
-    save_datas: Optional[List[str]] = None,
+    save_data: Optional[str] = None,
 ):
     """
-    Compute and optionally plot/save surface and bulk Raman spectra for different z regions.
+    Compute and optionally save the surface Raman spectra (isotropic, anisotropic, and low-frequency)
+    from atomic polarizability and geometry data for H2O and OH.
 
     Parameters
     ----------
     h2o : np.ndarray
-        Water molecule coordinates, shape (n_frames, n_molecules, 3).
-    atomic_polar : np.ndarray
-        Atomic polarizability tensors, shape (n_frames, n_molecules, 3, 3).
+        Water molecule coordinates, shape (n_frames, n_h2o, 3).
+    oh : np.ndarray
+        OH group coordinates, shape (n_frames, n_oh, 3).
+    cells : np.ndarray
+        Simulation box array, shape (n_frames, 3, 3).
+    atomic_polar_h2o : np.ndarray
+        Atomic polarizability tensor for H2O, shape (n_frames, n_h2o, 3, 3).
+    atomic_polar_oh : np.ndarray
+        Atomic polarizability tensor for OH, shape (n_frames, n_oh, 3, 3).
     dt : float, optional
         Time step in picoseconds. Default is 0.0005.
     window : int, optional
-        Window size for correlation calculation. Default is 50000.
-    z_total_min, z_total_max, z1_min, z1_max, z2_min, z2_max, z3_min, z3_max : float, optional
-        Z region boundaries for surface and bulk selection.
-    z_bin : float, optional
-        Bin width for z axis. Default is 0.4.
+        Window size for correlation calculation. Default is 2000.
+    z0 : float, optional
+        Z cutoff center for weight calculation. Default is 21.5.
+    zc : float, optional
+        Z cutoff width for weight calculation. Default is 10.0.
+    zw : float, optional
+        Z cutoff smoothing parameter. Default is 0.5.
+    rc : float, optional
+        Cutoff radius for correlation calculation. Default is 6.0.
     width : int, optional
-        Width parameter for Raman calculation. Default is 25.
+        Width parameter for Raman calculation. Default is 240.
     temperature : float, optional
         Temperature in Kelvin. Default is 330.0.
+    M : int, optional
+        Number of points for Raman calculation. Default is 20000.
+    filter_type : str, optional
+        Filter type for Raman calculation. Default is "lorenz".
     save_plots : Optional[List[str]], optional
-        List of file paths to save the plots: [iso, aniso, aniso_low]. If None, plots are not saved.
-    save_datas : Optional[List[str]], optional
-        List of file paths to save the data: [iso, aniso, aniso_low]. If None, data is not saved.
-    show_plot : bool, optional
-        Whether to display plots interactively. Default is False.
+        List of file paths to save the plots: [iso_path, aniso_path, aniso_low_path].
+        If None, plots are not saved.
+    save_data : Optional[str], optional
+        File paths to save the data.
+        If None, data is not saved.
 
     Returns
     -------
-    Tuple of computed spectra arrays for iso, aniso, and low-frequency aniso.
+    Tuple of (wavenumber, total_iso, total_aniso, low_range) as np.ndarray.
     """
 
-    # Z axis is the 3rd column (index 2)
-    z_axis = h2o[..., [2], None]
-    total_polar = cal_range_dipole_polar(z_axis, atomic_polar, z_total_min, z_total_max, z_bin)
-    range_polar1 = cal_range_dipole_polar(z_axis, atomic_polar, z1_min, z1_max, z_bin)
-    range_polar2 = cal_range_dipole_polar(z_axis, atomic_polar, z2_min, z2_max, z_bin)
-    range_polar3 = cal_range_dipole_polar(z_axis, atomic_polar, z3_min, z3_max, z_bin)
+    atomic_polar = np.concatenate([atomic_polar_h2o, atomic_polar_oh], axis=1)
+    coords = np.concatenate([h2o, oh], axis=1)
 
-    corr_atomic = calculate_corr_polar(atomic_polar[:, 0], window)
-    corr_total = calculate_corr_polar(total_polar, window)
-    corr_range1 = calculate_corr_polar(range_polar1, window)
-    corr_range2 = calculate_corr_polar(range_polar2, window)
-    corr_range3 = calculate_corr_polar(range_polar3, window)
+    weight = cutoff_z(coords[..., 2], z0, zc, zw)
 
-    # Isotropic
-    raman_atomic_iso = calculate_raman(corr_atomic[0], width=width, dt_ps=dt, temperature=temperature)
-    raman_total_iso = calculate_raman(corr_total[0], width=width, dt_ps=dt, temperature=temperature)
-    raman_range1_iso = calculate_raman(corr_range1[0], width=width, dt_ps=dt, temperature=temperature)
-    raman_range2_iso = calculate_raman(corr_range2[0], width=width, dt_ps=dt, temperature=temperature)
-    raman_range3_iso = calculate_raman(corr_range3[0], width=width, dt_ps=dt, temperature=temperature)
-
-    # Normalization
-    SMAX = np.max(raman_atomic_iso[:8000, 1])
-    SMAX = max(SMAX, np.max(raman_total_iso[:8000, 1]))
-    SMAX = max(SMAX, np.max(raman_range1_iso[:8000, 1]))
-    SMAX = max(SMAX, np.max(raman_range2_iso[:8000, 1]))
-    SMAX = max(SMAX, np.max(raman_range3_iso[:8000, 1]))
-    SMAX /= 10
-
-    # Plot/save iso
-    plt.plot(raman_total_iso[:, 0], raman_total_iso[:, 1] / SMAX, label=r'$H_2O$, total', scalex=1.5, scaley=2.2)
-    plt.plot(raman_range1_iso[:, 0], (raman_range1_iso[:, 1] + raman_range3_iso[:, 1]) / 2 / SMAX, label=r'surface $H_2O$', scalex=1.5, scaley=2.2)
-    plt.plot(raman_range2_iso[:, 0], raman_range2_iso[:, 1] / SMAX, label=r'bulk $H_2O$', scalex=1.5, scaley=2.2)
-    plt.xlim((2800, 4000.))
-    plt.ylim((0, 1))
-    plt.xlabel(r'Wavenumber($\rm cm^{-1}$)', fontdict={'size': 12})
-    plt.ylabel(r'Intensity', fontdict={'size': 12})
-    plt.legend()
-    plt.title("Raman spectra (iso)")
-    if save_plots is not None and len(save_plots) > 0 and save_plots[0]:
-        plt.savefig(save_plots[0], dpi=300, facecolor='white', bbox_inches='tight')
-    plt.close()
-    if save_datas is not None and len(save_datas) > 0 and save_datas[0]:
-        np.savetxt(
-            save_datas[0],
-            np.column_stack((
-                raman_total_iso[:, 0],
-                raman_total_iso[:, 1] / SMAX,
-                (raman_range1_iso[:, 1] + raman_range3_iso[:, 1]) / 2 / SMAX,
-                raman_range2_iso[:, 1] / SMAX
-            ))
-        )
-
-    # Anisotropic
-    raman_atomic_aniso = calculate_raman(corr_atomic[1], width=width, dt_ps=dt, temperature=temperature)
-    raman_total_aniso = calculate_raman(corr_total[1], width=width, dt_ps=dt, temperature=temperature)
-    raman_range1_aniso = calculate_raman(corr_range1[1], width=width, dt_ps=dt, temperature=temperature)
-    raman_range2_aniso = calculate_raman(corr_range2[1], width=width, dt_ps=dt, temperature=temperature)
-    raman_range3_aniso = calculate_raman(corr_range3[1], width=width, dt_ps=dt, temperature=temperature)
-
-    plt.plot(raman_total_aniso[:, 0], raman_total_aniso[:, 1] / SMAX, label=r'$H_2O$, total', scalex=1.5, scaley=2.2)
-    plt.plot(raman_range1_aniso[:, 0], (raman_range1_aniso[:, 1] + raman_range3_aniso[:, 1]) / 2 / SMAX, label=r'surface $H_2O$', scalex=1.5, scaley=2.2)
-    plt.plot(raman_range2_aniso[:, 0], raman_range2_aniso[:, 1] / SMAX, label=r'bulk $H_2O$', scalex=1.5, scaley=2.2)
-    plt.xlim((2800, 4000.))
-    plt.ylim((0, 3))
-    plt.xlabel(r'Wavenumber($\rm cm^{-1}$)', fontdict={'size': 12})
-    plt.ylabel(r'Intensity', fontdict={'size': 12})
-    plt.legend()
-    plt.title("Raman spectra (aniso)")
-    if save_plots is not None and len(save_plots) > 1 and save_plots[1]:
-        plt.savefig(save_plots[1], dpi=300, facecolor='white', bbox_inches='tight')
-    plt.close()
-    if save_datas is not None and len(save_datas) > 1 and save_datas[1]:
-        np.savetxt(
-            save_datas[1],
-            np.column_stack((
-                raman_total_aniso[:, 0],
-                raman_total_aniso[:, 1] / SMAX,
-                (raman_range1_aniso[:, 1] + raman_range3_aniso[:, 1]) / 2 / SMAX,
-                raman_range2_aniso[:, 1] / SMAX
-            ))
-        )
-
-    # Low-frequency
-    low_total = raman_total_aniso[:, 1] * raman_total_aniso[:, 0] / 1000
-    low_range1 = raman_range1_aniso[:, 1] * raman_range1_aniso[:, 0] / 1000
-    low_range2 = raman_range2_aniso[:, 1] * raman_range2_aniso[:, 0] / 1000
-    low_range3 = raman_range3_aniso[:, 1] * raman_range3_aniso[:, 0] / 1000
-
-    plt.plot(raman_total_aniso[:, 0], low_total / SMAX, label=r'$H_2O$, total', scalex=1.5, scaley=2.2)
-    plt.plot(raman_range1_aniso[:, 0], (low_range1 + low_range3) / 2 / SMAX, label=r'surface $H_2O$', scalex=1.5, scaley=2.2)
-    plt.plot(raman_range2_aniso[:, 0], low_range2 / SMAX, label=r'bulk $H_2O$', scalex=1.5, scaley=2.2)
-    plt.xlim((0, 2500.))
-    plt.ylim((0, 8))
-    plt.xlabel(r'Wavenumber($\rm cm^{-1}$)', fontdict={'size': 12})
-    plt.ylabel(r'intensity', fontdict={'size': 12})
-    plt.legend()
-    plt.title("Low-frequency Raman spectra (aniso)")
-    if save_plots is not None and len(save_plots) > 2 and save_plots[2]:
-        plt.savefig(save_plots[2], dpi=300, facecolor='white', bbox_inches='tight')
-    plt.close()
-    if save_datas is not None and len(save_datas) > 2 and save_datas[2]:
-        np.savetxt(
-            save_datas[2],
-            np.column_stack((
-                raman_total_aniso[:, 0],
-                raman_total_aniso[:, 1] / SMAX,
-                (raman_range1_aniso[:, 1] + raman_range3_aniso[:, 1]) / 2 / SMAX,
-                raman_range2_aniso[:, 1] / SMAX
-            ))
-        )
-
-    return (
-        (raman_total_iso, raman_range1_iso, raman_range2_iso, raman_range3_iso),
-        (raman_total_aniso, raman_range1_aniso, raman_range2_aniso, raman_range3_aniso),
-        (low_total, low_range1, low_range2, low_range3)
+    corr_iso_intra, corr_aniso_intra, corr_iso_inter, corr_aniso_inter = calculate_corr_polar_atomic(
+        atomic_polar, weight, coords, cells, window, rc=rc
     )
+    corr_iso_intra = np.sum(corr_iso_intra[:, : h2o.shape[1]], axis=1)
+    corr_aniso_intra = np.sum(corr_aniso_intra[:, : h2o.shape[1]], axis=1)
+    corr_iso_inter = np.sum(corr_iso_inter[:, : h2o.shape[1]], axis=1)
+    corr_aniso_inter = np.sum(corr_aniso_inter[:, : h2o.shape[1]], axis=1)
+
+    wavenumber = np.array(
+        calculate_raman_atomic(
+            corr_iso_intra, width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type
+        )
+    )[0]
+    raman_iso_intra = np.array(
+        calculate_raman_atomic(
+            corr_iso_intra, width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type
+        )
+    )[1]
+    raman_aniso_intra = np.array(
+        calculate_raman_atomic(
+            corr_aniso_intra, width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type
+        )
+    )[1]
+    raman_iso_inter = np.array(
+        calculate_raman_atomic(
+            corr_iso_inter, width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type
+        )
+    )[1]
+    raman_aniso_inter = np.array(
+        calculate_raman_atomic(
+            corr_aniso_inter, width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type
+        )
+    )[1]
+
+    total_iso = raman_iso_intra + raman_iso_inter
+    total_aniso = raman_aniso_intra + raman_aniso_inter
+    low_range = wavenumber * total_aniso / 1000
+
+    if save_plots is not None:
+        # Isotropic Raman
+        plt.plot(wavenumber, total_iso, label=r"$H_2O$, iso", scalex=1.5, scaley=2.2)
+        plt.xlim((2800, 4000.0))
+        plt.xlabel(r"Wavenumber ($\rm cm^{-1}$)", fontdict={"size": 12})
+        plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
+        plt.legend()
+        plt.title("Raman spectra (iso)")
+        plt.savefig(save_plots[0], dpi=300, facecolor="white", bbox_inches="tight")
+        plt.close()
+
+        # Anisotropic Raman
+        plt.plot(wavenumber, total_aniso, label=r"$H_2O$, aniso", scalex=1.5, scaley=2.2)
+        plt.xlim((2800, 4000.0))
+        plt.xlabel(r"Wavenumber ($\rm cm^{-1}$)", fontdict={"size": 12})
+        plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
+        plt.legend()
+        plt.title("Raman spectra (aniso)")
+        plt.savefig(save_plots[1], dpi=300, facecolor="white", bbox_inches="tight")
+        plt.close()
+
+        # Low-frequency Raman
+        plt.plot(wavenumber, low_range, label=r"$H_2O$, aniso_low", scalex=1.5, scaley=2.2)
+        plt.xlim((0, 2500.0))
+        plt.xlabel(r"Wavenumber ($\rm cm^{-1}$)", fontdict={"size": 12})
+        plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
+        plt.legend()
+        plt.title("Low-frequency Raman spectra (aniso)")
+        plt.savefig(save_plots[2], dpi=300, facecolor="white", bbox_inches="tight")
+        plt.close()
+    if save_data is not None:
+        np.save(save_data, np.array([wavenumber, total_iso, total_aniso, low_range]))
+
+    return wavenumber, total_iso, total_aniso, low_range
 
 
 def compute_surface_sfg_h2o(
@@ -556,7 +636,7 @@ def compute_surface_sfg_h2o(
     width: int = 50,
     temperature: float = 330.0,
     save_plot: Optional[str] = None,
-    save_data: Optional[str] = None
+    save_data: Optional[str] = None,
 ):
     """
     Compute and optionally plot/save the surface SFG (sum-frequency generation) spectrum.
@@ -599,23 +679,19 @@ def compute_surface_sfg_h2o(
     weighted_polar = cal_weighted_polar(h2o[..., [2], None], atomic_polar, z0, zc, zw)
 
     corr = cal_corr_sfg(
-        weighted_polar[..., 0, 0] + weighted_polar[..., 1, 1],
-        weighted_dipole[..., 2],
-        h2o,
-        window,
-        rc=rc
+        weighted_polar[..., 0, 0] + weighted_polar[..., 1, 1], weighted_dipole[..., 2], h2o, window, rc=rc
     )
     sfg = calculate_sfg(corr, width=width, dt_ps=dt, temperature=temperature)
 
     if save_plot is not None:
-        plt.plot(sfg[:, 0], sfg[:, 1], label=r'$H_2O$', scalex=1.5, scaley=2.2)
-        plt.xlim((0, 4000.))
+        plt.plot(sfg[:, 0], sfg[:, 1], label=r"$H_2O$", scalex=1.5, scaley=2.2)
+        plt.xlim((0, 4000.0))
         plt.ylim((-0.12, 0.12))
-        plt.xlabel(r'Wavenumber($\rm cm^{-1}$)', fontdict={'size': 12})
-        plt.ylabel(r'Im[$\chi^{(2)}$]', fontdict={'size': 12})
+        plt.xlabel(r"Wavenumber($\rm cm^{-1}$)", fontdict={"size": 12})
+        plt.ylabel(r"Im[$\chi^{(2)}$]", fontdict={"size": 12})
         plt.legend()
         plt.title("SFG in xxz and yyz")
-        plt.savefig(save_plot, dpi=100, facecolor='white', bbox_inches='tight')
+        plt.savefig(save_plot, dpi=100, facecolor="white", bbox_inches="tight")
         plt.close()
 
     if save_data is not None:
@@ -626,6 +702,7 @@ def compute_surface_sfg_h2o(
 
 from ase import Atoms  # noqa: E402
 from typing import List, Dict  # noqa: E402
+
 
 def set_cells_h2o(stc_list: List[Atoms], cell: List[float]):
     """
@@ -649,12 +726,7 @@ def set_cells_h2o(stc_list: List[Atoms], cell: List[float]):
     return stc_list
 
 
-def get_lumped_wacent_poses_rel_h2o(
-    stc: Atoms,
-    elem_symbol: str,
-    cutoff: float = 1.0,
-    expected_cn: int = 4
-):
+def get_lumped_wacent_poses_rel_h2o(stc: Atoms, elem_symbol: str, cutoff: float = 1.0, expected_cn: int = 4):
     """
     determine the positions of the wannaier centers around O and sum it into the wannaier centroid
 
@@ -674,23 +746,23 @@ def get_lumped_wacent_poses_rel_h2o(
     np.ndarray
         Array of mean relative positions for each target atom.
     """
-    elem_idx   = np.where(stc.symbols == elem_symbol)[0]
-    wacent_idx = np.where(stc.symbols == 'X')[0]
+    elem_idx = np.where(stc.symbols == elem_symbol)[0]
+    wacent_idx = np.where(stc.symbols == "X")[0]
     elem_poses = stc.positions[elem_idx]
     wacent_poses = stc.positions[wacent_idx]
-    
+
     cellpar = stc.cell.cellpar()
     assert cellpar is not None
-    #dist_matrix
+    # dist_matrix
     dist_mat = distance_array(elem_poses, wacent_poses, box=cellpar)
 
-    #each row get distance and select the candidates
+    # each row get distance and select the candidates
     lumped_wacent_poses_rel = []
     for elem_entry, dist_vec in enumerate(dist_mat):
-        #print(_elem_idx)
-        bool_vec = (dist_vec < cutoff)
+        # print(_elem_idx)
+        bool_vec = dist_vec < cutoff
         cn = np.sum(bool_vec)
-        
+
         # modify neighbor wannier centers coords relative to the center element atom
         neig_wacent_poses = wacent_poses[bool_vec, :]
         neig_wacent_poses_rel = neig_wacent_poses - elem_poses[elem_entry]
@@ -698,7 +770,14 @@ def get_lumped_wacent_poses_rel_h2o(
         lumped_wacent_pos_rel = neig_wacent_poses_rel.mean(axis=0)
 
         if cn != expected_cn:
-            print("The atom index is :", elem_idx[elem_entry], "The atom position is ", elem_poses[elem_entry],"The coordination number is :", cn)
+            print(
+                "The atom index is :",
+                elem_idx[elem_entry],
+                "The atom position is ",
+                elem_poses[elem_entry],
+                "The coordination number is :",
+                cn,
+            )
         lumped_wacent_poses_rel.append(lumped_wacent_pos_rel)
     lumped_wacent_poses_rel = np.stack(lumped_wacent_poses_rel)
     return lumped_wacent_poses_rel
@@ -723,8 +802,10 @@ def set_lumped_wfc_h2o(stc_list: List[Atoms], lumped_dict: Dict[str, int]):
     X_pos = []
     for stc in stc_list:
         for elem_symbol, expected_cn in lumped_dict.items():
-            lumped_wacent_poses_rel = get_lumped_wacent_poses_rel_h2o(stc=stc, elem_symbol=elem_symbol, cutoff = 1.0, expected_cn=expected_cn)
-            elem_pos = stc.get_positions()[stc.symbols==elem_symbol]
+            lumped_wacent_poses_rel = get_lumped_wacent_poses_rel_h2o(
+                stc=stc, elem_symbol=elem_symbol, cutoff=1.0, expected_cn=expected_cn
+            )
+            elem_pos = stc.get_positions()[stc.symbols == elem_symbol]
             X_pos.append(elem_pos + lumped_wacent_poses_rel)
 
     wfc_pos = np.reshape(X_pos, (len(stc_list), -1))

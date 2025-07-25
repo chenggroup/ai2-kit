@@ -60,6 +60,17 @@ workflow:
       # [ /path/to/*/frozen_model.pb ]
       fixture_models: []
 
+      # Optional, provide a path to a model that will be used as initial weight
+      # It will use deepmd's finetune option
+      pretrained_model: null
+
+
+      # Optional, Use the previous models to initialize the current training,
+      # which can speed up the training process.
+      # It will use deepmd's finetune option
+      # Default: false
+      init_from_previous: false
+
       # Optional, define a custom input modifier function to modify the input template.
       # Useful when you want to modify the input template dynamically.
       # For example, change auto_prob_style according to train data.

@@ -1180,35 +1180,6 @@ url = "https://pypi.mirrors.ustc.edu.cn/simple"
 reference = "ustc"
 
 [[package]]
-name = "emmet-core"
-version = "0.55.5"
-description = "Core Emmet Library"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "emmet-core-0.55.5.tar.gz", hash = "sha256:27408f36342925c0d7a3cfcea03c64af883e1ba2cd404b87e8a8ecf9a8faee92"},
-    {file = "emmet_core-0.55.5-py3-none-any.whl", hash = "sha256:db124b4c12b57c7036e5d459309c194374a287644a8a3645e9af5aaa5e2c9fe0"},
-]
-
-[package.dependencies]
-monty = ">=2021.3"
-pybtex = ">=0.24,<1.0"
-pydantic = ">=1.10.2"
-pymatgen = ">=2021.3"
-spglib = ">=2.0.1"
-typing-extensions = ">=3.7,<5.0"
-
-[package.extras]
-all = ["pymatgen-analysis-alloys (>=0.0.3)", "pymatgen-analysis-diffusion (>=2022.1.15)", "robocrys (>=0.2.7)", "seekpath (>=2.0.1)"]
-docs = ["jinja2", "livereload", "mkdocs", "mkdocs-awesome-pages-plugin", "mkdocs-markdownextradata-plugin", "mkdocs-material (<8.3)", "mkdocs-material-extensions", "mkdocs-minify-plugin", "mkdocstrings", "mkdocstrings[python]"]
-test = ["custodian (>=2022.5.26)", "flake8", "maggma", "mypy", "mypy-extensions", "pre-commit", "pycodestyle", "pydocstyle", "pytest", "pytest-cov", "types-requests", "types-setuptools", "wincertstore"]
-
-[package.source]
-type = "legacy"
-url = "https://pypi.mirrors.ustc.edu.cn/simple"
-reference = "ustc"
-
-[[package]]
 name = "exceptiongroup"
 version = "1.1.1"
 description = "Backport of PEP 654 (exception groups)"
@@ -1330,7 +1301,7 @@ name = "fire-rpc"
 version = "0.1.3"
 description = "turn fire command line to a rpc server"
 optional = true
-python-versions = "<4.0,>=3.9"
+python-versions = ">=3.9,<4.0"
 files = [
     {file = "fire_rpc-0.1.3-py3-none-any.whl", hash = "sha256:38dcf5ec521e41a19ebb38526c2343b761739ae094f3a7a79d1699afbca5c2e3"},
     {file = "fire_rpc-0.1.3.tar.gz", hash = "sha256:c50e3a3202ab7b2159a3676b84be045abb71d3abcbc8dc6a5de86132e9b9ac88"},
@@ -1339,6 +1310,11 @@ files = [
 [package.dependencies]
 aiohttp = ">=3.11.12,<4.0.0"
 fire = ">=0.5.0,<0.6.0"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.mirrors.ustc.edu.cn/simple"
+reference = "ustc"
 
 [[package]]
 name = "fonttools"
@@ -1501,21 +1477,6 @@ files = [
     {file = "frozenlist-1.5.0-cp39-cp39-win_amd64.whl", hash = "sha256:5c28f4b5dbef8a0d8aad0d4de24d1e9e981728628afaf4ea0792f5d0939372f0"},
     {file = "frozenlist-1.5.0-py3-none-any.whl", hash = "sha256:d994863bba198a4a518b467bb971c56e1db3f180a25c6cf7bb1949c267f748c3"},
     {file = "frozenlist-1.5.0.tar.gz", hash = "sha256:81d5af29e61b9c8348e876d442253723928dce6433e0e76cd925cd83f1b4b817"},
-]
-
-[package.source]
-type = "legacy"
-url = "https://pypi.mirrors.ustc.edu.cn/simple"
-reference = "ustc"
-
-[[package]]
-name = "future"
-version = "0.18.3"
-description = "Clean single-source support for Python 3 and 2"
-optional = false
-python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
-files = [
-    {file = "future-0.18.3.tar.gz", hash = "sha256:34a17436ed1e96697a86f9de3d15a3b0be01d8bc8de9c1dffd59fb8234ed5307"},
 ]
 
 [package.source]
@@ -2682,57 +2643,6 @@ url = "https://pypi.mirrors.ustc.edu.cn/simple"
 reference = "ustc"
 
 [[package]]
-name = "mp-api"
-version = "0.33.3"
-description = "API Server for the Materials Project"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "mp-api-0.33.3.tar.gz", hash = "sha256:652d9ae791165fea94a20fd9335e0c1c89db8e071f85e9e7d78cf064a274ff08"},
-    {file = "mp_api-0.33.3-py3-none-any.whl", hash = "sha256:433941d36e1c8c8521a37f968f5898a5611d4984d8cefadd9b1d7cd31fec805d"},
-]
-
-[package.dependencies]
-emmet-core = ">=0.54.0"
-monty = ">=2021.3.12"
-msgpack = "*"
-pymatgen = ">=2022.3.7"
-requests = ">=2.23.0"
-setuptools = "*"
-typing-extensions = ">=3.7.4.1"
-
-[package.extras]
-all = ["boto3", "custodian", "emmet-core[all] (>=0.54.0)", "mpcontribs-client"]
-test = ["flake8", "mypy", "mypy-extensions", "pre-commit", "pycodestyle", "pytest", "pytest-asyncio", "pytest-cov", "pytest-mock", "types-pkg-resources", "types-requests", "typing-extensions"]
-
-[package.source]
-type = "legacy"
-url = "https://pypi.mirrors.ustc.edu.cn/simple"
-reference = "ustc"
-
-[[package]]
-name = "mpmath"
-version = "1.3.0"
-description = "Python library for arbitrary-precision floating-point arithmetic"
-optional = false
-python-versions = "*"
-files = [
-    {file = "mpmath-1.3.0-py3-none-any.whl", hash = "sha256:a0b2b9fe80bbcd81a6647ff13108738cfb482d481d826cc0e02f5b35e5c88d2c"},
-    {file = "mpmath-1.3.0.tar.gz", hash = "sha256:7a28eb2a9774d00c7bc92411c19a89209d5da7c4c9a9e227be8330a23a25b91f"},
-]
-
-[package.extras]
-develop = ["codecov", "pycodestyle", "pytest (>=4.6)", "pytest-cov", "wheel"]
-docs = ["sphinx"]
-gmpy = ["gmpy2 (>=2.1.0a4)"]
-tests = ["pytest (>=4.6)"]
-
-[package.source]
-type = "legacy"
-url = "https://pypi.mirrors.ustc.edu.cn/simple"
-reference = "ustc"
-
-[[package]]
 name = "mrcfile"
 version = "1.4.3"
 description = "MRC file I/O library"
@@ -3257,22 +3167,6 @@ url = "https://pypi.mirrors.ustc.edu.cn/simple"
 reference = "ustc"
 
 [[package]]
-name = "palettable"
-version = "3.3.3"
-description = "Color palettes for Python"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "palettable-3.3.3-py2.py3-none-any.whl", hash = "sha256:74e9e7d7fe5a9be065e02397558ed1777b2df0b793a6f4ce1a5ee74f74fb0caa"},
-    {file = "palettable-3.3.3.tar.gz", hash = "sha256:094dd7d9a5fc1cca4854773e5c1fc6a315b33bd5b3a8f47064928facaf0490a8"},
-]
-
-[package.source]
-type = "legacy"
-url = "https://pypi.mirrors.ustc.edu.cn/simple"
-reference = "ustc"
-
-[[package]]
 name = "pandas"
 version = "1.5.3"
 description = "Powerful data structures for data analysis, time series, and statistics"
@@ -3523,26 +3417,6 @@ files = [
 [package.extras]
 docs = ["furo (>=2023.3.27)", "proselint (>=0.13)", "sphinx (>=6.2.1)", "sphinx-autodoc-typehints (>=1.23,!=1.23.4)"]
 test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest (>=7.3.1)", "pytest-cov (>=4)", "pytest-mock (>=3.10)"]
-
-[package.source]
-type = "legacy"
-url = "https://pypi.mirrors.ustc.edu.cn/simple"
-reference = "ustc"
-
-[[package]]
-name = "plotly"
-version = "5.14.1"
-description = "An open-source, interactive data visualization library for Python"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "plotly-5.14.1-py2.py3-none-any.whl", hash = "sha256:a63f3ad9e4cc2e02902a738e5e3e7f3d1307f2732ac71a6c28f1238ed3052826"},
-    {file = "plotly-5.14.1.tar.gz", hash = "sha256:bcac86d7fcba3eff7260c1eddc36ca34dae2aded10a0709808446565e0e53b93"},
-]
-
-[package.dependencies]
-packaging = "*"
-tenacity = ">=6.2.0"
 
 [package.source]
 type = "legacy"
@@ -4092,68 +3966,6 @@ files = [
 
 [package.extras]
 plugins = ["importlib-metadata"]
-
-[package.source]
-type = "legacy"
-url = "https://pypi.mirrors.ustc.edu.cn/simple"
-reference = "ustc"
-
-[[package]]
-name = "pymatgen"
-version = "2023.5.10"
-description = "Python Materials Genomics is a robust materials analysis code that defines core object representations for structures and molecules with support for many electronic structure codes. It is currently the core analysis code powering the Materials Project (https://materialsproject.org)."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "pymatgen-2023.5.10-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:dffbc65763208e32b388e7bfa275b1f6b638a66163cd457e8c54e8aa17bf3266"},
-    {file = "pymatgen-2023.5.10-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e9a6651e884df8badc8f417346bdcb85625596094f5da1ac68c51ee35b460366"},
-    {file = "pymatgen-2023.5.10-cp310-cp310-win32.whl", hash = "sha256:db57e6d5f4d4e6f43c2ccc05c49d2881152dc9c9cc00cee4146090e7b9075952"},
-    {file = "pymatgen-2023.5.10-cp310-cp310-win_amd64.whl", hash = "sha256:d48936096df7dfaa765efdd7dca1eda4bd049723656382543bd20de213f39441"},
-    {file = "pymatgen-2023.5.10-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:4566a30be7cd6f74e54c1c786aef9ebaf3bf97bba741d166c7c97070c3aa9388"},
-    {file = "pymatgen-2023.5.10-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:df42c06788c6c3ca70f909db9f4d65ec7f7e50316d0163161576e503ec3ff346"},
-    {file = "pymatgen-2023.5.10-cp311-cp311-win32.whl", hash = "sha256:12544cba3b72519fe764c88fc7df2cae93448782a3b8d139887cbda013f044f1"},
-    {file = "pymatgen-2023.5.10-cp311-cp311-win_amd64.whl", hash = "sha256:a631ff10e69cfbf251170fb1da46e503a3dbfc28cde067998f34aeafe760bade"},
-    {file = "pymatgen-2023.5.10-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:e850646f421df236d61ae050aa1c1d2dc459f6a7671477cac397eba2290236e8"},
-    {file = "pymatgen-2023.5.10-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:755167e62dd98e0d039dd04e4804684318d9cd1c9187f380a7758a60dc1da953"},
-    {file = "pymatgen-2023.5.10-cp38-cp38-win32.whl", hash = "sha256:3a7b7489efb4e5fa89d2978d380f06815bd7f103213b1c0a4278667fd9091e20"},
-    {file = "pymatgen-2023.5.10-cp38-cp38-win_amd64.whl", hash = "sha256:03b935cebe1413fcf58d8bb8b6920ae97812ffbf55db42217e662778bac91802"},
-    {file = "pymatgen-2023.5.10-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:0848b01605b5a9e5cc552033795161e19bb440d584f3acec6ecdd1beac193c25"},
-    {file = "pymatgen-2023.5.10-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:2c49c6e4d9c77c39015f2f50be07171126b72e924f0b3f086be9be10a7c01059"},
-    {file = "pymatgen-2023.5.10-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:918ba1988af139a3949c312c0cdd16c7650480e39feb786a237e5c9a0c19c94b"},
-    {file = "pymatgen-2023.5.10-cp39-cp39-win32.whl", hash = "sha256:339c72ac95aa8d594ea843f9f75c36cf088ddf9c46cae2931c6c550d0022d1c4"},
-    {file = "pymatgen-2023.5.10-cp39-cp39-win_amd64.whl", hash = "sha256:cee2c05bf501e96e1be13605539535712b20cd9041b5bc764658cdfe0b4f9570"},
-    {file = "pymatgen-2023.5.10.tar.gz", hash = "sha256:81bf2646c14933fe425acfb7afe947ef5411c3144caae7263fe7347f4b797e2a"},
-]
-
-[package.dependencies]
-matplotlib = ">=1.5"
-monty = ">=3.0.2"
-mp-api = ">=0.27.3"
-networkx = ">=2.2"
-numpy = ">=1.20.1"
-palettable = ">=3.1.1"
-pandas = "*"
-plotly = ">=4.5.0"
-pybtex = "*"
-requests = "*"
-"ruamel.yaml" = ">=0.17.0"
-scipy = ">=1.5.0"
-spglib = ">=2.0.2"
-sympy = "*"
-tabulate = "*"
-tqdm = "*"
-uncertainties = ">=3.1.4"
-
-[package.extras]
-abinit = ["netcdf4"]
-ase = ["ase (>=3.3)"]
-dev = ["black", "mypy", "pre-commit", "pytest", "pytest-cov", "pytest-split", "ruff"]
-docs = ["doc2dash", "sphinx", "sphinx-rtd-theme"]
-electronic-structure = ["fdint (>=2.0.2)"]
-numba = ["numba"]
-optional = ["BoltzTraP2 (>=22.3.2)", "ase (>=3.22.1)", "chemview (>=0.6)", "f90nml (>=1.1.2)", "galore (>=0.6.1)", "h5py (>=3.8.0)", "jarvis-tools (>=2020.7.14)", "netCDF4 (>=1.5.8)", "phonopy (>=2.4.2)", "seekpath (>=1.9.4)"]
-relaxation = ["m3gnet"]
-vis = ["vtk (>=6.0.0)"]
 
 [package.source]
 type = "legacy"
@@ -4846,55 +4658,6 @@ url = "https://pypi.mirrors.ustc.edu.cn/simple"
 reference = "ustc"
 
 [[package]]
-name = "spglib"
-version = "2.0.2"
-description = "This is the spglib module."
-optional = false
-python-versions = "*"
-files = [
-    {file = "spglib-2.0.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:a54dbc8954ffef86895c29416274b23b562dcdd23f8d3d4e61b47b43eabe65aa"},
-    {file = "spglib-2.0.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:da956b941a377c6af450b252ee4ef03040dd2f80b5b77c56d043a5aa3b7e0aca"},
-    {file = "spglib-2.0.2-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:791cd3d525a33142f874facb4a0371a744deb6c63cbfa8d8eec2cc2977f54691"},
-    {file = "spglib-2.0.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2f76c1a5e9699479c847a577e3d7974c676a030048ca4f9ae1b89008ef8b3db7"},
-    {file = "spglib-2.0.2-cp310-cp310-win_amd64.whl", hash = "sha256:19d1a793515711c3196126f4f6da32b1ebb4e6f3c418671692430191b6bb5c75"},
-    {file = "spglib-2.0.2-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:c6dafee1c21ef378df002802a7a74f92b6a8b54170fe12ebab7f563c8333aae3"},
-    {file = "spglib-2.0.2-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:b515b688b595590181a763586d9b2bf28e1c5c49dadc90825963ee5c8d63ff69"},
-    {file = "spglib-2.0.2-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:57ffbc725c7c22410dbf19f276762d81448843e35bdca55d00480e30dfac61e8"},
-    {file = "spglib-2.0.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b57e9cbe6ce271a9a2ff403e236e07adaf6c263acbf4dbe007632e189f4108e7"},
-    {file = "spglib-2.0.2-cp311-cp311-win_amd64.whl", hash = "sha256:778306dcccd5c3946357d64435593d80d22758abd94d2d0fc9ec8ee3f75c33a3"},
-    {file = "spglib-2.0.2-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:4a58ecdd553a9c1603e9bd8124170e97cea0d0ee3be76e5efc2f952a6d463f35"},
-    {file = "spglib-2.0.2-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:184f4045a6691be5012d75296874e1c7468ebdec3284161724c000efd78558d7"},
-    {file = "spglib-2.0.2-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:04fd1899d69456259e3667aa4cace8e4e6f3b8a369714ed01f349b4734263df1"},
-    {file = "spglib-2.0.2-cp36-cp36m-win_amd64.whl", hash = "sha256:4d026e4ffd4801b1c0bf6784cb7547032db4a1d0806993060dd95f5caa547c77"},
-    {file = "spglib-2.0.2-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:98ff97079e331cc707cc1836bfe6c632eb496ffff76fd534bd28faa1221124bd"},
-    {file = "spglib-2.0.2-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b7440b220cd100c31ee72a33dcb1ee8544ff9b0c0cd69aeee78c081eea654cd3"},
-    {file = "spglib-2.0.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0352429063f0f174d5b763a4a119ff972fa8f951762719eb930f2db8d462df22"},
-    {file = "spglib-2.0.2-cp37-cp37m-win_amd64.whl", hash = "sha256:64e6731f5921c55521efe53cd9eead26a624124b04547216a8e90bc654638664"},
-    {file = "spglib-2.0.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:d0d17316837825c67723ab2bc6d9cdee0a8252673c7e4e12f8a9264732865bef"},
-    {file = "spglib-2.0.2-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:50dfd569aa2f8a1393c9784449c1631b73ef3b4035670a905a959656a8af2bc5"},
-    {file = "spglib-2.0.2-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:8916019d201e107d3dc02367ad36f96913e2a42dc9226578e5608b835dec3ad4"},
-    {file = "spglib-2.0.2-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:07fa12e0fba754ddf9daa126f82a3b6ed21d4ef5ff7d8f7747e26f55b67c153c"},
-    {file = "spglib-2.0.2-cp38-cp38-win_amd64.whl", hash = "sha256:d2132751f1151f6875b45c9e4b9053fee1d2ef376aa85c8a53f058c71f492a9e"},
-    {file = "spglib-2.0.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:c5c23bd8ee8941cb679ba941f8b49cae306fa62a92085d84a451ae86332dc440"},
-    {file = "spglib-2.0.2-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:8b09b79309bd599947d1007ec7598182f193aa291fc50cd5f19b2c73aa643641"},
-    {file = "spglib-2.0.2-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:d9f63b3f1b00a49d1a409b47e66beb6ea3eaed2131749be8668fce3cb01ec753"},
-    {file = "spglib-2.0.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b9ab53e531f4083ef61f349fe662f40c1f86bc1e313d76f838a54317acb74865"},
-    {file = "spglib-2.0.2-cp39-cp39-win_amd64.whl", hash = "sha256:9f904e8a1420e3c07a0815f698c464d9a3ea5b5419276ae002f765c5d06f7bee"},
-    {file = "spglib-2.0.2.tar.gz", hash = "sha256:1d081ec22da4ab4fc3198e9445ddad6dec2261c43927831151d93e39422610aa"},
-]
-
-[package.dependencies]
-numpy = "*"
-
-[package.extras]
-doc = ["Sphinx (==4.5.0)", "myst-parser (==0.18.0)", "sphinx-autobuild (==2021.3.14)", "sphinx-book-theme (==0.3.3)", "sphinxcontrib-bibtex (==2.4.2)"]
-
-[package.source]
-type = "legacy"
-url = "https://pypi.mirrors.ustc.edu.cn/simple"
-reference = "ustc"
-
-[[package]]
 name = "sphinx"
 version = "5.0.2"
 description = "Python documentation generator"
@@ -5407,25 +5170,6 @@ url = "https://pypi.mirrors.ustc.edu.cn/simple"
 reference = "ustc"
 
 [[package]]
-name = "sympy"
-version = "1.12"
-description = "Computer algebra system (CAS) in Python"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "sympy-1.12-py3-none-any.whl", hash = "sha256:c3588cd4295d0c0f603d0f2ae780587e64e2efeedb3521e46b9bb1d08d184fa5"},
-    {file = "sympy-1.12.tar.gz", hash = "sha256:ebf595c8dac3e0fdc4152c51878b498396ec7f30e7a914d6071e674d49420fb8"},
-]
-
-[package.dependencies]
-mpmath = ">=0.19"
-
-[package.source]
-type = "legacy"
-url = "https://pypi.mirrors.ustc.edu.cn/simple"
-reference = "ustc"
-
-[[package]]
 name = "tabulate"
 version = "0.9.0"
 description = "Pretty-print tabular data"
@@ -5438,25 +5182,6 @@ files = [
 
 [package.extras]
 widechars = ["wcwidth"]
-
-[package.source]
-type = "legacy"
-url = "https://pypi.mirrors.ustc.edu.cn/simple"
-reference = "ustc"
-
-[[package]]
-name = "tenacity"
-version = "8.2.2"
-description = "Retry code until it succeeds"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "tenacity-8.2.2-py3-none-any.whl", hash = "sha256:2f277afb21b851637e8f52e6a613ff08734c347dc19ade928e519d7d2d8569b0"},
-    {file = "tenacity-8.2.2.tar.gz", hash = "sha256:43af037822bd0029025877f3b2d97cc4d7bb0c2991000a3d59d71517c5c969e0"},
-]
-
-[package.extras]
-doc = ["reno", "sphinx", "tornado (>=4.5)"]
 
 [package.source]
 type = "legacy"
@@ -5640,31 +5365,6 @@ tqdm = "*"
 [package.extras]
 parametric-umap = ["tensorflow (>=2.1)", "tensorflow-probability (>=0.10)"]
 plot = ["bokeh", "colorcet", "datashader", "holoviews", "matplotlib", "pandas", "scikit-image", "seaborn"]
-
-[package.source]
-type = "legacy"
-url = "https://pypi.mirrors.ustc.edu.cn/simple"
-reference = "ustc"
-
-[[package]]
-name = "uncertainties"
-version = "3.1.7"
-description = "Transparent calculations with uncertainties on the quantities involved (aka error propagation); fast calculation of derivatives"
-optional = false
-python-versions = "*"
-files = [
-    {file = "uncertainties-3.1.7-py2.py3-none-any.whl", hash = "sha256:4040ec64d298215531922a68fa1506dc6b1cb86cd7cca8eca848fcfe0f987151"},
-    {file = "uncertainties-3.1.7.tar.gz", hash = "sha256:80111e0839f239c5b233cb4772017b483a0b7a1573a581b92ab7746a35e6faab"},
-]
-
-[package.dependencies]
-future = "*"
-
-[package.extras]
-all = ["nose", "numpy", "sphinx"]
-docs = ["sphinx"]
-optional = ["numpy"]
-tests = ["nose", "numpy"]
 
 [package.source]
 type = "legacy"
@@ -5983,4 +5683,4 @@ rpc = ["fire-rpc"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "8f14ff3280b15b9b48668755546980e7e6e17d32a24c7e141ce40d7f9c306986"
+content-hash = "9a0f545bed6c7cf393dd59037e8c733371e015f3f64653fc51fbe1215fa7539b"

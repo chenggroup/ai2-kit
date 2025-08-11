@@ -1,4 +1,7 @@
 # Change Logs
+## v1.0.3
+* implement lammps tool: gen_mass_map
+
 ## v1.0.2
 * fix slice method in model_devi
 

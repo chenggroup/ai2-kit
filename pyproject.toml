@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ai2-kit"
-version = "1.0.2"
+version = "1.0.3"
 description = ""
 authors = ["weihong.xu <xuweihong.cn@gmail.com>"]
 readme = "README.md"

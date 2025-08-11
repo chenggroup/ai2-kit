@@ -1,6 +1,9 @@
 from ase.data import atomic_masses, atomic_numbers
 
 class LammpsTool:
+    """
+    A tool for LAMMPS related operations.
+    """
 
     def gen_mass_map(self, atom_types: tuple, out_file = None):
         """

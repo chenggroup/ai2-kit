@@ -1,4 +1,9 @@
 # Change Logs
+
+## v1.0.4
+* implement lammps tool: analysis_density_convergence
+* improve yaml tool
+
 ## v1.0.3
 * implement lammps tool: gen_mass_map
 

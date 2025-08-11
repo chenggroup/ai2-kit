@@ -73,8 +73,8 @@ class ToolGroup:
 
     @property
     def yaml(self):
-        from ai2_kit.tool.yaml import Yaml
-        return Yaml
+        from ai2_kit.tool.yaml import YamlTool
+        return YamlTool
 
     @property
     def batch(self):

@@ -1,3 +1,4 @@
+from typing import Union
 from ai2_kit.core.util import load_yaml_file
 from ruamel.yaml import YAML
 from ruamel.yaml.scalarstring import LiteralScalarString as LSS
@@ -6,13 +7,26 @@ from copy import deepcopy
 import sys
 
 
-class Yaml:
+class YamlTool:
+    """
+    Tool for handling YAML files.
+    """
+
     def __init__(self) -> None:
         self.data = None
 
     def load(self, yaml_file: str):
         self.file = yaml_file
         self.data = load_yaml_file(yaml_file)
+        return self
+
+    def get(self, key: Union[str, int]):
+        if isinstance(self.data, list):
+            self.data = self.data[key]  # type: ignore
+        elif isinstance(self.data, dict):
+            keys = key.split('.')  # type: ignore
+            for k in keys:
+                self.data = self.data[k]
         return self
 
     def set_value(self, key: str, value):
@@ -27,8 +41,8 @@ class Yaml:
         keys = key.split('.')
         d = self.data
         for k in keys[:-1]:
-            d = d[k]
-        d[keys[-1]] = value
+            d = d[k]  # type: ignore
+        d[keys[-1]] = value  # type: ignore
         return self
 
     def dump(self, in_place = False, pretty=True):
@@ -36,12 +50,20 @@ class Yaml:
         yaml.default_flow_style = False
         data = deepcopy(self.data)
         if pretty:
-            _apply_lss(data)
+            _apply_lss(data)  # type: ignore
         if in_place:
             with open(self.file, 'w') as fp:
                 yaml.dump(data, fp)
         else: # to stdout
             yaml.dump(data, sys.stdout)
+
+    def print(self):
+        """
+        Print the YAML data to stdout.
+        """
+        yaml = YAML()
+        yaml.default_flow_style = False
+        yaml.dump(self.data, sys.stdout)
 
 
 def _apply_lss(data: dict):

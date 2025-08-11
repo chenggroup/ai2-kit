@@ -34,10 +34,11 @@ class LammpsTool:
 
         result = {
             'converged_density': converged_density,
-            'converged_frames': list(converged_df.index),
+            'converged_frames': converged_df.index.tolist(),
         }
         if debug:
-            result['avg_density'] = list(avg_density)
+            result['time'] = df['time'].tolist()
+            result['avg_density'] = avg_density.tolist()
 
         if out_file:
             with open(out_file, 'w') as f:

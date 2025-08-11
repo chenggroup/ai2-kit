@@ -1,16 +1,12 @@
 from fire import Fire
 
+import warnings
 import logging
 import os
 
+from ai2_kit.core.cmd import CmdGroup
 
 logger = logging.getLogger(__name__)
-
-
-class Group:
-    def __init__(self, items: dict, doc: str = '') -> None:
-        self.__doc__ = doc
-        self.__dict__.update(items)
 
 
 class AlgorithmGroup:
@@ -92,8 +88,17 @@ class ToolGroup:
 
     @property
     def hpc(self):
+        # deprecated, use `oh-my-batch` instead
+        warnings.warn('The hpc module is deprecated, please use oh-my-batch instead.',
+                        DeprecationWarning, stacklevel=2)
+
         from ai2_kit.tool.hpc import cmd_entry
         return cmd_entry
+
+    @property
+    def lammps(self):
+        from ai2_kit.tool.lammps import LammpsTool
+        return LammpsTool()
 
     @property
     def misc(self):
@@ -142,7 +147,7 @@ class FeatureGroup:
         return CmdEntries
 
 
-ai2_kit = Group({
+ai2_kit = CmdGroup({
     'workflow': WorkflowGroup(),
     'algorithm': AlgorithmGroup(),
     'tool': ToolGroup(),

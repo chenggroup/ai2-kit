@@ -3151,6 +3151,25 @@ url = "https://pypi.mirrors.ustc.edu.cn/simple"
 reference = "ustc"
 
 [[package]]
+name = "oh-my-batch"
+version = "0.6.1"
+description = ""
+optional = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "oh_my_batch-0.6.1-py3-none-any.whl", hash = "sha256:e705d733f2cad164d3bc9003f94b9f57f35a6f906a24b6927e7d7d99729fed9c"},
+    {file = "oh_my_batch-0.6.1.tar.gz", hash = "sha256:b1f3178ec3d3edfda6d56adbecc3868de0ec066f8fe7b1baea872cf276de78e1"},
+]
+
+[package.dependencies]
+fire = ">=0.5.0,<0.6.0"
+
+[package.source]
+type = "legacy"
+url = "https://pypi.mirrors.ustc.edu.cn/simple"
+reference = "ustc"
+
+[[package]]
 name = "packaging"
 version = "23.1"
 description = "Core utilities for Python packages"
@@ -5683,4 +5702,4 @@ rpc = ["fire-rpc"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "9a0f545bed6c7cf393dd59037e8c733371e015f3f64653fc51fbe1215fa7539b"
+content-hash = "153e7c1064526feab82052eaf596c891b0496e48b86998e27303e7e2c6ad089c"

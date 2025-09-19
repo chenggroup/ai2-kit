@@ -1,10 +1,10 @@
-<p align="center"> <img src="doc/res/logo.png" alt="ai2-kit logo" width="240" /> </p>
-
 [![PyPI version](https://badge.fury.io/py/ai2-kit.svg)](https://badge.fury.io/py/ai2-kit)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/ai2-kit)](https://pypi.org/project/ai2-kit/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ai2-kit)](https://pypi.org/project/ai2-kit/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15266041.svg)](https://doi.org/10.5281/zenodo.15266041)
 
+
+<p align="center"> <img src="doc/res/logo.png" alt="ai2-kit logo" width="240" /> </p>
 
 A toolkit featured _**a**rtificial **i**ntelligence × **a**b **i**nitio_ for computational chemistry research.
 
@@ -42,17 +42,14 @@ poetry run ai2-kit
 ### Featuring Tools
 * [NMRNet](doc/manual/nmrnet.md): A toolkit for predict NMR with deep learning network.
 * [ai2-cat](doc/manual/ai2cat.md): A toolkit for dynamic catalysis researching.
+* [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
+* [Amorphous Oxides Structure Analysis Toolkit](doc/manual/aos-analysis.md)
+* [Re-weighting Toolkit](doc/manual/reweighting.md)
 
 ### Workflows
 * [CLL MLP Training Workflow](doc/manual/cll-workflow.md) ([zh](doc/manual/cll-workflow.zh.md))
 
-### Domain Specific Tools
-* [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
-* [Amorphous Oxides Structure Analysis Toolkit](doc/manual/aos-analysis.md)
-* [Reweighting Toolkit](doc/manual/reweighting.md)
-
 ### General Tools
-* [Tips](doc/manual/tips.md): useful tips for using `ai2-kit`
 * [ASE Toolkit](doc/manual/ase.md): commands to process trajectory files with [ASE](https://wiki.fysik.dtu.dk/ase/)
 * [DPData Toolkit](doc/manual/dpdata.md): commands to process system data with [dpdata](https://github.com/deepmodeling/dpdata/)
 * [Model Deviation Toolkit](doc/manual/model-deviation.md): a toolkit to filter structures by model deviation
@@ -60,8 +57,5 @@ poetry run ai2-kit
 ### Notebooks
 * [ai2cat](notebook/ai2cat.ipynb)
 
-
-## Acknowledgement
-This project is inspired by and built upon the following projects:
-* [dpgen](https://github.com/deepmodeling/dpgen/tree/master/dpgen): A concurrent learning platform for the generation of reliable deep learning based potential energy models.
-* [ase](https://wiki.fysik.dtu.dk/ase/): Atomic Simulation Environment.
+## Tips
+* [Tips](doc/manual/tips.md): useful tips for using `ai2-kit`

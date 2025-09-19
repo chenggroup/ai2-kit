@@ -41,10 +41,10 @@ poetry run ai2-kit
 ## Manuals
 ### Featuring Tools
 * [NMRNet](doc/manual/nmrnet.md): A toolkit for predict NMR with deep learning network.
-* [ai2-cat](doc/manual/ai2cat.md): A toolkit for dynamic catalysis researching.
 * [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
 * [Amorphous Oxides Structure Analysis Toolkit](doc/manual/aos-analysis.md)
 * [Re-weighting Toolkit](doc/manual/reweighting.md)
+* [ai2-cat](doc/manual/ai2cat.md): A toolkit for dynamic catalysis researching.
 
 ### Workflows
 * [CLL MLP Training Workflow](doc/manual/cll-workflow.md) ([zh](doc/manual/cll-workflow.zh.md))

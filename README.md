@@ -48,7 +48,7 @@ poetry run ai2-kit
 
 ### Workflows
 #### Example Driven Workflows (Recommended)
-These workflows are built with `oh-my-batch` and example shell scripts, which can be easily adapted to your own research purpose.
+These workflows are built with [oh-my-batch](https://github.com/link89/oh-my-batch) and example shell scripts, which can be easily adapted to your own research purpose.
 It provides more flexibility and transparency to run and customize their own workflows.
 
 * [TESLA workflow](https://github.com/link89/oh-my-batch/tree/main/examples/tesla/): A customizable active learning workflow for training machine learning potentials.

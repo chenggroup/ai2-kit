@@ -63,8 +63,10 @@ These workflows are driven by configuration files, which can be easily modified 
 * [DPData Toolkit](doc/manual/dpdata.md): commands to process system data with [dpdata](https://github.com/deepmodeling/dpdata/)
 * [Model Deviation Toolkit](doc/manual/model-deviation.md): a toolkit to filter structures by model deviation
 
-### Notebooks
-* [ai2cat](notebook/ai2cat.ipynb)
+### Online Apps and Notebooks
+* [Electrolyte Designer](https://ai4ec.ac.cn/apps/op-elyte-emulator): run electrolyte simulations with ease.
+* [NMRNet Prediction](https://ai4ec.ac.cn/apps/nmrnet-predict): an online app to predict NMR chemical shifts with pre-trained NMRNet models.
+* [ai2cat](notebook/ai2cat.ipynb): an interactive notebook for dynamic catalysis research.
 
 ## Tips
 * [Tips](doc/manual/tips.md): useful tips for using `ai2-kit`

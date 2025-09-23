@@ -47,6 +47,15 @@ poetry run ai2-kit
 * [ai2-cat](doc/manual/ai2cat.md): A toolkit for dynamic catalysis researching.
 
 ### Workflows
+#### Example Driven Workflows (Recommended)
+These workflows are built with `oh-my-batch` and example shell scripts, which can be easily adapted to your own research purpose.
+It provides more flexibility and transparency for users to run and customize their own workflows.
+
+* [TESLA workflow](https://github.com/link89/oh-my-batch/tree/main/examples/tesla/): A customizable active learning workflow for training machine learning potentials.
+* [TESLA PIMD workflow](https://github.com/link89/oh-my-batch/tree/main/examples/tesla-pimd/): A customizable active learning workflow for training machine learning potentials with path integral molecular dynamics.
+
+#### Config Driven Workflows 
+These workflows are driven by configuration files, which can be easily modified to fit your own research purpose.
 * [CLL MLP Training Workflow](doc/manual/cll-workflow.md) ([zh](doc/manual/cll-workflow.zh.md))
 
 ### General Tools

@@ -98,7 +98,14 @@ class SshConnector(BaseConnector):
         return to_path
 
     def put(self, *args, **kwargs):
-        return self._connection.put(*args, **kwargs)
+        try:
+            return self._connection.put(*args, **kwargs)
+        except IOError as e:
+            # This is a workaround for the following error raised by paramiko::
+            # paramiko/sftp_client.py", line 722, in putfo
+            # raise IOError( OSError: size mismatch in put! ...)
+            if 'size mismatch' not in str(e):
+                raise e
 
     def get(self, *args, **kwargs):
         return self._connection.get(*args, **kwargs)

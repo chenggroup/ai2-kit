@@ -2,6 +2,7 @@
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/ai2-kit)](https://pypi.org/project/ai2-kit/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ai2-kit)](https://pypi.org/project/ai2-kit/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15266041.svg)](https://doi.org/10.5281/zenodo.15266041)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/y/chenggroup/ai2-kit/main)
 
 
 <p align="center"> <img src="doc/res/logo.png" alt="ai2-kit logo" width="240" /> </p>

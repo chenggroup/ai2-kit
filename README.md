@@ -16,6 +16,15 @@ A toolkit featured _**a**rtificial **i**ntelligence × **a**b **i**nitio_ for co
 * Collection of tools to facilitate the development of automated workflows for computational chemistry research.
 * Use with [oh-my-batch](https://github.com/link89/oh-my-batch) to build your own workflow with shell script.
 
+## Environment Requirements
+
+`ai2-kit` is developed and tested on Linux systems, and it should work on macOS as well.
+For Windows, most of the `ai2-kit` features are expected to work. However, some third-party libraries (such as *dscribe*) may not function properly on Windows. 
+In such cases, it is recommended to use `ai2-kit` through Windows Subsystem for Linux (WSL).
+
+If you are using the latest version of Python, some third-party libraries may not yet provide pre-built binary releases, 
+which can cause `pip install` to fail. It is therefore suggested to use `ai2-kit` with Python 3.10–3.12.
+We strongly recommend creating a dedicated Conda environment to avoid unexpected issues caused by incompatible package versions.
 
 ## Installation
 

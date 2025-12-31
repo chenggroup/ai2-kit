@@ -1,0 +1,70 @@
+{
+  "model": {
+    "type_map": [
+      "Cu",
+      "Cl",
+      "H",
+      "O",
+      "K"
+    ],
+    "descriptor": {
+      "type": "se_a",
+      "rcut_smth": 0.5,
+      "rcut": 6.0,
+      "neuron": [
+        25,
+        50,
+        100
+      ],
+      "resnet_dt": false,
+      "axis_neuron": 16,
+      "trainable": false,
+      "seed": @SEED
+    },
+    "fitting_net": {
+      "type": "dipole",
+      "dipole_type": [
+        1,
+        3,
+        4
+      ],
+      "neuron": [
+        120,
+        120,
+        120
+      ],
+      "resnet_dt": true,
+      "seed": @SEED
+    }
+  },
+  "learning_rate": {
+    "type": "exp",
+    "decay_steps": @DECAY,
+    "start_lr": 1.0e-5,
+    "stop_lr": 1.0e-8
+  },
+  "loss": {
+    "type": "tensor",
+    "pref": 0.0,
+    "pref_atomic": 1.0
+  },
+  "training": {
+    "training_data": {
+      "systems": [
+        @DP_DATASET
+      ],
+      "batch_size": "auto",
+      "set_prefix": "set"
+    },
+    "numb_steps": @STEPS,
+    "seed": @SEED,
+    "disp_file": "lcurve.out",
+    "disp_freq": 100,
+    "save_freq": 100,
+    "save_ckpt": "model.ckpt",
+    "disp_training": true,
+    "time_training": true
+  }
+}
+
+

@@ -1,0 +1,94 @@
+{
+  "model": {
+    "type_map": [
+      "Cu",
+      "Cl",
+      "H",
+      "O",
+      "K"
+    ],
+    "descriptor": {
+      "type": "se_a",
+      "rcut_smth": 0.5,
+      "rcut": 6.0,
+      "neuron": [
+        25,
+        50,
+        100
+      ],
+      "resnet_dt": false,
+      "axis_neuron": 16,
+      "seed": @SEED
+    },
+    "fitting_net": {
+      "neuron": [
+        32,
+        32,
+        32
+      ],
+      "resnet_dt": true,
+      "precision": "float64",
+      "seed": @SEED,
+      "_comment3": " that's all"
+    },
+    "modifier": {
+      "type": "dipole_charge_electrode",
+      "model_name": @DW_MODEL,
+      "model_charge_map": [
+        -8,
+        -8,
+        -8
+      ],
+      "sys_charge_map": [
+        0,
+        7,
+        1,
+        6,
+        9
+      ],
+      "ewald_h":0.5,
+      "ewald_beta": 0.4,
+      "eta": 1.805
+    },
+    "_comment4": " that's all"
+  },
+
+  "learning_rate": {
+    "type": "exp",
+    "decay_steps": @DECAY,
+    "start_lr": 0.001,
+    "stop_lr": 1.0e-8,
+    "_comment5": "that's all"
+  },
+
+  "loss": {
+    "type": "ener",
+    "start_pref_e": 0.02,
+    "limit_pref_e": 1,
+    "start_pref_f": 1000,
+    "limit_pref_f": 1,
+    "start_pref_v": 0,
+    "limit_pref_v": 0,
+    "_comment6": " that's all"
+  },
+
+  "training": {
+    "training_data": {
+      "systems": [
+        @DP_DATASET
+      ],
+      "batch_size": "auto",
+      "_comment7": "that's all"
+    },
+    "numb_steps": @STEPS,
+    "seed": @SEED,
+    "disp_file": "lcurve.out",
+    "disp_freq": 10,
+    "save_freq": 50,
+    "_comment8": "that's all"
+  },
+
+  "_comment9": "that's all"
+}
+
+

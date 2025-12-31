@@ -1,0 +1,81 @@
+variable        DATA_FILE          string @DATA_FILE
+variable        NSTEPS          equal @STEPS
+variable        DT              equal 0.0005
+variable        BETA            equal 0.4
+variable        KMESH_X         equal 24
+variable        KMESH_Y         equal 24
+variable        KMESH_Z         equal 118
+variable        THERMO_FREQ     equal @FREQ
+variable        DUMP_FREQ       equal @FREQ
+variable        OUT_DUMP_FREQ   equal @FREQ
+variable        TEMP            equal @TEMP
+variable        ETA             equal 0.625
+variable        SIGMA           equal @CHARGE
+variable        SEED            equal @SEED
+
+
+units           metal
+boundary        p p p
+atom_style      full
+
+read_data       ${DATA_FILE}
+restart         50000 system.restart
+
+# Cu H O Cl (X X)
+mass 1 63.546  # Cu
+mass 2 35.45    # Cl
+mass 3 1.008    # H
+mass 4 15.999   # O
+mass 5 39.098   # K
+mass 6 1.008    # X
+mass 7 1.008    # X
+mass 8 1.008    # X
+
+
+group           real_atom type 1 2 3 4 5 
+group           virtual_atom type  6 7 8
+group           slab type 1
+group           sol type 2 3 4 5
+
+neighbor        2.0 bin
+neigh_modify    every 10 delay 0 check no exclude group sol virtual_atom
+
+pair_style      hybrid/scaled 1.0 deepmd @EC_MODELS out_freq ${THERMO_FREQ} out_file model_devi.out 0.0  lj/cut/coul/long/gauss 6.0 
+pair_coeff      * * deepmd
+pair_coeff      * * lj/cut/coul/long/gauss 0.0 1.0 NULL 
+pair_coeff      1 1 lj/cut/coul/long/gauss 0.0 1.0 ${ETA}
+
+bond_style      zero
+bond_coeff      *
+special_bonds   lj/coul 1 1 1 angle no
+
+kspace_style    pppm/electrode 1e-5
+kspace_modify   gewald ${BETA} diff ik mesh ${KMESH_X} ${KMESH_Y} ${KMESH_Z}
+
+fix             fdplr all dplr model @EC_SINGLE_MODEL type_associate 2 6 4 7 5 8  bond_type 1
+#fix             fconq slab electrode/conp ${SIGMA} pair lj/cut/coul/long/gauss 
+fix             fconq slab electrode/conq ${SIGMA} pair lj/cut/coul/long/gauss 
+fix             freeze slab setforce 0.0 0.0 0.0
+
+# compute the temperature of solution
+compute         real_temp sol temp
+fix             fnvt sol nvt temp ${TEMP} ${TEMP} 0.05
+fix_modify      fnvt temp real_temp
+
+
+thermo ${THERMO_FREQ}
+thermo_style custom step c_real_temp etotal pe ke press
+
+dump            traj all custom ${DUMP_FREQ} dump.lammpstrj id type element x y z fx fy fz q
+dump_modify     traj element Cu Cl H O K X X X sort id format float %20.15g
+
+velocity        sol create ${TEMP} ${SEED}
+velocity        sol scale ${TEMP}
+velocity        slab set 0.0 0.0 0.0
+
+add_run_style   verlet/split/dplr
+run_style       verlet/split/dplr
+
+timestep        ${DT}
+run             ${NSTEPS}
+

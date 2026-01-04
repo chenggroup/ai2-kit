@@ -1,0 +1,49 @@
+variable    DATA_FILE        string conf.lmp
+variable    N_STEPS          equal 200000000
+variable    TEMP             equal 350
+variable    SEED             equal @SEED
+
+variable    TAU_T            equal 0.1
+variable    TAU_P            equal 0.5
+variable    TIME_CONST       equal 0.1
+variable    PRES             equal -1
+variable    THERMO_FREQ      equal 1000
+variable    DUMP_FREQ        equal 1000
+variable    SAMPLE_FREQ      equal 1000
+
+
+units           metal
+atom_style      atomic
+boundary p p p
+
+neighbor 2.0 bin
+box      tilt large
+
+
+if "${restart} > 0" then "read_restart md.restart.*" else "read_data ${DATA_FILE} extra/atom/types 0"
+
+mass 1  208.9804  # Bi
+mass 2  1.00784   # H
+mass 3  15.999    # O
+mass 4  50.9415   # V
+
+pair_style deepmd @DP_MODELS out_freq ${THERMO_FREQ} out_file model_devi-${lammpsid}.out
+pair_coeff * *
+
+log log-${lammpsid}.lammps
+
+
+if "${restart} == 0" then "velocity all create ${TEMP} ${SEED}"
+
+print "This is lammps-${lammpsid}"
+fix 1 all ipi slurm-one-node 16843 unix
+
+thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz
+thermo       ${THERMO_FREQ}
+dump         1 all custom ${DUMP_FREQ} dump-${lammpsid}.lammpstrj id type x y z fx fy fz
+dump_modify  1 sort id
+restart      10000 md.restart
+
+timestep 0.000500
+run      ${N_STEPS} upto
+

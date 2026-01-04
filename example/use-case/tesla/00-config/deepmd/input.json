@@ -1,0 +1,55 @@
+{
+  "model": {
+    "descriptor": {
+      "type": "se_a",
+      "sel": "auto",
+      "rcut_smth": 2.0,
+      "rcut": 15.0,
+      "neuron": [ 25, 50, 100 ],
+      "resnet_dt": false,
+      "axis_neuron": 16,
+      "seed": @SEED
+    },
+    "fitting_net": {
+      "neuron": [ 240, 240, 240 ],
+      "resnet_dt": true,
+      "seed": @SEED
+    },
+    "type_map": [ "Ag", "O" ]
+  },
+  "learning_rate": {
+    "type": "exp",
+    "start_lr": 0.001,
+    "decay_steps": 2000
+  },
+  "loss": {
+    "start_pref_e": 0.02,
+    "limit_pref_e": 2,
+    "start_pref_f": 1000,
+    "limit_pref_f": 1,
+    "start_pref_v": 0,
+    "limit_pref_v": 0
+  },
+  "training": {
+    "disp_file": "lcurve.out",
+    "disp_freq": 1000,
+    "numb_test": 1,
+    "save_freq": 1000,
+    "save_ckpt": "model.ckpt",
+    "disp_training": true,
+    "time_training": true,
+    "profiling": false,
+    "profiling_file": "timeline.json",
+    "numb_steps": @STEPS,
+    "seed": @SEED,
+    "training_data": {
+      "set_prefix": "set",
+      "batch_size": "auto",
+      "sys_probs": null,
+      "systems": [
+        @DP_DATASET
+      ],
+      "auto_prob_style": "prob_sys_size"
+    }
+  }
+}

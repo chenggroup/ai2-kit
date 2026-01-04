@@ -1,0 +1,76 @@
+&GLOBAL
+    PROJECT AI2KIT
+    RUN_TYPE ENERGY_FORCE
+&END GLOBAL
+&FORCE_EVAL
+    METHOD QS
+    STRESS_TENSOR ANALYTICAL
+    &DFT
+        BASIS_SET_FILE_NAME /public/groups/ai4ec/data/cp2k/BASIS_MOLOPT
+        POTENTIAL_FILE_NAME /public/groups/ai4ec/data/cp2k/GTH_POTENTIALS
+        CHARGE              0
+        UKS                 T
+        &MGRID
+            CUTOFF     600
+            REL_CUTOFF 50
+            NGRIDS     4
+        &END MGRID
+        &QS
+            EPS_DEFAULT 1.0E-12
+        &END QS
+        # CONFIGURATION FOR SEMICONDUCTOR
+        &SCF
+            SCF_GUESS RESTART
+            EPS_SCF 3e-07
+            MAX_SCF 50
+            &OUTER_SCF
+                EPS_SCF 3e-07
+                MAX_SCF 20
+            &END OUTER_SCF
+            &OT
+                MINIMIZER CG
+                PRECONDITIONER FULL_SINGLE_INVERSE
+                ENERGY_GAP 0.1
+            &END OT
+        &END SCF
+        # END CONFIGURATION FOR SEMICONDUCTOR
+        &XC
+            &XC_FUNCTIONAL PBE
+            &END XC_FUNCTIONAL
+            &vdW_POTENTIAL
+                DISPERSION_FUNCTIONAL PAIR_POTENTIAL
+                &PAIR_POTENTIAL
+                    TYPE DFTD3
+                    PARAMETER_FILE_NAME /public/groups/ai4ec/data/cp2k/dftd3.dat
+                    REFERENCE_FUNCTIONAL PBE
+                &END PAIR_POTENTIAL
+            &END vdW_POTENTIAL
+        &END XC
+    &END DFT
+    &SUBSYS
+    @include @DATA_FILE
+    &KIND O
+        BASIS_SET DZVP-MOLOPT-SR-GTH
+        # All available BASIS_SET:
+        # SZV-MOLOPT-GTH DZVP-MOLOPT-GTH TZVP-MOLOPT-GTH TZV2P-MOLOPT-GTH TZV2PX-MOLOPT-GTH SZV-MOLOPT-SR-GTH DZVP-MOLOPT-SR-GTH
+        POTENTIAL GTH-PBE-q6
+        # All available POTENTIAL:
+        # GTH-BLYP-q6 GTH-BP-q6 GTH-HCTH120-q6 GTH-HCTH407-q6 GTH-PADE-q6 GTH-PBE-q6 GTH-OLYP-q6
+    &END KIND
+    &KIND Ag
+        BASIS_SET DZVP-MOLOPT-SR-GTH
+        # All available BASIS_SET:
+        # SZV-MOLOPT-SR-GTH DZVP-MOLOPT-SR-GTH
+        POTENTIAL GTH-PBE-q11
+        # All available POTENTIAL:
+        # GTH-BLYP-q11 GTH-BLYP-q19 GTH-PADE-q1 GTH-PADE-q11 GTH-PADE-q19 GTH-PBE-q11 GTH-PBE-q19
+    &END KIND
+
+    &END SUBSYS
+    &PRINT
+        &FORCES ON
+        &END FORCES
+        &STRESS_TENSOR ON
+        &END STRESS_TENSOR
+    &END PRINT
+&END FORCE_EVAL

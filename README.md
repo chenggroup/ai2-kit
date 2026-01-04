@@ -61,8 +61,10 @@ poetry run ai2-kit
 These workflows are built with [oh-my-batch](https://github.com/link89/oh-my-batch) and example shell scripts, which can be easily adapted to your own research purpose.
 It provides more flexibility and transparency to run and customize their own workflows.
 
-* [TESLA workflow](https://github.com/link89/oh-my-batch/tree/main/examples/tesla/): A customizable active learning workflow for training machine learning potentials.
-* [TESLA PIMD workflow](https://github.com/link89/oh-my-batch/tree/main/examples/tesla-pimd/): A customizable active learning workflow for training machine learning potentials with path integral molecular dynamics.
+* [TESLA](./example/use-case/tesla/): A customizable active learning workflow for training machine learning potentials.
+* [TESLA PIMD](./examples/use-case/tesla-pimd/): A customizable active learning workflow for training machine learning potentials with path integral molecular dynamics.
+* [TESLA for ec-MLP](./example/use-case/tesla-for-ec-mlp/): A customizable active learning workflow for training machine learning potentials for electrolyte systems.
+
 
 #### Config Driven Workflows
 These workflows are driven by configuration files, which can be easily modified to fit your own research purpose. 

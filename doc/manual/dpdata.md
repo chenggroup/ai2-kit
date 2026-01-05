@@ -50,10 +50,10 @@ ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy --fparam [0,1] - wri
 ai2-kit tool dpdata read dp-h2o --nolabel - eval dp-frozen.pb - write new-dp-h2o
 
 # Drop the first 10 frames and then sample 10 frames use random method, and save it as xyz format
-ai2-kit tool dpdata read dp-h2o - slice 10: - sample 10 --method random - to_ase - write h2o.xyz
+ai2-kit tool dpdata read dp-h2o --fmt deepmd/npy - slice 10: - sample 10 --method random - to_ase - write h2o.xyz
 
 # Convert dpdata to ase format and write VASP POSCAR files
-ai2-kit tool dpdata read dp-h2o - to_ase - write_frames "./vasp-{i-04d}/POSCAR" --format vasp 
+ai2-kit tool dpdata read dp-h2o --fmt deepmd/npy - to_ase - write_frames "./vasp-{i-04d}/POSCAR" --format vasp 
 
 # convert cp2k data to the format that can be used by deepmd dplr module
 # data used in v3

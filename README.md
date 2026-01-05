@@ -7,7 +7,7 @@
 
 <p align="center"> <img src="doc/res/logo.png" alt="ai2-kit logo" width="240" /> </p>
 
-A toolkit featured _**a**rtificial **i**ntelligence × **a**b **i**nitio_ for computational chemistry research.
+`ai2-kit`(pronounced as "AI Squared Kit")  is a command line and python toolkit featured _**a**rtificial **i**ntelligence × **a**b **i**nitio_ for complex chemistry systems research.
 
 *Please be advised that `ai2-kit` is still under heavy development and you should expect things to change often. We encourage people to play and explore with `ai2-kit`, and stay tuned with us for more features to come.*
 
@@ -54,6 +54,7 @@ You can run the following command to see the available commands and sub-commands
 
 ```bash
 ai2-kit
+# e.g.
 ai2-kit tool
 ai2-kit tool dpdata
 
@@ -62,7 +63,7 @@ For detailed usage of each command, you can run the following command to view th
 
 ```bash
 ai2-kit <sub-command> --help
-# e.g
+# e.g.
 ai2-kit tool dpdata read --help
 ```
 

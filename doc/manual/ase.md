@@ -5,6 +5,8 @@ ai2-kit tool ase
 ```
 This toolkit is a command line wrapper of [ASE](https://wiki.fysik.dtu.dk/ase/) to allow user to process trajectory via command line.
 
+`ase` tool can be use with [dpdata tool](./dpdata.md) to convert trajectory to DeepMD-kit dataset.
+
 ## Usage
 
 ```bash

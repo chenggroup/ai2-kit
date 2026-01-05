@@ -6,6 +6,8 @@ ai2-kit tool dpdata
 
 This toolkit is a command line wrapper of [dpdata](https://github.com/deepmodeling/dpdata) to allow user to process DeepMD dataset via command line.
 
+`dpdata` tool can be use with [ase tool](./ase.md) to process trajectory files in various formats.
+
 ## Usage
 
 ```bash
@@ -44,12 +46,14 @@ ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy - filter "lambda x: 
 # Set fparam when reading data
 ai2-kit tool dpdata read ./path/to/dataset --fmt deepmd/npy --fparam [0,1] - write ./path/to/new_dataset
 
-# (re)label data
-ai2-kit tool dpdata read dp-h2o --nolabel - eval dp-frozen.pb - write new-dp-hwo
+# (re)label data with a DeepPot model
+ai2-kit tool dpdata read dp-h2o --nolabel - eval dp-frozen.pb - write new-dp-h2o
 
 # Drop the first 10 frames and then sample 10 frames use random method, and save it as xyz format
 ai2-kit tool dpdata read dp-h2o - slice 10: - sample 10 --method random - to_ase - write h2o.xyz
-o
+
+# Convert dpdata to ase format and write VASP POSCAR files
+ai2-kit tool dpdata read dp-h2o - to_ase - write_frames "./vasp-{i-04d}/POSCAR" --format vasp 
 
 # convert cp2k data to the format that can be used by deepmd dplr module
 # data used in v3

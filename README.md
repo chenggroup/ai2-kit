@@ -48,6 +48,24 @@ poetry install
 poetry run ai2-kit
 ```
 
+## Usage
+All `ai2-kit` commands can be accessed via the command line interface `ai2-kit`.
+You can run the following command to see the available commands and sub-commands:
+
+```bash
+ai2-kit
+ai2-kit tool
+ai2-kit tool dpdata
+
+```
+For detailed usage of each command, you can run the following command to view the help information:
+
+```bash
+ai2-kit <sub-command> --help
+# e.g
+ai2-kit tool dpdata read --help
+```
+
 ## Manuals
 ### Featuring Tools
 * [NMRNet](doc/manual/nmrnet.md): A toolkit for predict NMR with deep learning network.

@@ -81,7 +81,7 @@ These workflows are built with [oh-my-batch](https://github.com/link89/oh-my-bat
 It provides more flexibility and transparency to run and customize their own workflows.
 
 * [TESLA](./example/use-case/tesla/): A customizable active learning workflow for training machine learning potentials.
-* [TESLA PIMD](./examples/use-case/tesla-pimd/): A customizable active learning workflow for training machine learning potentials with path integral molecular dynamics.
+* [TESLA PIMD](./example/use-case/tesla-pimd/): A customizable active learning workflow for training machine learning potentials with path integral molecular dynamics.
 * [TESLA for ec-MLP](./example/use-case/tesla-for-ec-mlp/): A customizable active learning workflow for training machine learning potentials for electrolyte systems.
 
 

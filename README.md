@@ -2,6 +2,7 @@
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/ai2-kit)](https://pypi.org/project/ai2-kit/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ai2-kit)](https://pypi.org/project/ai2-kit/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15266041.svg)](https://doi.org/10.5281/zenodo.15266041)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/chenggroup/ai2-kit)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/y/chenggroup/ai2-kit/main)
 
 

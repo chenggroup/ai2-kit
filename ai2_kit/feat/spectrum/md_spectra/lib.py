@@ -1,17 +1,499 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import Optional, List
+from typing import Dict, List, Optional
 import dpdata
+from ase import Atoms
 from MDAnalysis.lib.distances import distance_array, minimize_vectors
 
-from .function_cal_corr import (
-    calculate_corr_vdipole,
-    calculate_corr_polar,
-    cal_corr_sfg_method2,
-    cutoff_z
-)
-from .function_ft import calculate_ir, calculate_raman, calculate_sfg
-from .function_prepare import find_h2o, do_pbc, calculate_dipole
+def write_to_diagonal(a: np.ndarray, diag: np.ndarray, offset: int = 0, axis1: int = 0, axis2: int = 1):
+    diag_slices = [slice(None) for _ in a.shape]
+    start_idx = [max(-offset, 0), max(offset, 0)]
+    diag_len = min(a.shape[axis1] - start_idx[0], a.shape[axis2] - start_idx[1])
+    assert diag_len >= 0
+    if diag_len == 0:
+        return
+    diag_slices[axis1] = list(range(start_idx[0], start_idx[0] + diag_len))
+    diag_slices[axis2] = list(range(start_idx[1], start_idx[1] + diag_len))
+    a[tuple(diag_slices)] = diag
+
+
+def _coords_cells_mul(coords: np.ndarray, cells: np.ndarray) -> np.ndarray:
+    if coords.ndim >= cells.ndim:
+        d0 = coords.ndim - cells.ndim + 1
+        shape = coords.shape
+        return np.matmul(coords.reshape(shape[:-d0 - 1] + (-1, 3)), cells).reshape(shape)
+    return np.matmul(coords[..., None, :], cells).squeeze(-2)
+
+
+def inv_cells(cells: np.ndarray):
+    return np.linalg.inv(cells)
+
+
+def to_frac(coords: np.ndarray, cells: np.ndarray) -> np.ndarray:
+    return _coords_cells_mul(coords, inv_cells(cells))
+
+
+def box_shift(dx: np.ndarray, cells: np.ndarray) -> np.ndarray:
+    return dx - _coords_cells_mul(np.round(to_frac(dx, cells)), cells)
+
+
+def do_pbc(coords: np.ndarray, cells: np.ndarray) -> np.ndarray:
+    return coords - _coords_cells_mul(np.floor(to_frac(coords, cells)), cells)
+
+
+def get_distance(
+    coords_A: np.ndarray,
+    coords_B: Optional[np.ndarray],
+    cells: np.ndarray,
+    remove_diag: bool = False,
+    offset: int = 0,
+):
+    if coords_B is None:
+        coords_B = coords_A
+    distance = np.linalg.norm(
+        box_shift(coords_A[..., None, :] - coords_B[..., None, :, :], cells),
+        ord=2,
+        axis=-1,
+    )
+    if remove_diag:
+        write_to_diagonal(distance, np.inf, offset=offset, axis1=-2, axis2=-1)
+    return distance
+
+
+def k_nearest(coords_A: np.ndarray, coords_B: Optional[np.ndarray], cells: np.ndarray, k: int, batch_size: int = -1):
+    self_comp = False
+    if coords_B is None:
+        coords_B = coords_A
+        self_comp = True
+    d = coords_B.shape[-2]
+    k = min(d, k)
+    batch_size = min(d - k, batch_size)
+    if batch_size <= 0:
+        distance = get_distance(coords_A, coords_B, cells, remove_diag=self_comp)
+        k_index = np.argpartition(distance, k, axis=-1)[..., :k]
+        k_distance = np.take_along_axis(distance, k_index, axis=-1)
+    else:
+        shape = list(coords_A.shape)
+        shape[-1] = k + batch_size
+        k_index = np.empty(shape, dtype=int)
+        k_distance = np.empty(shape, dtype=coords_B.dtype)
+        k_index[..., :k] = np.arange(k)
+        k_distance[..., :k] = get_distance(coords_A, coords_B[..., :k, :], cells, remove_diag=self_comp, offset=0)
+        for i in range(k, d, batch_size):
+            end_i = min(d, i + batch_size)
+            sz = end_i - i
+            k_index[..., k:k + sz] = np.arange(i, end_i)
+            k_distance[..., k:k + sz] = get_distance(
+                coords_A, coords_B[..., i:end_i, :], cells, remove_diag=self_comp, offset=i
+            )
+            partition_idx = np.argpartition(k_distance, k, axis=-1)
+            k_index = np.take_along_axis(k_index, partition_idx, axis=-1)
+            k_distance = np.take_along_axis(k_distance, partition_idx, axis=-1)
+    sort_idx = np.argsort(k_distance[..., :k], axis=-1)
+    return np.take_along_axis(k_index[..., :k], sort_idx, axis=-1)
+
+
+def find_h2o(coords_sel: np.ndarray, coords_oth: np.ndarray, cells: np.ndarray, r_bond: float):
+    coords_sel = coords_sel[..., np.newaxis, :]
+    delta = box_shift(coords_oth[..., np.newaxis, :, :] - coords_sel, cells[..., np.newaxis, np.newaxis, :, :])  # type: ignore
+    mask = np.linalg.norm(delta, 2, axis=-1) < r_bond
+    return np.sum(mask, axis=-1) == 2
+
+
+def calculate_dipole_H(coords_O: np.ndarray, coords_H: np.ndarray, cells: np.ndarray):
+    idx_H = k_nearest(coords_O[[0]], coords_H[[0]], cells[[0]], 2)
+    cH = np.take_along_axis(coords_H[..., np.newaxis, :, :], idx_H[..., np.newaxis], axis=-2)
+    return np.sum(box_shift(cH - coords_O[..., np.newaxis, :], cells[..., np.newaxis, np.newaxis, :, :]), axis=-2)
+
+
+def calculate_dipole(coords_O: np.ndarray, coords_H: np.ndarray, cells: np.ndarray, wannier: np.ndarray) -> np.ndarray:
+    return calculate_dipole_H(coords_O, coords_H, cells) - wannier * 8
+
+
+def calculate_dipole_OH_H(coords_O: np.ndarray, coords_H: np.ndarray, coords_Al: np.ndarray, cells: np.ndarray):
+    idx_H = k_nearest(coords_O[[0]], coords_H[[0]], cells[[0]], 1)
+    idx_Al = k_nearest(coords_O[[0]], coords_Al[[0]], cells[[0]], 2)
+    cH = np.take_along_axis(coords_H[..., np.newaxis, :, :], idx_H[..., np.newaxis], axis=-2)
+    cAl = np.take_along_axis(coords_Al[..., np.newaxis, :, :], idx_Al[..., np.newaxis], axis=-2)
+    return (
+        np.sum(box_shift(cH - coords_O[..., np.newaxis, :], cells[..., np.newaxis, np.newaxis, :, :]), axis=-2)
+        + np.sum(box_shift(cAl - coords_O[..., np.newaxis, :], cells[..., np.newaxis, np.newaxis, :, :]), axis=-2) / 6
+    )
+
+
+def calculate_dipole_OH(
+    coords_O: np.ndarray,
+    coords_H: np.ndarray,
+    coords_Al: np.ndarray,
+    cells: np.ndarray,
+    wannier: np.ndarray,
+) -> np.ndarray:
+    return calculate_dipole_OH_H(coords_O, coords_H, coords_Al, cells) - wannier * 8
+
+
+def calculate_corr(A: np.ndarray, B: np.ndarray, NMAX: int, window: Optional[int] = None):
+    if A.ndim == 1 or B.ndim == 1:
+        A = A.reshape(-1, 1)
+        B = B.reshape(-1, 1)
+    if window is None:
+        window = min(A.shape[0], B.shape[0] - NMAX)
+    v1 = A[:window][::-1]
+    v2 = B[:window + NMAX]
+    pad_width = [(0, 0)] * A.ndim
+    pad_width[0] = (0, NMAX)
+    v1 = np.pad(v1, pad_width, "constant", constant_values=0)
+    corr = np.fft.ifft(np.fft.fft(v1, axis=0) * np.fft.fft(v2, axis=0), axis=0).real
+    return corr[window - 1:window + NMAX] / window
+
+
+def cutoff_ir_raman(arr, low, high, smooth_width):
+    eps = 1e-2
+    cut_f = lambda x: np.exp(-1 / np.clip(x, eps, None))
+    a_in = cut_f(np.maximum(low - arr, arr - high))
+    a_out = cut_f(np.minimum(arr - low, high - arr) + smooth_width)
+    return a_out / (a_out + a_in)
+
+
+def cal_range_dipole_polar(z, atomic_dipole, z_lo, z_hi, r_smth):
+    weight = cutoff_ir_raman(z, z_lo, z_hi, r_smth)
+    return np.sum(weight * atomic_dipole, axis=1) / np.sqrt(np.clip(np.sum(weight, axis=1), 1, None))
+
+
+def calculate_corr_vdipole(
+    atomic_dipole: np.ndarray,
+    weight: np.ndarray,
+    coords: np.ndarray,
+    cells: np.ndarray,
+    dt_ps: float,
+    window: int,
+    rc: float = 6.75,
+):
+    natom = atomic_dipole.shape[1]
+    weight = weight[1:-1]
+    coords = coords[1:-1]
+    cells = cells[1:-1]
+    weight /= np.sqrt(np.clip(np.sum(np.abs(weight), axis=1, keepdims=True), 1, None))
+    v_dipole = weight[..., None] * (atomic_dipole[2:] - atomic_dipole[:-2]) / (2 * dt_ps)
+    corr_intra = calculate_corr(v_dipole, v_dipole, window)
+    dipole_cutoff = np.empty_like(v_dipole)
+    for atom_i in range(natom):
+        dis_mask = get_distance(coords, coords[:, [atom_i], :], cells) < rc
+        dis_mask[:, atom_i] = False
+        dipole_cutoff[:, atom_i] = np.matmul(v_dipole.transpose(0, 2, 1), dis_mask).squeeze(2)
+    corr_inter = calculate_corr(dipole_cutoff, v_dipole, window)
+    return corr_intra, corr_inter
+
+
+def calculate_corr_polar(
+    atomic_polar: np.ndarray,
+    weight: np.ndarray,
+    coords: np.ndarray,
+    cells: np.ndarray,
+    window: int,
+    rc: float = 6.75,
+):
+    nframes, natom = atomic_polar.shape[:2]
+    polar_iso = np.mean(atomic_polar.diagonal(offset=0, axis1=-2, axis2=-1), axis=-1)
+    diag = np.zeros_like(atomic_polar, dtype=float)
+    diag[..., 0, 0] = polar_iso
+    diag[..., 1, 1] = polar_iso
+    diag[..., 2, 2] = polar_iso
+    polar_aniso = atomic_polar - diag
+    polar_iso -= np.mean(polar_iso, axis=0, keepdims=True)
+    polar_aniso -= np.mean(polar_aniso, axis=0, keepdims=True)
+    polar_iso = np.square(weight) * polar_iso
+    polar_aniso = np.square(weight[..., None, None]) * polar_aniso
+    polar_aniso = polar_aniso.reshape(nframes, natom, 9)
+    corr_iso_intra = calculate_corr(polar_iso, polar_iso, window)
+    corr_aniso_intra = np.sum(calculate_corr(polar_aniso, polar_aniso, window), axis=-1) * (2.0 / 15.0)
+    polar_iso_cutoff = np.empty_like(polar_iso)
+    polar_aniso_cutoff = np.empty_like(polar_aniso)
+    for atom_i in range(natom):
+        dis_mask = get_distance(coords, coords[:, [atom_i], :], cells) < rc
+        dis_mask[:, atom_i] = False
+        polar_iso_cutoff[:, atom_i] = np.matmul(polar_iso[:, None, :], dis_mask).squeeze((1, 2))
+        polar_aniso_cutoff[:, atom_i] = np.matmul(polar_aniso.transpose(0, 2, 1), dis_mask).squeeze(2)
+    corr_iso_inter = calculate_corr(polar_iso_cutoff, polar_iso, window)
+    corr_aniso_inter = np.sum(calculate_corr(polar_aniso_cutoff, polar_aniso, window), axis=-1) * (2.0 / 15.0)
+    return corr_iso_intra, corr_aniso_intra, corr_iso_inter, corr_aniso_inter
+
+
+def cutoff_z(z_arr, z0, zc, zw):
+    cut_f = lambda x: np.cos(np.pi * np.clip(x, -1, 0) / 2) ** 2
+    z = z_arr - z0
+    return np.sign(z) * cut_f((np.abs(z) - (zc + zw)) / zw)
+
+
+def cal_corr_sfg_method2(
+    atomic_polar: np.ndarray,
+    atomic_dipole: np.ndarray,
+    weight: np.ndarray,
+    coords: np.ndarray,
+    cells: np.ndarray,
+    window: int,
+    rc: float = 6.75,
+):
+    natom = atomic_dipole.shape[1]
+    atomic_polar -= np.mean(atomic_polar, axis=0, keepdims=True)
+    atomic_dipole -= np.mean(atomic_dipole, axis=0, keepdims=True)
+    dipole = weight * atomic_dipole
+    corr_intra = calculate_corr(dipole, np.square(weight) * atomic_polar, window)
+    dipole_cutoff = np.empty_like(dipole)
+    for atom_i in range(natom):
+        dis_mask = get_distance(coords, coords[:, [atom_i], :], cells) < rc
+        dis_mask[:, atom_i] = False
+        dipole_cutoff[:, atom_i] = np.matmul(dipole[:, None, :], dis_mask).squeeze() * np.square(weight[:, atom_i])
+    corr_inter = calculate_corr(dipole_cutoff, atomic_polar, window)
+    return corr_intra, corr_inter
+
+
+def cal_corr_sfg_method1(
+    atomic_polar: np.ndarray,
+    atomic_dipole: np.ndarray,
+    weight: np.ndarray,
+    coords: np.ndarray,
+    cells: np.ndarray,
+    window: int,
+    rc: float = 6.75,
+):
+    natom = atomic_dipole.shape[1]
+    atomic_polar -= np.mean(atomic_polar, axis=0, keepdims=True)
+    atomic_dipole -= np.mean(atomic_dipole, axis=0, keepdims=True)
+    dipole = weight * atomic_dipole
+    polar = np.square(weight) * atomic_polar
+    corr_intra = calculate_corr(dipole, polar, window)
+    dipole_cutoff = np.empty_like(dipole)
+    for atom_i in range(natom):
+        dis_mask = get_distance(coords, coords[:, [atom_i], :], cells) < rc
+        dis_mask[:, atom_i] = False
+        dipole_cutoff[:, atom_i] = np.matmul(dipole[:, None, :], dis_mask).squeeze((1, 2))
+    corr_inter = calculate_corr(dipole_cutoff, polar, window)
+    return corr_intra, corr_inter
+
+
+calculate_corr_vdipole_atomic = calculate_corr_vdipole
+calculate_corr_polar_atomic = calculate_corr_polar
+
+
+def apply_gussian_filter(corr: np.ndarray, width: float):
+    nmax = corr.shape[0] - 1
+    return corr * np.exp(-0.5 * (0.5 * width * np.arange(nmax + 1) / nmax) ** 2)
+
+
+def apply_lorenz_filter(corr: np.ndarray, width: float, dt):
+    nmax = corr.shape[0] - 1
+    b = width * 2.99792458e-3
+    M = int(1 / (dt * 0.01 * 2)) * 2
+    M = max(M, nmax)
+    dx = 1 / (M * dt)
+    NX = int(50 * np.sqrt(b) / dx / 2) * 2
+    x = np.arange(NX + 1) * dx
+    p = b / (b ** 2 + x ** 2)
+    _, ph = FT(dx, p, M)
+    return corr * ph[:nmax + 1]
+
+
+def _range_fft(a: np.ndarray, n: Optional[int] = None, axis: int = -1):
+    axis %= a.ndim
+    l = a.shape[axis]
+    if n is None:
+        n = l
+    if n >= l:
+        return np.fft.fft(a, n, axis)
+    num_n = int(l / n)
+    l0 = n * num_n
+    new_shape = list(a.shape)
+    new_shape[axis] = n
+    new_shape.insert(axis, num_n)
+    a_main = np.sum(a.take(range(l0), axis).reshape(new_shape), axis)
+    a_tail = a.take(range(l0, l), axis)
+    return np.fft.fft(a_main, n, axis) + np.fft.fft(a_tail, n, axis)
+
+
+def _FFT_OE(C: np.ndarray, M: int):
+    M0 = int(M / 2)
+    DTH = 2 * np.pi / M
+    CE = _range_fft(C[::2], M0)
+    CE = np.concatenate([CE, CE, CE[0:1]])
+    CO = _range_fft(C[1::2], M0) * np.exp(-np.arange(M0) * DTH * 1j)
+    CO = np.concatenate([CO, -CO, CO[0:1]])
+    return CE, CO
+
+
+def _FILON_PARAMS(THETA: np.ndarray) -> np.ndarray:
+    SINTH = np.sin(THETA)
+    COSTH = np.cos(THETA)
+    SINSQ = np.square(SINTH)
+    COSSQ = np.square(COSTH)
+    THSQ = np.square(THETA)
+    THCUB = THSQ * THETA
+    ALPHA = 1.0 * (THSQ + THETA * SINTH * COSTH - 2.0 * SINSQ)
+    BETA = 2.0 * (THETA * (1.0 + COSSQ) - 2.0 * SINTH * COSTH)
+    GAMMA = 4.0 * (SINTH - THETA * COSTH)
+    ALPHA[0] = 0.0
+    BETA[0] = 2.0 / 3.0
+    GAMMA[0] = 4.0 / 3.0
+    ALPHA[1:] /= THCUB[1:]
+    BETA[1:] /= THCUB[1:]
+    GAMMA[1:] /= THCUB[1:]
+    return ALPHA, BETA, GAMMA
+
+
+def FT(DT: float, C: np.ndarray, M: Optional[int] = None) -> np.ndarray:
+    NMAX = C.shape[0] - 1
+    if NMAX % 2 != 0:
+        raise ValueError("NMAX (=len(C)-1) must be even for the cosine transform.")
+    if M is None:
+        M = NMAX
+    elif M % 2 != 0:
+        M += 1
+    freq = 1 / (M * DT)
+    DTH = 2 * np.pi / M
+    THETA = np.arange(M + 1) * DTH
+    ALPHA, BETA, GAMMA = _FILON_PARAMS(THETA)
+    CE, CO = _FFT_OE(C, M)
+    CE, CO = CE.real, CO.real
+    CE -= 0.5 * (C[0] + C[NMAX] * np.cos(THETA * NMAX))
+    CHAT = 2.0 * (ALPHA * C[NMAX] * np.sin(THETA * NMAX) + BETA * CE + GAMMA * CO) * DT
+    return freq, CHAT
+
+
+def FT_sin(DT: float, C: np.ndarray, M: Optional[int] = None) -> np.ndarray:
+    NMAX = C.shape[0] - 1
+    if NMAX % 2 != 0:
+        raise ValueError("NMAX (=len(C)-1) must be even for the sine transform.")
+    if M is None:
+        M = NMAX
+    elif M % 2 != 0:
+        M += 1
+    freq = 1 / (M * DT)
+    DTH = 2 * np.pi / M
+    THETA = np.arange(M + 1) * DTH
+    ALPHA, BETA, GAMMA = _FILON_PARAMS(THETA)
+    CE, CO = _FFT_OE(C, M)
+    CE, CO = CE.imag, CO.imag
+    CE -= 0.5 * (C[NMAX] * np.sin(THETA * NMAX))
+    CHAT = 2.0 * (ALPHA * (C[0] - C[NMAX] * np.cos(THETA * NMAX)) + BETA * CE + GAMMA * CO) * DT
+    return freq, CHAT
+
+
+def change_unit_ir(freq_ps, CHAT: np.ndarray, temperature: float):
+    a0 = 0.52917721067e-10
+    cc = 2.99792458e8
+    kB = 1.38064852 * 1.0e-23
+    beta = 1.0 / (kB * temperature)
+    unit_basic = 1.602176565 * 1.0e-19 * a0
+    unitt = unit_basic / 1
+    unit2 = unitt ** 2
+    epsilon0 = 8.8541878e-12
+    unit_all = beta / (3.0 * cc * a0 ** 3) / (2 * epsilon0) * unit2
+    unit_all = unit_all * 1.0e12 * 1.0e-2
+    CHAT *= unit_all
+    d_omega = 1e10 * freq_ps / cc
+    return d_omega, CHAT
+
+
+def change_unit_raman(freq_ps, CHAT: np.ndarray, temperature: float):
+    cc = 2.99792458e8
+    kB = 1.38064852 * 1.0e-23
+    h = 6.62607015e-34
+    h_bar = h / (2 * np.pi)
+    beta = 1.0 / (kB * temperature)
+    freq = 2 * np.pi * freq_ps * 1e12
+    CHAT = CHAT * 1e4 * (1 - np.exp(-beta * h_bar * freq * np.arange(CHAT.shape[0])))
+    d_omega = 1e10 * freq_ps / cc
+    return d_omega, CHAT
+
+
+def change_unit_sfg(freq_ps, CHAT: np.ndarray, temperature: float):
+    a0 = 0.52917721067e-10
+    cc = 2.99792458e8
+    kB = 1.38064852 * 1.0e-23
+    beta = 1.0 / (kB * temperature)
+    unit_basic = 1.602176565 * 1.0e-19 * a0
+    unitt = unit_basic / 1
+    unit2 = unitt ** 2
+    epsilon0 = 8.8541878e-12
+    unit_all = beta / (4 * np.pi * a0 ** 2) / (2 * epsilon0) * unit2
+    unit_all = unit_all * 1.0e12 * 1.0e-5
+    CHAT *= unit_all * freq_ps * 1e4 * np.arange(CHAT.shape[0])
+    d_omega = 1e10 * freq_ps / cc
+    return d_omega, CHAT
+
+
+def calculate_ir(corr: np.ndarray, width: float, dt_ps: float, temperature: float, M: Optional[int] = None, filter_type: str = "gaussian"):
+    nmax = corr.shape[0] - 1
+    if nmax % 2 != 0:
+        nmax -= 1
+        corr = corr[:-1]
+    tmax = nmax * dt_ps
+    filter_type = filter_type.lower().strip()
+    print("nmax         =", nmax)
+    print("dt   (ps)    =", dt_ps)
+    print("tmax (ps)    =", tmax)
+    print("Filter type  =", filter_type)
+    print("Smooth width =", width)
+    if filter_type == "gaussian":
+        C = apply_gussian_filter(corr, width * tmax / 100.0 * 3)
+    elif filter_type == "lorenz":
+        C = apply_lorenz_filter(corr, width, dt_ps)
+    else:
+        raise NotImplementedError(f"Unknown filter type: {filter_type}!")
+    freq_ps, CHAT = FT(dt_ps, C, M)
+    d_omega, CHAT = change_unit_ir(freq_ps, CHAT, temperature)
+    return np.arange(CHAT.shape[0]) * d_omega, CHAT
+
+
+def calculate_raman(corr: np.ndarray, width: float, dt_ps: float, temperature: float, M: Optional[int] = None, filter_type: str = "gaussian"):
+    nmax = corr.shape[0] - 1
+    if nmax % 2 != 0:
+        nmax -= 1
+        corr = corr[:-1]
+    tmax = nmax * dt_ps
+    filter_type = filter_type.lower().strip()
+    print("nmax         =", nmax)
+    print("dt   (ps)    =", dt_ps)
+    print("tmax (ps)    =", tmax)
+    print("Filter type  =", filter_type)
+    print("width        = ", width)
+    if filter_type == "gaussian":
+        C = apply_gussian_filter(corr, width * tmax / 100.0 * 3)
+    elif filter_type == "lorenz":
+        C = apply_lorenz_filter(corr, width, dt_ps)
+    else:
+        raise NotImplementedError(f"Unknown filter type: {filter_type}!")
+    freq_ps, CHAT = FT(dt_ps, C, M)
+    d_omega, CHAT = change_unit_raman(freq_ps, CHAT, temperature)
+    return np.arange(CHAT.shape[0]) * d_omega, CHAT
+
+
+def calculate_sfg(corr: np.ndarray, width: int, dt_ps: float, temperature: float, M: Optional[int] = None, filter_type: str = "gaussian"):
+    nmax = corr.shape[0] - 1
+    if nmax % 2 != 0:
+        nmax -= 1
+        corr = corr[:-1]
+    tmax = nmax * dt_ps
+    filter_type = filter_type.lower().strip()
+    print("nmax         =", nmax)
+    print("dt   (ps)    =", dt_ps)
+    print("tmax (ps)    =", tmax)
+    print("Filter type  =", filter_type)
+    print("width        = ", width)
+    if filter_type == "gaussian":
+        C = apply_gussian_filter(corr, width * tmax / 100.0 * 3)
+    elif filter_type == "lorenz":
+        C = apply_lorenz_filter(corr, width, dt_ps)
+    else:
+        raise NotImplementedError(f"Unknown filter type: {filter_type}!")
+    freq_ps, CHAT_COS = FT(dt_ps, C, M)
+    _, CHAT_SIN = FT_sin(dt_ps, C, M)
+    d_omega, CHAT_COS = change_unit_sfg(freq_ps, CHAT_COS, temperature)
+    _, CHAT_SIN = change_unit_sfg(freq_ps, CHAT_SIN, temperature)
+    return np.arange(CHAT_COS.shape[0]) * d_omega, -CHAT_COS, CHAT_SIN
+
+
+calculate_ir_atomic = calculate_ir
+calculate_raman_atomic = calculate_raman
 
 
 def _normalize_for_plot(wavenumber: np.ndarray, intensity: np.ndarray, x_min: float, x_max: float) -> np.ndarray:
@@ -592,9 +1074,6 @@ def compute_surface_sfg_h2o(
 
     return wavenumber, sfg_imag_h2o
 
-
-from ase import Atoms
-from typing import Dict
 
 def set_cells_h2o(stc_list: List[Atoms], cell: List[float]):
     """

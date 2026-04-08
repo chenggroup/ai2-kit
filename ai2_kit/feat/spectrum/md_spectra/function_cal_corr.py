@@ -1,5 +1,6 @@
 from typing import Optional
 import numpy as np
+from .function_prepare import get_distance
 
 def calculate_corr(A: np.ndarray, B: np.ndarray, NMAX: int, window: Optional[int] = None):
     """
@@ -55,55 +56,106 @@ def cal_range_dipole_polar(z, atomic_dipole, z_lo, z_hi, r_smth):
     range_dipole = np.sum(weight * atomic_dipole, axis = 1) / np.sqrt(np.clip(np.sum(weight, axis = 1), 1, None))
     return range_dipole
 
-def calculate_corr_vdipole(dipole: np.ndarray, dt_ps: float, window: int):
-    v_dipole = (dipole[2:] - dipole[:-2]) / (2 * dt_ps)
-    v_dipole -= np.mean(v_dipole, axis = 0, keepdims = True)
-    corr = np.sum(calculate_corr(v_dipole, v_dipole, window), axis = -1)
-    return corr
+def calculate_corr_vdipole(atomic_dipole: np.ndarray, weight: np.ndarray, coords: np.ndarray, 
+                           cells: np.ndarray, dt_ps: float, window: int, rc: float = 6.75):
+    nframes, natom = atomic_dipole.shape[:2]
+    weight = weight[1:-1]
+    coords = coords[1:-1]
+    cells = cells[1:-1]
+    weight /= np.sqrt(np.clip(np.sum(np.abs(weight), axis = 1, keepdims = True), 1, None))
+    v_dipole = weight[..., None] * (atomic_dipole[2:] - atomic_dipole[:-2]) / (2 * dt_ps)
+    # v_dipole -= np.mean(v_dipole, axis = 0, keepdims = True)
+    corr_intra = calculate_corr(v_dipole, v_dipole, window)
+    dipole_cutoff = np.empty_like(v_dipole)
+    for atom_i in range(natom):
+        dis_mask = get_distance(coords, coords[:, [atom_i], :], cells) < rc
+        dis_mask[:, atom_i] = False
+        dipole_cutoff[:, atom_i] = np.matmul(v_dipole.transpose(0, 2, 1), dis_mask).squeeze(2)
+    corr_inter = calculate_corr(dipole_cutoff, v_dipole, window)
+    return corr_intra, corr_inter
 
-def calculate_corr_polar(polar: np.ndarray, window: int):
-    polar_iso = np.mean(polar.diagonal(offset = 0, axis1 = 1, axis2 = 2), axis = 1)
+def calculate_corr_polar(atomic_polar: np.ndarray, weight: np.ndarray, coords: np.ndarray, 
+                         cells: np.ndarray, window: int, rc: float = 6.75):
+    nframes, natom = atomic_polar.shape[:2]
 
-    diag = np.zeros((polar_iso.shape[0], 3, 3), dtype = float)
-    diag[:, 0, 0] = polar_iso
-    diag[:, 1, 1] = polar_iso
-    diag[:, 2, 2] = polar_iso
-    polar_aniso = polar - diag
+    polar_iso = np.mean(atomic_polar.diagonal(offset = 0, axis1 = -2, axis2 = -1), axis = -1)
+    diag = np.zeros_like(atomic_polar, dtype = float)
+    diag[..., 0, 0] = polar_iso
+    diag[..., 1, 1] = polar_iso
+    diag[..., 2, 2] = polar_iso
+    polar_aniso = atomic_polar - diag # type: ignore
 
     polar_iso -= np.mean(polar_iso, axis = 0, keepdims = True)
     polar_aniso -= np.mean(polar_aniso, axis = 0, keepdims = True)
+    polar_iso = np.square(weight) * polar_iso
+    polar_aniso = np.square(weight[..., None, None]) * polar_aniso
+    polar_aniso = polar_aniso.reshape(nframes, natom, 9)
 
-    corr_iso = calculate_corr(polar_iso, polar_iso, window)
-    polar_aniso = polar_aniso.reshape(-1, 9)
-    corr_aniso = calculate_corr(polar_aniso, polar_aniso, window)
-    corr_aniso *= 2 / 15
-    return corr_iso, corr_aniso
+    corr_iso_intra = calculate_corr(polar_iso, polar_iso, window)
+    corr_aniso_intra = np.sum(calculate_corr(polar_aniso, polar_aniso, window), axis = -1) * (2. / 15.)
+    
+    polar_iso_cutoff = np.empty_like(polar_iso)
+    polar_aniso_cutoff = np.empty_like(polar_aniso)
+    for atom_i in range(natom):
+        dis_mask = get_distance(coords, coords[:, [atom_i], :], cells) < rc
+        dis_mask[:, atom_i] = False
+        polar_iso_cutoff[:, atom_i] = np.matmul(polar_iso[:, None, :], dis_mask).squeeze((1, 2))
+        polar_aniso_cutoff[:, atom_i] = np.matmul(polar_aniso.transpose(0, 2, 1), dis_mask).squeeze(2)
+    corr_iso_inter = calculate_corr(polar_iso_cutoff, polar_iso, window)
+    corr_aniso_inter = np.sum(calculate_corr(polar_aniso_cutoff, polar_aniso, window), axis = -1) * (2. / 15.)
 
-def cutoff_sfg(z_arr, z0, zc, zw):
+    return corr_iso_intra, corr_aniso_intra, corr_iso_inter, corr_aniso_inter
+
+def cutoff_z(z_arr, z0, zc, zw):
+    """Cutoff along z-axis by cosine function."""
     cut_f = lambda x: np.cos(np.pi * np.clip(x, -1, 0) / 2)**2
     z = z_arr - z0
     return np.sign(z) * cut_f((np.abs(z) - (zc + zw)) / zw)
 
-def cal_weighted_dipole(z, atomic_dipole, z0, zc, zw):
-    weight = cutoff_sfg(z, z0, zc, zw)
-    weighted_dipole = weight * atomic_dipole / np.sqrt(np.clip(np.sum(np.abs(weight), axis = 1, keepdims = True), 1, None))
-    return weighted_dipole
+# def zaxis_weight(z_arr, z0, zc, zw):
+#     weight = cutoff_z(z_arr, z0, zc, zw)
+#     return weight / np.sqrt(np.clip(np.sum(np.abs(weight), axis = 1, keepdims = True), 1, None))
 
-def cal_weighted_polar(z, atomic_dipole, z0, zc, zw):
-    weight = cutoff_sfg(z, z0, zc, zw)
-    weighted_polar = (weight ** 2) * atomic_dipole / np.sqrt(np.clip(np.sum(weight ** 2, axis = 1, keepdims = True), 1, None))
-    return weighted_polar
+# def cal_weighted_dipole(weight, atomic_dipole):
+#     return weight * atomic_dipole
 
-def cal_corr_sfg(atomic_polar: np.ndarray, atomic_dipole: np.ndarray, coords: np.ndarray, window: int, rc: float = 6.75):
+# def cal_weighted_polar(weight, atomic_polar):
+#     return (weight ** 2) * atomic_polar
+
+def cal_corr_sfg_method1(atomic_polar: np.ndarray, atomic_dipole: np.ndarray, weight: np.ndarray, 
+                         coords: np.ndarray, cells: np.ndarray, window: int, rc: float = 6.75):
+    """
+    Calculate SFG correlation by `S(0)\mu(0)S(t)^2\alpha(t)`.
+    """
+    nframes, natom = atomic_dipole.shape[:2]
     atomic_polar -= np.mean(atomic_polar, axis = 0, keepdims = True)
     atomic_dipole -= np.mean(atomic_dipole, axis = 0, keepdims = True)
-    natom = atomic_dipole.shape[1]
-    dipole_cutoff = np.empty_like(atomic_dipole)
+    dipole = weight * atomic_dipole    
+    polar = np.square(weight) * atomic_polar
+    corr_intra = calculate_corr(dipole, polar, window)
+    dipole_cutoff = np.empty_like(dipole)
     for atom_i in range(natom):
-        dis_mask = np.linalg.norm(coords - coords[:, [atom_i], :], ord=2, axis=-1) < rc
-        dipole_cutoff[:, atom_i] = np.sum(atomic_dipole * dis_mask, axis=1)
-    corr = np.sum(calculate_corr(dipole_cutoff, atomic_polar, window), axis = -1)
-    return corr
+        dis_mask = get_distance(coords, coords[:, [atom_i], :], cells) < rc
+        dis_mask[:, atom_i] = False
+        dipole_cutoff[:, atom_i] = np.matmul(dipole[:, None, :], dis_mask).squeeze((1, 2))
+    corr_inter = calculate_corr(dipole_cutoff, polar, window)
+    return corr_intra, corr_inter
 
-
-
+def cal_corr_sfg_method2(atomic_polar: np.ndarray, atomic_dipole: np.ndarray, weight: np.ndarray, 
+                         coords: np.ndarray, cells: np.ndarray, window: int, rc: float = 6.75):
+    """
+    Calculate SFG correlation by `S(0)\mu(0)S(0)^2\alpha(t)`.
+    """
+    nframes, natom = atomic_dipole.shape[:2]
+    atomic_polar -= np.mean(atomic_polar, axis = 0, keepdims = True)
+    atomic_dipole -= np.mean(atomic_dipole, axis = 0, keepdims = True)
+    dipole = weight * atomic_dipole
+    polar = atomic_polar
+    corr_intra = calculate_corr(dipole, np.square(weight) * polar, window)
+    dipole_cutoff = np.empty_like(dipole)
+    for atom_i in range(natom):
+        dis_mask = get_distance(coords, coords[:, [atom_i], :], cells) < rc
+        dis_mask[:, atom_i] = False
+        dipole_cutoff[:, atom_i] = np.matmul(dipole[:, None, :], dis_mask).squeeze() * np.square(weight[:, atom_i])
+    corr_inter = calculate_corr(dipole_cutoff, polar, window)
+    return corr_intra, corr_inter

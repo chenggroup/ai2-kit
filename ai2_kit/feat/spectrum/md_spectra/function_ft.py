@@ -8,6 +8,136 @@ def apply_gussian_filter(corr: np.ndarray, width: float):
     nmax = corr.shape[0] - 1
     return corr * np.exp(-.5 * (0.5 * width * np.arange(nmax + 1) / nmax)**2)
 
+def apply_lorenz_filter(corr: np.ndarray, width: float, dt):
+    """
+    Apply Cauchy-Lorenz filter. Parameter `width` means the smoothing width.
+    """
+    nmax = corr.shape[0] - 1
+    b = width * 2.99792458e-3
+    M = int(1 / (dt * 0.01 * 2)) * 2
+    M = max(M, nmax)
+    dx = 1 / (M * dt)
+    NX = int(50 * np.sqrt(b) / dx / 2) * 2
+    x = np.arange(NX + 1) * dx
+    p = b / (b**2 + x**2)
+    _, ph = FT(dx, p, M)
+    return corr * ph[:nmax + 1]
+
+def FT(DT: float, C: np.ndarray, M: Optional[int] = None) -> np.ndarray:
+    """
+    Perform a cosine transform on the correlation function using FFT.
+    The same as FILONC while `DOM = 2\pi / (M * DT)` (or `OMEGA_MAX = 2\pi / DT`).
+
+    Parameters
+    -----
+    C: ndarray
+        the correlation function.
+    DT: float
+        time interval between points in C.
+    M: Optional[int]
+        number of intervals on the frequency axis. Default is `len(corr) - 1`.
+
+    Returns
+    -----
+    Frequency and the 1-d cosine transform of the correlation function.
+    freq: float, frequency. `freq = 1 / (M * DT)` 
+    CHAT: np.ndarray, the 1-d cosine transform.
+    """
+    NMAX = C.shape[0] - 1
+    if NMAX % 2 != 0:
+        raise ValueError("NMAX (=len(C)-1) must be even for the cosine transform.")
+    if M is None:
+        M = NMAX
+    elif M % 2 != 0:
+        M += 1
+        
+    freq = 1 / (M * DT)
+    DTH = 2 * np.pi / M
+    NU = np.arange(M + 1)
+    THETA = NU * DTH
+
+    ALPHA, BETA, GAMMA = _FILON_PARAMS(THETA)
+    CE, CO = _FFT_OE(C, M)
+    CE, CO = CE.real, CO.real
+    CE -= 0.5 * (C[0] + C[NMAX] * np.cos(THETA * NMAX))
+
+    CHAT = 2.0 * (ALPHA * C[NMAX] * np.sin (THETA * NMAX) + BETA * CE + GAMMA * CO) * DT
+    return freq, CHAT
+
+def FT_sin(DT: float, C: np.ndarray, M: Optional[int] = None) -> np.ndarray:
+    """
+    Perform a sine transform on the correlation function using FFT.
+
+    Parameters
+    -----
+    C: ndarray
+        the correlation function.
+    DT: float
+        time interval between points in C.
+    M: Optional[int]
+        number of intervals on the frequency axis. Default is `len(corr) - 1`.
+
+    Returns
+    -----
+    Frequency and the 1-d sine transform of the correlation function.
+    freq: float, frequency. `freq = 1 / (M * DT)` 
+    CHAT: np.ndarray, the 1-d sine transform.
+    """
+    NMAX = C.shape[0] - 1
+    if NMAX % 2 != 0:
+        raise ValueError("NMAX (=len(C)-1) must be even for the sine transform.")
+    if M is None:
+        M = NMAX
+    elif M % 2 != 0:
+        M += 1
+    
+    freq = 1 / (M * DT)
+    DTH = 2 * np.pi / M
+    NU = np.arange(M + 1)
+    THETA = NU * DTH
+
+    ALPHA, BETA, GAMMA = _FILON_PARAMS(THETA)
+    CE, CO = _FFT_OE(C, M)
+    CE, CO = CE.imag, CO.imag
+    CE -= 0.5 * (C[NMAX] * np.sin(THETA * NMAX))
+
+    CHAT = 2.0 * (ALPHA * (C[0] - C[NMAX] * np.cos(THETA * NMAX)) + BETA * CE + GAMMA * CO) * DT
+    return freq, CHAT
+
+def _FILON_PARAMS(THETA: np.ndarray) -> np.ndarray:
+    """
+    Calculate the filon parameters.
+    """
+    SINTH = np.sin(THETA)
+    COSTH = np.cos(THETA)
+    SINSQ = np.square(SINTH)
+    COSSQ = np.square(COSTH)
+    THSQ  = np.square(THETA)
+    THCUB = THSQ * THETA
+    ALPHA = 1. * ( THSQ + THETA * SINTH * COSTH - 2. * SINSQ )
+    BETA  = 2. * ( THETA * ( 1. + COSSQ ) - 2. * SINTH * COSTH )
+    GAMMA = 4. * ( SINTH - THETA * COSTH )
+    ALPHA[0] = 0.
+    BETA[0] = 2. / 3.
+    GAMMA[0] = 4. / 3.
+    ALPHA[1:] /= THCUB[1:]
+    BETA[1:] /= THCUB[1:]
+    GAMMA[1:] /= THCUB[1:]
+    return ALPHA, BETA, GAMMA
+
+def _FFT_OE(C: np.ndarray, M: int):
+    M0 = int(M / 2)
+    DTH = 2 * np.pi / M
+
+    # Even coordinates
+    CE = _range_fft(C[::2], M0) # type: ignore
+    CE = np.concatenate([CE, CE, CE[0:1]])
+
+    # Odd coordinates
+    CO = _range_fft(C[1::2], M0) * np.exp(-np.arange(M0) * DTH * 1j) # type: ignore
+    CO = np.concatenate([CO, -CO, CO[0:1]])
+    return CE, CO
+
 def _range_fft(a: np.ndarray, n: Optional[int] = None, axis: int = -1):
     """
     Compute `a_hat[..., l, ...] = \sum_{k=1}^{a.shape[axis]} a[..., k, ...]e^{-(2kl\pi/n)}`
@@ -26,65 +156,6 @@ def _range_fft(a: np.ndarray, n: Optional[int] = None, axis: int = -1):
     a_main = np.sum(a.take(range(l0), axis).reshape(new_shape), axis)
     a_tail = a.take(range(l0, l), axis)
     return np.fft.fft(a_main, n, axis) + np.fft.fft(a_tail, n, axis)
-
-def _FFT_OE(C: np.ndarray, DTH: float, M: int):
-    NMAX = C.shape[0] - 1
-    NU = np.arange(M + 1)
-    THETA = NU * DTH
-    # Even coordinates
-    CE = _range_fft(C[:-1:2], n = int(M / 2)).real # type: ignore
-    CE = np.concatenate([CE, CE, CE[0:1]]) + C[NMAX] * np.cos(THETA * NMAX)
-    # Odd coordinates
-    CO = (_range_fft(C[1::2], n = int(M / 2)) * np.exp(-THETA[:int(M / 2)] * 1j)).real # type: ignore
-    CO = np.concatenate([CO, -CO, CO[0:1]])
-    return CE, CO
-
-def FT(DT: float, C: np.ndarray, M: Optional[int] = None) -> np.ndarray:
-    """
-    The same as FILONC while `DOM = 2\pi / (M * DT)` (or `OMEGA_MAX = 2\pi / DT`).
-    This is implemented by FFT.
-
-    Parameters
-    -----
-    C: ndarray, the correlation function.
-    DT: float, time interval between points in C.
-    M: Optional[int], number of intervals on the frequency axis.
-    `M = NMAX` by default.
-
-    Return
-    -----
-    freq: float, frequency. `freq = 1 / (M * DT)` 
-    CHAT: np.ndarray, the 1-d cosine transform.
-    """
-    NMAX = C.shape[0] - 1
-    assert NMAX % 2 == 0, 'NMAX is not even!'
-    if M is None:
-        M = NMAX
-    elif M % 2 != 0:
-        M += 1
-    DTH = 2 * np.pi / M
-    NU = np.arange(M + 1)
-    THETA = NU * DTH
-    SINTH = np.sin(THETA)
-    COSTH = np.cos(THETA)
-    SINSQ = np.square(SINTH)
-    COSSQ = np.square(COSTH)
-    THSQ  = np.square(THETA)
-    THCUB = THSQ * THETA
-    ALPHA = 1. * ( THSQ + THETA * SINTH * COSTH - 2. * SINSQ )
-    BETA  = 2. * ( THETA * ( 1. + COSSQ ) - 2. * SINTH * COSTH )
-    GAMMA = 4. * ( SINTH - THETA * COSTH )
-    ALPHA[0] = 0.
-    BETA[0] = 2. / 3.
-    GAMMA[0] = 4. / 3.
-    ALPHA[1:] /= THCUB[1:]
-    BETA[1:] /= THCUB[1:]
-    GAMMA[1:] /= THCUB[1:]
-    CE, CO = _FFT_OE(C, DTH, M)
-    CE -= 0.5 * (C[0] + C[NMAX] * np.cos(THETA * NMAX))
-    CHAT = 2.0 * (ALPHA * C[NMAX] * np.sin ( THETA * NMAX ) + BETA * CE + GAMMA * CO) * DT
-    freq = 1 / (M * DT)
-    return freq, CHAT
 
 def change_unit_ir(freq_ps, CHAT: np.ndarray, temperature: float):
     a0 = 0.52917721067e-10  # m
@@ -118,52 +189,7 @@ def change_unit_raman(freq_ps, CHAT: np.ndarray, temperature: float):
     d_omega = 1e10 * freq_ps / cc       # cm^-1
     return d_omega, CHAT
 
-def calculate_ir(corr: np.ndarray, width: float, dt_ps: float, temperature: float, M: Optional[int] = None):
-    nmax = corr.shape[0] - 1
-    if nmax % 2 != 0:
-        nmax -= 1
-        corr = corr[:-1]
-    tmax = nmax * dt_ps
-    print('nmax      =', nmax)
-    print('dt   (ps) =', dt_ps)
-    print('tmax (ps) =', tmax)
-    print("width     = ", width)
-    width = width * tmax / 100.0 * 3
-    C = apply_gussian_filter(corr, width)
-    freq_ps, CHAT = FT(dt_ps, C, M)
-    d_omega, CHAT = change_unit_ir(freq_ps, CHAT, temperature)
-    return np.stack([np.arange(CHAT.shape[0]) * d_omega, CHAT], axis = 1)
-
-def calculate_raman(corr: np.ndarray, width: float, dt_ps: float, temperature: float, M: Optional[int] = None):
-    nmax = corr.shape[0] - 1
-    if nmax % 2 != 0:
-        nmax -= 1
-        corr = corr[:-1]
-    tmax = nmax * dt_ps        # ps
-    print('nmax      =', nmax)
-    print('dt   (ps) =', dt_ps)
-    print('tmax (ps) =', tmax)
-    print("width     = ", width)
-    width = width * tmax / 100.0 * 3.0
-    C = apply_gussian_filter(corr, width)
-    freq_ps, CHAT = FT(dt_ps, C, M)
-    d_omega, CHAT = change_unit_raman(freq_ps, CHAT, temperature)
-    return np.stack([np.arange(CHAT.shape[0]) * d_omega, CHAT], axis = 1)
-
-def calculate_sfg(corr: np.ndarray, width: int, dt_ps: float, temperature: float):
-    nmax = corr.shape[0] - 1
-    if nmax % 2 != 0:
-        nmax -= 1
-        corr = corr[:-1]
-    tmax = nmax * dt_ps
-    # dom = 2. * np.pi / tmax
-    print('nmax  =', nmax)
-    print('dt    =', dt_ps)
-    print('tmax  =', tmax)
-    print("width = ", width)
-    width = width * tmax / 100.0 * 3.0
-    C = apply_gussian_filter(corr, width)
-    freq, CHAT = FT(dt_ps, C, 10000)
+def change_unit_sfg(freq_ps, CHAT: np.ndarray, temperature: float):
     a0 = 0.52917721067e-10  # m
     cc = 2.99792458e8;      # m/s
     kB = 1.38064852*1.0e-23 # J/K
@@ -179,9 +205,80 @@ def calculate_sfg(corr: np.ndarray, width: int, dt_ps: float, temperature: float
     epsilon0 = 8.8541878e-12 # F/m = C^2 / (J * m)
     unit_all = beta / (4 * np.pi * a0 ** 2) / (2 * epsilon0) * unit2
     unit_all = unit_all * 1.0e12 * 1.0e-5; # ps to s, m-1to 1000cm-1
-    CHAT *= -unit_all * freq * 1e4 * np.arange(CHAT.shape[0])
-    d_omega = 1e10 * freq / cc
-    return np.stack([np.arange(CHAT.shape[0]) * d_omega, CHAT], axis = 1)
+    CHAT *= unit_all * freq_ps * 1e4 * np.arange(CHAT.shape[0])
+    d_omega = 1e10 * freq_ps / cc
+    return d_omega, CHAT
 
+def calculate_ir(corr: np.ndarray, width: float, dt_ps: float, temperature: float, 
+                 M: Optional[int] = None, filter_type: str = "gaussian"):
+    nmax = corr.shape[0] - 1
+    if nmax % 2 != 0:
+        nmax -= 1
+        corr = corr[:-1]
+    tmax = nmax * dt_ps
+    filter_type = filter_type.lower().strip()
+    print("nmax         =", nmax)
+    print("dt   (ps)    =", dt_ps)
+    print("tmax (ps)    =", tmax)
+    print("Filter type  =", filter_type)
+    print("Smooth width =", width)
+    if filter_type == "gaussian":
+        width = width * tmax / 100.0 * 3
+        C = apply_gussian_filter(corr, width)
+    elif filter_type == "lorenz":
+        C = apply_lorenz_filter(corr, width, dt_ps)
+    else:
+        raise NotImplementedError(f"Unknown filter type: {filter_type}!")
+    freq_ps, CHAT = FT(dt_ps, C, M)
+    d_omega, CHAT = change_unit_ir(freq_ps, CHAT, temperature)
+    return np.arange(CHAT.shape[0]) * d_omega, CHAT
 
+def calculate_raman(corr: np.ndarray, width: float, dt_ps: float, temperature: float, 
+                    M: Optional[int] = None, filter_type: str = "gaussian"):
+    nmax = corr.shape[0] - 1
+    if nmax % 2 != 0:
+        nmax -= 1
+        corr = corr[:-1]
+    tmax = nmax * dt_ps        # ps
+    filter_type = filter_type.lower().strip()
+    print('nmax         =', nmax)
+    print('dt   (ps)    =', dt_ps)
+    print('tmax (ps)    =', tmax)
+    print("Filter type  =", filter_type)
+    print("width        = ", width)
+    if filter_type == "gaussian":
+        width = width * tmax / 100.0 * 3
+        C = apply_gussian_filter(corr, width)
+    elif filter_type == "lorenz":
+        C = apply_lorenz_filter(corr, width, dt_ps)
+    else:
+        raise NotImplementedError(f"Unknown filter type: {filter_type}!")
+    freq_ps, CHAT = FT(dt_ps, C, M)
+    d_omega, CHAT = change_unit_raman(freq_ps, CHAT, temperature)
+    return np.arange(CHAT.shape[0]) * d_omega, CHAT
 
+def calculate_sfg(corr: np.ndarray, width: int, dt_ps: float, temperature: float, 
+                  M: Optional[int] = None, filter_type: str = "gaussian"):
+    nmax = corr.shape[0] - 1
+    if nmax % 2 != 0:
+        nmax -= 1
+        corr = corr[:-1]
+    tmax = nmax * dt_ps
+    filter_type = filter_type.lower().strip()
+    print('nmax         =', nmax)
+    print('dt   (ps)    =', dt_ps)
+    print('tmax (ps)    =', tmax)
+    print("Filter type  =", filter_type)
+    print("width        = ", width)
+    if filter_type == "gaussian":
+        width = width * tmax / 100.0 * 3
+        C = apply_gussian_filter(corr, width)
+    elif filter_type == "lorenz":
+        C = apply_lorenz_filter(corr, width, dt_ps)
+    else:
+        raise NotImplementedError(f"Unknown filter type: {filter_type}!")
+    freq_ps, CHAT_COS = FT    (dt_ps, C, M)
+    _      , CHAT_SIN = FT_sin(dt_ps, C, M)
+    d_omega, CHAT_COS = change_unit_sfg(freq_ps, CHAT_COS, temperature)
+    _      , CHAT_SIN = change_unit_sfg(freq_ps, CHAT_SIN, temperature)
+    return np.arange(CHAT_COS.shape[0]) * d_omega, -CHAT_COS, CHAT_SIN

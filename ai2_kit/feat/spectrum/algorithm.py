@@ -526,7 +526,8 @@ def compute_atomic_dipole_h2o(
     type_O: int = 0,
     type_H: int = 1,
     r_bond: float = 1.2,
-    save_datas: Optional[List[str]] = None,
+    save_h2o: Optional[str] = None,
+    save_atomic_dipole: Optional[str] = None,
 ):
     """
     Compute atomic dipole moments for water molecules from trajectory and Wannier center data.
@@ -537,8 +538,10 @@ def compute_atomic_dipole_h2o(
         type_O (int, optional): Atom type index for Oxygen. Defaults to 0.
         type_H (int, optional): Atom type index for Hydrogen. Defaults to 1.
         r_bond (float, optional): Cutoff distance to define an O-H bond. Defaults to 1.2.
-        save_datas (Optional[List[str]], optional): List of file paths to save [h2o coordinates, atomic dipoles]. 
-                                                    Defaults to None.
+        save_h2o (Optional[str], optional): File path to save the extracted water oxygen coordinates.
+            Defaults to None.
+        save_atomic_dipole (Optional[str], optional): File path to save the computed atomic dipoles.
+            Defaults to None.
 
     Returns:
         tuple[np.ndarray, np.ndarray]: 
@@ -555,15 +558,15 @@ def compute_atomic_dipole_h2o(
     h2o_mask = find_h2o(coords_O[0], coords_H[0], cells[0], r_bond=r_bond)
     h2o_O = coords_O[:, h2o_mask, :]
 
-    if save_datas is not None and len(save_datas) > 0 and save_datas[0]:
-        np.save(save_datas[0], h2o_O)
+    if save_h2o is not None:
+        np.save(save_h2o, h2o_O)
 
     wannier = wannier.reshape(traj.get_nframes(), -1, 3)
     wannier_h2o = wannier[:, h2o_mask, :]
     atomic_dipole = calculate_dipole(h2o_O, coords_H, cells, wannier_h2o)
 
-    if save_datas is not None and len(save_datas) > 1 and save_datas[1]:
-        np.save(save_datas[1], atomic_dipole.astype(np.float32))
+    if save_atomic_dipole is not None:
+        np.save(save_atomic_dipole, atomic_dipole.astype(np.float32))
 
     return h2o_O, atomic_dipole
 
@@ -574,7 +577,7 @@ def extract_atomic_polar_from_traj_h2o(
     type_O: int = 0,
     type_H: int = 1,
     r_bond: float = 1.2,
-    save_data: Optional[str] = None,
+    save_atomic_polar: Optional[str] = None,
 ):
     """
     Extract atomic polarizability tensors specifically for water molecules.
@@ -585,7 +588,8 @@ def extract_atomic_polar_from_traj_h2o(
         type_O (int, optional): Atom type index for Oxygen. Defaults to 0.
         type_H (int, optional): Atom type index for Hydrogen. Defaults to 1.
         r_bond (float, optional): Cutoff distance to define an O-H bond. Defaults to 1.2.
-        save_data (Optional[str], optional): File path to save the water polarizability array. Defaults to None.
+        save_atomic_polar (Optional[str], optional): File path to save the water polarizability array.
+            Defaults to None.
 
     Returns:
         np.ndarray: The extracted atomic polarizability array for water molecules.
@@ -602,8 +606,8 @@ def extract_atomic_polar_from_traj_h2o(
     h2o_mask = find_h2o(coords_O[0], coords_H[0], cells[0], r_bond=r_bond)
     polar_h2o = polar[:, h2o_mask, :, :]
 
-    if save_data is not None:
-        np.save(save_data, polar_h2o.astype(np.float32))
+    if save_atomic_polar is not None:
+        np.save(save_atomic_polar, polar_h2o.astype(np.float32))
 
     return polar_h2o
 
@@ -623,8 +627,8 @@ def compute_bulk_ir_h2o(
     M: int = 20000,
     filter_type: str = "lorenz",
     nuclear_quantum_factor: float = 0.96,
-    save_plot: Optional[str] = None,
-    save_data: Optional[str] = None,
+    save_ir_plot: Optional[str] = None,
+    save_ir_spectrum: Optional[str] = None,
 ):
     """
     Compute and optionally save/plot the bulk IR spectrum from atomic dipole data.
@@ -644,8 +648,8 @@ def compute_bulk_ir_h2o(
         M (int, optional): Number of points for IR Fourier transform. Defaults to 20000.
         filter_type (str, optional): Filter type ("lorenz" or "gaussian"). Defaults to "lorenz".
         nuclear_quantum_factor (float, optional): Correction factor for nuclear quantum effects. Defaults to 0.96.
-        save_plot (Optional[str], optional): Path to save the plot figure. Defaults to None.
-        save_data (Optional[str], optional): Path to save the raw array data. Defaults to None.
+        save_ir_plot (Optional[str], optional): Path to save the IR plot figure. Defaults to None.
+        save_ir_spectrum (Optional[str], optional): Path to save the IR spectrum data. Defaults to None.
 
     Returns:
         tuple[np.ndarray, np.ndarray]:
@@ -666,7 +670,7 @@ def compute_bulk_ir_h2o(
         calculate_ir(np.sum(corr_intra, axis=1) + np.sum(corr_inter, axis=1), width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type)
     )[1]
 
-    if save_plot is not None:
+    if save_ir_plot is not None:
         scaled_wavenumber = wavenumber * nuclear_quantum_factor
         xlim_min, xlim_max = 0, 4000
         norm_ir = _normalize_for_plot(scaled_wavenumber, ir, xlim_min, xlim_max)
@@ -678,11 +682,11 @@ def compute_bulk_ir_h2o(
         plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
         plt.legend()
         plt.title("IR spectra")
-        plt.savefig(save_plot, dpi=300, facecolor="white", bbox_inches="tight")
+        plt.savefig(save_ir_plot, dpi=300, facecolor="white", bbox_inches="tight")
         plt.close()
 
-    if save_data is not None:
-        np.savetxt(save_data, np.array([wavenumber, ir]).T)
+    if save_ir_spectrum is not None:
+        np.savetxt(save_ir_spectrum, np.array([wavenumber, ir]).T)
 
     return wavenumber, ir
 
@@ -702,8 +706,10 @@ def compute_bulk_raman_h2o(
     M: int = 20000,
     filter_type: str = "lorenz",
     nuclear_quantum_factor: float = 0.96,
-    save_plots: Optional[List[str]] = None,
-    save_data: Optional[str] = None,
+    save_iso_plot: Optional[str] = None,
+    save_aniso_plot: Optional[str] = None,
+    save_low_freq_plot: Optional[str] = None,
+    save_raman_spectrum: Optional[str] = None,
 ):
     """
     Compute and optionally save/plot the bulk Raman spectra (isotropic, anisotropic, and low-frequency).
@@ -723,8 +729,10 @@ def compute_bulk_raman_h2o(
         M (int, optional): Number of points for Raman Fourier transform. Defaults to 20000.
         filter_type (str, optional): Filter type ("lorenz" or "gaussian"). Defaults to "lorenz".
         nuclear_quantum_factor (float, optional): Correction factor for nuclear quantum effects. Defaults to 0.96.
-        save_plots (Optional[List[str]], optional): List of 3 paths to save iso, aniso, and low-freq plots. Defaults to None.
-        save_data (Optional[str], optional): Path to save the raw array data. Defaults to None.
+        save_iso_plot (Optional[str], optional): Path to save the isotropic Raman plot. Defaults to None.
+        save_aniso_plot (Optional[str], optional): Path to save the anisotropic Raman plot. Defaults to None.
+        save_low_freq_plot (Optional[str], optional): Path to save the low-frequency Raman plot. Defaults to None.
+        save_raman_spectrum (Optional[str], optional): Path to save the Raman spectrum data. Defaults to None.
 
     Returns:
         tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
@@ -754,10 +762,8 @@ def compute_bulk_raman_h2o(
     total_aniso = raman_aniso_intra + raman_aniso_inter
     low_range = wavenumber * (raman_aniso_intra + raman_aniso_inter) / 1000
 
-    if save_plots is not None and len(save_plots) == 3:
+    if save_iso_plot is not None:
         scaled_wavenumber = wavenumber * nuclear_quantum_factor
-        
-        # Isotropic Raman
         xlim_min, xlim_max = 2800, 4000
         norm_iso = _normalize_for_plot(scaled_wavenumber, total_iso, xlim_min, xlim_max)
         plt.plot(scaled_wavenumber, norm_iso, label="bulk water", scalex=1.5, scaley=2.2)
@@ -767,10 +773,12 @@ def compute_bulk_raman_h2o(
         plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
         plt.legend()
         plt.title("Raman spectra (iso)")
-        plt.savefig(save_plots[0], dpi=300, facecolor="white", bbox_inches="tight")
+        plt.savefig(save_iso_plot, dpi=300, facecolor="white", bbox_inches="tight")
         plt.close()
 
-        # Anisotropic Raman
+    if save_aniso_plot is not None:
+        scaled_wavenumber = wavenumber * nuclear_quantum_factor
+        xlim_min, xlim_max = 2800, 4000
         norm_aniso = _normalize_for_plot(scaled_wavenumber, total_aniso, xlim_min, xlim_max)
         plt.plot(scaled_wavenumber, norm_aniso, label="bulk water", scalex=1.5, scaley=2.2)
         plt.xlim(xlim_min, xlim_max)
@@ -779,10 +787,11 @@ def compute_bulk_raman_h2o(
         plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
         plt.legend()
         plt.title("Raman spectra (aniso)")
-        plt.savefig(save_plots[1], dpi=300, facecolor="white", bbox_inches="tight")
+        plt.savefig(save_aniso_plot, dpi=300, facecolor="white", bbox_inches="tight")
         plt.close()
 
-        # Low-frequency Raman
+    if save_low_freq_plot is not None:
+        scaled_wavenumber = wavenumber * nuclear_quantum_factor
         xlim_min_low, xlim_max_low = 0, 2500
         norm_low = _normalize_for_plot(scaled_wavenumber, low_range, xlim_min_low, xlim_max_low)
         plt.plot(scaled_wavenumber, norm_low, label="bulk water", scalex=1.5, scaley=2.2)
@@ -792,11 +801,11 @@ def compute_bulk_raman_h2o(
         plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
         plt.legend()
         plt.title("Low-frequency Raman spectra (aniso)")
-        plt.savefig(save_plots[2], dpi=300, facecolor="white", bbox_inches="tight")
+        plt.savefig(save_low_freq_plot, dpi=300, facecolor="white", bbox_inches="tight")
         plt.close()
 
-    if save_data is not None:
-        np.savetxt(save_data, np.array([wavenumber, total_iso, total_aniso, low_range]).T)
+    if save_raman_spectrum is not None:
+        np.savetxt(save_raman_spectrum, np.array([wavenumber, total_iso, total_aniso, low_range]).T)
 
     return wavenumber, total_iso, total_aniso, low_range
 
@@ -816,8 +825,8 @@ def compute_surface_ir_spectra_h2o(
     M: int = 20000,
     filter_type: str = "lorenz",
     nuclear_quantum_factor: float = 0.96,
-    save_plot: Optional[str] = None,
-    save_data: Optional[str] = None,
+    save_ir_plot: Optional[str] = None,
+    save_ir_spectrum: Optional[str] = None,
 ):
     """
     Compute and optionally plot/save surface IR spectra for interfacial water.
@@ -837,8 +846,8 @@ def compute_surface_ir_spectra_h2o(
         M (int, optional): Number of points for Fourier transform. Defaults to 20000.
         filter_type (str, optional): Filter type ("lorenz" or "gaussian"). Defaults to "lorenz".
         nuclear_quantum_factor (float, optional): Correction factor for nuclear quantum effects. Defaults to 0.96.
-        save_plot (Optional[str], optional): Path to save the plot figure. Defaults to None.
-        save_data (Optional[str], optional): Path to save the raw array data. Defaults to None.
+        save_ir_plot (Optional[str], optional): Path to save the IR plot figure. Defaults to None.
+        save_ir_spectrum (Optional[str], optional): Path to save the IR spectrum data. Defaults to None.
 
     Returns:
         tuple[np.ndarray, np.ndarray]:
@@ -858,7 +867,7 @@ def compute_surface_ir_spectra_h2o(
         calculate_ir(np.sum(corr_intra_h2o + corr_inter_h2o, axis=1), width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type)
     )[1]
 
-    if save_plot is not None:
+    if save_ir_plot is not None:
         scaled_wavenumber = wavenumber * nuclear_quantum_factor
         xlim_min, xlim_max = 0, 4000
         norm_ir = _normalize_for_plot(scaled_wavenumber, ir_h2o, xlim_min, xlim_max)
@@ -870,11 +879,11 @@ def compute_surface_ir_spectra_h2o(
         plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
         plt.legend()
         plt.title("IR spectra")
-        plt.savefig(save_plot, dpi=300, facecolor="white", bbox_inches="tight")
+        plt.savefig(save_ir_plot, dpi=300, facecolor="white", bbox_inches="tight")
         plt.close()
 
-    if save_data is not None:
-        np.savetxt(save_data, np.array([wavenumber, ir_h2o]).T)
+    if save_ir_spectrum is not None:
+        np.savetxt(save_ir_spectrum, np.array([wavenumber, ir_h2o]).T)
 
     return wavenumber, ir_h2o
 
@@ -894,8 +903,10 @@ def compute_surface_raman_h2o(
     M: int = 20000,
     filter_type: str = "lorenz",
     nuclear_quantum_factor: float = 0.96,
-    save_plots: Optional[List[str]] = None,
-    save_data: Optional[str] = None,
+    save_iso_plot: Optional[str] = None,
+    save_aniso_plot: Optional[str] = None,
+    save_low_freq_plot: Optional[str] = None,
+    save_raman_spectrum: Optional[str] = None,
 ):
     """
     Compute and optionally save the surface Raman spectra for interfacial water.
@@ -915,8 +926,10 @@ def compute_surface_raman_h2o(
         M (int, optional): Number of points for Fourier transform. Defaults to 20000.
         filter_type (str, optional): Filter type ("lorenz" or "gaussian"). Defaults to "lorenz".
         nuclear_quantum_factor (float, optional): Correction factor for nuclear quantum effects. Defaults to 0.96.
-        save_plots (Optional[List[str]], optional): List of 3 paths for iso, aniso, and low-freq plots. Defaults to None.
-        save_data (Optional[str], optional): Path to save the raw array data. Defaults to None.
+        save_iso_plot (Optional[str], optional): Path to save the isotropic Raman plot. Defaults to None.
+        save_aniso_plot (Optional[str], optional): Path to save the anisotropic Raman plot. Defaults to None.
+        save_low_freq_plot (Optional[str], optional): Path to save the low-frequency Raman plot. Defaults to None.
+        save_raman_spectrum (Optional[str], optional): Path to save the Raman spectrum data. Defaults to None.
 
     Returns:
         tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
@@ -945,10 +958,8 @@ def compute_surface_raman_h2o(
     total_aniso = raman_aniso_intra + raman_aniso_inter
     low_range = wavenumber * (raman_aniso_intra + raman_aniso_inter) / 1000
 
-    if save_plots is not None and len(save_plots) == 3:
+    if save_iso_plot is not None:
         scaled_wavenumber = wavenumber * nuclear_quantum_factor
-
-        # Isotropic Raman
         xlim_min, xlim_max = 2800, 4000
         norm_iso = _normalize_for_plot(scaled_wavenumber, total_iso, xlim_min, xlim_max)
         plt.plot(scaled_wavenumber, norm_iso, label="interfacial water", scalex=1.5, scaley=2.2)
@@ -958,10 +969,12 @@ def compute_surface_raman_h2o(
         plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
         plt.legend()
         plt.title("Raman spectra (iso)")
-        plt.savefig(save_plots[0], dpi=300, facecolor="white", bbox_inches="tight")
+        plt.savefig(save_iso_plot, dpi=300, facecolor="white", bbox_inches="tight")
         plt.close()
 
-        # Anisotropic Raman
+    if save_aniso_plot is not None:
+        scaled_wavenumber = wavenumber * nuclear_quantum_factor
+        xlim_min, xlim_max = 2800, 4000
         norm_aniso = _normalize_for_plot(scaled_wavenumber, total_aniso, xlim_min, xlim_max)
         plt.plot(scaled_wavenumber, norm_aniso, label="interfacial water", scalex=1.5, scaley=2.2)
         plt.xlim(xlim_min, xlim_max)
@@ -970,10 +983,11 @@ def compute_surface_raman_h2o(
         plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
         plt.legend()
         plt.title("Raman spectra (aniso)")
-        plt.savefig(save_plots[1], dpi=300, facecolor="white", bbox_inches="tight")
+        plt.savefig(save_aniso_plot, dpi=300, facecolor="white", bbox_inches="tight")
         plt.close()
 
-        # Low-frequency Raman
+    if save_low_freq_plot is not None:
+        scaled_wavenumber = wavenumber * nuclear_quantum_factor
         xlim_min_low, xlim_max_low = 0, 2500
         norm_low = _normalize_for_plot(scaled_wavenumber, low_range, xlim_min_low, xlim_max_low)
         plt.plot(scaled_wavenumber, norm_low, label="interfacial water", scalex=1.5, scaley=2.2)
@@ -983,11 +997,11 @@ def compute_surface_raman_h2o(
         plt.ylabel(r"Intensity (a.u.)", fontdict={"size": 12})
         plt.legend()
         plt.title("Low-frequency Raman spectra (aniso)")
-        plt.savefig(save_plots[2], dpi=300, facecolor="white", bbox_inches="tight")
+        plt.savefig(save_low_freq_plot, dpi=300, facecolor="white", bbox_inches="tight")
         plt.close()
         
-    if save_data is not None:
-        np.savetxt(save_data, np.array([wavenumber, total_iso, total_aniso, low_range]).T)
+    if save_raman_spectrum is not None:
+        np.savetxt(save_raman_spectrum, np.array([wavenumber, total_iso, total_aniso, low_range]).T)
 
     return wavenumber, total_iso, total_aniso, low_range
 
@@ -1008,8 +1022,8 @@ def compute_surface_sfg_h2o(
     M: int = 20000,
     filter_type: str = "lorenz",
     nuclear_quantum_factor: float = 0.96,
-    save_plot: Optional[str] = None,
-    save_data: Optional[str] = None,
+    save_sfg_plot: Optional[str] = None,
+    save_sfg_spectrum: Optional[str] = None,
 ):
     """
     Compute and optionally plot/save the surface SFG spectrum (xxz/yyz).
@@ -1030,8 +1044,8 @@ def compute_surface_sfg_h2o(
         M (int, optional): Number of points for Fourier transform. Defaults to 20000.
         filter_type (str, optional): Filter type ("lorenz" or "gaussian"). Defaults to "lorenz".
         nuclear_quantum_factor (float, optional): Correction factor for nuclear quantum effects. Defaults to 0.96.
-        save_plot (Optional[str], optional): Path to save the plot figure. Defaults to None.
-        save_data (Optional[str], optional): Path to save the raw array data. Defaults to None.
+        save_sfg_plot (Optional[str], optional): Path to save the SFG plot figure. Defaults to None.
+        save_sfg_spectrum (Optional[str], optional): Path to save the SFG spectrum data. Defaults to None.
 
     Returns:
         tuple[np.ndarray, np.ndarray]:
@@ -1054,7 +1068,7 @@ def compute_surface_sfg_h2o(
     wavenumber = np.array(calculate_sfg(corr_h2o, width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type))[0]
     sfg_imag_h2o = np.array(calculate_sfg(corr_h2o, width=width, dt_ps=dt, temperature=temperature, M=M, filter_type=filter_type))[1]
 
-    if save_plot is not None:
+    if save_sfg_plot is not None:
         scaled_wavenumber = wavenumber * nuclear_quantum_factor
         xlim_min, xlim_max = 2800, 4000
         norm_sfg = _normalize_for_plot(scaled_wavenumber, sfg_imag_h2o, xlim_min, xlim_max)
@@ -1066,11 +1080,11 @@ def compute_surface_sfg_h2o(
         plt.ylabel(r"Im[$\chi^{(2)}$ (a.u.)]", fontdict={"size": 12})
         plt.legend()
         plt.title("SFG spectra (xxz)")
-        plt.savefig(save_plot, dpi=300, facecolor="white", bbox_inches="tight")
+        plt.savefig(save_sfg_plot, dpi=300, facecolor="white", bbox_inches="tight")
         plt.close()
 
-    if save_data is not None:
-        np.savetxt(save_data, np.array([wavenumber, sfg_imag_h2o]).T)
+    if save_sfg_spectrum is not None:
+        np.savetxt(save_sfg_spectrum, np.array([wavenumber, sfg_imag_h2o]).T)
 
     return wavenumber, sfg_imag_h2o
 

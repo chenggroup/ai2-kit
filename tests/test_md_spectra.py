@@ -57,7 +57,7 @@ class TestMdSpectra(unittest.TestCase):
             type_O=1,
             type_H=2,
             r_bond=1.3,
-            save_data=output_dir / name,
+            save_atomic_polar=output_dir / name,
         )
 
         np.testing.assert_array_equal(_load_fast_array(sample_dir / name), np.load(output_dir / name))
@@ -76,7 +76,8 @@ class TestMdSpectra(unittest.TestCase):
             type_O=1,
             type_H=2,
             r_bond=1.3,
-            save_datas=[output_dir / name_h2o, output_dir / name_adw],
+            save_h2o=output_dir / name_h2o,
+            save_atomic_dipole=output_dir / name_adw,
         )
 
         h2o_out = np.load(output_dir / name_h2o)
@@ -107,8 +108,8 @@ class TestMdSpectra(unittest.TestCase):
             width=25,
             temperature=330.0,
             M=FAST_M,
-            save_plot=output_dir / "ir_sp.png",
-            save_data=output_dir / name,
+            save_ir_plot=output_dir / "ir_sp.png",
+            save_ir_spectrum=output_dir / name,
         )
 
         self._assert_valid_curve(wavenumber, ir_h2o)
@@ -140,8 +141,8 @@ class TestMdSpectra(unittest.TestCase):
             width=50,
             temperature=330.0,
             M=FAST_M,
-            save_plot=output_dir / "sfg.png",
-            save_data=output_dir / name,
+            save_sfg_plot=output_dir / "sfg.png",
+            save_sfg_spectrum=output_dir / name,
         )
 
         self._assert_valid_curve(wavenumber, sfg_imag)
@@ -172,8 +173,8 @@ class TestMdSpectra(unittest.TestCase):
             temperature=330.0,
             M=FAST_M,
             filter_type="lorenz",
-            save_plot=output_dir / "bulk_ir.png",
-            save_data=output_dir / name,
+            save_ir_plot=output_dir / "bulk_ir.png",
+            save_ir_spectrum=output_dir / name,
         )
 
         self._assert_valid_curve(wavenumber, ir)
@@ -204,12 +205,10 @@ class TestMdSpectra(unittest.TestCase):
             temperature=330.0,
             M=FAST_M,
             filter_type="lorenz",
-            save_plots=[
-                output_dir / "bulk_raman_iso.png",
-                output_dir / "bulk_raman_aniso.png",
-                output_dir / "bulk_raman_aniso_low.png",
-            ],
-            save_data=output_dir / name,
+            save_iso_plot=output_dir / "bulk_raman_iso.png",
+            save_aniso_plot=output_dir / "bulk_raman_aniso.png",
+            save_low_freq_plot=output_dir / "bulk_raman_aniso_low.png",
+            save_raman_spectrum=output_dir / name,
         )
 
         self._assert_valid_curve(wavenumber, total_iso)
@@ -242,12 +241,10 @@ class TestMdSpectra(unittest.TestCase):
             temperature=330.0,
             M=FAST_M,
             filter_type="lorenz",
-            save_plots=[
-                output_dir / "sur_raman_iso.png",
-                output_dir / "sur_raman_aniso.png",
-                output_dir / "sur_raman_aniso_low.png",
-            ],
-            save_data=output_dir / name,
+            save_iso_plot=output_dir / "sur_raman_iso.png",
+            save_aniso_plot=output_dir / "sur_raman_aniso.png",
+            save_low_freq_plot=output_dir / "sur_raman_aniso_low.png",
+            save_raman_spectrum=output_dir / name,
         )
 
         self._assert_valid_curve(wavenumber, total_iso)

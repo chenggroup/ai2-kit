@@ -13,7 +13,7 @@ import numpy as np  # noqa: E402
 import dpdata  # noqa: E402
 from ase.io import read  # noqa: E402
 
-from ai2_kit.feat.spectrum import md_spectra  # noqa: E402
+from ai2_kit.feat.spectrum import algorithm as md_spectra  # noqa: E402
 
 sample_dir = Path(__file__).parent / "data-sample" / "md_spectra_sample"
 output_dir = Path(__file__).parent / "data-sample" / "md_spectra_output"

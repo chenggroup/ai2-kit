@@ -1,5 +1,8 @@
 # Change Logs
 
+## v1.0.7
+* fix oh-my-batch version
+
 ## v1.0.6
 * improvement: add `--outlier` option for model_devi analysis tool
 

@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,34 +432,34 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.domain.lasp</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashTemplate</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashScript</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.job</span> <span class="kn">import</span> <span class="n">gather_jobs</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">merge_dict</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.script</span><span class="w"> </span><span class="kn">import</span> <span class="n">BashTemplate</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashScript</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.artifact</span><span class="w"> </span><span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">gather_jobs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">merge_dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">Template</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">string</span><span class="w"> </span><span class="kn">import</span> <span class="n">Template</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">ase.io</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ase.io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">.iface</span> <span class="kn">import</span> <span class="n">BaseCllContext</span><span class="p">,</span> <span class="n">ICllExploreOutput</span>
-<span class="kn">from</span> <span class="nn">.constant</span> <span class="kn">import</span> <span class="n">DEFAULT_LASP_IN</span><span class="p">,</span> <span class="n">DEFAULT_LAMMPS_TEMPLATE_FOR_DP_SSW</span><span class="p">,</span> <span class="n">MODEL_DEVI_OUT</span>
-<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">artifacts_to_ase_atoms</span><span class="p">,</span> <span class="n">DataFormat</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.iface</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCllContext</span><span class="p">,</span> <span class="n">ICllExploreOutput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.constant</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_LASP_IN</span><span class="p">,</span> <span class="n">DEFAULT_LAMMPS_TEMPLATE_FOR_DP_SSW</span><span class="p">,</span> <span class="n">MODEL_DEVI_OUT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">artifacts_to_ase_atoms</span><span class="p">,</span> <span class="n">DataFormat</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="CllLaspInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspInputConfig">[docs]</a><span class="k">class</span> <span class="nc">CllLaspInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<div class="viewcode-block" id="CllLaspInputConfig.Potential"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspInputConfig.Potential">[docs]</a>    <span class="k">class</span> <span class="nc">Potential</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<div class="viewcode-block" id="CllLaspInputConfig.Potential.LammpsPotential"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspInputConfig.Potential.LammpsPotential">[docs]</a>        <span class="k">class</span> <span class="nc">LammpsPotential</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllLaspInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspInputConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CllLaspInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllLaspInputConfig.Potential"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspInputConfig.Potential">[docs]</a>    <span class="k">class</span><span class="w"> </span><span class="nc">Potential</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllLaspInputConfig.Potential.LammpsPotential"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspInputConfig.Potential.LammpsPotential">[docs]</a>        <span class="k">class</span><span class="w"> </span><span class="nc">LammpsPotential</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
             <span class="n">input_template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_LAMMPS_TEMPLATE_FOR_DP_SSW</span></div>
 
         <span class="n">lammps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LammpsPotential</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># currently only lammps is supported</span></div>
@@ -475,14 +476,14 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="CllLaspContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspContextConfig">[docs]</a><span class="k">class</span> <span class="nc">CllLaspContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllLaspContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspContextConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CllLaspContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">lasp_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;lasp&#39;</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
     <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span></div>
 
 
 <div class="viewcode-block" id="CllLaspInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspInput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">CllLaspInput</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CllLaspInput</span><span class="p">:</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">CllLaspInputConfig</span>
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">mass_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
@@ -491,19 +492,19 @@ document.write(`
 
 
 <div class="viewcode-block" id="CllLaspContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspContext">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">CllLaspContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CllLaspContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">CllLaspContextConfig</span></div>
 
 
 <div class="viewcode-block" id="CllLaspOutput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspOutput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">CllLaspOutput</span><span class="p">(</span><span class="n">ICllExploreOutput</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CllLaspOutput</span><span class="p">(</span><span class="n">ICllExploreOutput</span><span class="p">):</span>
     <span class="n">output_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
 
-<div class="viewcode-block" id="CllLaspOutput.get_model_devi_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspOutput.get_model_devi_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_model_devi_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
+<div class="viewcode-block" id="CllLaspOutput.get_model_devi_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.CllLaspOutput.get_model_devi_dataset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_model_devi_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dirs</span></div></div>
 
 
-<div class="viewcode-block" id="cll_lasp"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.cll_lasp">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">cll_lasp</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllLaspInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllLaspContext</span><span class="p">):</span>
+<div class="viewcode-block" id="cll_lasp"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.cll_lasp">[docs]</a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">cll_lasp</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllLaspInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllLaspContext</span><span class="p">):</span>
     <span class="n">executor</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">default_executor</span>
 
     <span class="c1"># setup workspace</span>
@@ -572,11 +573,11 @@ document.write(`
     <span class="k">return</span> <span class="n">CllLaspOutput</span><span class="p">(</span><span class="n">output_dirs</span><span class="o">=</span><span class="n">output_dirs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="LammpsInputTemplate"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.LammpsInputTemplate">[docs]</a><span class="k">class</span> <span class="nc">LammpsInputTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
+<div class="viewcode-block" id="LammpsInputTemplate"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.LammpsInputTemplate">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">LammpsInputTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
     <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;$$&#39;</span></div>
 
 
-<div class="viewcode-block" id="make_lasp_task_dirs"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.make_lasp_task_dirs">[docs]</a><span class="k">def</span> <span class="nf">make_lasp_task_dirs</span><span class="p">(</span><span class="n">systems</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
+<div class="viewcode-block" id="make_lasp_task_dirs"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.make_lasp_task_dirs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">make_lasp_task_dirs</span><span class="p">(</span><span class="n">systems</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
                         <span class="n">lasp_in_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
                         <span class="n">base_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                         <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -627,7 +628,7 @@ document.write(`
     <span class="k">return</span> <span class="n">task_dirs</span></div>
 
 
-<div class="viewcode-block" id="process_lasp_output"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.process_lasp_output">[docs]</a><span class="k">def</span> <span class="nf">process_lasp_output</span><span class="p">(</span><span class="n">task_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;structures.xyz&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="process_lasp_output"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.process_lasp_output">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">process_lasp_output</span><span class="p">(</span><span class="n">task_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;structures.xyz&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Align lasp output with model_devi records.</span>
 
@@ -668,8 +669,8 @@ document.write(`
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">model_devi_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="process_lasp_outputs"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.process_lasp_outputs">[docs]</a><span class="k">def</span> <span class="nf">process_lasp_outputs</span><span class="p">(</span><span class="n">task_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">joblib</span>
+<div class="viewcode-block" id="process_lasp_outputs"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lasp.html#ai2_kit.domain.lasp.process_lasp_outputs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">process_lasp_outputs</span><span class="p">(</span><span class="n">task_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
     <span class="n">joblib</span><span class="o">.</span><span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">workers</span><span class="p">)(</span>
         <span class="n">joblib</span><span class="o">.</span><span class="n">delayed</span><span class="p">(</span><span class="n">process_lasp_output</span><span class="p">)(</span><span class="n">task_dir</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">task_dir</span> <span class="ow">in</span> <span class="n">task_dirs</span>

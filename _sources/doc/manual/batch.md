@@ -1,9 +1,14 @@
 # Batch Script Helper
+
 ```bash
 ai2-kit tool batch --help
 ```
 
 A toolkit to generate batch scripts.
+
+## ⚠️ Deprecated Warning
+
+The **Batch Toolkit** is no longer maintained and will be removed in the future. Please use [oh-my-batch](https://github.com/link89/oh-my-batch) instead.
 
 ## Usage
 

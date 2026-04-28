@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,17 +432,17 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.tool.frame</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">expand_globs</span><span class="p">,</span> <span class="n">slice_from_str</span><span class="p">,</span> <span class="n">SAMPLE_METHOD</span><span class="p">,</span> <span class="n">list_sample</span><span class="p">,</span> <span class="n">ensure_dir</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_globs</span><span class="p">,</span> <span class="n">slice_from_str</span><span class="p">,</span> <span class="n">SAMPLE_METHOD</span><span class="p">,</span> <span class="n">list_sample</span><span class="p">,</span> <span class="n">ensure_dir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="FrameTool"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool">[docs]</a><span class="k">class</span> <span class="nc">FrameTool</span><span class="p">:</span>
+<div class="viewcode-block" id="FrameTool"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FrameTool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This tool is design to sampling frames from large trajectory file without parsing them.</span>
 <span class="sd">    You can use this tool to merge, sample frames from multiple files, and write them to a new file.</span>
@@ -450,11 +451,11 @@ document.write(`
 <span class="sd">    For example, jsonl data file, or trajectory files in LAMMPS, xyz, etc format.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="FrameTool.read"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">frame_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rp</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">header_size</span><span class="p">:</span><span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="FrameTool.read"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.read">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">frame_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rp</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">header_size</span><span class="p">:</span><span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load trajectory files from multiple paths, support glob pattern</span>
 
@@ -474,7 +475,7 @@ document.write(`
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="FrameTool.slice"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.slice">[docs]</a>    <span class="k">def</span> <span class="nf">slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="FrameTool.slice"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.slice">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        slice frame by python slice expression, for example</span>
 <span class="sd">        `10:`, `:10`, `::2`, etc</span>
@@ -487,7 +488,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="FrameTool.sample"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.sample">[docs]</a>    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">SAMPLE_METHOD</span><span class="o">=</span><span class="s1">&#39;even&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="FrameTool.sample"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.sample">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">SAMPLE_METHOD</span><span class="o">=</span><span class="s1">&#39;even&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        sample frame by different method</span>
 
@@ -501,14 +502,14 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="n">list_sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="FrameTool.size"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FrameTool.size"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.size">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        size of loaded frames</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="FrameTool.write"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keep_header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="FrameTool.write"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.write">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keep_header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">ensure_dir</span><span class="p">(</span><span class="n">out_file</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">keep_header</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">:</span>
@@ -517,7 +518,7 @@ document.write(`
                 <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="load_frames"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.load_frames">[docs]</a><span class="k">def</span> <span class="nf">load_frames</span><span class="p">(</span><span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">frame_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rp</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">header_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="load_frames"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.load_frames">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_frames</span><span class="p">(</span><span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">frame_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rp</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">header_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load frames from multiple files</span>
 
@@ -539,7 +540,7 @@ document.write(`
     <span class="k">return</span> <span class="n">header</span><span class="p">,</span> <span class="n">all_frames</span></div>
 
 
-<div class="viewcode-block" id="parse_frames"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.parse_frames">[docs]</a><span class="k">def</span> <span class="nf">parse_frames</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">frame_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rp</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">header_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_frames"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.parse_frames">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">parse_frames</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">frame_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rp</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">header_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    parse frames from lines</span>
 
@@ -563,7 +564,7 @@ document.write(`
     <span class="k">return</span> <span class="n">header</span><span class="p">,</span> <span class="p">[</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">frame_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="n">frame_size</span><span class="p">)]</span></div>
 
 
-<div class="viewcode-block" id="detect_frame_size"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.detect_frame_size">[docs]</a><span class="k">def</span> <span class="nf">detect_frame_size</span><span class="p">(</span><span class="n">l</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">rp</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="detect_frame_size"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.detect_frame_size">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">detect_frame_size</span><span class="p">(</span><span class="n">l</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">rp</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    detect frame size of a file by repeating pattern</span>
 <span class="sd">    :param rp: repeated pattern, can be string or regex, e.g. &#39;TIMESTEP&#39; (for lammpstrj), &#39;Lattice&#39; (for xyz)</span>

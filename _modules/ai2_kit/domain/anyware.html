@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,35 +432,35 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.domain.anyware</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashTemplate</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashScript</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.job</span> <span class="kn">import</span> <span class="n">gather_jobs</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">dump_text</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.connector</span> <span class="kn">import</span> <span class="n">get_ln_cmd</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.script</span><span class="w"> </span><span class="kn">import</span> <span class="n">BashTemplate</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashScript</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.artifact</span><span class="w"> </span><span class="kn">import</span> <span class="n">Artifact</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">gather_jobs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">dump_text</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.connector</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_ln_cmd</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Any</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">Template</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">string</span><span class="w"> </span><span class="kn">import</span> <span class="n">Template</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">ase.io</span>
-
-
-<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">artifacts_to_ase_atoms_v2</span><span class="p">,</span> <span class="n">DataFormat</span>
-<span class="kn">from</span> <span class="nn">.iface</span> <span class="kn">import</span> <span class="n">BaseCllContext</span><span class="p">,</span> <span class="n">ICllExploreOutput</span>
-<span class="kn">from</span> <span class="nn">.cp2k</span> <span class="kn">import</span> <span class="n">dump_coord_n_cell</span>
-<span class="kn">from</span> <span class="nn">.lammps</span> <span class="kn">import</span> <span class="n">_get_dp_models_variables</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ase.io</span>
 
 
-<div class="viewcode-block" id="AnywareContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.AnywareContextConfig">[docs]</a><span class="k">class</span> <span class="nc">AnywareContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">artifacts_to_ase_atoms_v2</span><span class="p">,</span> <span class="n">DataFormat</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.iface</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCllContext</span><span class="p">,</span> <span class="n">ICllExploreOutput</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.cp2k</span><span class="w"> </span><span class="kn">import</span> <span class="n">dump_coord_n_cell</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.lammps</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_dp_models_variables</span>
+
+
+<div class="viewcode-block" id="AnywareContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.AnywareContextConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AnywareContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
     <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span></div>
 
 
-<div class="viewcode-block" id="AnywareConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.AnywareConfig">[docs]</a><span class="k">class</span> <span class="nc">AnywareConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="AnywareConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.AnywareConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AnywareConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 
     <span class="n">system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -561,7 +562,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="AnywareInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.AnywareInput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">AnywareInput</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnywareInput</span><span class="p">:</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">AnywareConfig</span>
     <span class="n">new_system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
     <span class="n">dp_models</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]]</span>
@@ -570,19 +571,19 @@ document.write(`
 
 
 <div class="viewcode-block" id="AnywareContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.AnywareContext">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">AnywareContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnywareContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">AnywareContextConfig</span></div>
 
 
 <div class="viewcode-block" id="AnywareOutput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.AnywareOutput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">AnywareOutput</span><span class="p">(</span><span class="n">ICllExploreOutput</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnywareOutput</span><span class="p">(</span><span class="n">ICllExploreOutput</span><span class="p">):</span>
     <span class="n">output_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
 
-<div class="viewcode-block" id="AnywareOutput.get_model_devi_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.AnywareOutput.get_model_devi_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_model_devi_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
+<div class="viewcode-block" id="AnywareOutput.get_model_devi_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.AnywareOutput.get_model_devi_dataset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_model_devi_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dirs</span></div></div>
 
 
-<div class="viewcode-block" id="anyware"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.anyware">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">anyware</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">AnywareInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">AnywareContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnywareOutput</span><span class="p">:</span>
+<div class="viewcode-block" id="anyware"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.anyware">[docs]</a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">anyware</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">AnywareInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">AnywareContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnywareOutput</span><span class="p">:</span>
     <span class="n">executor</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">default_executor</span>
     <span class="n">work_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">work_dir</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">path_prefix</span><span class="p">)</span>
 
@@ -635,13 +636,13 @@ document.write(`
     <span class="k">return</span> <span class="n">AnywareOutput</span><span class="p">(</span><span class="n">output_dirs</span><span class="o">=</span><span class="n">task_artifacts</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="run_post_process_fn"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.run_post_process_fn">[docs]</a><span class="k">def</span> <span class="nf">run_post_process_fn</span><span class="p">(</span><span class="n">post_process_fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">task_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<div class="viewcode-block" id="run_post_process_fn"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.run_post_process_fn">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">run_post_process_fn</span><span class="p">(</span><span class="n">post_process_fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">task_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
     <span class="n">_locals</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">exec</span><span class="p">(</span><span class="n">post_process_fn</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">_locals</span><span class="p">)</span>
     <span class="n">_locals</span><span class="p">[</span><span class="s1">&#39;post_process_fn&#39;</span><span class="p">](</span><span class="n">task_dirs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="make_anyware_task_dirs"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.make_anyware_task_dirs">[docs]</a><span class="k">def</span> <span class="nf">make_anyware_task_dirs</span><span class="p">(</span><span class="n">work_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<div class="viewcode-block" id="make_anyware_task_dirs"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.make_anyware_task_dirs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">make_anyware_task_dirs</span><span class="p">(</span><span class="n">work_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                            <span class="n">data_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">],</span>
                            <span class="n">dp_models</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
                            <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -654,7 +655,7 @@ document.write(`
                            <span class="n">system_file_format</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                            <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
                            <span class="p">):</span>
-    <span class="k">class</span> <span class="nc">_Template</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">_Template</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
         <span class="n">delimiter</span> <span class="o">=</span> <span class="n">template_delimiter</span>
 
     <span class="c1"># handle data files</span>

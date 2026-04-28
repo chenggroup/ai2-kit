@@ -209,6 +209,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">ai2_kit</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="ai2_kit.html">ai2_kit package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -230,7 +231,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -267,6 +267,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4 current active"><a class="current reference internal" href="#">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -483,47 +484,90 @@ document.write(`
 <span id="ai2-kit-tool-model-devi-module"></span><h1>ai2_kit.tool.model_devi module<a class="headerlink" href="#module-ai2_kit.tool.model_devi" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ai2_kit.tool.model_devi.ModelDevi">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.tool.model_devi.</span></span><span class="sig-name descname"><span class="pre">ModelDevi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Atoms</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">md_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/model_devi.html#ModelDevi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.model_devi.ModelDevi" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.tool.model_devi.</span></span><span class="sig-name descname"><span class="pre">ModelDevi</span></span><a class="reference internal" href="../_modules/ai2_kit/tool/model_devi.html#ModelDevi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.model_devi.ModelDevi" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A tool to analyze the deviation of model from model deviation file of deepmd-kit</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.model_devi.ModelDevi.done">
+<span class="sig-name descname"><span class="pre">done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/model_devi.html#ModelDevi.done"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.model_devi.ModelDevi.done" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="ai2_kit.tool.model_devi.ModelDevi.dump_stats">
 <span class="sig-name descname"><span class="pre">dump_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tsv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/model_devi.html#ModelDevi.dump_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.model_devi.ModelDevi.dump_stats" title="Permalink to this definition">#</a></dt>
 <dd><p>Dump the statistics of grading</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.tool.model_devi.ModelDevi.grade">
-<span class="sig-name descname"><span class="pre">grade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'max_devi_f'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/model_devi.html#ModelDevi.grade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.model_devi.ModelDevi.grade" title="Permalink to this definition">#</a></dt>
-<dd><p>Grade atoms based on the deviation of model: the good, the bad and the ugly
-the grade is based on the column of max_devi_f by default,
-if the value is below lo, the level is good,
-if the value is above hi, the level is ugly,
-otherwise, the level is bad</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>lo</strong> – the lower bound of good level</p></li>
-<li><p><strong>hi</strong> – the upper bound of ugly level</p></li>
-<li><p><strong>col</strong> – the column of model deviation to grade, default is max_devi_f</p></li>
+<li><p><strong>out_file</strong> – the file path to write the statistics</p></li>
+<li><p><strong>fmt</strong> – the format of table, default is tsv</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.tool.model_devi.ModelDevi.md_arr_load">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">md_arr_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/ai2_kit/tool/model_devi.html#ModelDevi.md_arr_load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.model_devi.ModelDevi.md_arr_load" title="Permalink to this definition">#</a></dt>
-<dd><p>Load model deviation files</p>
+<dt class="sig sig-object py" id="ai2_kit.tool.model_devi.ModelDevi.grade">
+<span class="sig-name descname"><span class="pre">grade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'max_devi_f'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outlier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/model_devi.html#ModelDevi.grade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.model_devi.ModelDevi.grade" title="Permalink to this definition">#</a></dt>
+<dd><p>Grade atoms based on the deviation of model into 3 levels: good, decent, poor</p>
+<p>the grade is based on the column of max_devi_f by default,
+if the value is below lo, the level is good,
+if the value is above hi, the level is poor,
+otherwise, the level is decent.
+outlier is an independent indicator, default is 2 * hi if not provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lo</strong> – the lower bound of decent level, below this value is good</p></li>
+<li><p><strong>hi</strong> – the upper bound of decent level, above this value is poor</p></li>
+<li><p><strong>col</strong> – the column of model deviation to grade, default is max_devi_f</p></li>
+<li><p><strong>outlier</strong> – the threshold of outlier, default is 2 * hi</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.tool.model_devi.ModelDevi.to_ase">
-<span class="sig-name descname"><span class="pre">to_ase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/model_devi.html#ModelDevi.to_ase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.model_devi.ModelDevi.to_ase" title="Permalink to this definition">#</a></dt>
-<dd><p>Hand over the atoms to ase tool</p>
+<dt class="sig sig-object py" id="ai2_kit.tool.model_devi.ModelDevi.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">dir_or_glob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">md_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model_devi.out'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/model_devi.html#ModelDevi.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.model_devi.ModelDevi.read" title="Permalink to this definition">#</a></dt>
+<dd><p>read model deviation from file, support multiple files and glob pattern</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>level</strong> – the grade level to hand over, valid values are good, bad, ugly</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dir_or_glob</strong> – path or glob pattern to locate data path</p></li>
+<li><p><strong>traj_file</strong> – trajectory file name to read, relative to data path, e.g dump.lammpstrj</p></li>
+<li><p><strong>md_file</strong> – model deviation file name to read, default is model_devi.out</p></li>
+<li><p><strong>ignore_error</strong> – ignore error when reading files</p></li>
+<li><p><strong>kwargs</strong> – other arguments for ase.io.read</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.model_devi.ModelDevi.slice">
+<span class="sig-name descname"><span class="pre">slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/model_devi.html#ModelDevi.slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.model_devi.ModelDevi.slice" title="Permalink to this definition">#</a></dt>
+<dd><p>Slice the atoms based on the expression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>expr</strong> – the expression to slice the atoms, e.g. ‘0:10’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.model_devi.ModelDevi.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'decent'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/model_devi.html#ModelDevi.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.model_devi.ModelDevi.write" title="Permalink to this definition">#</a></dt>
+<dd><p>Write atoms to file based on the level of grading</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> – the file path to write</p></li>
+<li><p><strong>inplace</strong> – if True, write to the original data directory</p></li>
+<li><p><strong>level</strong> – the level of grading to write, default is decent</p></li>
+<li><p><strong>ignore_error</strong> – ignore error when writing files</p></li>
+<li><p><strong>kwargs</strong> – other arguments for ase.io.write</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

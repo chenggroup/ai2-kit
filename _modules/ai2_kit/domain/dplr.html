@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,24 +432,24 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.domain.dplr</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">ase.geometry.cell</span> <span class="kn">import</span> <span class="n">cell_to_cellpar</span>
-<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.geometry.cell</span><span class="w"> </span><span class="kn">import</span> <span class="n">cell_to_cellpar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">import</span> <span class="nn">ase.io</span>
-<span class="kn">import</span> <span class="nn">dpdata</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ase.io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dpdata</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 
-<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">LammpsData</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">LammpsData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="dpdata_read_cp2k_dplr_data"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.dpdata_read_cp2k_dplr_data">[docs]</a><span class="k">def</span> <span class="nf">dpdata_read_cp2k_dplr_data</span><span class="p">(</span>
+<div class="viewcode-block" id="dpdata_read_cp2k_dplr_data"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.dpdata_read_cp2k_dplr_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dpdata_read_cp2k_dplr_data</span><span class="p">(</span>
     <span class="n">cp2k_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">cp2k_output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">wannier_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -457,6 +458,7 @@ document.write(`
     <span class="n">wannier_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">wannier_spread_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">model_charge_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">export_atomic_weight</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gnereate dpdata from cp2k output and wannier file for DPLR</span>
@@ -469,12 +471,21 @@ document.write(`
 <span class="sd">    :param wannier_cutoff: the cutoff to allocate wannier centers around atoms</span>
 <span class="sd">    :param wannier_spread_file: the wannier spread file, if provided, the spread data will be added to dp_sys</span>
 <span class="sd">    :param model_charge_map: the charge map of wannier in model, for example, [-8]</span>
+<span class="sd">    :param export_atomic_weight: whether to export atomic weight rather than return None when getting exception</span>
 
 <span class="sd">    :return dp_sys: dpdata.LabeledSystem</span>
 <span class="sd">        In addition to the common energy data, atomic_dipole data is added.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cp2k_output</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cp2k_dir</span><span class="p">,</span> <span class="n">cp2k_output</span><span class="p">)</span>
     <span class="n">wannier_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cp2k_dir</span><span class="p">,</span> <span class="n">wannier_file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">wannier_spread_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">model_charge_map</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">),</span> <span class="s2">&quot;model_charge_map is not supported when collecting wannier_spread&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="n">export_atomic_weight</span>
+        <span class="p">),</span> <span class="s2">&quot;export_atomic_weight is not supported when collecting wannier_spread&quot;</span>
+
     <span class="n">wannier_spread_file</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cp2k_dir</span><span class="p">,</span> <span class="n">wannier_spread_file</span><span class="p">)</span> <span class="k">if</span> <span class="n">wannier_spread_file</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="p">)</span>
@@ -488,14 +499,15 @@ document.write(`
             <span class="n">wannier_cutoff</span><span class="p">,</span>
             <span class="n">wannier_spread_file</span><span class="p">,</span>
             <span class="n">model_charge_map</span><span class="p">,</span>
+            <span class="n">export_atomic_weight</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+    <span class="k">except</span><span class="p">:</span>
         <span class="n">dp_sys</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">return</span> <span class="n">dp_sys</span></div>
 
 
-<div class="viewcode-block" id="set_dplr_ext_from_cp2k_output"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.set_dplr_ext_from_cp2k_output">[docs]</a><span class="k">def</span> <span class="nf">set_dplr_ext_from_cp2k_output</span><span class="p">(</span>
+<div class="viewcode-block" id="set_dplr_ext_from_cp2k_output"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.set_dplr_ext_from_cp2k_output">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_dplr_ext_from_cp2k_output</span><span class="p">(</span>
     <span class="n">dp_sys</span><span class="p">:</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">,</span>
     <span class="n">wannier_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -503,12 +515,13 @@ document.write(`
     <span class="n">wannier_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">wannier_spread_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">model_charge_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">export_atomic_weight</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="n">wannier_atoms</span> <span class="o">=</span> <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">wannier_file</span><span class="p">)</span>
     <span class="c1"># assert np.all(wannier_atoms.symbols == &quot;X&quot;), (</span>
     <span class="c1">#     &quot;%s should include Wannier centres only&quot; % wannier_file</span>
     <span class="c1"># )</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">wannier_atoms</span><span class="o">.</span><span class="n">symbols</span> <span class="o">==</span> <span class="s2">&quot;X&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">wannier_atoms</span><span class="o">.</span><span class="n">symbols</span> <span class="o">==</span> <span class="s2">&quot;X&quot;</span>  <span class="c1"># type: ignore</span>
     <span class="n">wannier_atoms</span> <span class="o">=</span> <span class="n">wannier_atoms</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
 
     <span class="n">natoms</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">get_natoms</span><span class="p">()</span>
@@ -516,6 +529,9 @@ document.write(`
     <span class="k">if</span> <span class="n">nframes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">assert</span> <span class="n">nframes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Only support one frame&quot;</span>
+
+    <span class="k">if</span> <span class="n">export_atomic_weight</span><span class="p">:</span>
+        <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atomic_weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 
     <span class="c1"># symbols = np.array(dp_sys.data[&quot;atom_names&quot;])[dp_sys.data[&quot;atom_types&quot;]]</span>
     <span class="n">sel_ids</span> <span class="o">=</span> <span class="n">get_sel_ids</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">type_map</span><span class="p">,</span> <span class="n">sel_type</span><span class="p">)</span>
@@ -529,13 +545,15 @@ document.write(`
         <span class="n">cns_ref</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">atomic_dipole_reformat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-    <span class="n">atomic_dipole_reformat</span><span class="p">[:,</span> <span class="n">sel_ids</span><span class="p">]</span> <span class="o">=</span> <span class="n">atomic_dipole</span>
+    <span class="n">atomic_dipole_reformat</span><span class="p">[:,</span> <span class="n">sel_ids</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">atomic_dipole</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">nframes</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
     <span class="n">atomic_dipole</span> <span class="o">=</span> <span class="n">atomic_dipole_reformat</span>
     <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atomic_dipole&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">atomic_dipole</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">wannier_spread_reformat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wannier_spread</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">wannier_spread_reformat</span><span class="p">[:,</span> <span class="n">sel_ids</span><span class="p">]</span> <span class="o">=</span> <span class="n">wannier_spread</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">nframes</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+            <span class="n">wannier_spread_reformat</span><span class="p">[:,</span> <span class="n">sel_ids</span><span class="p">]</span> <span class="o">=</span> <span class="n">wannier_spread</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">nframes</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+            <span class="p">)</span>
             <span class="n">wannier_spread</span> <span class="o">=</span> <span class="n">wannier_spread_reformat</span>
             <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;wannier_spread&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
                 <span class="n">wannier_spread</span><span class="p">,</span> <span class="p">[</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natoms</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
@@ -545,14 +563,14 @@ document.write(`
     <span class="k">return</span> <span class="n">dp_sys</span></div>
 
 
-<div class="viewcode-block" id="get_sel_ids"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_sel_ids">[docs]</a><span class="k">def</span> <span class="nf">get_sel_ids</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">type_map</span><span class="p">,</span> <span class="n">sel_type</span><span class="p">):</span>
+<div class="viewcode-block" id="get_sel_ids"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_sel_ids">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_sel_ids</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">type_map</span><span class="p">,</span> <span class="n">sel_type</span><span class="p">):</span>
     <span class="n">symbols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atom_names&quot;</span><span class="p">])[</span><span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atom_types&quot;</span><span class="p">]]</span>
     <span class="c1"># sel_ids = [np.where(symbols == type_map[ii])[0] for ii in sel_type]</span>
     <span class="n">sel_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">symbols</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">type_map</span><span class="p">)[</span><span class="n">sel_type</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">sel_ids</span></div>
 
 
-<div class="viewcode-block" id="get_ref_cns"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_ref_cns">[docs]</a><span class="k">def</span> <span class="nf">get_ref_cns</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">type_map</span><span class="p">,</span> <span class="n">sel_type</span><span class="p">,</span> <span class="n">model_charge_map</span><span class="p">):</span>
+<div class="viewcode-block" id="get_ref_cns"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_ref_cns">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_ref_cns</span><span class="p">(</span><span class="n">dp_sys</span><span class="p">,</span> <span class="n">type_map</span><span class="p">,</span> <span class="n">sel_type</span><span class="p">,</span> <span class="n">model_charge_map</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">model_charge_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
@@ -566,7 +584,7 @@ document.write(`
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cns_ref</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_atomic_dipole"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_atomic_dipole">[docs]</a><span class="k">def</span> <span class="nf">get_atomic_dipole</span><span class="p">(</span>
+<div class="viewcode-block" id="get_atomic_dipole"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_atomic_dipole">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_atomic_dipole</span><span class="p">(</span>
     <span class="n">dp_sys</span><span class="p">,</span>
     <span class="n">sel_ids</span><span class="p">,</span>
     <span class="n">wannier_atoms</span><span class="p">,</span>
@@ -574,7 +592,7 @@ document.write(`
     <span class="n">wannier_spread_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">cns_ref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">MDAnalysis.lib.distances</span> <span class="kn">import</span> <span class="n">distance_array</span><span class="p">,</span> <span class="n">minimize_vectors</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">MDAnalysis.lib.distances</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance_array</span><span class="p">,</span> <span class="n">minimize_vectors</span>
 
     <span class="n">coords</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">cellpar</span> <span class="o">=</span> <span class="n">cell_to_cellpar</span><span class="p">(</span><span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
@@ -584,6 +602,8 @@ document.write(`
         <span class="n">full_wannier_spread</span> <span class="o">=</span> <span class="n">read_wannier_spread</span><span class="p">(</span><span class="n">wannier_spread_file</span><span class="p">)[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">full_wannier_spread</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">export_atomic_weight</span> <span class="o">=</span> <span class="s2">&quot;atomic_weight&quot;</span> <span class="ow">in</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span>
 
     <span class="n">ref_coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">sel_ids</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">e_coords</span> <span class="o">=</span> <span class="n">wannier_atoms</span><span class="o">.</span><span class="n">get_positions</span><span class="p">()</span>
@@ -597,7 +617,11 @@ document.write(`
         <span class="n">mask</span> <span class="o">=</span> <span class="n">dist_vec</span> <span class="o">&lt;</span> <span class="n">wannier_cutoff</span>
         <span class="n">cn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cn</span> <span class="o">!=</span> <span class="n">cns_ref</span><span class="p">[</span><span class="n">ii</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;wannier atoms </span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s2"> atoms in the cutoff range&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">export_atomic_weight</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;wannier atoms </span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s2"> atoms in the cutoff range&quot;</span>
+                <span class="p">)</span>
+            <span class="n">dp_sys</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;atomic_weight&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="n">sel_ids</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">mlwc_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">wc_coord_rel</span> <span class="o">=</span> <span class="n">e_coords</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">ref_coords</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">full_wannier_spread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -611,18 +635,19 @@ document.write(`
         <span class="p">)</span>
     <span class="n">mlwc_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">mlwc_ids</span><span class="p">)</span>
     <span class="c1"># exclude double counting</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">mlwc_ids</span><span class="p">))</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cns_ref</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">mlwc_ids</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">mlwc_ids</span><span class="p">)</span>
     <span class="n">atomic_dipole</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">atomic_dipole</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
     <span class="k">assert</span> <span class="n">atomic_dipole</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_ids</span><span class="p">)</span>
-    <span class="n">wannier_spread</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">wannier_spread</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">full_wannier_spread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">wannier_spread</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">wannier_spread</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">atomic_dipole</span><span class="p">,</span> <span class="n">extended_coords</span><span class="p">,</span> <span class="n">wannier_spread</span></div>
 
 
-<div class="viewcode-block" id="build_sel_type_assertion"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.build_sel_type_assertion">[docs]</a><span class="k">def</span> <span class="nf">build_sel_type_assertion</span><span class="p">(</span><span class="n">sel_type</span><span class="p">,</span> <span class="n">model_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">py_cmd</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="build_sel_type_assertion"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.build_sel_type_assertion">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">build_sel_type_assertion</span><span class="p">(</span><span class="n">sel_type</span><span class="p">,</span> <span class="n">model_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">py_cmd</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">):</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{</span><span class="n">py_cmd</span><span class="si">}</span><span class="s1"> -c &quot;from deepmd.infer import DeepDipole;dp = DeepDipole(</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span><span class="si">}</span><span class="s1">);assert</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">sel_type</span><span class="p">)</span><span class="si">}</span><span class="s1">==[t for t in dp.tselt]&quot;&#39;&#39;&#39;</span></div>
 
 
-<div class="viewcode-block" id="dump_dplr_lammps_data"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.dump_dplr_lammps_data">[docs]</a><span class="k">def</span> <span class="nf">dump_dplr_lammps_data</span><span class="p">(</span>
+<div class="viewcode-block" id="dump_dplr_lammps_data"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.dump_dplr_lammps_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dump_dplr_lammps_data</span><span class="p">(</span>
     <span class="n">fp</span><span class="p">,</span>
     <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -696,14 +721,14 @@ document.write(`
     <span class="n">lmp_data</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">atom_style</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="n">specorder</span><span class="o">=</span><span class="n">type_map</span> <span class="o">+</span> <span class="n">vtypes</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_unused_symbols"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_unused_symbols">[docs]</a><span class="k">def</span> <span class="nf">get_unused_symbols</span><span class="p">(</span><span class="n">used_symbols</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="get_unused_symbols"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_unused_symbols">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_unused_symbols</span><span class="p">(</span><span class="n">used_symbols</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get unused symbols from ase</span>
 
 <span class="sd">    :param used_symbols: symbols that are already used</span>
 <span class="sd">    :param size: number of unused symbols to get</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">ase.data</span> <span class="kn">import</span> <span class="n">chemical_symbols</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">chemical_symbols</span>
 
     <span class="n">unused_symbols</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">chemical_symbols</span><span class="p">):</span>
@@ -714,9 +739,9 @@ document.write(`
     <span class="k">return</span> <span class="n">unused_symbols</span></div>
 
 
-<div class="viewcode-block" id="get_sel_type"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_sel_type">[docs]</a><span class="k">def</span> <span class="nf">get_sel_type</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="get_sel_type"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.get_sel_type">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_sel_type</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">deepmd.infer</span> <span class="kn">import</span> <span class="n">DeepDipole</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">deepmd.infer</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeepDipole</span>
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;deepmd-kit is not installed&quot;</span><span class="p">)</span>
 
@@ -724,7 +749,7 @@ document.write(`
     <span class="k">return</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">dp</span><span class="o">.</span><span class="n">tselt</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="read_wannier_spread"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.read_wannier_spread">[docs]</a><span class="k">def</span> <span class="nf">read_wannier_spread</span><span class="p">(</span><span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="read_wannier_spread"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.read_wannier_spread">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">read_wannier_spread</span><span class="p">(</span><span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Read wannier spread file generated by cp2k</span>
 
@@ -751,11 +776,12 @@ document.write(`
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wannier</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="dplr_v2_to_v3"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.dplr_v2_to_v3">[docs]</a><span class="k">def</span> <span class="nf">dplr_v2_to_v3</span><span class="p">(</span><span class="n">data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sel_symbol</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<div class="viewcode-block" id="dplr_v2_to_v3"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.dplr_v2_to_v3">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dplr_v2_to_v3</span><span class="p">(</span><span class="n">data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sel_symbol</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
     <span class="n">atomic_data_fnames</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;atomic_dipole.npy&quot;</span><span class="p">,</span>
         <span class="s2">&quot;atomic_polarizability.npy&quot;</span><span class="p">,</span>
         <span class="s2">&quot;wannier_spread.npy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;atomic_weight.npy&quot;</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="k">for</span> <span class="n">atomic_data_fname</span> <span class="ow">in</span> <span class="n">atomic_data_fnames</span><span class="p">:</span>
         <span class="n">fnames</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
@@ -776,7 +802,12 @@ document.write(`
 
             <span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
             <span class="n">n_frames</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="p">[</span><span class="n">n_frames</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_ids</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="p">[</span><span class="n">n_frames</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_ids</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">raw_data</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">n_frames</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Already in v3 format: %s&quot;</span> <span class="o">%</span> <span class="n">fname</span><span class="p">)</span>
+                <span class="k">continue</span>
             <span class="n">n_dim</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
             <span class="n">full_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">n_frames</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">])</span>
@@ -784,11 +815,12 @@ document.write(`
             <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">full_data</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">n_frames</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span></div>
 
 
-<div class="viewcode-block" id="dplr_v3_to_v2"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.dplr_v3_to_v2">[docs]</a><span class="k">def</span> <span class="nf">dplr_v3_to_v2</span><span class="p">(</span><span class="n">data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sel_symbol</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<div class="viewcode-block" id="dplr_v3_to_v2"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dplr.html#ai2_kit.domain.dplr.dplr_v3_to_v2">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dplr_v3_to_v2</span><span class="p">(</span><span class="n">data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sel_symbol</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
     <span class="n">atomic_data_fnames</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;atomic_dipole.npy&quot;</span><span class="p">,</span>
         <span class="s2">&quot;atomic_polarizability.npy&quot;</span><span class="p">,</span>
         <span class="s2">&quot;wannier_spread.npy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;atomic_weight.npy&quot;</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="k">for</span> <span class="n">atomic_data_fname</span> <span class="ow">in</span> <span class="n">atomic_data_fnames</span><span class="p">:</span>
         <span class="n">fnames</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
@@ -809,7 +841,12 @@ document.write(`
 
             <span class="n">raw_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
             <span class="n">n_frames</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">raw_data_reshape</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">n_frames</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">raw_data_reshape</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">n_frames</span><span class="p">,</span> <span class="n">n_atoms</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">raw_data</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">n_frames</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sel_ids</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Already in v2 format: %s&quot;</span> <span class="o">%</span> <span class="n">fname</span><span class="p">)</span>
+                <span class="k">continue</span>
             <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">raw_data_reshape</span><span class="p">[:,</span> <span class="n">sel_ids</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">n_frames</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span></div>
 </pre></div>
 

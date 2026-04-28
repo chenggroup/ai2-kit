@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = '_api/ai2_kit.algorithm';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ai2_kit.algorithm.aos_analysis module" href="ai2_kit.algorithm.aos_analysis.html" />
+    <link rel="next" title="ai2_kit.algorithm.uninmr package" href="ai2_kit.algorithm.uninmr.html" />
     <link rel="prev" title="ai2_kit package" href="ai2_kit.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -209,6 +209,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">ai2_kit</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="ai2_kit.html">ai2_kit package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 current active has-children"><a class="current reference internal" href="#">ai2_kit.algorithm package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -230,7 +231,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -267,6 +267,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -477,6 +478,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-ai2_kit.algorithm">Module contents</a></li>
 </ul>
@@ -492,6 +494,50 @@ document.write(`
                   
   <section id="ai2-kit-algorithm-package">
 <h1>ai2_kit.algorithm package<a class="headerlink" href="#ai2-kit-algorithm-package" title="Permalink to this heading">#</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ai2_kit.algorithm.uninmr.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ai2_kit.algorithm.uninmr.data.html">ai2_kit.algorithm.uninmr.data package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.data.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.data.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ai2_kit.algorithm.uninmr.losses.html">ai2_kit.algorithm.uninmr.losses package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.losses.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.losses.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ai2_kit.algorithm.uninmr.models.html">ai2_kit.algorithm.uninmr.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.models.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ai2_kit.algorithm.uninmr.tasks.html">ai2_kit.algorithm.uninmr.tasks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.tasks.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.tasks.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ai2_kit.algorithm.uninmr.utils.html">ai2_kit.algorithm.uninmr.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.utils.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.utils.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ai2_kit.algorithm.uninmr.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ai2_kit.algorithm.uninmr.infer.html">ai2_kit.algorithm.uninmr.infer module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ai2_kit.algorithm.uninmr.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
@@ -547,11 +593,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="ai2_kit.algorithm.aos_analysis.html"
+       href="ai2_kit.algorithm.uninmr.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ai2_kit.algorithm.aos_analysis module</p>
+        <p class="prev-next-title">ai2_kit.algorithm.uninmr package</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -571,6 +617,7 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-ai2_kit.algorithm">Module contents</a></li>
 </ul>

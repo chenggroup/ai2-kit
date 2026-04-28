@@ -209,6 +209,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">ai2_kit</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="ai2_kit.html">ai2_kit package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -230,7 +231,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -267,6 +267,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -547,6 +548,17 @@ if you want to generate different sample each time, you should set random seed m
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.ase.AseTool.shuffle">
+<span class="sig-name descname"><span class="pre">shuffle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/ase.html#AseTool.shuffle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.ase.AseTool.shuffle" title="Permalink to this definition">#</a></dt>
+<dd><p>shuffle data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> – seed for random shuffle</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ai2_kit.tool.ase.AseTool.size">
 <span class="sig-name descname"><span class="pre">size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/ase.html#AseTool.size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.ase.AseTool.size" title="Permalink to this definition">#</a></dt>
 <dd><p>size of loaded data</p>
@@ -580,20 +592,14 @@ if you want to generate different sample each time, you should set random seed m
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.tool.ase.AseTool.to_model_devi">
-<span class="sig-name descname"><span class="pre">to_model_devi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">md_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/ase.html#AseTool.to_model_devi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.ase.AseTool.to_model_devi" title="Permalink to this definition">#</a></dt>
-<dd><p>Hand over atoms array to model-devi tool</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>md_files</strong> – paths to model_devi file, support multiple files and glob pattern</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="ai2_kit.tool.ase.AseTool.write">
-<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/ase.html#AseTool.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.ase.AseTool.write" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/ase.html#AseTool.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.ase.AseTool.write" title="Permalink to this definition">#</a></dt>
+<dd><p>write atoms to file
+:param filename: the filename to write
+:param slice: slice expression to select data
+:param chain: if True, return self, useful for chain operation
+:param kwargs: other arguments for ase.io.write</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ai2_kit.tool.ase.AseTool.write_dplr_lammps_data">
@@ -622,12 +628,14 @@ about fitting tensor: <a class="reference external" href="https://docs.deepmodel
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ai2_kit.tool.ase.AseTool.write_frames">
-<span class="sig-name descname"><span class="pre">write_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/ase.html#AseTool.write_frames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.ase.AseTool.write_frames" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">write_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/ase.html#AseTool.write_frames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.ase.AseTool.write_frames" title="Permalink to this definition">#</a></dt>
 <dd><p>write each frame to a separate file, useful to write to format only support single frame, POSCAR for example</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> – the filename template, use {i} to represent the index, for example, ‘frame_{i}.xyz’</p></li>
+<li><p><strong>slice</strong> – slice expression to select data</p></li>
+<li><p><strong>chain</strong> – if True, return self, useful for chain operation</p></li>
 <li><p><strong>kwargs</strong> – other arguments for ase.io.write</p></li>
 </ul>
 </dd>

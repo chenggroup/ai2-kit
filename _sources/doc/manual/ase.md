@@ -5,6 +5,8 @@ ai2-kit tool ase
 ```
 This toolkit is a command line wrapper of [ASE](https://wiki.fysik.dtu.dk/ase/) to allow user to process trajectory via command line.
 
+`ase` tool can be use with [dpdata tool](./dpdata.md) to convert trajectory to DeepMD-kit dataset.
+
 ## Usage
 
 ```bash
@@ -61,4 +63,7 @@ ai2-kit tool ase read h2o.xyz - write_dplr_lammps_data tmp/dplr/{i}.lammps.data 
 
 # Drop the first 10 frames and then sample 10 frames use random method, and save it as dpdata.System format
 ai2-kit tool ase read h2o.lammpstrj --specorder [H,O] - slice 10: - sample 10 --method random - to_dpdata - write dp-h2o --nomerge
+
+# Split the trajectory into multiple parts, for example, pick 10 frames randomly and save it to 10.xyz, and the rest to rest.xyz
+ai2-kit tool ase read all.xyz - shuffle - write 10.xyz --slice :10 --chain - write rest.xyz --slice 10: 
 ```

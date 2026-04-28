@@ -1,6 +1,14 @@
 ai2\_kit.algorithm package
 ==========================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ai2_kit.algorithm.uninmr
+
 Submodules
 ----------
 

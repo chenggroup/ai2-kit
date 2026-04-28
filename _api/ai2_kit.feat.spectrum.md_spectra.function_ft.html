@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>ai2_kit.dflow package &#8212; ai2-kit Reference</title>
+    <title>ai2_kit.feat.spectrum.md_spectra.function_ft module &#8212; ai2-kit Reference</title>
   
   
   
@@ -62,11 +62,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_api/ai2_kit.dflow';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_api/ai2_kit.feat.spectrum.md_spectra.function_ft';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ai2_kit.domain package" href="ai2_kit.domain.html" />
-    <link rel="prev" title="ai2_kit.core.util module" href="ai2_kit.core.util.html" />
+    <link rel="next" title="ai2_kit.feat.spectrum.md_spectra.function_prepare module" href="ai2_kit.feat.spectrum.md_spectra.function_prepare.html" />
+    <link rel="prev" title="ai2_kit.feat.spectrum.md_spectra.function_cal_corr module" href="ai2_kit.feat.spectrum.md_spectra.function_cal_corr.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -209,6 +209,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">ai2_kit</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="ai2_kit.html">ai2_kit package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -230,7 +231,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -249,9 +249,9 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.vasp.html">ai2_kit.domain.vasp module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.feat.html">ai2_kit.feat package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="ai2_kit.feat.html">ai2_kit.feat package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.feat.catalysis.html">ai2_kit.feat.catalysis package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ai2_kit.feat.spectrum.html">ai2_kit.feat.spectrum package</a></li>
+<li class="toctree-l4 current active"><a class="reference internal" href="ai2_kit.feat.spectrum.html">ai2_kit.feat.spectrum package</a></li>
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.lib.html">ai2_kit.lib package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -267,6 +267,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -353,7 +354,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2F_api/ai2_kit.dflow.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2F_api/ai2_kit.feat.spectrum.md_spectra.function_ft.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -383,7 +384,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../_sources/_api/ai2_kit.dflow.rst" target="_blank"
+      <li><a href="../_sources/_api/ai2_kit.feat.spectrum.md_spectra.function_ft.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -454,9 +455,7 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
+
 </div></div>
       
     </div>
@@ -467,19 +466,11 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>ai2_kit.dflow package</h1>
+    <h1>ai2_kit.feat.spectrum.md_spectra.function_ft module</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-ai2_kit.dflow">Module contents</a></li>
-</ul>
-            </nav>
         </div>
     </div>
 </div>
@@ -489,11 +480,63 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="ai2-kit-dflow-package">
-<h1>ai2_kit.dflow package<a class="headerlink" href="#ai2-kit-dflow-package" title="Permalink to this heading">#</a></h1>
-<section id="module-ai2_kit.dflow">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ai2_kit.dflow" title="Permalink to this heading">#</a></h2>
-</section>
+  <section id="module-ai2_kit.feat.spectrum.md_spectra.function_ft">
+<span id="ai2-kit-feat-spectrum-md-spectra-function-ft-module"></span><h1>ai2_kit.feat.spectrum.md_spectra.function_ft module<a class="headerlink" href="#module-ai2_kit.feat.spectrum.md_spectra.function_ft" title="Permalink to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.md_spectra.function_ft.FT">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.spectrum.md_spectra.function_ft.</span></span><span class="sig-name descname"><span class="pre">FT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DT</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/md_spectra/function_ft.html#FT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.md_spectra.function_ft.FT" title="Permalink to this definition">#</a></dt>
+<dd><p>The same as FILONC while <cite>DOM = 2pi / (M * DT)</cite> (or <cite>OMEGA_MAX = 2pi / DT</cite>).
+This is implemented by FFT.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>C</strong> (<em>ndarray</em><em>, </em><em>the correlation function.</em>) – </p></li>
+<li><p><strong>DT</strong> (<em>float</em><em>, </em><em>time interval between points in C.</em>) – </p></li>
+<li><p><strong>M</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em><em>, </em><em>number of intervals on the frequency axis.</em>) – </p></li>
+<li><p><strong>default.</strong> (<em>M = NMAX by</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>freq</strong> (float, frequency. <cite>freq = 1 / (M * DT)</cite>)</p></li>
+<li><p><strong>CHAT</strong> (<em>np.ndarray, the 1-d cosine transform.</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.md_spectra.function_ft.apply_gussian_filter">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.spectrum.md_spectra.function_ft.</span></span><span class="sig-name descname"><span class="pre">apply_gussian_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/md_spectra/function_ft.html#apply_gussian_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.md_spectra.function_ft.apply_gussian_filter" title="Permalink to this definition">#</a></dt>
+<dd><p>Apply gaussian filter. Parameter <cite>width</cite> means the smoothing width.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.md_spectra.function_ft.calculate_ir">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.spectrum.md_spectra.function_ft.</span></span><span class="sig-name descname"><span class="pre">calculate_ir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt_ps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/md_spectra/function_ft.html#calculate_ir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.md_spectra.function_ft.calculate_ir" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.md_spectra.function_ft.calculate_raman">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.spectrum.md_spectra.function_ft.</span></span><span class="sig-name descname"><span class="pre">calculate_raman</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt_ps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/md_spectra/function_ft.html#calculate_raman"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.md_spectra.function_ft.calculate_raman" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.md_spectra.function_ft.calculate_sfg">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.spectrum.md_spectra.function_ft.</span></span><span class="sig-name descname"><span class="pre">calculate_sfg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt_ps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/md_spectra/function_ft.html#calculate_sfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.md_spectra.function_ft.calculate_sfg" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.md_spectra.function_ft.change_unit_ir">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.spectrum.md_spectra.function_ft.</span></span><span class="sig-name descname"><span class="pre">change_unit_ir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq_ps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CHAT</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/md_spectra/function_ft.html#change_unit_ir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.md_spectra.function_ft.change_unit_ir" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ai2_kit.feat.spectrum.md_spectra.function_ft.change_unit_raman">
+<span class="sig-prename descclassname"><span class="pre">ai2_kit.feat.spectrum.md_spectra.function_ft.</span></span><span class="sig-name descname"><span class="pre">change_unit_raman</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq_ps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CHAT</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/feat/spectrum/md_spectra/function_ft.html#change_unit_raman"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.feat.spectrum.md_spectra.function_ft.change_unit_raman" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
     <script type="text/x-thebe-config">
@@ -527,20 +570,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="ai2_kit.core.util.html"
+       href="ai2_kit.feat.spectrum.md_spectra.function_cal_corr.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">ai2_kit.core.util module</p>
+        <p class="prev-next-title">ai2_kit.feat.spectrum.md_spectra.function_cal_corr module</p>
       </div>
     </a>
     <a class="right-next"
-       href="ai2_kit.domain.html"
+       href="ai2_kit.feat.spectrum.md_spectra.function_prepare.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ai2_kit.domain package</p>
+        <p class="prev-next-title">ai2_kit.feat.spectrum.md_spectra.function_prepare module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -550,21 +593,6 @@ document.write(`
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-ai2_kit.dflow">Module contents</a></li>
-</ul>
-  </nav></div>
-
-</div></div>
               
             
           </div>

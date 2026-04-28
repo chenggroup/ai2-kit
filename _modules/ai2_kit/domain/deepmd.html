@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,30 +432,30 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.domain.deepmd</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashSteps</span><span class="p">,</span> <span class="n">BashTemplate</span><span class="p">,</span> <span class="n">make_gpu_parallel_steps</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.job</span> <span class="kn">import</span> <span class="n">gather_jobs</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">dict_nested_get</span><span class="p">,</span> <span class="n">expand_globs</span><span class="p">,</span> <span class="n">dump_json</span><span class="p">,</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">flatten</span><span class="p">,</span> <span class="n">create_fn</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.tool.dpdata</span> <span class="kn">import</span> <span class="n">set_fparam</span><span class="p">,</span> <span class="n">register_data_types</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.artifact</span><span class="w"> </span><span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.script</span><span class="w"> </span><span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashSteps</span><span class="p">,</span> <span class="n">BashTemplate</span><span class="p">,</span> <span class="n">make_gpu_parallel_steps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">gather_jobs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">dict_nested_get</span><span class="p">,</span> <span class="n">expand_globs</span><span class="p">,</span> <span class="n">dump_json</span><span class="p">,</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">flatten</span><span class="p">,</span> <span class="n">create_fn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.tool.dpdata</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_fparam</span><span class="p">,</span> <span class="n">register_data_types</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">dpdata</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">groupby</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dpdata</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">.iface</span> <span class="kn">import</span> <span class="n">ICllTrainOutput</span><span class="p">,</span> <span class="n">BaseCllContext</span><span class="p">,</span> <span class="n">TRAINING_MODE</span>
-<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">DataFormat</span><span class="p">,</span> <span class="n">get_data_format</span>
-<span class="kn">from</span> <span class="nn">.dpff</span> <span class="kn">import</span> <span class="n">set_dpff_ext_from_cp2k_output</span>
-<span class="kn">from</span> <span class="nn">.dplr</span> <span class="kn">import</span> <span class="n">dplr_v3_to_v2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.iface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ICllTrainOutput</span><span class="p">,</span> <span class="n">BaseCllContext</span><span class="p">,</span> <span class="n">TRAINING_MODE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataFormat</span><span class="p">,</span> <span class="n">get_data_format</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.dpff</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_dpff_ext_from_cp2k_output</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.dplr</span><span class="w"> </span><span class="kn">import</span> <span class="n">dplr_v3_to_v2</span>
 
-<span class="kn">from</span> <span class="nn">.constant</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.constant</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">DP_CHECKPOINT_FILE</span><span class="p">,</span>
     <span class="n">DP_DISP_FILE</span><span class="p">,</span>
     <span class="n">DP_PROFILING_FILE</span><span class="p">,</span>
@@ -466,9 +467,9 @@ document.write(`
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="CllDeepmdInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig">[docs]</a><span class="k">class</span> <span class="nc">CllDeepmdInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllDeepmdInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CllDeepmdInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 
-<div class="viewcode-block" id="CllDeepmdInputConfig.DwTraningConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.DwTraningConfig">[docs]</a>    <span class="k">class</span> <span class="nc">DwTraningConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllDeepmdInputConfig.DwTraningConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInputConfig.DwTraningConfig">[docs]</a>    <span class="k">class</span><span class="w"> </span><span class="nc">DwTraningConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Options for deep wannier model training</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -561,7 +562,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="CllDeepmdContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdContextConfig">[docs]</a><span class="k">class</span> <span class="nc">CllDeepmdContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllDeepmdContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdContextConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CllDeepmdContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
     <span class="n">dp_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;dp&#39;</span>
     <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
@@ -569,7 +570,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="CllDeepmdInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdInput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">CllDeepmdInput</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CllDeepmdInput</span><span class="p">:</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">CllDeepmdInputConfig</span>
     <span class="n">mode</span><span class="p">:</span> <span class="n">TRAINING_MODE</span>
     <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
@@ -580,23 +581,23 @@ document.write(`
 
 
 <div class="viewcode-block" id="CllDeepmdContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.CllDeepmdContext">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">CllDeepmdContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CllDeepmdContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">CllDeepmdContextConfig</span></div>
 
 
 <div class="viewcode-block" id="GenericDeepmdOutput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">GenericDeepmdOutput</span><span class="p">(</span><span class="n">ICllTrainOutput</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GenericDeepmdOutput</span><span class="p">(</span><span class="n">ICllTrainOutput</span><span class="p">):</span>
     <span class="n">models</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
     <span class="n">dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
 
-<div class="viewcode-block" id="GenericDeepmdOutput.get_mlp_models"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.get_mlp_models">[docs]</a>    <span class="k">def</span> <span class="nf">get_mlp_models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
+<div class="viewcode-block" id="GenericDeepmdOutput.get_mlp_models"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.get_mlp_models">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_mlp_models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span></div>
 
-<div class="viewcode-block" id="GenericDeepmdOutput.get_training_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.get_training_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_training_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
+<div class="viewcode-block" id="GenericDeepmdOutput.get_training_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.GenericDeepmdOutput.get_training_dataset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_training_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span></div></div>
 
 
-<div class="viewcode-block" id="cll_deepmd"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.cll_deepmd">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">cll_deepmd</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllDeepmdInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllDeepmdContext</span><span class="p">):</span>
+<div class="viewcode-block" id="cll_deepmd"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.cll_deepmd">[docs]</a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">cll_deepmd</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllDeepmdInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllDeepmdContext</span><span class="p">):</span>
     <span class="n">executor</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">default_executor</span>
 
     <span class="c1"># if fix_models is set, return it and skip training</span>
@@ -735,7 +736,7 @@ document.write(`
         <span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">dp_task_dirs</span><span class="p">]</span>
     <span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">_classify_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_classify_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Classify dataset into train, outlier and validation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -754,7 +755,7 @@ document.write(`
     <span class="c1"># FIXME: there are users reporting duplicated data in dataset</span>
     <span class="c1"># So we need to check and remove duplicated data</span>
     <span class="c1"># TODO: find the root cause of duplicated data and remove this workaround</span>
-    <span class="k">def</span> <span class="nf">_unique</span><span class="p">(</span><span class="n">l</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_unique</span><span class="p">(</span><span class="n">l</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">r</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Found duplicated data in dataset: </span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -762,7 +763,7 @@ document.write(`
     <span class="k">return</span> <span class="n">_unique</span><span class="p">(</span><span class="n">train_systems</span><span class="p">),</span> <span class="n">_unique</span><span class="p">(</span><span class="n">outlier_systems</span><span class="p">),</span> <span class="n">_unique</span><span class="p">(</span><span class="n">validation_systems</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_build_deepmd_steps</span><span class="p">(</span><span class="n">dp_cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_deepmd_steps</span><span class="p">(</span><span class="n">dp_cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                         <span class="n">compress_model</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
                         <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                         <span class="n">previous_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -793,7 +794,7 @@ document.write(`
     <span class="k">return</span> <span class="n">steps</span>
 
 
-<div class="viewcode-block" id="make_deepmd_task_dirs"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.make_deepmd_task_dirs">[docs]</a><span class="k">def</span> <span class="nf">make_deepmd_task_dirs</span><span class="p">(</span><span class="n">input_template</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+<div class="viewcode-block" id="make_deepmd_task_dirs"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.make_deepmd_task_dirs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">make_deepmd_task_dirs</span><span class="p">(</span><span class="n">input_template</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
                           <span class="n">model_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                           <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                           <span class="n">train_systems</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -855,7 +856,7 @@ document.write(`
     <span class="k">return</span> <span class="n">dp_task_dirs</span><span class="p">,</span> <span class="n">dw_task_dir</span></div>
 
 
-<div class="viewcode-block" id="make_deepmd_input"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.make_deepmd_input">[docs]</a><span class="k">def</span> <span class="nf">make_deepmd_input</span><span class="p">(</span><span class="n">input_template</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+<div class="viewcode-block" id="make_deepmd_input"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.make_deepmd_input">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">make_deepmd_input</span><span class="p">(</span><span class="n">input_template</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
                       <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                       <span class="n">train_systems</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                       <span class="n">outlier_systems</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -868,7 +869,7 @@ document.write(`
     <span class="c1"># ref: https://github.com/deepmodeling/dpgen2/blob/master/dpgen2/op/prep_dp_train.py</span>
     <span class="c1"># ref: https://github.com/deepmodeling/dpgen2/blob/master/dpgen2/op/run_dp_train.py</span>
 
-    <span class="k">def</span> <span class="nf">_random_seed</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_random_seed</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span>
 
     <span class="n">dp_input</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">input_template</span><span class="p">)</span>
@@ -923,7 +924,7 @@ document.write(`
 
     <span class="k">return</span> <span class="n">dp_input</span></div>
 
-<div class="viewcode-block" id="make_deepmd_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.make_deepmd_dataset">[docs]</a><span class="k">def</span> <span class="nf">make_deepmd_dataset</span><span class="p">(</span>
+<div class="viewcode-block" id="make_deepmd_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.deepmd.html#ai2_kit.domain.deepmd.make_deepmd_dataset">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">make_deepmd_dataset</span><span class="p">(</span>
     <span class="n">dataset_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">outlier_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">raw_data_collection</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
@@ -1004,7 +1005,7 @@ document.write(`
     <span class="k">return</span> <span class="n">dataset_dirs</span><span class="p">,</span> <span class="n">outlier_dirs</span></div>
 
 
-<span class="k">def</span> <span class="nf">_write_dp_dataset_by_formula</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]],</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_dp_dataset_by_formula</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]],</span>
                                  <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">sel_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Write dp dataset that grouping by formula</span>
@@ -1031,12 +1032,12 @@ document.write(`
     <span class="p">}</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)]</span>
 
 
-<span class="k">def</span> <span class="nf">_write_dp_dataset_by_ancestor</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]],</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">sel_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_dp_dataset_by_ancestor</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">,</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">]],</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">sel_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    write dp dataset that grouping by ancestor</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">output_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">def</span> <span class="nf">get_ancestor</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ancestor</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">]</span>
     <span class="n">dp_system_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">get_ancestor</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">dp_system_group</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">dp_system_list</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">get_ancestor</span><span class="p">):</span>

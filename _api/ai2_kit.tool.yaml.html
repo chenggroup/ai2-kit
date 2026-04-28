@@ -209,6 +209,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">ai2_kit</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="ai2_kit.html">ai2_kit package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -230,7 +231,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -267,6 +267,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4 current active"><a class="current reference internal" href="#">ai2_kit.tool.yaml module</a></li>
@@ -482,22 +483,34 @@ document.write(`
   <section id="module-ai2_kit.tool.yaml">
 <span id="ai2-kit-tool-yaml-module"></span><h1>ai2_kit.tool.yaml module<a class="headerlink" href="#module-ai2_kit.tool.yaml" title="Permalink to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="ai2_kit.tool.yaml.Yaml">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.tool.yaml.</span></span><span class="sig-name descname"><span class="pre">Yaml</span></span><a class="reference internal" href="../_modules/ai2_kit/tool/yaml.html#Yaml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.yaml.Yaml" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ai2_kit.tool.yaml.YamlTool">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ai2_kit.tool.yaml.</span></span><span class="sig-name descname"><span class="pre">YamlTool</span></span><a class="reference internal" href="../_modules/ai2_kit/tool/yaml.html#YamlTool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.yaml.YamlTool" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tool for handling YAML files.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.tool.yaml.Yaml.dump">
-<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/yaml.html#Yaml.dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.yaml.Yaml.dump" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ai2_kit.tool.yaml.YamlTool.dump">
+<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/yaml.html#YamlTool.dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.yaml.YamlTool.dump" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.tool.yaml.Yaml.load">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/yaml.html#Yaml.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.yaml.Yaml.load" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ai2_kit.tool.yaml.YamlTool.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/yaml.html#YamlTool.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.yaml.YamlTool.get" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ai2_kit.tool.yaml.Yaml.set_value">
-<span class="sig-name descname"><span class="pre">set_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/yaml.html#Yaml.set_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.yaml.Yaml.set_value" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="ai2_kit.tool.yaml.YamlTool.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/yaml.html#YamlTool.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.yaml.YamlTool.load" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.yaml.YamlTool.print">
+<span class="sig-name descname"><span class="pre">print</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/yaml.html#YamlTool.print"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.yaml.YamlTool.print" title="Permalink to this definition">#</a></dt>
+<dd><p>Print the YAML data to stdout.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai2_kit.tool.yaml.YamlTool.set_value">
+<span class="sig-name descname"><span class="pre">set_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/yaml.html#YamlTool.set_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.yaml.YamlTool.set_value" title="Permalink to this definition">#</a></dt>
 <dd><p>edit a yaml file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

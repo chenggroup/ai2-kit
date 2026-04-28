@@ -209,6 +209,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -230,7 +231,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -267,6 +267,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -496,6 +497,7 @@ document.write(`
 </pre></div>
 </div>
 <p>This toolkit is a command line wrapper of <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE</a> to allow user to process trajectory via command line.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ase</span></code> tool can be use with <a class="reference internal" href="dpdata.html"><span class="doc std std-doc">dpdata tool</span></a> to convert trajectory to DeepMD-kit dataset.</p>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w">  </span><span class="c1"># show all commands</span>
@@ -597,6 +599,9 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> <
 
 <span class="c1"># Drop the first 10 frames and then sample 10 frames use random method, and save it as dpdata.System format</span>
 ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>h2o.lammpstrj<span class="w"> </span>--specorder<span class="w"> </span><span class="o">[</span>H,O<span class="o">]</span><span class="w"> </span>-<span class="w"> </span>slice<span class="w"> </span><span class="m">10</span>:<span class="w"> </span>-<span class="w"> </span>sample<span class="w"> </span><span class="m">10</span><span class="w"> </span>--method<span class="w"> </span>random<span class="w"> </span>-<span class="w"> </span>to_dpdata<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>dp-h2o<span class="w"> </span>--nomerge
+
+<span class="c1"># Split the trajectory into multiple parts, for example, pick 10 frames randomly and save it to 10.xyz, and the rest to rest.xyz</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>all.xyz<span class="w"> </span>-<span class="w"> </span>shuffle<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span><span class="m">10</span>.xyz<span class="w"> </span>--slice<span class="w"> </span>:10<span class="w"> </span>--chain<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>rest.xyz<span class="w"> </span>--slice<span class="w"> </span><span class="m">10</span>:<span class="w"> </span>
 </pre></div>
 </div>
 </section>

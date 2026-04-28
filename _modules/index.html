@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -459,10 +460,15 @@ document.write(`
 <li><a href="ai2_kit/domain/selector.html">ai2_kit.domain.selector</a></li>
 <li><a href="ai2_kit/domain/updater.html">ai2_kit.domain.updater</a></li>
 <li><a href="ai2_kit/domain/util.html">ai2_kit.domain.util</a></li>
-<li><a href="ai2_kit/domain/vasp.html">ai2_kit.domain.vasp</a></li>
 <li><a href="ai2_kit/feat/catalysis.html">ai2_kit.feat.catalysis</a></li>
 <li><a href="ai2_kit/feat/spectrum.html">ai2_kit.feat.spectrum</a></li>
-<ul><li><a href="ai2_kit/feat/spectrum/viber.html">ai2_kit.feat.spectrum.viber</a></li>
+<ul><li><a href="ai2_kit/feat/spectrum/md_spectra/function_atomic.html">ai2_kit.feat.spectrum.md_spectra.function_atomic</a></li>
+<li><a href="ai2_kit/feat/spectrum/md_spectra/function_cal_corr.html">ai2_kit.feat.spectrum.md_spectra.function_cal_corr</a></li>
+<li><a href="ai2_kit/feat/spectrum/md_spectra/function_ft.html">ai2_kit.feat.spectrum.md_spectra.function_ft</a></li>
+<li><a href="ai2_kit/feat/spectrum/md_spectra/function_prepare.html">ai2_kit.feat.spectrum.md_spectra.function_prepare</a></li>
+<li><a href="ai2_kit/feat/spectrum/md_spectra/lib.html">ai2_kit.feat.spectrum.md_spectra.lib</a></li>
+<li><a href="ai2_kit/feat/spectrum/smiviz/gapplot.html">ai2_kit.feat.spectrum.smiviz.gapplot</a></li>
+<li><a href="ai2_kit/feat/spectrum/viber.html">ai2_kit.feat.spectrum.viber</a></li>
 </ul><li><a href="ai2_kit/lib/plumed.html">ai2_kit.lib.plumed</a></li>
 <li><a href="ai2_kit/main.html">ai2_kit.main</a></li>
 <li><a href="ai2_kit/tool/ase.html">ai2_kit.tool.ase</a></li>
@@ -471,10 +477,10 @@ document.write(`
 <li><a href="ai2_kit/tool/dpdata.html">ai2_kit.tool.dpdata</a></li>
 <li><a href="ai2_kit/tool/frame.html">ai2_kit.tool.frame</a></li>
 <li><a href="ai2_kit/tool/hpc.html">ai2_kit.tool.hpc</a></li>
+<li><a href="ai2_kit/tool/lammps.html">ai2_kit.tool.lammps</a></li>
 <li><a href="ai2_kit/tool/misc.html">ai2_kit.tool.misc</a></li>
 <li><a href="ai2_kit/tool/model_devi.html">ai2_kit.tool.model_devi</a></li>
 <li><a href="ai2_kit/tool/yaml.html">ai2_kit.tool.yaml</a></li>
-<li><a href="ai2_kit/workflow/cll_mlp.html">ai2_kit.workflow.cll_mlp</a></li>
 <li><a href="ai2_kit/workflow/fep_mlp.html">ai2_kit.workflow.fep_mlp</a></li>
 </ul>
 

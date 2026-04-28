@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,30 +432,30 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.domain.cp2k</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashTemplate</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.job</span> <span class="kn">import</span> <span class="n">gather_jobs</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">dict_nested_get</span><span class="p">,</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">list_sample</span><span class="p">,</span> <span class="n">dump_json</span><span class="p">,</span> <span class="n">dump_text</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.artifact</span><span class="w"> </span><span class="kn">import</span> <span class="n">Artifact</span><span class="p">,</span> <span class="n">ArtifactDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.script</span><span class="w"> </span><span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">gather_jobs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">dict_nested_get</span><span class="p">,</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">list_sample</span><span class="p">,</span> <span class="n">dump_json</span><span class="p">,</span> <span class="n">dump_text</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span>
 
-<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">Template</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">string</span><span class="w"> </span><span class="kn">import</span> <span class="n">Template</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">.data</span> <span class="kn">import</span> <span class="n">DataFormat</span><span class="p">,</span> <span class="n">ase_atoms_to_cp2k_input_data</span><span class="p">,</span> <span class="n">artifacts_to_ase_atoms</span>
-<span class="kn">from</span> <span class="nn">.iface</span> <span class="kn">import</span> <span class="n">ICllLabelOutput</span><span class="p">,</span> <span class="n">BaseCllContext</span><span class="p">,</span> <span class="n">TRAINING_MODE</span>
-<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">cp2k_dump_input</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataFormat</span><span class="p">,</span> <span class="n">ase_atoms_to_cp2k_input_data</span><span class="p">,</span> <span class="n">artifacts_to_ase_atoms</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.iface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ICllLabelOutput</span><span class="p">,</span> <span class="n">BaseCllContext</span><span class="p">,</span> <span class="n">TRAINING_MODE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">cp2k_dump_input</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="CllCp2kInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kInputConfig">[docs]</a><span class="k">class</span> <span class="nc">CllCp2kInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllCp2kInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kInputConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CllCp2kInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">init_system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">wfn_warmup_template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -486,7 +487,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="CllCp2kContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kContextConfig">[docs]</a><span class="k">class</span> <span class="nc">CllCp2kContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="CllCp2kContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kContextConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CllCp2kContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
     <span class="n">cp2k_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;cp2k&#39;</span>
     <span class="n">post_cp2k_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;echo &quot;no post_cp2k_cmd&quot;&#39;</span>
@@ -494,7 +495,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="CllCp2kInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kInput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">CllCp2kInput</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CllCp2kInput</span><span class="p">:</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">CllCp2kInputConfig</span>
     <span class="n">mode</span><span class="p">:</span> <span class="n">TRAINING_MODE</span>
     <span class="n">system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
@@ -503,19 +504,19 @@ document.write(`
 
 
 <div class="viewcode-block" id="CllCp2kContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.CllCp2kContext">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">CllCp2kContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CllCp2kContext</span><span class="p">(</span><span class="n">BaseCllContext</span><span class="p">):</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">CllCp2kContextConfig</span></div>
 
 
 <div class="viewcode-block" id="GenericCp2kOutput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.GenericCp2kOutput">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">GenericCp2kOutput</span><span class="p">(</span><span class="n">ICllLabelOutput</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GenericCp2kOutput</span><span class="p">(</span><span class="n">ICllLabelOutput</span><span class="p">):</span>
     <span class="n">cp2k_outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Artifact</span><span class="p">]</span>
 
-<div class="viewcode-block" id="GenericCp2kOutput.get_labeled_system_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.GenericCp2kOutput.get_labeled_system_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_labeled_system_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GenericCp2kOutput.get_labeled_system_dataset"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.GenericCp2kOutput.get_labeled_system_dataset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_labeled_system_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp2k_outputs</span></div></div>
 
 
-<div class="viewcode-block" id="cll_cp2k"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.cll_cp2k">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">cll_cp2k</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllCp2kInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllCp2kContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericCp2kOutput</span><span class="p">:</span>
+<div class="viewcode-block" id="cll_cp2k"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.cll_cp2k">[docs]</a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">cll_cp2k</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">CllCp2kInput</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">CllCp2kContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericCp2kOutput</span><span class="p">:</span>
     <span class="n">executor</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">default_executor</span>
 
     <span class="c1"># For the first round</span>
@@ -583,11 +584,11 @@ document.write(`
     <span class="k">return</span> <span class="n">GenericCp2kOutput</span><span class="p">(</span><span class="n">cp2k_outputs</span><span class="o">=</span><span class="n">cp2k_outputs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Cp2kInputTemplate"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.Cp2kInputTemplate">[docs]</a><span class="k">class</span> <span class="nc">Cp2kInputTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
+<div class="viewcode-block" id="Cp2kInputTemplate"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.Cp2kInputTemplate">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Cp2kInputTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
     <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;$$&#39;</span></div>
 
 
-<div class="viewcode-block" id="make_cp2k_task_dirs"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.make_cp2k_task_dirs">[docs]</a><span class="k">def</span> <span class="nf">make_cp2k_task_dirs</span><span class="p">(</span><span class="n">system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
+<div class="viewcode-block" id="make_cp2k_task_dirs"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.make_cp2k_task_dirs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">make_cp2k_task_dirs</span><span class="p">(</span><span class="n">system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ArtifactDict</span><span class="p">],</span>
                         <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                         <span class="n">input_template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                         <span class="n">template_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
@@ -653,7 +654,7 @@ document.write(`
         <span class="p">})</span>
     <span class="k">return</span> <span class="n">task_dirs</span></div>
 
-<div class="viewcode-block" id="dump_coord_n_cell"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.dump_coord_n_cell">[docs]</a><span class="k">def</span> <span class="nf">dump_coord_n_cell</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">):</span>
+<div class="viewcode-block" id="dump_coord_n_cell"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.dump_coord_n_cell">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dump_coord_n_cell</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">):</span>
     <span class="n">coords</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">ase_atoms_to_cp2k_input_data</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
     <span class="n">cp2k_dump_input</span><span class="p">({</span>
         <span class="s1">&#39;COORD&#39;</span><span class="p">:</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>  <span class="c1"># FIXME: this is a dirty hack, should make dump_cp2k_input support COORD</span>
@@ -666,7 +667,7 @@ document.write(`
     <span class="p">},</span> <span class="n">fp</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="lammps_efield_to_cp2k"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.lammps_efield_to_cp2k">[docs]</a><span class="k">def</span> <span class="nf">lammps_efield_to_cp2k</span><span class="p">(</span><span class="n">efield</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">]):</span>
+<div class="viewcode-block" id="lammps_efield_to_cp2k"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.cp2k.html#ai2_kit.domain.cp2k.lammps_efield_to_cp2k">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">lammps_efield_to_cp2k</span><span class="p">(</span><span class="n">efield</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    IN CP2K, the efield is defined as</span>
 <span class="sd">    INTENSITY and POLARIZATION (direction of the electric field)</span>
@@ -674,8 +675,8 @@ document.write(`
 <span class="sd">    :param efield: list of 3 floats, the electric field in lammps unit</span>
 <span class="sd">    :return: intensity, polarization</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">constants</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
 
     <span class="n">efield</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">efield</span><span class="p">)</span>
     <span class="n">factor</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">physical_constants</span><span class="p">[</span><span class="s2">&quot;atomic unit of electric field&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">angstrom</span>

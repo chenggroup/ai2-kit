@@ -9,7 +9,6 @@ Subpackages
 
    ai2_kit.algorithm
    ai2_kit.core
-   ai2_kit.dflow
    ai2_kit.domain
    ai2_kit.feat
    ai2_kit.lib

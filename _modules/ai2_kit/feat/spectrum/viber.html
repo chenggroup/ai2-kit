@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,34 +432,34 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.feat.spectrum.viber</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">ase.io</span>
-<span class="kn">import</span> <span class="nn">dpdata</span>
-<span class="kn">import</span> <span class="nn">shlex</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ase.io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dpdata</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shlex</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">MDAnalysis.lib.distances</span> <span class="kn">import</span> <span class="n">distance_array</span><span class="p">,</span> <span class="n">minimize_vectors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MDAnalysis.lib.distances</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance_array</span><span class="p">,</span> <span class="n">minimize_vectors</span>
 
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">expand_globs</span><span class="p">,</span> <span class="n">cmd_with_checkpoint</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.domain.cp2k</span> <span class="kn">import</span> <span class="n">dump_coord_n_cell</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">list_split</span><span class="p">,</span> <span class="n">expand_globs</span><span class="p">,</span> <span class="n">cmd_with_checkpoint</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.domain.cp2k</span><span class="w"> </span><span class="kn">import</span> <span class="n">dump_coord_n_cell</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Cp2kLabelTaskBuilder"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder">[docs]</a><span class="k">class</span> <span class="nc">Cp2kLabelTaskBuilder</span><span class="p">:</span>
+<div class="viewcode-block" id="Cp2kLabelTaskBuilder"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Cp2kLabelTaskBuilder</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This a builder class to generate cp2k labeling task.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_atoms_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Atoms</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_task_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cp2k_inputs</span><span class="p">:</span> <span class="n">OrderedDict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Cp2kLabelTaskBuilder.add_system"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.add_system">[docs]</a>    <span class="k">def</span> <span class="nf">add_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">file_path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Cp2kLabelTaskBuilder.add_system"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.add_system">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">file_path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add system files to label</span>
 
@@ -472,7 +473,7 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">_ase_read</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Cp2kLabelTaskBuilder.add_cp2k_input"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.add_cp2k_input">[docs]</a>    <span class="k">def</span> <span class="nf">add_cp2k_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Cp2kLabelTaskBuilder.add_cp2k_input"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.add_cp2k_input">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_cp2k_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add cp2k input file for dipole or polarizability calculation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -480,7 +481,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">_cp2k_inputs</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">_ensure_file_exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Cp2kLabelTaskBuilder.make_tasks"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.make_tasks">[docs]</a>    <span class="k">def</span> <span class="nf">make_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Cp2kLabelTaskBuilder.make_tasks"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.make_tasks">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">make_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make task dirs for cp2k labeling (prepare systems and cp2k input files)</span>
 <span class="sd">        :param out_dir: output dir</span>
@@ -510,7 +511,7 @@ document.write(`
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">task_dirs</span><span class="p">)</span><span class="si">}</span><span class="s1"> task dirs&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Cp2kLabelTaskBuilder.make_scripts"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.make_scripts">[docs]</a>    <span class="k">def</span> <span class="nf">make_scripts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="Cp2kLabelTaskBuilder.make_scripts"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.make_scripts">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">make_scripts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                      <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;cp2k-batch-</span><span class="si">{i:02d}</span><span class="s1">.sub&#39;</span><span class="p">,</span>
                      <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
                      <span class="n">template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -561,12 +562,12 @@ document.write(`
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Write batch script to </span><span class="si">{</span><span class="n">batch_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Cp2kLabelTaskBuilder.done"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.done">[docs]</a>    <span class="k">def</span> <span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Cp2kLabelTaskBuilder.done"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.Cp2kLabelTaskBuilder.done">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Mark the end of commands chain</span>
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
-    <span class="k">def</span> <span class="nf">_ase_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ase_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -575,7 +576,7 @@ document.write(`
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s1"> systems from </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">, total </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_atoms_list</span><span class="p">)</span><span class="si">}</span><span class="s1"> systems&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="dpdata_read_cp2k_viber_data"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.dpdata_read_cp2k_viber_data">[docs]</a><span class="k">def</span> <span class="nf">dpdata_read_cp2k_viber_data</span><span class="p">(</span><span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<div class="viewcode-block" id="dpdata_read_cp2k_viber_data"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.viber.html#ai2_kit.feat.spectrum.viber.dpdata_read_cp2k_viber_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dpdata_read_cp2k_viber_data</span><span class="p">(</span><span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                 <span class="n">lumped_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
                                 <span class="n">output_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
                                 <span class="n">wannier</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;wannier.xyz&#39;</span><span class="p">,</span>
@@ -661,7 +662,7 @@ document.write(`
     <span class="k">return</span> <span class="n">dp_sys</span></div>
 
 
-<span class="k">def</span> <span class="nf">_get_lumped_wacent_poses_rel</span><span class="p">(</span><span class="n">stc</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span> <span class="n">elem_symbol</span><span class="p">,</span> <span class="n">wacent_symbol</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">expected_cn</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_lumped_wacent_poses_rel</span><span class="p">(</span><span class="n">stc</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span> <span class="n">elem_symbol</span><span class="p">,</span> <span class="n">wacent_symbol</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">expected_cn</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    determine the positions of the wannier centers around O</span>
 <span class="sd">    and sum it into the wannier centroid.</span>
@@ -701,21 +702,21 @@ document.write(`
     <span class="n">lumped_wacent_poses_rel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">lumped_wacent_poses_rel</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">lumped_wacent_poses_rel</span>
 
-<span class="k">def</span> <span class="nf">_is_X</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_X</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span> 
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="s1">&#39;X&#39;</span><span class="p">:</span> 
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="kc">False</span>
 
-<span class="k">def</span> <span class="nf">_can_retain</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="n">elem_symbol</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_can_retain</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="n">elem_symbol</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="n">elem_symbol</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="kc">False</span>
 
-<span class="k">def</span> <span class="nf">_set_lumped_wfc</span><span class="p">(</span><span class="n">stc_list</span><span class="p">,</span> <span class="n">lumped_dict</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">,</span> <span class="n">wacent_symbol</span><span class="p">,</span> <span class="n">to_polar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_set_lumped_wfc</span><span class="p">(</span><span class="n">stc_list</span><span class="p">,</span> <span class="n">lumped_dict</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">,</span> <span class="n">wacent_symbol</span><span class="p">,</span> <span class="n">to_polar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    set the wannier function centroids</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -747,14 +748,14 @@ document.write(`
         <span class="n">wfc_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">X_pos</span><span class="p">,</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">wfc_pos</span>
 
-<span class="k">def</span> <span class="nf">_set_cells</span><span class="p">(</span><span class="n">stc_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Atoms</span><span class="p">],</span> <span class="n">cell</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_set_cells</span><span class="p">(</span><span class="n">stc_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Atoms</span><span class="p">],</span> <span class="n">cell</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">stc</span> <span class="ow">in</span> <span class="n">stc_list</span><span class="p">:</span>
         <span class="n">stc</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
         <span class="n">stc</span><span class="o">.</span><span class="n">set_pbc</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">stc_list</span>
 
 
-<span class="k">def</span> <span class="nf">_ensure_file_exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ensure_file_exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s1"> is not a file&#39;</span>
     <span class="k">return</span> <span class="n">file_path</span>
 

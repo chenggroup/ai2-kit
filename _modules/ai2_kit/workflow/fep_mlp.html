@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,12 +432,12 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.workflow.fep_mlp</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.executor</span> <span class="kn">import</span> <span class="n">BaseExecutorConfig</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.artifact</span> <span class="kn">import</span> <span class="n">ArtifactMap</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">load_yaml_files</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.resource_manager</span> <span class="kn">import</span> <span class="n">ResourceManager</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.domain</span> <span class="kn">import</span> <span class="p">(</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.executor</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseExecutorConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.artifact</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArtifactMap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_yaml_files</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.resource_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResourceManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.domain</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">deepmd</span><span class="p">,</span>
     <span class="n">iface</span><span class="p">,</span>
     <span class="n">lammps</span><span class="p">,</span>
@@ -445,22 +446,22 @@ document.write(`
     <span class="n">constant</span> <span class="k">as</span> <span class="n">const</span><span class="p">,</span>
     <span class="n">updater</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.checkpoint</span> <span class="kn">import</span> <span class="n">set_checkpoint_dir</span><span class="p">,</span> <span class="n">apply_checkpoint</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.checkpoint</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_checkpoint_dir</span><span class="p">,</span> <span class="n">apply_checkpoint</span>
 
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
-<span class="kn">from</span> <span class="nn">fire</span> <span class="kn">import</span> <span class="n">Fire</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fire</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fire</span>
 
-<span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="FepExecutorConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.FepExecutorConfig">[docs]</a><span class="k">class</span> <span class="nc">FepExecutorConfig</span><span class="p">(</span><span class="n">BaseExecutorConfig</span><span class="p">):</span>
-<div class="viewcode-block" id="FepExecutorConfig.Context"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context">[docs]</a>    <span class="k">class</span> <span class="nc">Context</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="FepExecutorConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.FepExecutorConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FepExecutorConfig</span><span class="p">(</span><span class="n">BaseExecutorConfig</span><span class="p">):</span>
+<div class="viewcode-block" id="FepExecutorConfig.Context"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.FepExecutorConfig.Context">[docs]</a>    <span class="k">class</span><span class="w"> </span><span class="nc">Context</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 
         <span class="n">deepmd</span><span class="p">:</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdContextConfig</span>
         <span class="n">lammps</span><span class="p">:</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsContextConfig</span>
@@ -469,18 +470,18 @@ document.write(`
     <span class="n">context</span><span class="p">:</span> <span class="n">Context</span></div>
 
 
-<div class="viewcode-block" id="WorkflowConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig">[docs]</a><span class="k">class</span> <span class="nc">WorkflowConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<div class="viewcode-block" id="WorkflowConfig.General"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.General">[docs]</a>    <span class="k">class</span> <span class="nc">General</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="WorkflowConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">WorkflowConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="WorkflowConfig.General"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.General">[docs]</a>    <span class="k">class</span><span class="w"> </span><span class="nc">General</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
         <span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
         <span class="n">mass_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
         <span class="n">max_iters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span></div>
 
-<div class="viewcode-block" id="WorkflowConfig.Branch"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch">[docs]</a>    <span class="k">class</span> <span class="nc">Branch</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="WorkflowConfig.Branch"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.Branch">[docs]</a>    <span class="k">class</span><span class="w"> </span><span class="nc">Branch</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
         <span class="n">deepmd</span><span class="p">:</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdInputConfig</span>
         <span class="n">cp2k</span><span class="p">:</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kInputConfig</span>
         <span class="n">threshold</span><span class="p">:</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDeviSelectorInputConfig</span></div>
 
-<div class="viewcode-block" id="WorkflowConfig.Update"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.Update">[docs]</a>    <span class="k">class</span> <span class="nc">Update</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="WorkflowConfig.Update"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.WorkflowConfig.Update">[docs]</a>    <span class="k">class</span><span class="w"> </span><span class="nc">Update</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
         <span class="n">walkthrough</span><span class="p">:</span> <span class="n">updater</span><span class="o">.</span><span class="n">CllWalkthroughUpdaterInputConfig</span></div>
 
     <span class="n">general</span><span class="p">:</span> <span class="n">General</span>
@@ -490,13 +491,13 @@ document.write(`
     <span class="n">update</span><span class="p">:</span> <span class="n">Update</span></div>
 
 
-<div class="viewcode-block" id="FepWorkflowConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.FepWorkflowConfig">[docs]</a><span class="k">class</span> <span class="nc">FepWorkflowConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="FepWorkflowConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.FepWorkflowConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FepWorkflowConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">executors</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FepExecutorConfig</span><span class="p">]</span>
     <span class="n">artifacts</span><span class="p">:</span> <span class="n">ArtifactMap</span>
     <span class="n">workflow</span><span class="p">:</span> <span class="n">Any</span></div>
 
 
-<div class="viewcode-block" id="run_workflow"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.run_workflow">[docs]</a><span class="k">def</span> <span class="nf">run_workflow</span><span class="p">(</span><span class="o">*</span><span class="n">config_files</span><span class="p">,</span>
+<div class="viewcode-block" id="run_workflow"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.run_workflow">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">run_workflow</span><span class="p">(</span><span class="o">*</span><span class="n">config_files</span><span class="p">,</span>
                  <span class="n">executor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">path_prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">checkpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -529,7 +530,7 @@ document.write(`
     <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cll_mlp_training_workflow</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">resource_manager</span><span class="p">,</span> <span class="n">executor</span><span class="p">,</span> <span class="n">path_prefix</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="cll_mlp_training_workflow"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.cll_mlp_training_workflow">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">cll_mlp_training_workflow</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">FepWorkflowConfig</span><span class="p">,</span> <span class="n">resource_manager</span><span class="p">:</span> <span class="n">ResourceManager</span><span class="p">,</span> <span class="n">executor</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="cll_mlp_training_workflow"><a class="viewcode-back" href="../../../_api/ai2_kit.workflow.fep_mlp.html#ai2_kit.workflow.fep_mlp.cll_mlp_training_workflow">[docs]</a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">cll_mlp_training_workflow</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">FepWorkflowConfig</span><span class="p">,</span> <span class="n">resource_manager</span><span class="p">:</span> <span class="n">ResourceManager</span><span class="p">,</span> <span class="n">executor</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">context_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">executors</span><span class="p">[</span><span class="n">executor</span><span class="p">]</span><span class="o">.</span><span class="n">context</span>
     <span class="n">raw_workflow_config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">workflow</span><span class="p">)</span>
 

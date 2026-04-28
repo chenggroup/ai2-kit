@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,23 +432,23 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.domain.dpff</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">dpdata.unit</span> <span class="kn">import</span> <span class="n">econvs</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dpdata.unit</span><span class="w"> </span><span class="kn">import</span> <span class="n">econvs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">import</span> <span class="nn">dpdata</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dpdata</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
 
-<span class="kn">from</span> <span class="nn">.dplr</span> <span class="kn">import</span> <span class="n">set_dplr_ext_from_cp2k_output</span><span class="p">,</span> <span class="n">get_sel_ids</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.dplr</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_dplr_ext_from_cp2k_output</span><span class="p">,</span> <span class="n">get_sel_ids</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="dpdata_read_cp2k_dpff_data"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.dpdata_read_cp2k_dpff_data">[docs]</a><span class="k">def</span> <span class="nf">dpdata_read_cp2k_dpff_data</span><span class="p">(</span>
+<div class="viewcode-block" id="dpdata_read_cp2k_dpff_data"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.dpdata_read_cp2k_dpff_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dpdata_read_cp2k_dpff_data</span><span class="p">(</span>
     <span class="n">cp2k_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">cp2k_output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">wannier_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -511,7 +512,7 @@ document.write(`
     <span class="k">return</span> <span class="n">dp_sys</span></div>
 
 
-<div class="viewcode-block" id="set_dpff_ext_from_cp2k_output"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.set_dpff_ext_from_cp2k_output">[docs]</a><span class="k">def</span> <span class="nf">set_dpff_ext_from_cp2k_output</span><span class="p">(</span>
+<div class="viewcode-block" id="set_dpff_ext_from_cp2k_output"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.set_dpff_ext_from_cp2k_output">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_dpff_ext_from_cp2k_output</span><span class="p">(</span>
     <span class="n">dp_sys</span><span class="p">:</span> <span class="n">dpdata</span><span class="o">.</span><span class="n">LabeledSystem</span><span class="p">,</span>
     <span class="n">cp2k_output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">wannier_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -584,7 +585,7 @@ document.write(`
     <span class="k">return</span> <span class="n">dp_sys</span></div>
 
 
-<div class="viewcode-block" id="get_cp2k_output_total_energy"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_cp2k_output_total_energy">[docs]</a><span class="k">def</span> <span class="nf">get_cp2k_output_total_energy</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
+<div class="viewcode-block" id="get_cp2k_output_total_energy"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_cp2k_output_total_energy">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_cp2k_output_total_energy</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
     <span class="n">start_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;  Total charge density g-space grids:&quot;</span>
     <span class="n">end_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;  Total energy:&quot;</span>
     <span class="n">start_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">start_pattern</span><span class="p">)</span>
@@ -616,14 +617,14 @@ document.write(`
     <span class="k">return</span> <span class="n">tot_e</span></div>
 
 
-<div class="viewcode-block" id="get_pbc_atomic_efield"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_pbc_atomic_efield">[docs]</a><span class="k">def</span> <span class="nf">get_pbc_atomic_efield</span><span class="p">(</span>
+<div class="viewcode-block" id="get_pbc_atomic_efield"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.dpff.html#ai2_kit.domain.dpff.get_pbc_atomic_efield">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_pbc_atomic_efield</span><span class="p">(</span>
     <span class="n">dp_sys</span><span class="p">,</span>
     <span class="n">extended_coords</span><span class="p">,</span>
     <span class="n">extended_charges</span><span class="p">,</span>
     <span class="n">ewald_h</span><span class="p">,</span>
     <span class="n">ewald_beta</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">deepmd.infer.ewald_recp</span> <span class="kn">import</span> <span class="n">EwaldRecp</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">deepmd.infer.ewald_recp</span><span class="w"> </span><span class="kn">import</span> <span class="n">EwaldRecp</span>
 
     <span class="n">er</span> <span class="o">=</span> <span class="n">EwaldRecp</span><span class="p">(</span><span class="n">ewald_h</span><span class="p">,</span> <span class="n">ewald_beta</span><span class="p">)</span>
     <span class="n">natoms</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">get_natoms</span><span class="p">()</span>

@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,39 +432,39 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.feat.catalysis</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">ase.io</span>
-<span class="kn">import</span> <span class="nn">fire</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ase.io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">fire</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">ruamel.yaml</span> <span class="kn">import</span> <span class="n">YAML</span>
-<span class="kn">from</span> <span class="nn">ruamel.yaml.comments</span> <span class="kn">import</span> <span class="n">TaggedScalar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ruamel.yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">YAML</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ruamel.yaml.comments</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaggedScalar</span>
 
-<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">parse_path_list</span><span class="p">,</span> <span class="n">nested_set</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.domain.cp2k</span> <span class="kn">import</span> <span class="n">dump_coord_n_cell</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.domain.lammps</span> <span class="kn">import</span> <span class="n">get_ensemble</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_path_list</span><span class="p">,</span> <span class="n">nested_set</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.domain.cp2k</span><span class="w"> </span><span class="kn">import</span> <span class="n">dump_coord_n_cell</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.domain.lammps</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_ensemble</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span><span class="p">,</span> <span class="n">Atom</span>
-<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">Template</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">Atoms</span><span class="p">,</span> <span class="n">Atom</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">string</span><span class="w"> </span><span class="kn">import</span> <span class="n">Template</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
-<span class="kn">from</span> <span class="nn">.constant</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.constant</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="ConfigBuilder"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder">[docs]</a><span class="k">class</span> <span class="nc">ConfigBuilder</span><span class="p">:</span>
+<div class="viewcode-block" id="ConfigBuilder"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ConfigBuilder</span><span class="p">:</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Atoms</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="ConfigBuilder.load_system"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.load_system">[docs]</a>    <span class="k">def</span> <span class="nf">load_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigBuilder.load_system"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.load_system">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">load_system</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loading system to memory using ASE</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -472,7 +473,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="o">=</span> <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="ConfigBuilder.gen_mlp_training_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_mlp_training_input">[docs]</a>    <span class="k">def</span> <span class="nf">gen_mlp_training_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="ConfigBuilder.gen_mlp_training_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_mlp_training_input">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">gen_mlp_training_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span><span class="p">,</span>
                                <span class="n">train_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                                <span class="n">explore_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -501,7 +502,7 @@ document.write(`
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">mlp_training_input_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">out_data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ConfigBuilder.gen_deepmd_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_deepmd_input">[docs]</a>    <span class="k">def</span> <span class="nf">gen_deepmd_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="ConfigBuilder.gen_deepmd_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_deepmd_input">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">gen_deepmd_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                          <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span><span class="p">,</span>
                          <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
                          <span class="n">template_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEEPMD_DEFAULT_TEMPLATE</span><span class="p">):</span>
@@ -514,7 +515,7 @@ document.write(`
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">deepmd_input_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ConfigBuilder.gen_plumed_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_plumed_input">[docs]</a>    <span class="k">def</span> <span class="nf">gen_plumed_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigBuilder.gen_plumed_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_plumed_input">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">gen_plumed_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate Plumed input files</span>
 <span class="sd">        Args:</span>
@@ -551,7 +552,7 @@ document.write(`
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">plumed_input_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plumed_input</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="ConfigBuilder.gen_lammps_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_lammps_input">[docs]</a>    <span class="k">def</span> <span class="nf">gen_lammps_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;./out&#39;</span><span class="p">,</span> <span class="n">abs_path</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigBuilder.gen_lammps_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_lammps_input">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">gen_lammps_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;./out&#39;</span><span class="p">,</span> <span class="n">abs_path</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;atoms must be loaded first&#39;</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;nsteps&#39;</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
@@ -590,7 +591,7 @@ document.write(`
             <span class="s1">&#39;ensemble_config&#39;</span><span class="p">:</span> <span class="n">ensemble_config</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="k">class</span> <span class="nc">LammpsTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
+        <span class="k">class</span><span class="w"> </span><span class="nc">LammpsTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
             <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;$$&#39;</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">template_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
@@ -606,7 +607,7 @@ document.write(`
         <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">lammps_data_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;lammps-data&#39;</span><span class="p">,</span> <span class="n">specorder</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
 
 
-<div class="viewcode-block" id="ConfigBuilder.gen_cp2k_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_cp2k_input">[docs]</a>    <span class="k">def</span> <span class="nf">gen_cp2k_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="ConfigBuilder.gen_cp2k_input"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.gen_cp2k_input">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">gen_cp2k_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                        <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span><span class="p">,</span>
                        <span class="n">basis_set_file</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;BASIS_MOLOPT&#39;</span><span class="p">,</span>
                        <span class="n">potential_file</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;GTH_POTENTIALS&#39;</span><span class="p">,</span>
@@ -727,7 +728,7 @@ document.write(`
             <span class="n">dump_coord_n_cell</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;coord_n_cell.inc is generated at </span><span class="si">{</span><span class="n">coord_n_cell_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ConfigBuilder.get_plumed_group"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.get_plumed_group">[docs]</a>    <span class="k">def</span> <span class="nf">get_plumed_group</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigBuilder.get_plumed_group"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.ConfigBuilder.get_plumed_group">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_plumed_group</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get auto generated plumed group</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -744,13 +745,13 @@ document.write(`
         <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plumed_input</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="get_type_map"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.get_type_map">[docs]</a><span class="k">def</span> <span class="nf">get_type_map</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">):</span>
+<div class="viewcode-block" id="get_type_map"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.get_type_map">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_type_map</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">):</span>
     <span class="n">type_map</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_chemical_symbols</span><span class="p">()))</span>  <span class="c1"># sorted to ensure order</span>
     <span class="n">mass_map</span> <span class="o">=</span> <span class="p">[</span><span class="n">Atom</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span><span class="o">.</span><span class="n">mass</span> <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">type_map</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">type_map</span><span class="p">,</span> <span class="n">mass_map</span></div>
 
 
-<div class="viewcode-block" id="get_basis_n_potential"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.get_basis_n_potential">[docs]</a><span class="k">def</span> <span class="nf">get_basis_n_potential</span><span class="p">(</span><span class="n">basis_set_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">potential_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<div class="viewcode-block" id="get_basis_n_potential"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.get_basis_n_potential">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_basis_n_potential</span><span class="p">(</span><span class="n">basis_set_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">potential_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">basis_set_files</span><span class="p">:</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;BASIS_SET_FILE_NAME </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -759,7 +760,7 @@ document.write(`
     <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="select_basis_set"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.select_basis_set">[docs]</a><span class="k">def</span> <span class="nf">select_basis_set</span><span class="p">(</span><span class="n">choices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">preferred</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="select_basis_set"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.select_basis_set">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">select_basis_set</span><span class="p">(</span><span class="n">choices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">preferred</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    select basis set by matching preferred basis set</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -773,7 +774,7 @@ document.write(`
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot find preferred basis set </span><span class="si">{</span><span class="n">preferred</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="n">choices</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="select_potential"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.select_potential">[docs]</a><span class="k">def</span> <span class="nf">select_potential</span><span class="p">(</span><span class="n">choices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">ve</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">xc_function</span><span class="o">=</span><span class="s1">&#39;PBE&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="select_potential"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.select_potential">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">select_potential</span><span class="p">(</span><span class="n">choices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">ve</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">xc_function</span><span class="o">=</span><span class="s1">&#39;PBE&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    select potential by matching valence electron and xc_function</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -783,11 +784,11 @@ document.write(`
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot find potential for ve </span><span class="si">{</span><span class="n">ve</span><span class="si">}</span><span class="s1"> and xc_function </span><span class="si">{</span><span class="n">xc_function</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="n">choices</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_valence_electron"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.get_valence_electron">[docs]</a><span class="k">def</span> <span class="nf">get_valence_electron</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="get_valence_electron"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.get_valence_electron">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_valence_electron</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;.*?(\d+)$&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># type: ignore</span></div>
 
 
-<div class="viewcode-block" id="find_cp2k_data_file"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.find_cp2k_data_file">[docs]</a><span class="k">def</span> <span class="nf">find_cp2k_data_file</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="find_cp2k_data_file"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.find_cp2k_data_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">find_cp2k_data_file</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    find CP2K data file in CP2K_DATA_DIR</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -801,7 +802,7 @@ document.write(`
     <span class="k">return</span> <span class="n">file</span></div>
 
 
-<div class="viewcode-block" id="parse_cp2k_data_file"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.parse_cp2k_data_file">[docs]</a><span class="k">def</span> <span class="nf">parse_cp2k_data_file</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">parsed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_cp2k_data_file"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.parse_cp2k_data_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">parse_cp2k_data_file</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">parsed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    get all available basic set and potential from CP2K data file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -819,7 +820,7 @@ document.write(`
     <span class="k">return</span> <span class="n">parsed</span></div>
 
 
-<div class="viewcode-block" id="dump_artifacts"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.dump_artifacts">[docs]</a><span class="k">def</span> <span class="nf">dump_artifacts</span><span class="p">(</span><span class="n">artifacts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="dump_artifacts"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.dump_artifacts">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dump_artifacts</span><span class="p">(</span><span class="n">artifacts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">artifact</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="p">:</span>
         <span class="n">key</span> <span class="o">=</span> <span class="n">artifact</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span>
@@ -842,7 +843,7 @@ document.write(`
     <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inspect_lammps_output"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.inspect_lammps_output">[docs]</a><span class="k">def</span> <span class="nf">inspect_lammps_output</span><span class="p">(</span><span class="n">lammps_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">save_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fig_ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="inspect_lammps_output"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.inspect_lammps_output">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">inspect_lammps_output</span><span class="p">(</span><span class="n">lammps_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">save_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fig_ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="n">model_devi_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lammps_dir</span><span class="p">,</span> <span class="s1">&#39;model_devi.out&#39;</span><span class="p">)</span>
     <span class="n">colvar_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lammps_dir</span><span class="p">,</span> <span class="s1">&#39;COLVAR&#39;</span><span class="p">)</span>
     <span class="n">lammps_input_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lammps_dir</span><span class="p">,</span> <span class="s1">&#39;lammps.input&#39;</span><span class="p">)</span>
@@ -888,15 +889,15 @@ document.write(`
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_to</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="CmdEntries"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.CmdEntries">[docs]</a><span class="k">class</span> <span class="nc">CmdEntries</span><span class="p">:</span>
-<div class="viewcode-block" id="CmdEntries.build_config"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.CmdEntries.build_config">[docs]</a>    <span class="k">def</span> <span class="nf">build_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CmdEntries"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.CmdEntries">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CmdEntries</span><span class="p">:</span>
+<div class="viewcode-block" id="CmdEntries.build_config"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.CmdEntries.build_config">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">build_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Build config file for catalyst</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ConfigBuilder</span></div></div>
 
 
-<div class="viewcode-block" id="cli_main"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.cli_main">[docs]</a><span class="k">def</span> <span class="nf">cli_main</span><span class="p">():</span>
+<div class="viewcode-block" id="cli_main"><a class="viewcode-back" href="../../../_api/ai2_kit.feat.catalysis.html#ai2_kit.feat.catalysis.cli_main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">cli_main</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Command line entry for ai2-cat command</span>
 <span class="sd">    &quot;&quot;&quot;</span>

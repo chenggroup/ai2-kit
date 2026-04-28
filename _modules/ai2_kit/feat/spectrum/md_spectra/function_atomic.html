@@ -1,0 +1,1168 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ai2_kit.feat.spectrum.md_spectra.function_atomic &#8212; ai2-kit Reference</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../_static/jquery.js"></script>
+    <script src="../../../../../_static/underscore.js"></script>
+    <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../../_static/doctools.js"></script>
+    <script src="../../../../../_static/clipboard.min.js"></script>
+    <script src="../../../../../_static/copybutton.js"></script>
+    <script src="../../../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/ai2_kit/feat/spectrum/md_spectra/function_atomic';</script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">ai2-kit Reference</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../intro.html">
+                    ai<sup>2</sup>-kit
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Featuring Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/manual/ai2cat.html">ai2-cat Toolkit</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Workflows</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/manual/cll-workflow.html">CLL Machine Learning Potential Training Workflow</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Domain Specific Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/manual/proton-transfer.html">Proton Transfer Analysis Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/manual/aos-analysis.html">Amorphous Oxides Structure Analysis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Build-in Functionalities</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/manual/checkpoint.html">Checkpoint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/manual/hpc-executor.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/manual/ase.html">ASE Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/manual/dpdata.html">Dpdata Toolkit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/manual/tips.html">Tips</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebooks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../notebook/ai2cat.html">AI2-Cat Calculation Notebook</a></li>
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">中文文档</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/manual/cll-workflow.zh.html">CLL 势函数训练工作流</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/manual/hpc-executor.zh.html">AI<sup>2</sup>-Kit HPC Executor</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/manual/references.html">References</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../../_api/ai2_kit.core.html">ai2_kit.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.artifact.html">ai2_kit.core.artifact module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.checkpoint.html">ai2_kit.core.checkpoint module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.cmd.html">ai2_kit.core.cmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.connector.html">ai2_kit.core.connector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.executor.html">ai2_kit.core.executor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.future.html">ai2_kit.core.future module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.job.html">ai2_kit.core.job module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.log.html">ai2_kit.core.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.pydantic.html">ai2_kit.core.pydantic module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.queue_system.html">ai2_kit.core.queue_system module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.resource_manager.html">ai2_kit.core.resource_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.script.html">ai2_kit.core.script module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.constant.html">ai2_kit.domain.constant module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.cp2k.html">ai2_kit.domain.cp2k module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.data.html">ai2_kit.domain.data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.deepmd.html">ai2_kit.domain.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.dpff.html">ai2_kit.domain.dpff module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.dplr.html">ai2_kit.domain.dplr module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.iface.html">ai2_kit.domain.iface module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.lammps.html">ai2_kit.domain.lammps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.lasp.html">ai2_kit.domain.lasp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.selector.html">ai2_kit.domain.selector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.updater.html">ai2_kit.domain.updater module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.util.html">ai2_kit.domain.util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.domain.vasp.html">ai2_kit.domain.vasp module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../../_api/ai2_kit.feat.html">ai2_kit.feat package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.feat.catalysis.html">ai2_kit.feat.catalysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.feat.spectrum.html">ai2_kit.feat.spectrum package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../../_api/ai2_kit.lib.html">ai2_kit.lib package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.lib.constant.html">ai2_kit.lib.constant module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.lib.plumed.html">ai2_kit.lib.plumed module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../_api/ai2_kit.res.html">ai2_kit.res package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../../_api/ai2_kit.tool.html">ai2_kit.tool package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.tool.ase.html">ai2_kit.tool.ase module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.tool.batch.html">ai2_kit.tool.batch module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.tool.deepmd.html">ai2_kit.tool.deepmd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../../_api/ai2_kit.workflow.html">ai2_kit.workflow package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.workflow.cll_mlp.html">ai2_kit.workflow.cll_mlp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../_api/ai2_kit.workflow.fep_mlp.html">ai2_kit.workflow.fep_mlp module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../_api/ai2_kit.main.html">ai2_kit.main module</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/chenggroup/ai2-kit" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/chenggroup/ai2-kit/issues/new?title=Issue%20on%20page%20%2F_modules/ai2_kit/feat/spectrum/md_spectra/function_atomic.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for ai2_kit.feat.spectrum.md_spectra.function_atomic</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<div class="viewcode-block" id="write_to_diagonal"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.write_to_diagonal">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">write_to_diagonal</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">diag</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">diag_slices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">]</span>
+    <span class="n">start_idx</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="n">offset</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+    <span class="n">diag_len</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis1</span><span class="p">]</span> <span class="o">-</span> <span class="n">start_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis2</span><span class="p">]</span> <span class="o">-</span> <span class="n">start_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">diag_len</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">diag_len</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">diag_slices</span><span class="p">[</span><span class="n">axis1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">start_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">start_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">diag_len</span><span class="p">))</span>
+    <span class="n">diag_slices</span><span class="p">[</span><span class="n">axis2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">start_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">start_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">diag_len</span><span class="p">))</span>
+    <span class="n">a</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">diag_slices</span><span class="p">)]</span> <span class="o">=</span> <span class="n">diag</span></div>
+
+<div class="viewcode-block" id="get_distance"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.get_distance">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_distance</span><span class="p">(</span><span class="n">coords_A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coords_B</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+                 <span class="n">remove_diag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate the distances between coords_A and coords_B.</span>
+<span class="sd">        The distance is calculated in the sense of PBC.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -------------</span>
+<span class="sd">            coords_A (..., num_A, 3): the coordinates of the central points. The size of the last axis is the dimension.</span>
+<span class="sd">            coords_B (..., num_B, 3): the coordinates of the points to be selected. </span>
+<span class="sd">            If B is None, A will be compared with itself.</span>
+<span class="sd">            cells    (..., 3, 3): the PBC cells.</span>
+<span class="sd">            remove_diag, bool: whether to fill the diagonal with np.inf.</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        -------------</span>
+<span class="sd">            distance (..., num_A, num_B): the matrix of distances.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">coords_B</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">coords_B</span> <span class="o">=</span> <span class="n">coords_A</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+        <span class="n">box_shift</span><span class="p">(</span>
+            <span class="n">coords_A</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">coords_B</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span>  <span class="c1"># type: ignore</span>
+            <span class="n">cells</span>
+        <span class="p">),</span> 
+        <span class="nb">ord</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">remove_diag</span><span class="p">:</span>
+        <span class="n">write_to_diagonal</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span><span class="p">,</span> <span class="n">axis1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis2</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">distance</span></div>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_coords_cells_mul</span><span class="p">(</span><span class="n">coords</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">coords</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;=</span> <span class="n">cells</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
+        <span class="n">d0</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="n">cells</span><span class="o">.</span><span class="n">ndim</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">_shape</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">coords</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">_shape</span><span class="p">[:</span><span class="o">-</span><span class="n">d0</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span> <span class="n">cells</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">_shape</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">cells</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+<div class="viewcode-block" id="inv_cells"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.inv_cells">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">inv_cells</span><span class="p">(</span><span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reciprocal cells.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">cells</span><span class="p">)</span></div>
+<div class="viewcode-block" id="to_frac"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.to_frac">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">to_frac</span><span class="p">(</span><span class="n">coords</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transfer from the cartesian coordinate to fractional coordinate.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----</span>
+<span class="sd">    coords: np.ndarray,</span>
+<span class="sd">    in shape of (..., 3)</span>
+
+<span class="sd">    cells: np.ndarray,</span>
+<span class="sd">    in shape of (..., 3, 3)</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    -----</span>
+<span class="sd">    fractional coords: np.ndarray,</span>
+<span class="sd">    in shape of (..., 3)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">recip_cell</span> <span class="o">=</span> <span class="n">inv_cells</span><span class="p">(</span><span class="n">cells</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_coords_cells_mul</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">recip_cell</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="box_shift"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.box_shift">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">box_shift</span><span class="p">(</span><span class="n">dx</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Shift the coordinates (dx) to the coordinates that have the smallest absolute value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----</span>
+<span class="sd">    dx: np.ndarray,</span>
+<span class="sd">    in shape of (..., 3)</span>
+
+<span class="sd">    cells: np.ndarray,</span>
+<span class="sd">    in shape of (..., 3, 3)</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    -----</span>
+<span class="sd">    shifted_dx: np.ndarray,</span>
+<span class="sd">    in shape of (..., 3)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">dx</span> <span class="o">-</span> <span class="n">_coords_cells_mul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">to_frac</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">cells</span><span class="p">)),</span> <span class="n">cells</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="do_pbc"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.do_pbc">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">do_pbc</span><span class="p">(</span><span class="n">coords</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Translate to the home cell.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----</span>
+<span class="sd">    coords: np.ndarray,</span>
+<span class="sd">    in shape of (..., natom, 3)</span>
+
+<span class="sd">    cells: np.ndarray,</span>
+<span class="sd">    in shape of (..., 3, 3)</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    -----</span>
+<span class="sd">    translated coords: np.ndarray,</span>
+<span class="sd">    in shape of (..., 3)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">coords</span> <span class="o">-</span> <span class="n">_coords_cells_mul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">to_frac</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">cells</span><span class="p">)),</span> <span class="n">cells</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="k_nearest"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.k_nearest">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">k_nearest</span><span class="p">(</span><span class="n">coords_A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coords_B</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+                   <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For each atom in coords_A, choose the k-nearest atoms (in the cell) among coords_B, and return their indices.</span>
+<span class="sd">    The distance is calculated in the sense of PBC.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -------------</span>
+<span class="sd">    coords_A (..., num_A, 3): </span>
+<span class="sd">    the coordinates of the central points. The size of the last axis is the dimension.</span>
+
+<span class="sd">    coords_B (..., num_B, 3): </span>
+<span class="sd">    the coordinates of the points to be selected. </span>
+<span class="sd">    If B is None, A will be compared with itself, where the diagonal will be removed.</span>
+
+<span class="sd">    cells (..., 3, 3): </span>
+<span class="sd">    the PBC box. cells[..., :, i] is the i-th axis of the cell.</span>
+
+<span class="sd">    k: int, the number of the points selected from coords_B.</span>
+
+<span class="sd">    batch_size: int, the batch size of atoms in coords_B at each time. </span>
+<span class="sd">    The required memory size is (..., num_A, k + batch_size).</span>
+<span class="sd">    If batch_size &lt;= 0, it will use the largest batch_size, </span>
+<span class="sd">    which means the required memory size is (..., num_A, num_B).</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    -------------</span>
+<span class="sd">    indices (..., num_A, k): the indices of the k-nearest points in coords_B.</span>
+
+<span class="sd">    distances (..., num_A, k): the distances of the k-nearest points in coords_B.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">self_comp</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">coords_B</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">coords_B</span> <span class="o">=</span> <span class="n">coords_A</span>
+        <span class="n">self_comp</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">coords_B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">d</span> <span class="o">-</span> <span class="n">k</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">batch_size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="n">get_distance</span><span class="p">(</span><span class="n">coords_A</span><span class="p">,</span> <span class="n">coords_B</span><span class="p">,</span> <span class="n">cells</span><span class="p">,</span> <span class="n">remove_diag</span> <span class="o">=</span> <span class="n">self_comp</span><span class="p">)</span>
+        <span class="n">k_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argpartition</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">k_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="n">k_index</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">coords_A</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="n">batch_size</span>
+        <span class="n">k_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">_shape</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="n">k_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">_shape</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">coords_B</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">k_index</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">k_distance</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_distance</span><span class="p">(</span>
+            <span class="n">coords_A</span><span class="p">,</span> <span class="n">coords_B</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="n">k</span><span class="p">,</span> <span class="p">:],</span> <span class="n">cells</span><span class="p">,</span> <span class="n">remove_diag</span> <span class="o">=</span> <span class="n">self_comp</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+            <span class="n">end_i</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">)</span>
+            <span class="n">sz</span> <span class="o">=</span> <span class="n">end_i</span> <span class="o">-</span> <span class="n">i</span>
+            <span class="n">k_index</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span><span class="n">k</span> <span class="o">+</span> <span class="n">sz</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">end_i</span><span class="p">)</span>
+            <span class="n">k_distance</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span><span class="n">k</span> <span class="o">+</span> <span class="n">sz</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_distance</span><span class="p">(</span>
+                <span class="n">coords_A</span><span class="p">,</span> <span class="n">coords_B</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span><span class="n">end_i</span><span class="p">,</span> <span class="p">:],</span> <span class="n">cells</span><span class="p">,</span> <span class="n">remove_diag</span> <span class="o">=</span> <span class="n">self_comp</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="p">)</span>
+            <span class="n">partition_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argpartition</span><span class="p">(</span><span class="n">k_distance</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">k_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">k_index</span><span class="p">,</span> <span class="n">partition_idx</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">k_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">k_distance</span><span class="p">,</span> <span class="n">partition_idx</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sort_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">k_distance</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="n">k</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">k_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">k_index</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="n">k</span><span class="p">],</span> <span class="n">sort_idx</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">k_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">k_distance</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="n">k</span><span class="p">],</span> <span class="n">sort_idx</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">k_index</span></div>
+
+<div class="viewcode-block" id="find_h2o"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.find_h2o">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">find_h2o</span><span class="p">(</span><span class="n">coords_sel</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coords_oth</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+                <span class="n">r_bond</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+                <span class="c1"># mask_sel: Optional[np.ndarray] = None</span>
+                <span class="p">):</span>
+    <span class="n">coords_sel</span> <span class="o">=</span> <span class="n">coords_sel</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="c1"># (..., num_sel, num_oth, 3)</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">box_shift</span><span class="p">(</span><span class="n">coords_oth</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">coords_sel</span><span class="p">,</span> <span class="n">cells</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span> <span class="c1"># type: ignore</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">r_bond</span>
+    <span class="n">h2o_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">h2o_mask</span></div>
+
+<div class="viewcode-block" id="find_oh"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.find_oh">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">find_oh</span><span class="p">(</span><span class="n">coords_sel</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coords_oth</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+                <span class="n">r_bond</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+                <span class="c1"># mask_sel: Optional[np.ndarray] = None</span>
+                <span class="p">):</span>
+    <span class="n">coords_sel</span> <span class="o">=</span> <span class="n">coords_sel</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="c1"># (..., num_sel, num_oth, 3)</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">box_shift</span><span class="p">(</span><span class="n">coords_oth</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">coords_sel</span><span class="p">,</span> <span class="n">cells</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span> <span class="c1"># type: ignore</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">r_bond</span>
+    <span class="n">oh_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">oh_mask</span></div>
+
+<div class="viewcode-block" id="calculate_dipole_H"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.calculate_dipole_H">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_dipole_H</span><span class="p">(</span><span class="n">coords_O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coords_H</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="n">idx_H</span> <span class="o">=</span> <span class="n">k_nearest</span><span class="p">(</span><span class="n">coords_O</span><span class="p">[[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">coords_H</span><span class="p">[[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">cells</span><span class="p">[[</span><span class="mi">0</span><span class="p">]],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">cH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">coords_H</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">idx_H</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">box_shift</span><span class="p">(</span><span class="n">cH</span> <span class="o">-</span> <span class="n">coords_O</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:],</span> <span class="n">cells</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]),</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="calculate_dipole"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.calculate_dipole">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_dipole</span><span class="p">(</span><span class="n">coords_O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coords_H</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">wannier</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">dipole_H</span> <span class="o">=</span> <span class="n">calculate_dipole_H</span><span class="p">(</span><span class="n">coords_O</span><span class="p">,</span> <span class="n">coords_H</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
+    <span class="n">atomic_dipole</span> <span class="o">=</span> <span class="n">dipole_H</span> <span class="o">-</span> <span class="n">wannier</span> <span class="o">*</span> <span class="mi">8</span>
+    <span class="k">return</span> <span class="n">atomic_dipole</span></div>
+
+<div class="viewcode-block" id="calculate_dipole_OH_H"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.calculate_dipole_OH_H">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_dipole_OH_H</span><span class="p">(</span><span class="n">coords_O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coords_H</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coords_Al</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="n">idx_H</span> <span class="o">=</span> <span class="n">k_nearest</span><span class="p">(</span><span class="n">coords_O</span><span class="p">[[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">coords_H</span><span class="p">[[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">cells</span><span class="p">[[</span><span class="mi">0</span><span class="p">]],</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">idx_Al</span> <span class="o">=</span> <span class="n">k_nearest</span><span class="p">(</span><span class="n">coords_O</span><span class="p">[[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">coords_Al</span><span class="p">[[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">cells</span><span class="p">[[</span><span class="mi">0</span><span class="p">]],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">cH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">coords_H</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">idx_H</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">cAl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">coords_Al</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">idx_Al</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">box_shift</span><span class="p">(</span><span class="n">cH</span> <span class="o">-</span> <span class="n">coords_O</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:],</span> <span class="n">cells</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]),</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> 
+            <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">box_shift</span><span class="p">(</span><span class="n">cAl</span> <span class="o">-</span> <span class="n">coords_O</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:],</span> <span class="n">cells</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]),</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="calculate_dipole_OH"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.calculate_dipole_OH">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_dipole_OH</span><span class="p">(</span><span class="n">coords_O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coords_H</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coords_Al</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">wannier</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">dipole_H</span> <span class="o">=</span> <span class="n">calculate_dipole_OH_H</span><span class="p">(</span><span class="n">coords_O</span><span class="p">,</span> <span class="n">coords_H</span><span class="p">,</span> <span class="n">coords_Al</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
+    <span class="n">atomic_dipole</span> <span class="o">=</span> <span class="n">dipole_H</span> <span class="o">-</span> <span class="n">wannier</span> <span class="o">*</span> <span class="mi">8</span>
+    <span class="k">return</span> <span class="n">atomic_dipole</span></div>
+
+<div class="viewcode-block" id="calculate_corr"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.calculate_corr">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_corr</span><span class="p">(</span><span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">B</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">NMAX</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">window</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the correlation function: `corr(t) = &lt;A(0) * B(t)&gt;`. </span>
+<span class="sd">    Here, `A(t)` and `B(t)` are arrays of the same dimensions, </span>
+<span class="sd">    and `A(t) * B(t)` is the element-wise multiplication. </span>
+<span class="sd">    The esenmble average `&lt; &gt;` is estimated by moving average.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----</span>
+<span class="sd">    A, B: np.ndarray, in shape of (num_t, ...).</span>
+<span class="sd">        The first dimension refers to the time steps, and its size can be different.</span>
+<span class="sd">        The remaining dimensions (if present) must be the same.</span>
+<span class="sd">    </span>
+<span class="sd">    NMAX: int.</span>
+<span class="sd">        Maximal time steps. Calculate `corr(t)` with `0 &lt;= t &lt;= NMAX`.</span>
+<span class="sd">    </span>
+<span class="sd">    window: int, optional.</span>
+<span class="sd">        The width of window to do the moving average. </span>
+
+<span class="sd">        `&lt;A(0) * B(t)&gt; = 1 / window * \sum_{i = 0}^{window - 1} A(i) * B(t + i)`. </span>
+
+<span class="sd">    Return</span>
+<span class="sd">    -----</span>
+<span class="sd">    corr: np.ndarray, in shape of (NMAX + 1, ...).</span>
+<span class="sd">        `corr(t) = &lt;A(0) * B(t)&gt;`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">B</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">window</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">window</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">NMAX</span><span class="p">)</span>
+    <span class="c1"># Prepare for convolution</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">A</span><span class="p">[:</span><span class="n">window</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span> <span class="n">v2</span> <span class="o">=</span> <span class="n">B</span><span class="p">[:</span><span class="n">window</span> <span class="o">+</span> <span class="n">NMAX</span><span class="p">]</span>
+    <span class="n">pad_width</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">*</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span>
+    <span class="n">pad_width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">NMAX</span><span class="p">)</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">constant_values</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Convolve by FFT</span>
+    <span class="n">corr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">),</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">real</span> <span class="c1"># type: ignore</span>
+    <span class="c1"># Moving average</span>
+    <span class="n">corr</span> <span class="o">=</span> <span class="n">corr</span><span class="p">[</span><span class="n">window</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span><span class="n">window</span> <span class="o">+</span> <span class="n">NMAX</span><span class="p">]</span> <span class="o">/</span> <span class="n">window</span>
+    <span class="k">return</span> <span class="n">corr</span></div>
+
+<div class="viewcode-block" id="cutoff_ir_raman"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.cutoff_ir_raman">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">cutoff_ir_raman</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">,</span> <span class="n">smooth_width</span><span class="p">):</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-2</span>
+    <span class="n">cut_f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+    <span class="n">a_in</span> <span class="o">=</span> <span class="n">cut_f</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">low</span> <span class="o">-</span> <span class="n">arr</span><span class="p">,</span> <span class="n">arr</span> <span class="o">-</span> <span class="n">high</span><span class="p">))</span>
+    <span class="n">a_out</span> <span class="o">=</span> <span class="n">cut_f</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">arr</span> <span class="o">-</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">-</span> <span class="n">arr</span><span class="p">)</span> <span class="o">+</span> <span class="n">smooth_width</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a_out</span> <span class="o">/</span> <span class="p">(</span><span class="n">a_out</span> <span class="o">+</span> <span class="n">a_in</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="cal_range_dipole_polar"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.cal_range_dipole_polar">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">cal_range_dipole_polar</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">atomic_dipole</span><span class="p">,</span> <span class="n">z_lo</span><span class="p">,</span> <span class="n">z_hi</span><span class="p">,</span> <span class="n">r_smth</span><span class="p">):</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">cutoff_ir_raman</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">z_lo</span><span class="p">,</span> <span class="n">z_hi</span><span class="p">,</span> <span class="n">r_smth</span><span class="p">)</span>
+    <span class="n">range_dipole</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weight</span> <span class="o">*</span> <span class="n">atomic_dipole</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">range_dipole</span></div>
+
+<div class="viewcode-block" id="calculate_corr_vdipole_atomic"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.calculate_corr_vdipole_atomic">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_corr_vdipole_atomic</span><span class="p">(</span><span class="n">atomic_dipole</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coords</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+                           <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">window</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.75</span><span class="p">):</span>
+    <span class="n">nframes</span><span class="p">,</span> <span class="n">natom</span> <span class="o">=</span> <span class="n">atomic_dipole</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">cells</span> <span class="o">=</span> <span class="n">cells</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">weight</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">weight</span><span class="p">),</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span> <span class="o">=</span> <span class="kc">True</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+    <span class="n">v_dipole</span> <span class="o">=</span> <span class="n">weight</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">atomic_dipole</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="o">-</span> <span class="n">atomic_dipole</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dt_ps</span><span class="p">)</span>
+    <span class="c1"># v_dipole -= np.mean(v_dipole, axis = 0, keepdims = True)</span>
+    <span class="n">corr_intra</span> <span class="o">=</span> <span class="n">calculate_corr</span><span class="p">(</span><span class="n">v_dipole</span><span class="p">,</span> <span class="n">v_dipole</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+    <span class="n">dipole_cutoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">v_dipole</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">atom_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">natom</span><span class="p">):</span>
+        <span class="n">dis_mask</span> <span class="o">=</span> <span class="n">get_distance</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">coords</span><span class="p">[:,</span> <span class="p">[</span><span class="n">atom_i</span><span class="p">],</span> <span class="p">:],</span> <span class="n">cells</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">rc</span>
+        <span class="n">dis_mask</span><span class="p">[:,</span> <span class="n">atom_i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">dipole_cutoff</span><span class="p">[:,</span> <span class="n">atom_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">v_dipole</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dis_mask</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">corr_inter</span> <span class="o">=</span> <span class="n">calculate_corr</span><span class="p">(</span><span class="n">dipole_cutoff</span><span class="p">,</span> <span class="n">v_dipole</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">corr_intra</span><span class="p">,</span> <span class="n">corr_inter</span></div>
+
+<div class="viewcode-block" id="calculate_corr_polar_atomic"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.calculate_corr_polar_atomic">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_corr_polar_atomic</span><span class="p">(</span><span class="n">atomic_polar</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">coords</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+                         <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">window</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.75</span><span class="p">):</span>
+    <span class="n">nframes</span><span class="p">,</span> <span class="n">natom</span> <span class="o">=</span> <span class="n">atomic_polar</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">polar_iso</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">atomic_polar</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis2</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">diag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">atomic_polar</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">diag</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">polar_iso</span>
+    <span class="n">diag</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">polar_iso</span>
+    <span class="n">diag</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">polar_iso</span>
+    <span class="n">polar_aniso</span> <span class="o">=</span> <span class="n">atomic_polar</span> <span class="o">-</span> <span class="n">diag</span> <span class="c1"># type: ignore</span>
+
+    <span class="n">polar_iso</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">polar_iso</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">polar_aniso</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">polar_aniso</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">polar_iso</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span> <span class="o">*</span> <span class="n">polar_iso</span>
+    <span class="n">polar_aniso</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">weight</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">*</span> <span class="n">polar_aniso</span>
+    <span class="n">polar_aniso</span> <span class="o">=</span> <span class="n">polar_aniso</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nframes</span><span class="p">,</span> <span class="n">natom</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+
+    <span class="n">corr_iso_intra</span> <span class="o">=</span> <span class="n">calculate_corr</span><span class="p">(</span><span class="n">polar_iso</span><span class="p">,</span> <span class="n">polar_iso</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+    <span class="n">corr_aniso_intra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">calculate_corr</span><span class="p">(</span><span class="n">polar_aniso</span><span class="p">,</span> <span class="n">polar_aniso</span><span class="p">,</span> <span class="n">window</span><span class="p">),</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="mf">15.</span><span class="p">)</span>
+    
+    <span class="n">polar_iso_cutoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">polar_iso</span><span class="p">)</span>
+    <span class="n">polar_aniso_cutoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">polar_aniso</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">atom_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">natom</span><span class="p">):</span>
+        <span class="n">dis_mask</span> <span class="o">=</span> <span class="n">get_distance</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">coords</span><span class="p">[:,</span> <span class="p">[</span><span class="n">atom_i</span><span class="p">],</span> <span class="p">:],</span> <span class="n">cells</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">rc</span>
+        <span class="n">dis_mask</span><span class="p">[:,</span> <span class="n">atom_i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">polar_iso_cutoff</span><span class="p">[:,</span> <span class="n">atom_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">polar_iso</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">dis_mask</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">polar_aniso_cutoff</span><span class="p">[:,</span> <span class="n">atom_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">polar_aniso</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dis_mask</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">corr_iso_inter</span> <span class="o">=</span> <span class="n">calculate_corr</span><span class="p">(</span><span class="n">polar_iso_cutoff</span><span class="p">,</span> <span class="n">polar_iso</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+    <span class="n">corr_aniso_inter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">calculate_corr</span><span class="p">(</span><span class="n">polar_aniso_cutoff</span><span class="p">,</span> <span class="n">polar_aniso</span><span class="p">,</span> <span class="n">window</span><span class="p">),</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="mf">15.</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">corr_iso_intra</span><span class="p">,</span> <span class="n">corr_aniso_intra</span><span class="p">,</span> <span class="n">corr_iso_inter</span><span class="p">,</span> <span class="n">corr_aniso_inter</span></div>
+
+<div class="viewcode-block" id="cutoff_z"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.cutoff_z">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">cutoff_z</span><span class="p">(</span><span class="n">z_arr</span><span class="p">,</span> <span class="n">z0</span><span class="p">,</span> <span class="n">zc</span><span class="p">,</span> <span class="n">zw</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cutoff along z-axis by cosine function.&quot;&quot;&quot;</span>
+    <span class="n">cut_f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z_arr</span> <span class="o">-</span> <span class="n">z0</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">*</span> <span class="n">cut_f</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">zc</span> <span class="o">+</span> <span class="n">zw</span><span class="p">))</span> <span class="o">/</span> <span class="n">zw</span><span class="p">)</span></div>
+
+<span class="c1"># def zaxis_weight(z_arr, z0, zc, zw):</span>
+<span class="c1">#     weight = cutoff_z(z_arr, z0, zc, zw)</span>
+<span class="c1">#     return weight / np.sqrt(np.clip(np.sum(np.abs(weight), axis = 1, keepdims = True), 1, None))</span>
+
+<span class="c1"># def cal_weighted_dipole(weight, atomic_dipole):</span>
+<span class="c1">#     return weight * atomic_dipole</span>
+
+<span class="c1"># def cal_weighted_polar(weight, atomic_polar):</span>
+<span class="c1">#     return (weight ** 2) * atomic_polar</span>
+
+<div class="viewcode-block" id="cal_corr_sfg_method1"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.cal_corr_sfg_method1">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">cal_corr_sfg_method1</span><span class="p">(</span><span class="n">atomic_polar</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">atomic_dipole</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+                         <span class="n">coords</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">window</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.75</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate SFG correlation by `S(0)\mu(0)S(t)^2\alpha(t)`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nframes</span><span class="p">,</span> <span class="n">natom</span> <span class="o">=</span> <span class="n">atomic_dipole</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">atomic_polar</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">atomic_polar</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">atomic_dipole</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">atomic_dipole</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">dipole</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">atomic_dipole</span>    
+    <span class="n">polar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span> <span class="o">*</span> <span class="n">atomic_polar</span>
+    <span class="n">corr_intra</span> <span class="o">=</span> <span class="n">calculate_corr</span><span class="p">(</span><span class="n">dipole</span><span class="p">,</span> <span class="n">polar</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+    <span class="n">dipole_cutoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">dipole</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">atom_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">natom</span><span class="p">):</span>
+        <span class="n">dis_mask</span> <span class="o">=</span> <span class="n">get_distance</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">coords</span><span class="p">[:,</span> <span class="p">[</span><span class="n">atom_i</span><span class="p">],</span> <span class="p">:],</span> <span class="n">cells</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">rc</span>
+        <span class="n">dis_mask</span><span class="p">[:,</span> <span class="n">atom_i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">dipole_cutoff</span><span class="p">[:,</span> <span class="n">atom_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">dipole</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">dis_mask</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">corr_inter</span> <span class="o">=</span> <span class="n">calculate_corr</span><span class="p">(</span><span class="n">dipole_cutoff</span><span class="p">,</span> <span class="n">polar</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">corr_intra</span><span class="p">,</span> <span class="n">corr_inter</span></div>
+
+<div class="viewcode-block" id="cal_corr_sfg_method2"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.cal_corr_sfg_method2">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">cal_corr_sfg_method2</span><span class="p">(</span><span class="n">atomic_polar</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">atomic_dipole</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+                         <span class="n">coords</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cells</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">window</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.75</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate SFG correlation by `S(0)\mu(0)S(0)^2\alpha(t)`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nframes</span><span class="p">,</span> <span class="n">natom</span> <span class="o">=</span> <span class="n">atomic_dipole</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">atomic_polar</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">atomic_polar</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">atomic_dipole</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">atomic_dipole</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">dipole</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">atomic_dipole</span>
+    <span class="n">polar</span> <span class="o">=</span> <span class="n">atomic_polar</span>
+    <span class="n">corr_intra</span> <span class="o">=</span> <span class="n">calculate_corr</span><span class="p">(</span><span class="n">dipole</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span> <span class="o">*</span> <span class="n">polar</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+    <span class="n">dipole_cutoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">dipole</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">atom_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">natom</span><span class="p">):</span>
+        <span class="n">dis_mask</span> <span class="o">=</span> <span class="n">get_distance</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">coords</span><span class="p">[:,</span> <span class="p">[</span><span class="n">atom_i</span><span class="p">],</span> <span class="p">:],</span> <span class="n">cells</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">rc</span>
+        <span class="n">dis_mask</span><span class="p">[:,</span> <span class="n">atom_i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">dipole_cutoff</span><span class="p">[:,</span> <span class="n">atom_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">dipole</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">dis_mask</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">weight</span><span class="p">[:,</span> <span class="n">atom_i</span><span class="p">])</span>
+    <span class="n">corr_inter</span> <span class="o">=</span> <span class="n">calculate_corr</span><span class="p">(</span><span class="n">dipole_cutoff</span><span class="p">,</span> <span class="n">polar</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">corr_intra</span><span class="p">,</span> <span class="n">corr_inter</span></div>
+
+<div class="viewcode-block" id="apply_gussian_filter"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.apply_gussian_filter">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">apply_gussian_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply gaussian filter. Parameter `width` means the smoothing width.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nmax</span> <span class="o">=</span> <span class="n">corr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">corr</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">.5</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nmax</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">nmax</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="apply_lorenz_filter"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.apply_lorenz_filter">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">apply_lorenz_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply Cauchy-Lorenz filter. Parameter `width` means the smoothing width.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nmax</span> <span class="o">=</span> <span class="n">corr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="mf">2.99792458e-3</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">dt</span> <span class="o">*</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="n">NX</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">50</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="n">dx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">NX</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">b</span> <span class="o">/</span> <span class="p">(</span><span class="n">b</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ph</span> <span class="o">=</span> <span class="n">FT</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">corr</span> <span class="o">*</span> <span class="n">ph</span><span class="p">[:</span><span class="n">nmax</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FT"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.FT">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">FT</span><span class="p">(</span><span class="n">DT</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform a cosine transform on the correlation function using FFT.</span>
+<span class="sd">    The same as FILONC while `DOM = 2\pi / (M * DT)` (or `OMEGA_MAX = 2\pi / DT`).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----</span>
+<span class="sd">    C: ndarray</span>
+<span class="sd">        the correlation function.</span>
+<span class="sd">    DT: float</span>
+<span class="sd">        time interval between points in C.</span>
+<span class="sd">    M: Optional[int]</span>
+<span class="sd">        number of intervals on the frequency axis. Default is `len(corr) - 1`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -----</span>
+<span class="sd">    Frequency and the 1-d cosine transform of the correlation function.</span>
+<span class="sd">    freq: float, frequency. `freq = 1 / (M * DT)` </span>
+<span class="sd">    CHAT: np.ndarray, the 1-d cosine transform.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">NMAX</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">NMAX</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;NMAX (=len(C)-1) must be even for the cosine transform.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">M</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">NMAX</span>
+    <span class="k">elif</span> <span class="n">M</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">M</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+    <span class="n">freq</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="n">DT</span><span class="p">)</span>
+    <span class="n">DTH</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">M</span>
+    <span class="n">NU</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">THETA</span> <span class="o">=</span> <span class="n">NU</span> <span class="o">*</span> <span class="n">DTH</span>
+
+    <span class="n">ALPHA</span><span class="p">,</span> <span class="n">BETA</span><span class="p">,</span> <span class="n">GAMMA</span> <span class="o">=</span> <span class="n">_FILON_PARAMS</span><span class="p">(</span><span class="n">THETA</span><span class="p">)</span>
+    <span class="n">CE</span><span class="p">,</span> <span class="n">CO</span> <span class="o">=</span> <span class="n">_FFT_OE</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+    <span class="n">CE</span><span class="p">,</span> <span class="n">CO</span> <span class="o">=</span> <span class="n">CE</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">CO</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">CE</span> <span class="o">-=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="n">NMAX</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">THETA</span> <span class="o">*</span> <span class="n">NMAX</span><span class="p">))</span>
+
+    <span class="n">CHAT</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">ALPHA</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">NMAX</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span> <span class="p">(</span><span class="n">THETA</span> <span class="o">*</span> <span class="n">NMAX</span><span class="p">)</span> <span class="o">+</span> <span class="n">BETA</span> <span class="o">*</span> <span class="n">CE</span> <span class="o">+</span> <span class="n">GAMMA</span> <span class="o">*</span> <span class="n">CO</span><span class="p">)</span> <span class="o">*</span> <span class="n">DT</span>
+    <span class="k">return</span> <span class="n">freq</span><span class="p">,</span> <span class="n">CHAT</span></div>
+
+<div class="viewcode-block" id="FT_sin"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.FT_sin">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">FT_sin</span><span class="p">(</span><span class="n">DT</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Perform a sine transform on the correlation function using FFT.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----</span>
+<span class="sd">    C: ndarray</span>
+<span class="sd">        the correlation function.</span>
+<span class="sd">    DT: float</span>
+<span class="sd">        time interval between points in C.</span>
+<span class="sd">    M: Optional[int]</span>
+<span class="sd">        number of intervals on the frequency axis. Default is `len(corr) - 1`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -----</span>
+<span class="sd">    Frequency and the 1-d sine transform of the correlation function.</span>
+<span class="sd">    freq: float, frequency. `freq = 1 / (M * DT)` </span>
+<span class="sd">    CHAT: np.ndarray, the 1-d sine transform.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">NMAX</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">NMAX</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;NMAX (=len(C)-1) must be even for the sine transform.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">M</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">NMAX</span>
+    <span class="k">elif</span> <span class="n">M</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">M</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="n">freq</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="n">DT</span><span class="p">)</span>
+    <span class="n">DTH</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">M</span>
+    <span class="n">NU</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">THETA</span> <span class="o">=</span> <span class="n">NU</span> <span class="o">*</span> <span class="n">DTH</span>
+
+    <span class="n">ALPHA</span><span class="p">,</span> <span class="n">BETA</span><span class="p">,</span> <span class="n">GAMMA</span> <span class="o">=</span> <span class="n">_FILON_PARAMS</span><span class="p">(</span><span class="n">THETA</span><span class="p">)</span>
+    <span class="n">CE</span><span class="p">,</span> <span class="n">CO</span> <span class="o">=</span> <span class="n">_FFT_OE</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+    <span class="n">CE</span><span class="p">,</span> <span class="n">CO</span> <span class="o">=</span> <span class="n">CE</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">CO</span><span class="o">.</span><span class="n">imag</span>
+    <span class="n">CE</span> <span class="o">-=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">NMAX</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">THETA</span> <span class="o">*</span> <span class="n">NMAX</span><span class="p">))</span>
+
+    <span class="n">CHAT</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">ALPHA</span> <span class="o">*</span> <span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">[</span><span class="n">NMAX</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">THETA</span> <span class="o">*</span> <span class="n">NMAX</span><span class="p">))</span> <span class="o">+</span> <span class="n">BETA</span> <span class="o">*</span> <span class="n">CE</span> <span class="o">+</span> <span class="n">GAMMA</span> <span class="o">*</span> <span class="n">CO</span><span class="p">)</span> <span class="o">*</span> <span class="n">DT</span>
+    <span class="k">return</span> <span class="n">freq</span><span class="p">,</span> <span class="n">CHAT</span></div>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_FILON_PARAMS</span><span class="p">(</span><span class="n">THETA</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the filon parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SINTH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">THETA</span><span class="p">)</span>
+    <span class="n">COSTH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">THETA</span><span class="p">)</span>
+    <span class="n">SINSQ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">SINTH</span><span class="p">)</span>
+    <span class="n">COSSQ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">COSTH</span><span class="p">)</span>
+    <span class="n">THSQ</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">THETA</span><span class="p">)</span>
+    <span class="n">THCUB</span> <span class="o">=</span> <span class="n">THSQ</span> <span class="o">*</span> <span class="n">THETA</span>
+    <span class="n">ALPHA</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">*</span> <span class="p">(</span> <span class="n">THSQ</span> <span class="o">+</span> <span class="n">THETA</span> <span class="o">*</span> <span class="n">SINTH</span> <span class="o">*</span> <span class="n">COSTH</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">SINSQ</span> <span class="p">)</span>
+    <span class="n">BETA</span>  <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="p">(</span> <span class="n">THETA</span> <span class="o">*</span> <span class="p">(</span> <span class="mf">1.</span> <span class="o">+</span> <span class="n">COSSQ</span> <span class="p">)</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">SINTH</span> <span class="o">*</span> <span class="n">COSTH</span> <span class="p">)</span>
+    <span class="n">GAMMA</span> <span class="o">=</span> <span class="mf">4.</span> <span class="o">*</span> <span class="p">(</span> <span class="n">SINTH</span> <span class="o">-</span> <span class="n">THETA</span> <span class="o">*</span> <span class="n">COSTH</span> <span class="p">)</span>
+    <span class="n">ALPHA</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">BETA</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">/</span> <span class="mf">3.</span>
+    <span class="n">GAMMA</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.</span> <span class="o">/</span> <span class="mf">3.</span>
+    <span class="n">ALPHA</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">/=</span> <span class="n">THCUB</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">BETA</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">/=</span> <span class="n">THCUB</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">GAMMA</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">/=</span> <span class="n">THCUB</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="n">ALPHA</span><span class="p">,</span> <span class="n">BETA</span><span class="p">,</span> <span class="n">GAMMA</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_FFT_OE</span><span class="p">(</span><span class="n">C</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">M0</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">DTH</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">M</span>
+
+    <span class="c1"># Even coordinates</span>
+    <span class="n">CE</span> <span class="o">=</span> <span class="n">_range_fft</span><span class="p">(</span><span class="n">C</span><span class="p">[::</span><span class="mi">2</span><span class="p">],</span> <span class="n">M0</span><span class="p">)</span> <span class="c1"># type: ignore</span>
+    <span class="n">CE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">CE</span><span class="p">,</span> <span class="n">CE</span><span class="p">,</span> <span class="n">CE</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="c1"># Odd coordinates</span>
+    <span class="n">CO</span> <span class="o">=</span> <span class="n">_range_fft</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">],</span> <span class="n">M0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">M0</span><span class="p">)</span> <span class="o">*</span> <span class="n">DTH</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span> <span class="c1"># type: ignore</span>
+    <span class="n">CO</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">CO</span><span class="p">,</span> <span class="o">-</span><span class="n">CO</span><span class="p">,</span> <span class="n">CO</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">CE</span><span class="p">,</span> <span class="n">CO</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_range_fft</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute `a_hat[..., l, ...] = \sum_{k=1}^{a.shape[axis]} a[..., k, ...]e^{-(2kl\pi/n)}`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">axis</span> <span class="o">%=</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">l</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="n">l</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
+    <span class="n">num_n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">l</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">l0</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">num_n</span>
+    <span class="n">new_shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">new_shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span>
+    <span class="n">new_shape</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">num_n</span><span class="p">)</span>
+    <span class="n">a_main</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">l0</span><span class="p">),</span> <span class="n">axis</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">new_shape</span><span class="p">),</span> <span class="n">axis</span><span class="p">)</span>
+    <span class="n">a_tail</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">l0</span><span class="p">,</span> <span class="n">l</span><span class="p">),</span> <span class="n">axis</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">a_main</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">a_tail</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
+
+<div class="viewcode-block" id="change_unit_ir"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.change_unit_ir">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">change_unit_ir</span><span class="p">(</span><span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="n">a0</span> <span class="o">=</span> <span class="mf">0.52917721067e-10</span>  <span class="c1"># m</span>
+    <span class="n">cc</span> <span class="o">=</span> <span class="mf">2.99792458e8</span><span class="p">;</span>      <span class="c1"># m/s</span>
+    <span class="n">kB</span> <span class="o">=</span> <span class="mf">1.38064852</span><span class="o">*</span><span class="mf">1.0e-23</span> <span class="c1"># J/K</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">kB</span> <span class="o">*</span> <span class="n">temperature</span><span class="p">);</span> 
+	<span class="c1"># 1 Debye = 0.20819434 e*Angstrom</span>
+	<span class="c1"># 1 e = 1.602*1.0e-19 C</span>
+	<span class="c1"># change unit to C*m for M(0)</span>
+    <span class="n">unit_basic</span> <span class="o">=</span> <span class="mf">1.602176565</span> <span class="o">*</span> <span class="mf">1.0e-19</span> <span class="o">*</span> <span class="n">a0</span>
+	<span class="c1"># change unit to ps for dM(0)/dt</span>
+    <span class="n">unitt</span> <span class="o">=</span> <span class="n">unit_basic</span> <span class="o">/</span> <span class="mi">1</span>
+	<span class="c1"># because dot(M(0))*dot(M(t)) change unit to C^2 * m^2 / ps^2</span>
+    <span class="n">unit2</span> <span class="o">=</span> <span class="n">unitt</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">epsilon0</span> <span class="o">=</span> <span class="mf">8.8541878e-12</span> <span class="c1"># F/m = C^2 / (J * m)</span>
+    <span class="n">unit_all</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">cc</span> <span class="o">*</span> <span class="n">a0</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">epsilon0</span><span class="p">)</span> <span class="o">*</span> <span class="n">unit2</span>
+    <span class="n">unit_all</span> <span class="o">=</span> <span class="n">unit_all</span> <span class="o">*</span> <span class="mf">1.0e12</span> <span class="o">*</span> <span class="mf">1.0e-2</span><span class="p">;</span> <span class="c1"># ps to s, m-1 to cm-1</span>
+    <span class="n">CHAT</span> <span class="o">*=</span> <span class="n">unit_all</span>
+    <span class="n">d_omega</span> <span class="o">=</span> <span class="n">freq_ps</span> <span class="o">/</span> <span class="n">cc</span>     <span class="c1"># Wavenumber</span>
+    <span class="n">d_omega</span> <span class="o">*=</span> <span class="mf">1e10</span>         <span class="c1"># cm^-1</span>
+    <span class="k">return</span> <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT</span></div>
+
+<div class="viewcode-block" id="change_unit_raman"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.change_unit_raman">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">change_unit_raman</span><span class="p">(</span><span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="n">cc</span> <span class="o">=</span> <span class="mf">2.99792458e8</span><span class="p">;</span>                  <span class="c1"># m/s</span>
+    <span class="n">kB</span> <span class="o">=</span> <span class="mf">1.38064852</span><span class="o">*</span><span class="mf">1.0e-23</span>             <span class="c1"># J/K</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="mf">6.62607015e-34</span>                  <span class="c1"># J*s</span>
+    <span class="n">h_bar</span> <span class="o">=</span> <span class="n">h</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">kB</span> <span class="o">*</span> <span class="n">temperature</span><span class="p">);</span>    <span class="c1"># J^-1</span>
+    <span class="n">freq</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">freq_ps</span> <span class="o">*</span> <span class="mf">1e12</span>   <span class="c1"># s^-1</span>
+    <span class="n">CHAT</span> <span class="o">=</span> <span class="n">CHAT</span> <span class="o">*</span> <span class="mf">1e4</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">beta</span> <span class="o">*</span> <span class="n">h_bar</span> <span class="o">*</span> <span class="n">freq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">CHAT</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+    <span class="n">d_omega</span> <span class="o">=</span> <span class="mf">1e10</span> <span class="o">*</span> <span class="n">freq_ps</span> <span class="o">/</span> <span class="n">cc</span>       <span class="c1"># cm^-1</span>
+    <span class="k">return</span> <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT</span></div>
+
+<div class="viewcode-block" id="change_unit_sfg"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.change_unit_sfg">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">change_unit_sfg</span><span class="p">(</span><span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="n">a0</span> <span class="o">=</span> <span class="mf">0.52917721067e-10</span>  <span class="c1"># m</span>
+    <span class="n">cc</span> <span class="o">=</span> <span class="mf">2.99792458e8</span><span class="p">;</span>      <span class="c1"># m/s</span>
+    <span class="n">kB</span> <span class="o">=</span> <span class="mf">1.38064852</span><span class="o">*</span><span class="mf">1.0e-23</span> <span class="c1"># J/K</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">kB</span> <span class="o">*</span> <span class="n">temperature</span><span class="p">);</span> 
+	<span class="c1"># 1 Debye = 0.20819434 e*Angstrom</span>
+	<span class="c1"># 1 e = 1.602*1.0e-19 C</span>
+	<span class="c1"># change unit to C*m for M(0)</span>
+    <span class="n">unit_basic</span> <span class="o">=</span> <span class="mf">1.602176565</span> <span class="o">*</span> <span class="mf">1.0e-19</span> <span class="o">*</span> <span class="n">a0</span>
+	<span class="c1"># change unit to ps for dM(0)/dt</span>
+    <span class="n">unitt</span> <span class="o">=</span> <span class="n">unit_basic</span> <span class="o">/</span> <span class="mi">1</span>
+	<span class="c1"># because dot(M(0))*dot(M(t)) change unit to C^2 * m^2 / ps^2</span>
+    <span class="n">unit2</span> <span class="o">=</span> <span class="n">unitt</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">epsilon0</span> <span class="o">=</span> <span class="mf">8.8541878e-12</span> <span class="c1"># F/m = C^2 / (J * m)</span>
+    <span class="n">unit_all</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a0</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">epsilon0</span><span class="p">)</span> <span class="o">*</span> <span class="n">unit2</span>
+    <span class="n">unit_all</span> <span class="o">=</span> <span class="n">unit_all</span> <span class="o">*</span> <span class="mf">1.0e12</span> <span class="o">*</span> <span class="mf">1.0e-5</span><span class="p">;</span> <span class="c1"># ps to s, m-1to 1000cm-1</span>
+    <span class="n">CHAT</span> <span class="o">*=</span> <span class="n">unit_all</span> <span class="o">*</span> <span class="n">freq_ps</span> <span class="o">*</span> <span class="mf">1e4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">CHAT</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">d_omega</span> <span class="o">=</span> <span class="mf">1e10</span> <span class="o">*</span> <span class="n">freq_ps</span> <span class="o">/</span> <span class="n">cc</span>
+    <span class="k">return</span> <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT</span></div>
+
+<div class="viewcode-block" id="calculate_ir_atomic"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.calculate_ir_atomic">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_ir_atomic</span><span class="p">(</span><span class="n">corr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+                 <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">):</span>
+    <span class="n">nmax</span> <span class="o">=</span> <span class="n">corr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">nmax</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">nmax</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">corr</span> <span class="o">=</span> <span class="n">corr</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">tmax</span> <span class="o">=</span> <span class="n">nmax</span> <span class="o">*</span> <span class="n">dt_ps</span>
+    <span class="n">filter_type</span> <span class="o">=</span> <span class="n">filter_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;nmax         =&quot;</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dt   (ps)    =&quot;</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tmax (ps)    =&quot;</span><span class="p">,</span> <span class="n">tmax</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Filter type  =&quot;</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Smooth width =&quot;</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="n">tmax</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="mi">3</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">apply_gussian_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">&quot;lorenz&quot;</span><span class="p">:</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">apply_lorenz_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown filter type: </span><span class="si">{</span><span class="n">filter_type</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+    <span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT</span> <span class="o">=</span> <span class="n">FT</span><span class="p">(</span><span class="n">dt_ps</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+    <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT</span> <span class="o">=</span> <span class="n">change_unit_ir</span><span class="p">(</span><span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">CHAT</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT</span></div>
+
+<div class="viewcode-block" id="calculate_raman_atomic"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.calculate_raman_atomic">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_raman_atomic</span><span class="p">(</span><span class="n">corr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+                    <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">):</span>
+    <span class="n">nmax</span> <span class="o">=</span> <span class="n">corr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">nmax</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">nmax</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">corr</span> <span class="o">=</span> <span class="n">corr</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">tmax</span> <span class="o">=</span> <span class="n">nmax</span> <span class="o">*</span> <span class="n">dt_ps</span>        <span class="c1"># ps</span>
+    <span class="n">filter_type</span> <span class="o">=</span> <span class="n">filter_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;nmax         =&#39;</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;dt   (ps)    =&#39;</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;tmax (ps)    =&#39;</span><span class="p">,</span> <span class="n">tmax</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Filter type  =&quot;</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;width        = &quot;</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="n">tmax</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="mi">3</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">apply_gussian_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">&quot;lorenz&quot;</span><span class="p">:</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">apply_lorenz_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown filter type: </span><span class="si">{</span><span class="n">filter_type</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+    <span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT</span> <span class="o">=</span> <span class="n">FT</span><span class="p">(</span><span class="n">dt_ps</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+    <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT</span> <span class="o">=</span> <span class="n">change_unit_raman</span><span class="p">(</span><span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">CHAT</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT</span></div>
+
+<div class="viewcode-block" id="calculate_sfg"><a class="viewcode-back" href="../../../../../_api/ai2_kit.feat.spectrum.md_spectra.function_atomic.html#ai2_kit.feat.spectrum.md_spectra.function_atomic.calculate_sfg">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_sfg</span><span class="p">(</span><span class="n">corr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+                  <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">):</span>
+    <span class="n">nmax</span> <span class="o">=</span> <span class="n">corr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">nmax</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">nmax</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">corr</span> <span class="o">=</span> <span class="n">corr</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">tmax</span> <span class="o">=</span> <span class="n">nmax</span> <span class="o">*</span> <span class="n">dt_ps</span>
+    <span class="n">filter_type</span> <span class="o">=</span> <span class="n">filter_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;nmax         =&#39;</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;dt   (ps)    =&#39;</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;tmax (ps)    =&#39;</span><span class="p">,</span> <span class="n">tmax</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Filter type  =&quot;</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;width        = &quot;</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="n">tmax</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="mi">3</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">apply_gussian_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">&quot;lorenz&quot;</span><span class="p">:</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">apply_lorenz_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown filter type: </span><span class="si">{</span><span class="n">filter_type</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+    <span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT_COS</span> <span class="o">=</span> <span class="n">FT</span>    <span class="p">(</span><span class="n">dt_ps</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+    <span class="n">_</span>      <span class="p">,</span> <span class="n">CHAT_SIN</span> <span class="o">=</span> <span class="n">FT_sin</span><span class="p">(</span><span class="n">dt_ps</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+    <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT_COS</span> <span class="o">=</span> <span class="n">change_unit_sfg</span><span class="p">(</span><span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT_COS</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span>
+    <span class="n">_</span>      <span class="p">,</span> <span class="n">CHAT_SIN</span> <span class="o">=</span> <span class="n">change_unit_sfg</span><span class="p">(</span><span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT_SIN</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">CHAT_COS</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">d_omega</span><span class="p">,</span> <span class="o">-</span><span class="n">CHAT_COS</span><span class="p">,</span> <span class="n">CHAT_SIN</span></div>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By weihong.xu
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

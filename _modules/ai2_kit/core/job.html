@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,18 +432,18 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.core.job</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Awaitable</span>
-<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">asyncio</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Awaitable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 
-<span class="kn">from</span> <span class="nn">.future</span> <span class="kn">import</span> <span class="n">IFuture</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.future</span><span class="w"> </span><span class="kn">import</span> <span class="n">IFuture</span>
 
 <span class="c1"># Copy from parsl</span>
-<div class="viewcode-block" id="JobState"><a class="viewcode-back" href="../../../_api/ai2_kit.core.job.html#ai2_kit.core.job.JobState">[docs]</a><span class="k">class</span> <span class="nc">JobState</span><span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="JobState"><a class="viewcode-back" href="../../../_api/ai2_kit.core.job.html#ai2_kit.core.job.JobState">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">JobState</span><span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Defines a set of states that a job can be in&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">terminal</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">status_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;JobState&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">terminal</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">status_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;JobState&quot;</span><span class="p">:</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="p">[</span><span class="n">value</span><span class="p">])</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">_value_</span> <span class="o">=</span> <span class="n">value</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="n">terminal</span>
@@ -462,29 +463,29 @@ document.write(`
     <span class="n">TIMEOUT</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;TIMEOUT&quot;</span><span class="p">)</span>
     <span class="n">HELD</span> <span class="o">=</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;HELD&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TimeoutError"><a class="viewcode-back" href="../../../_api/ai2_kit.core.job.html#ai2_kit.core.job.TimeoutError">[docs]</a><span class="k">class</span> <span class="nc">TimeoutError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<div class="viewcode-block" id="TimeoutError"><a class="viewcode-back" href="../../../_api/ai2_kit.core.job.html#ai2_kit.core.job.TimeoutError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">TimeoutError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
     <span class="o">...</span></div>
 
-<div class="viewcode-block" id="JobFuture"><a class="viewcode-back" href="../../../_api/ai2_kit.core.job.html#ai2_kit.core.job.JobFuture">[docs]</a><span class="k">class</span> <span class="nc">JobFuture</span><span class="p">(</span><span class="n">IFuture</span><span class="p">[</span><span class="n">JobState</span><span class="p">]):</span>
+<div class="viewcode-block" id="JobFuture"><a class="viewcode-back" href="../../../_api/ai2_kit.core.job.html#ai2_kit.core.job.JobFuture">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">JobFuture</span><span class="p">(</span><span class="n">IFuture</span><span class="p">[</span><span class="n">JobState</span><span class="p">]):</span>
 
 <div class="viewcode-block" id="JobFuture.get_job_state"><a class="viewcode-back" href="../../../_api/ai2_kit.core.job.html#ai2_kit.core.job.JobFuture.get_job_state">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_job_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JobState</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_job_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JobState</span><span class="p">:</span>
         <span class="o">...</span></div>
 
 <div class="viewcode-block" id="JobFuture.cancel"><a class="viewcode-back" href="../../../_api/ai2_kit.core.job.html#ai2_kit.core.job.JobFuture.cancel">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="o">...</span></div>
 
 <div class="viewcode-block" id="JobFuture.is_success"><a class="viewcode-back" href="../../../_api/ai2_kit.core.job.html#ai2_kit.core.job.JobFuture.is_success">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">is_success</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_success</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="o">...</span></div>
 
 <div class="viewcode-block" id="JobFuture.resubmit"><a class="viewcode-back" href="../../../_api/ai2_kit.core.job.html#ai2_kit.core.job.JobFuture.resubmit">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">resubmit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;JobFuture&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resubmit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;JobFuture&#39;</span><span class="p">:</span>
         <span class="o">...</span></div></div>
 
-<div class="viewcode-block" id="gather_jobs"><a class="viewcode-back" href="../../../_api/ai2_kit.core.job.html#ai2_kit.core.job.gather_jobs">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">gather_jobs</span><span class="p">(</span><span class="n">jobs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">JobFuture</span><span class="p">],</span> <span class="n">timeout</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">),</span> <span class="n">max_tries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">JobState</span><span class="p">]:</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">wait_job</span><span class="p">(</span><span class="n">job</span><span class="p">:</span> <span class="n">JobFuture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JobState</span><span class="p">:</span>
+<div class="viewcode-block" id="gather_jobs"><a class="viewcode-back" href="../../../_api/ai2_kit.core.job.html#ai2_kit.core.job.gather_jobs">[docs]</a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">gather_jobs</span><span class="p">(</span><span class="n">jobs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">JobFuture</span><span class="p">],</span> <span class="n">timeout</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">),</span> <span class="n">max_tries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">JobState</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">wait_job</span><span class="p">(</span><span class="n">job</span><span class="p">:</span> <span class="n">JobFuture</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JobState</span><span class="p">:</span>
         <span class="n">state</span> <span class="o">=</span> <span class="n">JobState</span><span class="o">.</span><span class="n">UNKNOWN</span>
         <span class="n">tries</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>

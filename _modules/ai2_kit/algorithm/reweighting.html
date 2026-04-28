@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,16 +432,16 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.algorithm.reweighting</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
 
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gaussian_kde</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">gaussian_kde</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
-<span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">expand_globs</span><span class="p">,</span> <span class="n">ensure_dir</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.lib</span> <span class="kn">import</span> <span class="n">plumed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_globs</span><span class="p">,</span> <span class="n">ensure_dir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.lib</span><span class="w"> </span><span class="kn">import</span> <span class="n">plumed</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -453,7 +454,7 @@ document.write(`
 <span class="n">_FesResult</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;FesResult&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;fes&#39;</span><span class="p">,</span> <span class="s1">&#39;grid&#39;</span><span class="p">,</span> <span class="s1">&#39;extend&#39;</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="compute_fes"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.compute_fes">[docs]</a><span class="k">def</span> <span class="nf">compute_fes</span><span class="p">(</span><span class="n">cvs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">bias</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">temp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="compute_fes"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.compute_fes">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">compute_fes</span><span class="p">(</span><span class="n">cvs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">bias</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">temp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">w</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kB</span><span class="o">=</span><span class="n">default_kB</span><span class="p">,</span> <span class="n">grid_size</span><span class="o">=</span><span class="mi">100</span><span class="n">j</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute free energy surface from biased sampling data using Gaussian KDE</span>
@@ -504,7 +505,7 @@ document.write(`
     <span class="k">return</span> <span class="n">_FesResult</span><span class="p">(</span><span class="n">fes</span><span class="o">=</span><span class="n">fes</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="n">extend</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="compute_kde_weight"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.compute_kde_weight">[docs]</a><span class="k">def</span> <span class="nf">compute_kde_weight</span><span class="p">(</span><span class="n">baseline_energy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">target_energy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<div class="viewcode-block" id="compute_kde_weight"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.compute_kde_weight">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">compute_kde_weight</span><span class="p">(</span><span class="n">baseline_energy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">target_energy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                        <span class="n">temp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">kB</span><span class="o">=</span><span class="n">default_kB</span><span class="p">,</span>
                        <span class="n">ev_to_kjmol</span><span class="o">=</span><span class="n">default_ev_to_kjmol</span><span class="p">,):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -522,7 +523,7 @@ document.write(`
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span><span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">te</span> <span class="o">-</span> <span class="n">be</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="load_dp_energy"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.load_dp_energy">[docs]</a><span class="k">def</span> <span class="nf">load_dp_energy</span><span class="p">(</span><span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="load_dp_energy"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.load_dp_energy">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_dp_energy</span><span class="p">(</span><span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    load dpdata energy data from npy files</span>
 
@@ -538,13 +539,13 @@ document.write(`
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ReweightingTool"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.ReweightingTool">[docs]</a><span class="k">class</span> <span class="nc">ReweightingTool</span><span class="p">:</span>
+<div class="viewcode-block" id="ReweightingTool"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.ReweightingTool">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ReweightingTool</span><span class="p">:</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">colvar_df</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="ReweightingTool.load_energy"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.ReweightingTool.load_energy">[docs]</a>    <span class="k">def</span> <span class="nf">load_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="ReweightingTool.load_energy"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.ReweightingTool.load_energy">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">load_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        read baseline data as dpdata.LabeledSystem</span>
 
@@ -559,7 +560,7 @@ document.write(`
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="ReweightingTool.load_colvar"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.ReweightingTool.load_colvar">[docs]</a>    <span class="k">def</span> <span class="nf">load_colvar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="ReweightingTool.load_colvar"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.ReweightingTool.load_colvar">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">load_colvar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        load PLUMED COLVAR files and concatenate into a single DataFrame</span>
 <span class="sd">        you have to ensure the COLVAR data is aligned with energies</span>
@@ -571,7 +572,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">colvar_df</span> <span class="o">=</span> <span class="n">plumed</span><span class="o">.</span><span class="n">load_colvar_from_files</span><span class="p">(</span><span class="o">*</span><span class="n">paths</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="ReweightingTool.reweighting"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.ReweightingTool.reweighting">[docs]</a>    <span class="k">def</span> <span class="nf">reweighting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cv</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bias</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">temp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<div class="viewcode-block" id="ReweightingTool.reweighting"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.reweighting.html#ai2_kit.algorithm.reweighting.ReweightingTool.reweighting">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">reweighting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cv</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bias</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">temp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                     <span class="n">grid_size</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">save_fig_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">save_json_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">baseline_tag</span><span class="o">=</span><span class="s1">&#39;baseline&#39;</span><span class="p">,</span> <span class="n">target_tag</span><span class="o">=</span><span class="s1">&#39;target&#39;</span><span class="p">):</span>
@@ -583,7 +584,7 @@ document.write(`
 <span class="sd">        :param temp: temperature</span>
 <span class="sd">        :param save_to: save th</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
         <span class="n">cvs_df</span><span class="p">,</span> <span class="n">bias_df</span> <span class="o">=</span> <span class="n">plumed</span><span class="o">.</span><span class="n">get_cvs_bias_from_df</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colvar_df</span><span class="p">,</span> <span class="p">[</span><span class="n">cv</span><span class="p">],</span> <span class="n">bias</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;cvs shape: </span><span class="si">{</span><span class="n">cvs_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">, bias shape: </span><span class="si">{</span><span class="n">bias_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>

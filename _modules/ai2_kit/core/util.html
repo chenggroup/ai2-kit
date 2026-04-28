@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,24 +432,25 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.core.util</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Literal</span>
-<span class="kn">from</span> <span class="nn">ruamel.yaml</span> <span class="kn">import</span> <span class="n">YAML</span><span class="p">,</span> <span class="n">ScalarNode</span><span class="p">,</span> <span class="n">SequenceNode</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">zip_longest</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ruamel.yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">YAML</span><span class="p">,</span> <span class="n">ScalarNode</span><span class="p">,</span> <span class="n">SequenceNode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">zip_longest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">import</span> <span class="nn">shortuuid</span>
-<span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">hashlib</span>
-<span class="kn">import</span> <span class="nn">base64</span>
-<span class="kn">import</span> <span class="nn">psutil</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">shlex</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shortuuid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shlex</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -456,25 +458,39 @@ document.write(`
 
 <span class="n">SAMPLE_METHOD</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;even&#39;</span><span class="p">,</span> <span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="s1">&#39;truncate&#39;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="load_json"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.load_json">[docs]</a><span class="k">def</span> <span class="nf">load_json</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="json_dumps"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.json_dumps">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">json_dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">_json_dumps_default</span><span class="p">)</span></div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_json_dumps_default</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unknown type:&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="load_json"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.load_json">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_json</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="load_text"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.load_text">[docs]</a><span class="k">def</span> <span class="nf">load_text</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="load_text"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.load_text">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_text</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="parse_path_list"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.parse_path_list">[docs]</a><span class="k">def</span> <span class="nf">parse_path_list</span><span class="p">(</span><span class="n">path_list_str</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">to_abs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_path_list"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.parse_path_list">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">parse_path_list</span><span class="p">(</span><span class="n">path_list_str</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">to_abs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parse path list of environment variable style string</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">parse_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;~/&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">path</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path_list_str</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">path_list</span> <span class="o">=</span> <span class="n">path_list_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
@@ -485,12 +501,12 @@ document.write(`
     <span class="k">return</span> <span class="n">path_list</span></div>
 
 
-<div class="viewcode-block" id="wait_for_change"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.wait_for_change">[docs]</a><span class="k">def</span> <span class="nf">wait_for_change</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">attribute</span><span class="p">):</span>
+<div class="viewcode-block" id="wait_for_change"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.wait_for_change">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">wait_for_change</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">attribute</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wait for attribute change of a Jupyter widget</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">future</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">getvalue</span><span class="p">(</span><span class="n">change</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getvalue</span><span class="p">(</span><span class="n">change</span><span class="p">):</span>
         <span class="c1"># make the new value available</span>
         <span class="n">future</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">change</span><span class="o">.</span><span class="n">new</span><span class="p">)</span>
         <span class="n">widget</span><span class="o">.</span><span class="n">unobserve</span><span class="p">(</span><span class="n">getvalue</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
@@ -498,7 +514,7 @@ document.write(`
     <span class="k">return</span> <span class="n">future</span></div>
 
 
-<div class="viewcode-block" id="get_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.get_yaml">[docs]</a><span class="k">def</span> <span class="nf">get_yaml</span><span class="p">():</span>
+<div class="viewcode-block" id="get_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.get_yaml">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_yaml</span><span class="p">():</span>
     <span class="n">yaml</span> <span class="o">=</span> <span class="n">YAML</span><span class="p">(</span><span class="n">typ</span><span class="o">=</span><span class="s1">&#39;safe&#39;</span><span class="p">)</span>
     <span class="n">JoinTag</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">yaml</span><span class="p">)</span>
     <span class="n">LoadTextTag</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">yaml</span><span class="p">)</span>
@@ -506,14 +522,14 @@ document.write(`
     <span class="k">return</span> <span class="n">yaml</span></div>
 
 
-<div class="viewcode-block" id="load_yaml_file"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.load_yaml_file">[docs]</a><span class="k">def</span> <span class="nf">load_yaml_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+<div class="viewcode-block" id="load_yaml_file"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.load_yaml_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_yaml_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="n">yaml</span> <span class="o">=</span> <span class="n">get_yaml</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="load_yaml_files"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.load_yaml_files">[docs]</a><span class="k">def</span> <span class="nf">load_yaml_files</span><span class="p">(</span><span class="o">*</span><span class="n">paths</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">purge_anonymous</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="load_yaml_files"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.load_yaml_files">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_yaml_files</span><span class="p">(</span><span class="o">*</span><span class="n">paths</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">purge_anonymous</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;load yaml file: &#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
@@ -523,18 +539,18 @@ document.write(`
     <span class="k">return</span> <span class="n">d</span></div>
 
 
-<div class="viewcode-block" id="nested_set"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.nested_set">[docs]</a><span class="k">def</span> <span class="nf">nested_set</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="nested_set"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.nested_set">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">nested_set</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">value</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">{})</span>
     <span class="n">d</span><span class="p">[</span><span class="n">keys</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">value</span></div>
 
 
-<div class="viewcode-block" id="s_uuid"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.s_uuid">[docs]</a><span class="k">def</span> <span class="nf">s_uuid</span><span class="p">():</span>
+<div class="viewcode-block" id="s_uuid"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.s_uuid">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">s_uuid</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;short uuid&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">shortuuid</span><span class="o">.</span><span class="n">uuid</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="sort_unique_str_list"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.sort_unique_str_list">[docs]</a><span class="k">def</span> <span class="nf">sort_unique_str_list</span><span class="p">(</span><span class="n">l</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="sort_unique_str_list"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.sort_unique_str_list">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">sort_unique_str_list</span><span class="p">(</span><span class="n">l</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;remove duplicate str and sort&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">l</span><span class="p">))</span></div>
 
@@ -542,92 +558,92 @@ document.write(`
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="flatten"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.flatten">[docs]</a><span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">l</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+<div class="viewcode-block" id="flatten"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.flatten">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">flatten</span><span class="p">(</span><span class="n">l</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">l</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="format_env_string"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.format_env_string">[docs]</a><span class="k">def</span> <span class="nf">format_env_string</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="format_env_string"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.format_env_string">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">format_env_string</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="list_split"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.list_split">[docs]</a><span class="k">def</span> <span class="nf">list_split</span><span class="p">(</span><span class="n">l</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
+<div class="viewcode-block" id="list_split"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.list_split">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">list_split</span><span class="p">(</span><span class="n">l</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;split list into n chunks&quot;&quot;&quot;</span>
     <span class="c1"># ref: https://stackoverflow.com/questions/2130016/splitting-a-list-into-n-parts-of-approximately-equal-length</span>
     <span class="n">k</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="nb">min</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="nb">min</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span></div>
 
 
-<div class="viewcode-block" id="short_hash"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.short_hash">[docs]</a><span class="k">def</span> <span class="nf">short_hash</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="short_hash"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.short_hash">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">short_hash</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;short hash string&quot;&quot;&quot;</span>
     <span class="n">digest</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
     <span class="c1"># use urlsafe encode to avoid &#39;/&#39; in the string, as it will cause problem in file path</span>
     <span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span><span class="n">digest</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="to_awaitable"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.to_awaitable">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">to_awaitable</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<div class="viewcode-block" id="to_awaitable"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.to_awaitable">[docs]</a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">to_awaitable</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">value</span></div>
 
 
-<div class="viewcode-block" id="JoinTag"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag">[docs]</a><span class="k">class</span> <span class="nc">JoinTag</span><span class="p">:</span>
+<div class="viewcode-block" id="JoinTag"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">JoinTag</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;a tag to join strings in a list&quot;&quot;&quot;</span>
 
     <span class="n">yaml_tag</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;!join&#39;</span>
 
 <div class="viewcode-block" id="JoinTag.from_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag.from_yaml">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">constructor</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">constructor</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="n">seq</span> <span class="o">=</span> <span class="n">constructor</span><span class="o">.</span><span class="n">construct_sequence</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">seq</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="JoinTag.to_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag.to_yaml">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">to_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="o">...</span></div>
 
 <div class="viewcode-block" id="JoinTag.register"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.JoinTag.register">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml</span><span class="p">:</span> <span class="n">YAML</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml</span><span class="p">:</span> <span class="n">YAML</span><span class="p">):</span>
         <span class="n">yaml</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="LoadTextTag"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag">[docs]</a><span class="k">class</span> <span class="nc">LoadTextTag</span><span class="p">:</span>
+<div class="viewcode-block" id="LoadTextTag"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">LoadTextTag</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;a tag to read string from file&quot;&quot;&quot;</span>
 
     <span class="n">yaml_tag</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;!load_text&#39;</span>
 
 <div class="viewcode-block" id="LoadTextTag.from_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag.from_yaml">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">constructor</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">constructor</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">_yaml_get_path_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">constructor</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="LoadTextTag.to_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag.to_yaml">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">to_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="o">...</span></div>
 
 <div class="viewcode-block" id="LoadTextTag.register"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadTextTag.register">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml</span><span class="p">:</span> <span class="n">YAML</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml</span><span class="p">:</span> <span class="n">YAML</span><span class="p">):</span>
         <span class="n">yaml</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="LoadYamlTag"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag">[docs]</a><span class="k">class</span> <span class="nc">LoadYamlTag</span><span class="p">:</span>
+<div class="viewcode-block" id="LoadYamlTag"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">LoadYamlTag</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;a tag to read string from file&quot;&quot;&quot;</span>
 
     <span class="n">yaml_tag</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;!load_yaml&#39;</span>
 
 <div class="viewcode-block" id="LoadYamlTag.from_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag.from_yaml">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">constructor</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">constructor</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">_yaml_get_path_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">constructor</span><span class="p">)</span>
         <span class="n">yaml</span> <span class="o">=</span> <span class="n">get_yaml</span><span class="p">()</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LoadYamlTag.to_yaml"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag.to_yaml">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">to_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="o">...</span></div>
 
 <div class="viewcode-block" id="LoadYamlTag.register"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.LoadYamlTag.register">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml</span><span class="p">:</span> <span class="n">YAML</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml</span><span class="p">:</span> <span class="n">YAML</span><span class="p">):</span>
         <span class="n">yaml</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">_yaml_get_path_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">constructor</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_yaml_get_path_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">constructor</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ScalarNode</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">constructor</span><span class="o">.</span><span class="n">construct_scalar</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">SequenceNode</span><span class="p">):</span>
@@ -637,7 +653,7 @@ document.write(`
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown node type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="dict_remove_dot_keys"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.dict_remove_dot_keys">[docs]</a><span class="k">def</span> <span class="nf">dict_remove_dot_keys</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+<div class="viewcode-block" id="dict_remove_dot_keys"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.dict_remove_dot_keys">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dict_remove_dot_keys</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
         <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
             <span class="k">del</span> <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
@@ -645,7 +661,7 @@ document.write(`
             <span class="n">dict_remove_dot_keys</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="cmd_with_checkpoint"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.cmd_with_checkpoint">[docs]</a><span class="k">def</span> <span class="nf">cmd_with_checkpoint</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">checkpoint</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ignore_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="cmd_with_checkpoint"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.cmd_with_checkpoint">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">cmd_with_checkpoint</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">checkpoint</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ignore_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add checkpoint to a shell command.</span>
 <span class="sd">    If a checkpoint file exists, the command will be skipped,</span>
@@ -671,7 +687,7 @@ document.write(`
     <span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="merge_dict"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.merge_dict">[docs]</a><span class="k">def</span> <span class="nf">merge_dict</span><span class="p">(</span><span class="n">lo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">ro</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignore_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="merge_dict"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.merge_dict">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">merge_dict</span><span class="p">(</span><span class="n">lo</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">ro</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignore_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Merge two dict, the left dict will be overridden.</span>
 <span class="sd">    Note: list will be replaced instead of merged.</span>
@@ -693,7 +709,7 @@ document.write(`
             <span class="n">lo</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
     <span class="k">return</span> <span class="n">lo</span></div>
 
-<div class="viewcode-block" id="dict_nested_get"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.dict_nested_get">[docs]</a><span class="k">def</span> <span class="nf">dict_nested_get</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="n">EMPTY</span><span class="p">):</span>
+<div class="viewcode-block" id="dict_nested_get"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.dict_nested_get">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dict_nested_get</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="n">EMPTY</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;get value from nested dict&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d</span> <span class="ow">and</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">EMPTY</span><span class="p">:</span>
@@ -701,26 +717,26 @@ document.write(`
         <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">d</span></div>
 
-<div class="viewcode-block" id="dict_nested_set"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.dict_nested_set">[docs]</a><span class="k">def</span> <span class="nf">dict_nested_set</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="dict_nested_set"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.dict_nested_set">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dict_nested_set</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;set value to nested dict&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
     <span class="n">d</span><span class="p">[</span><span class="n">keys</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">value</span></div>
 
-<div class="viewcode-block" id="list_even_sample"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.list_even_sample">[docs]</a><span class="k">def</span> <span class="nf">list_even_sample</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+<div class="viewcode-block" id="list_even_sample"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.list_even_sample">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">list_even_sample</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">l</span>
     <span class="c1"># calculate the sample interval</span>
     <span class="n">interval</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">/</span> <span class="n">size</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">l</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">interval</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span></div>
 
-<div class="viewcode-block" id="list_random_sample"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.list_random_sample">[docs]</a><span class="k">def</span> <span class="nf">list_random_sample</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="list_random_sample"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.list_random_sample">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">list_random_sample</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">seed</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
     <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="list_sample"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.list_sample">[docs]</a><span class="k">def</span> <span class="nf">list_sample</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">SAMPLE_METHOD</span><span class="o">=</span><span class="s1">&#39;even&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="list_sample"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.list_sample">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">list_sample</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">SAMPLE_METHOD</span><span class="o">=</span><span class="s1">&#39;even&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    sample list</span>
 
@@ -741,7 +757,7 @@ document.write(`
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown sample method </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="flat_evenly"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.flat_evenly">[docs]</a><span class="k">def</span> <span class="nf">flat_evenly</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">):</span>
+<div class="viewcode-block" id="flat_evenly"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.flat_evenly">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">flat_evenly</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    flat a list of lists and ensure the output result distributed evenly</span>
 <span class="sd">    &gt;&gt;&gt; flat_evenly([[1, 2, 3], [4, 5, 6], [7, 8, 9]])</span>
@@ -751,7 +767,7 @@ document.write(`
     <span class="k">return</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">zip_longest</span><span class="p">(</span><span class="o">*</span><span class="n">list_of_lists</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">tup</span> <span class="k">if</span> <span class="n">e</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="limit"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.limit">[docs]</a><span class="k">def</span> <span class="nf">limit</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">size</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="limit"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.limit">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">size</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    limit the size of an iterable</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -764,30 +780,30 @@ document.write(`
             <span class="k">yield</span> <span class="n">x</span></div>
 
 
-<div class="viewcode-block" id="dump_json"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.dump_json">[docs]</a><span class="k">def</span> <span class="nf">dump_json</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="dump_json"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.dump_json">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dump_json</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">default</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;&lt;&lt;non-serializable: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">)</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2">&gt;&gt;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="dump_text"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.dump_text">[docs]</a><span class="k">def</span> <span class="nf">dump_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="dump_text"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.dump_text">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dump_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="flush_stdio"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.flush_stdio">[docs]</a><span class="k">def</span> <span class="nf">flush_stdio</span><span class="p">():</span>
-    <span class="kn">import</span> <span class="nn">sys</span>
+<div class="viewcode-block" id="flush_stdio"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.flush_stdio">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">flush_stdio</span><span class="p">():</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="ensure_dir"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.ensure_dir">[docs]</a><span class="k">def</span> <span class="nf">ensure_dir</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="ensure_dir"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.ensure_dir">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">ensure_dir</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">dirname</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="expand_globs"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.expand_globs">[docs]</a><span class="k">def</span> <span class="nf">expand_globs</span><span class="p">(</span><span class="n">patterns</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">raise_invalid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nature_sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="expand_globs"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.expand_globs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">expand_globs</span><span class="p">(</span><span class="n">patterns</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">raise_invalid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nature_sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Expand glob patterns in paths</span>
 
@@ -815,7 +831,7 @@ document.write(`
     <span class="k">return</span> <span class="n">paths</span></div>
 
 
-<div class="viewcode-block" id="slice_from_str"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.slice_from_str">[docs]</a><span class="k">def</span> <span class="nf">slice_from_str</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="slice_from_str"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.slice_from_str">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">slice_from_str</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    get slice object from a string expression,</span>
 <span class="sd">    for example: &quot;1:10&quot; -&gt; slice(1, 10), &quot;:10&quot; -&gt; slice(None, 10), etc</span>
@@ -825,13 +841,13 @@ document.write(`
     <span class="k">return</span> <span class="nb">slice</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">parse</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="perf_log"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.perf_log">[docs]</a><span class="k">def</span> <span class="nf">perf_log</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+<div class="viewcode-block" id="perf_log"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.perf_log">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">perf_log</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
     <span class="n">process</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">()</span>
     <span class="n">mem_info</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;perf: rss: </span><span class="si">%s</span><span class="s1"> M </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">mem_info</span><span class="o">.</span><span class="n">rss</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="create_fn"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.create_fn">[docs]</a><span class="k">def</span> <span class="nf">create_fn</span><span class="p">(</span><span class="n">func_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fn_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="create_fn"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.create_fn">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_fn</span><span class="p">(</span><span class="n">func_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fn_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">_locals</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">exec</span><span class="p">(</span><span class="n">func_str</span><span class="p">,</span> <span class="n">_locals</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">fn_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_locals</span><span class="p">:</span>
@@ -842,12 +858,33 @@ document.write(`
 <span class="n">NUM_TEXT_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d+|[^\d]+&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="num_text_split"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.num_text_split">[docs]</a><span class="k">def</span> <span class="nf">num_text_split</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<div class="viewcode-block" id="num_text_split"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.num_text_split">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">num_text_split</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">NUM_TEXT_PATTERN</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">s</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="nat_sort"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.nat_sort">[docs]</a><span class="k">def</span> <span class="nf">nat_sort</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+<div class="viewcode-block" id="nat_sort"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.nat_sort">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">nat_sort</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">num_text_split</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="resolve_path"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.resolve_path">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">resolve_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resolve path by expanding wildcard and environment variables</span>
+
+<span class="sd">    :param path: path with wildcard and environment variables</span>
+<span class="sd">    :return: resolved path</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># expand wildcard</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Wildcard expansion should result in only one path, got </span><span class="si">{</span><span class="n">paths</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No file found for </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">paths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># expand user home</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="c1"># expand environment variables</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">path</span></div>
 </pre></div>
 
                 </article>

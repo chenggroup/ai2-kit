@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,22 +432,22 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.tool.hpc</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.util</span> <span class="kn">import</span> <span class="n">expand_globs</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.log</span> <span class="kn">import</span> <span class="n">get_logger</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.job</span> <span class="kn">import</span> <span class="n">JobState</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.core.cmd</span> <span class="kn">import</span> <span class="n">CmdGroup</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">expand_globs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">JobState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.cmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">CmdGroup</span>
 
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">shlex</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shlex</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="append_if_not_exist"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.hpc.html#ai2_kit.tool.hpc.append_if_not_exist">[docs]</a><span class="k">def</span> <span class="nf">append_if_not_exist</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">feat_str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="append_if_not_exist"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.hpc.html#ai2_kit.tool.hpc.append_if_not_exist">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">append_if_not_exist</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">feat_str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">feat_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">feat_str</span> <span class="o">=</span> <span class="n">line</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fp</span><span class="p">:</span>
@@ -456,7 +457,7 @@ document.write(`
     <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Slurm"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.hpc.html#ai2_kit.tool.hpc.Slurm">[docs]</a><span class="k">class</span> <span class="nc">Slurm</span><span class="p">:</span>
+<div class="viewcode-block" id="Slurm"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.hpc.html#ai2_kit.tool.hpc.Slurm">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Slurm</span><span class="p">:</span>
 
     <span class="n">_state_table</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;PD&#39;</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span>
@@ -472,13 +473,13 @@ document.write(`
         <span class="s1">&#39;SE&#39;</span><span class="p">:</span> <span class="n">JobState</span><span class="o">.</span><span class="n">FAILED</span>   <span class="c1"># (special exit state)</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sbatch_bin</span> <span class="o">=</span> <span class="s1">&#39;sbatch&#39;</span><span class="p">,</span> <span class="n">squeue_bin</span> <span class="o">=</span> <span class="s1">&#39;squeue&#39;</span><span class="p">,</span> <span class="n">scancel_bin</span><span class="o">=</span><span class="s1">&#39;scancel&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sbatch_bin</span> <span class="o">=</span> <span class="s1">&#39;sbatch&#39;</span><span class="p">,</span> <span class="n">squeue_bin</span> <span class="o">=</span> <span class="s1">&#39;squeue&#39;</span><span class="p">,</span> <span class="n">scancel_bin</span><span class="o">=</span><span class="s1">&#39;scancel&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sbatch_bin</span> <span class="o">=</span> <span class="n">sbatch_bin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_squeue_bin</span> <span class="o">=</span> <span class="n">squeue_bin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scancel_bin</span> <span class="o">=</span> <span class="n">scancel_bin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_job_states</span> <span class="o">=</span> <span class="p">{}</span>
 
-<div class="viewcode-block" id="Slurm.submit"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.hpc.html#ai2_kit.tool.hpc.Slurm.submit">[docs]</a>    <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Slurm.submit"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.hpc.html#ai2_kit.tool.hpc.Slurm.submit">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Submit multiple Slurm script at once.</span>
 
@@ -500,7 +501,7 @@ document.write(`
             <span class="k">raise</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Slurm.wait"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.hpc.html#ai2_kit.tool.hpc.Slurm.wait">[docs]</a>    <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">7</span><span class="p">,</span> <span class="n">ignore_error</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">fast_fail</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">interval</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+<div class="viewcode-block" id="Slurm.wait"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.hpc.html#ai2_kit.tool.hpc.Slurm.wait">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">7</span><span class="p">,</span> <span class="n">ignore_error</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">fast_fail</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">interval</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Wait until all jobs are finished.</span>
 
@@ -534,10 +535,10 @@ document.write(`
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ignore_error</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_any_failed</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Some jobs failed&#39;</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_is_any_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_any_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">state</span> <span class="o">==</span> <span class="n">JobState</span><span class="o">.</span><span class="n">FAILED</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_job_states</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
-    <span class="k">def</span> <span class="nf">_update_job_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_job_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">query_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_squeue_bin</span><span class="si">}</span><span class="s2"> --noheader --format=&#39;%i %t&#39; -u $USER&quot;</span>
 
         <span class="n">fp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="n">query_cmd</span><span class="p">)</span>
@@ -560,11 +561,11 @@ document.write(`
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_job_states</span><span class="p">[</span><span class="n">job_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">JobState</span><span class="o">.</span><span class="n">FAILED</span>
 
-    <span class="k">def</span> <span class="nf">_cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">job_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_job_states</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scancel_bin</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">submit_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_sbatch_bin</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="n">submit_cmd</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">stdout</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>

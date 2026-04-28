@@ -208,6 +208,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -229,7 +230,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -266,6 +266,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -431,36 +432,36 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for ai2_kit.core.script</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sequence</span>
-<span class="kn">import</span> <span class="nn">shlex</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shlex</span>
 
-<span class="kn">from</span> <span class="nn">.pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
-<div class="viewcode-block" id="exit_on_error_statment"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.exit_on_error_statment">[docs]</a><span class="k">def</span> <span class="nf">exit_on_error_statment</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="s1">&#39;__EXITCODE__&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="exit_on_error_statment"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.exit_on_error_statment">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">exit_on_error_statment</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="s1">&#39;__EXITCODE__&#39;</span><span class="p">):</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">=$?; if [ $</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2"> -ne 0 ]; then exit $</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">; fi&quot;</span></div>
 
 
-<div class="viewcode-block" id="eoe_step"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.eoe_step">[docs]</a><span class="k">def</span> <span class="nf">eoe_step</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="eoe_step"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.eoe_step">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">eoe_step</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    exit on error step</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">cmd</span><span class="p">,</span> <span class="n">exit_on_error_statment</span><span class="p">()])</span></div>
 
 
-<div class="viewcode-block" id="BashTemplate"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashTemplate">[docs]</a><span class="k">class</span> <span class="nc">BashTemplate</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="BashTemplate"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashTemplate">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BashTemplate</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">shebang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;#!/bin/bash&#39;</span>
     <span class="n">header</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">setup</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">teardown</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
 
 
-<div class="viewcode-block" id="BashStep"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashStep">[docs]</a><span class="k">class</span> <span class="nc">BashStep</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="BashStep"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashStep">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BashStep</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">cmd</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
     <span class="n">cwd</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">checkpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">exit_on_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="BashStep.render"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashStep.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BashStep.render"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashStep.render">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">)</span>
 
@@ -500,11 +501,11 @@ document.write(`
 <span class="n">BashSteps</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">]]</span>
 
 
-<div class="viewcode-block" id="BashScript"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashScript">[docs]</a><span class="k">class</span> <span class="nc">BashScript</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="BashScript"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashScript">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BashScript</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BashTemplate</span><span class="p">]</span>
     <span class="n">steps</span><span class="p">:</span> <span class="n">BashSteps</span>
 
-<div class="viewcode-block" id="BashScript.render"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashScript.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BashScript.render"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashScript.render">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_render_bash_steps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span>
 
@@ -517,7 +518,7 @@ document.write(`
         <span class="p">])</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">_render_bash_steps</span><span class="p">(</span><span class="n">steps</span><span class="p">:</span> <span class="n">BashSteps</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_render_bash_steps</span><span class="p">(</span><span class="n">steps</span><span class="p">:</span> <span class="n">BashSteps</span><span class="p">):</span>
     <span class="n">rendered_steps</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
@@ -530,7 +531,7 @@ document.write(`
     <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rendered_steps</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="make_gpu_parallel_steps"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.make_gpu_parallel_steps">[docs]</a><span class="k">def</span> <span class="nf">make_gpu_parallel_steps</span><span class="p">(</span><span class="n">step_groups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">BashSteps</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]):</span>
+<div class="viewcode-block" id="make_gpu_parallel_steps"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.make_gpu_parallel_steps">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">make_gpu_parallel_steps</span><span class="p">(</span><span class="n">step_groups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">BashSteps</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]):</span>
     <span class="n">p_steps</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;IFS=&quot;,&quot; read -r -a _GPUS&lt;&lt;&lt; &quot;$CUDA_VISIBLE_DEVICES&quot;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;_TOTAL_GPUS=${#_GPUS[@]}&#39;</span><span class="p">,</span>

@@ -209,6 +209,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -230,7 +231,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -267,6 +267,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -548,9 +549,9 @@ document.write(`
 <span class="o">%</span><span class="k">matplotlib</span> widget
 <span class="o">%</span><span class="k">gui</span> asyncio
 
-<span class="kn">from</span> <span class="nn">ai2_kit.feat</span> <span class="kn">import</span> <span class="n">catalysis</span> <span class="k">as</span> <span class="n">ai2cat</span>
-<span class="kn">from</span> <span class="nn">ai2_kit.feat.catalysis</span> <span class="kn">import</span> <span class="n">ui</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.feat</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalysis</span> <span class="k">as</span> <span class="n">ai2cat</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.feat.catalysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">ui</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="n">AI4EC_DIR</span>              <span class="o">=</span> <span class="s1">&#39;/public/groups/ai4ec/data&#39;</span>
 <span class="n">CP2K_DATA</span>              <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/cp2k&#39;</span>
@@ -576,7 +577,7 @@ document.write(`
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># 每次新打开 notebook 或者重启 kernel 后，该模块均需要执行一次</span>
 <span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;widget&#39;</span><span class="p">)</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">&#39;gui&#39;</span><span class="p">,</span> <span class="s1">&#39;asyncio&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">ai2_kit.feat</span> <span class="kn">import</span> <span class="n">catalysis</span> <span class="k">as</span> <span class="n">ai2cat</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.feat</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalysis</span> <span class="k">as</span> <span class="n">ai2cat</span>
 
 <span class="nn">File ~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/IPython/core/interactiveshell.py:2456,</span> in <span class="ni">InteractiveShell.run_line_magic</span><span class="nt">(self, magic_name, line, _stack_depth)</span>
 <span class="g g-Whitespace">   </span><span class="mi">2454</span>     <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;local_ns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_local_scope</span><span class="p">(</span><span class="n">stack_depth</span><span class="p">)</span>
@@ -611,12 +612,12 @@ document.write(`
 <span class="g g-Whitespace">    </span><span class="mi">363</span> <span class="c1"># Due to circular imports, pyplot may be only partially initialised</span>
 <span class="g g-Whitespace">    </span><span class="mi">364</span> <span class="c1"># when this function runs.</span>
 <span class="g g-Whitespace">    </span><span class="mi">365</span> <span class="c1"># So avoid needing matplotlib attribute-lookup to access pyplot.</span>
-<span class="g g-Whitespace">    </span><span class="mi">366</span> <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="g g-Whitespace">    </span><span class="mi">366</span> <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="nn">File ~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/matplotlib/__init__.py:741,</span> in <span class="ni">RcParams.__setitem__</span><span class="nt">(self, key, val)</span>
 <span class="g g-Whitespace">    </span><span class="mi">739</span>         <span class="n">cval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">[</span><span class="n">key</span><span class="p">](</span><span class="n">val</span><span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">740</span>     <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">ve</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">741</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ve</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
+<span class="ne">--&gt; </span><span class="mi">741</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ve</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 <span class="g g-Whitespace">    </span><span class="mi">742</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">cval</span><span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">743</span> <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
 
@@ -631,9 +632,9 @@ document.write(`
 <p>初始结构上传后，可执行以下代码对结构进行可视化。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ase.visualize</span> <span class="kn">import</span> <span class="n">view</span>
-<span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Code</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">Markdown</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ase.visualize</span><span class="w"> </span><span class="kn">import</span> <span class="n">view</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Code</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">Markdown</span>
 
 <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;./POSCAR&#39;</span><span class="p">)</span>  <span class="c1"># 可更改此路径以改变要显示的文件</span>
 <span class="n">v</span> <span class="o">=</span> <span class="n">view</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">viewer</span><span class="o">=</span><span class="s1">&#39;ngl&#39;</span><span class="p">)</span>
@@ -890,8 +891,8 @@ document.write(`
 <p>上述计算完成后，会在目录下生成一个名为 <code class="docutils literal notranslate"><span class="pre">fes.dat</span></code> 的文件，通过以下代码可将其可视化。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <span class="n">fes_data_path</span> <span class="o">=</span> <span class="s1">&#39;./02-simulation/fes.dat&#39;</span>
 

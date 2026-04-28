@@ -209,6 +209,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -230,7 +231,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -267,6 +267,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -526,7 +527,7 @@ document.write(`
 <section id="basic-usage">
 <h3>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading">#</a></h3>
 <p>There are two ways to initialize <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code>, using a dictionary configuration or a <code class="docutils literal notranslate"><span class="pre">Pydantic</span></code> object. The configuration items of the two methods are exactly the same. The former is more suitable for direct use, and the latter is more suitable for integration with other frameworks. The following is an example of using a dictionary for configuration.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.executor</span> <span class="kn">import</span> <span class="n">HpcExecutor</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.executor</span><span class="w"> </span><span class="kn">import</span> <span class="n">HpcExecutor</span>
 
 <span class="n">executor</span> <span class="o">=</span> <span class="n">HpcExecutor</span><span class="o">.</span><span class="n">from_config</span><span class="p">({</span>
     <span class="s1">&#39;ssh&#39;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># Specify ssh connection information, if omitted, local execution is used</span>
@@ -562,7 +563,7 @@ document.write(`
 <li><p>After the job is completed, use the command line or Python on the login node to process the output data of the computing task</p></li>
 </ul>
 <p>In order to meet the above mode, in addition to providing the <code class="docutils literal notranslate"><span class="pre">run</span></code> interface for executing commands on the login node, <code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> also provides the <code class="docutils literal notranslate"><span class="pre">run_python_fn</span></code> interface for directly running Python functions on the login node.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">add</span><span class="p">)(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># run on login node</span>
@@ -606,7 +607,7 @@ document.write(`
 </pre></div>
 </div>
 <p>Except for the method of directly writing scripts mentioned above, you can also generate scripts through the tool class provided by <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code>, as shown below:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ai2_kit.core.script</span> <span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashTemplate</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.script</span><span class="w"> </span><span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashTemplate</span>
 
 <span class="n">header</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
 <span class="s1">#SBATCH --job-name=demo</span>
@@ -637,7 +638,7 @@ document.write(`
 <span class="n">state</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>  <span class="c1"># wait for job completion synchronously</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="o">...</span>
     <span class="n">state</span> <span class="o">=</span> <span class="k">await</span> <span class="n">job</span><span class="o">.</span><span class="n">result_async</span><span class="p">()</span>  <span class="c1"># wait for job completion asynchronously</span>
 </pre></div>

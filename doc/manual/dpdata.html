@@ -209,6 +209,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../_api/modules.html">ai2_kit</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../_api/ai2_kit.html">ai2_kit package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.algorithm.html">ai2_kit.algorithm package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.uninmr.html">ai2_kit.algorithm.uninmr package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.aos_analysis.html">ai2_kit.algorithm.aos_analysis module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.proton_transfer.html">ai2_kit.algorithm.proton_transfer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.algorithm.reweighting.html">ai2_kit.algorithm.reweighting module</a></li>
@@ -230,7 +231,6 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.core.util.html">ai2_kit.core.util module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../_api/ai2_kit.dflow.html">ai2_kit.dflow package</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../_api/ai2_kit.domain.html">ai2_kit.domain package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.anyware.html">ai2_kit.domain.anyware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.domain.asap.html">ai2_kit.domain.asap module</a></li>
@@ -267,6 +267,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.dpdata.html">ai2_kit.tool.dpdata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.frame.html">ai2_kit.tool.frame module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.hpc.html">ai2_kit.tool.hpc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.lammps.html">ai2_kit.tool.lammps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.misc.html">ai2_kit.tool.misc module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.model_devi.html">ai2_kit.tool.model_devi module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../_api/ai2_kit.tool.yaml.html">ai2_kit.tool.yaml module</a></li>
@@ -497,6 +498,7 @@ document.write(`
 </pre></div>
 </div>
 <p>This toolkit is a command line wrapper of <a class="reference external" href="https://github.com/deepmodeling/dpdata">dpdata</a> to allow user to process DeepMD dataset via command line.</p>
+<p><code class="docutils literal notranslate"><span class="pre">dpdata</span></code> tool can be use with <a class="reference internal" href="ase.html"><span class="doc std std-doc">ase tool</span></a> to process trajectory files in various formats.</p>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="c1"># show all commands</span>
@@ -573,12 +575,14 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"
 <span class="c1"># Set fparam when reading data</span>
 ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./path/to/dataset<span class="w"> </span>--fmt<span class="w"> </span>deepmd/npy<span class="w"> </span>--fparam<span class="w"> </span><span class="o">[</span><span class="m">0</span>,1<span class="o">]</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./path/to/new_dataset
 
-<span class="c1"># (re)label data</span>
-ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>dp-h2o<span class="w"> </span>--nolabel<span class="w"> </span>-<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>dp-frozen.pb<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>new-dp-hwo
+<span class="c1"># (re)label data with a DeepPot model</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>dp-h2o<span class="w"> </span>--nolabel<span class="w"> </span>-<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>dp-frozen.pb<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>new-dp-h2o
 
 <span class="c1"># Drop the first 10 frames and then sample 10 frames use random method, and save it as xyz format</span>
-ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>dp-h2o<span class="w"> </span>-<span class="w"> </span>slice<span class="w"> </span><span class="m">10</span>:<span class="w"> </span>-<span class="w"> </span>sample<span class="w"> </span><span class="m">10</span><span class="w"> </span>--method<span class="w"> </span>random<span class="w"> </span>-<span class="w"> </span>to_ase<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>h2o.xyz
-o
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>dp-h2o<span class="w"> </span>--fmt<span class="w"> </span>deepmd/npy<span class="w"> </span>-<span class="w"> </span>slice<span class="w"> </span><span class="m">10</span>:<span class="w"> </span>-<span class="w"> </span>sample<span class="w"> </span><span class="m">10</span><span class="w"> </span>--method<span class="w"> </span>random<span class="w"> </span>-<span class="w"> </span>to_ase<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>h2o.xyz
+
+<span class="c1"># Convert dpdata to ase format and write VASP POSCAR files</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>dp-h2o<span class="w"> </span>--fmt<span class="w"> </span>deepmd/npy<span class="w"> </span>-<span class="w"> </span>to_ase<span class="w"> </span>-<span class="w"> </span>write_frames<span class="w"> </span><span class="s2">&quot;./vasp-{i-04d}/POSCAR&quot;</span><span class="w"> </span>--format<span class="w"> </span>vasp<span class="w"> </span>
 
 <span class="c1"># convert cp2k data to the format that can be used by deepmd dplr module</span>
 <span class="c1"># data used in v3</span>
@@ -603,7 +607,7 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"
 </pre></div>
 </div>
 <p>You can also convert the data between v2 and v3 by using the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>ai2_kit.domain.dplr<span class="w"> </span>import<span class="w"> </span>dplr_v2_to_v3,<span class="w"> </span>dplr_v2_to_v3
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>ai2_kit.domain.dplr<span class="w"> </span>import<span class="w"> </span>dplr_v2_to_v3,<span class="w"> </span>dplr_v3_to_v2
 
 <span class="c1"># change in place</span>
 dplr_v2_to_v3<span class="o">(</span><span class="s2">&quot;dataset-v2&quot;</span>,<span class="w"> </span><span class="nv">sel_symbol</span><span class="o">=[</span><span class="s2">&quot;O&quot;</span>,<span class="w"> </span><span class="s2">&quot;K&quot;</span>,<span class="w"> </span><span class="s2">&quot;F&quot;</span><span class="o">])</span>

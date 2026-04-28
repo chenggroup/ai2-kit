@@ -1,4 +1,8 @@
 # Change Logs
+
+## v1.0.6
+* improvement: add `--outlier` option for model_devi analysis tool
+
 ## v1.0.5
 * fix: paramiko/sftp_client.py", line 722, in putfo raise IOError( OSError: size mismatch in put! ...)
 

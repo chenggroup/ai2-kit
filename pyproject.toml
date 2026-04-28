@@ -43,7 +43,7 @@ rpc = ["fire-rpc"]
 [[tool.poetry.source]]
 name = "ustc"
 url = "https://pypi.mirrors.ustc.edu.cn/simple/"
-priority = "default"
+priority = "supplemental"
 
 [[tool.poetry.source]]
 name = "pypi"

@@ -63,19 +63,24 @@ class ModelDevi:
         return self
 
 
-    def grade(self, lo: float, hi: float, col: str = 'max_devi_f'):
+    def grade(self, lo: float, hi: float, col: str = 'max_devi_f', outlier: float = None):
         """
         Grade atoms based on the deviation of model into 3 levels: good, decent, poor
 
         the grade is based on the column of max_devi_f by default,
         if the value is below lo, the level is good,
         if the value is above hi, the level is poor,
-        otherwise, the level is decent
+        otherwise, the level is decent.
+        outlier is an independent indicator, default is 2 * hi if not provided.
 
         :param lo: the lower bound of decent level, below this value is good
         :param hi: the upper bound of decent level, above this value is poor
         :param col: the column of model deviation to grade, default is max_devi_f
+        :param outlier: the threshold of outlier, default is 2 * hi
         """
+        if outlier is None:
+            outlier = hi * 2
+
         for item in self._items:
             df = item['md_df']
             if col not in df.columns:
@@ -83,15 +88,19 @@ class ModelDevi:
             good = df[col] < lo
             decent = (df[col] >= lo) & (df[col] <= hi)
             poor = df[col] > hi
+            is_outlier = df[col] > outlier
+
             self._stats[item['md_file']] = {
                 'g': good.sum(),
                 'd': decent.sum(),
                 'p': poor.sum(),
+                'o': is_outlier.sum(),
                 'all': len(df),
             }
             item['good'] = good
             item['decent'] = decent
             item['poor'] = poor
+            item['outlier'] = is_outlier
         return self
 
     def slice(self, expr: str):
@@ -121,17 +130,36 @@ class ModelDevi:
         """
         from tabulate import tabulate
 
-        headers = ['file', 'total', 'good', 'decent', 'poor', 'good%', 'decent%', 'poor%']
+        headers = ['file', 'total', 'good', 'decent', 'poor', 'outlier', 'good%', 'decent%', 'poor%', 'outlier%']
         table = []
+        total_all, g_all, d_all, p_all, o_all = 0, 0, 0, 0, 0
+
         for file, stats in self._stats.items():
             total = stats['all']
-            g = stats['g']
-            d = stats['d']
-            p = stats['p']
-            g_pct = '{:.2%}'.format(g / total)
-            d_pct = '{:.2%}'.format(d / total)
-            p_pct = '{:.2%}'.format(p / total)
-            table.append([file, total, g, d, p, g_pct, d_pct, p_pct])
+            g, d, p, o = stats['g'], stats['d'], stats['p'], stats['o']
+            total_all += total
+            g_all += g
+            d_all += d
+            p_all += p
+            o_all += o
+
+            table.append([
+                file, total, g, d, p, o,
+                '{:.2%}'.format(g / total),
+                '{:.2%}'.format(d / total),
+                '{:.2%}'.format(p / total),
+                '{:.2%}'.format(o / total),
+            ])
+
+        if total_all > 0:
+            table.append([
+                'SUMMARY', total_all, g_all, d_all, p_all, o_all,
+                '{:.2%}'.format(g_all / total_all),
+                '{:.2%}'.format(d_all / total_all),
+                '{:.2%}'.format(p_all / total_all),
+                '{:.2%}'.format(o_all / total_all),
+            ])
+
         stats_report = tabulate(table, headers=headers, tablefmt=fmt)
         if out_file:
             with open(out_file, 'w') as f:

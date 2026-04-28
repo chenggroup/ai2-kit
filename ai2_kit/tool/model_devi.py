@@ -130,7 +130,7 @@ class ModelDevi:
         """
         from tabulate import tabulate
 
-        headers = ['file', 'total', 'good', 'decent', 'poor', 'outlier', 'good%', 'decent%', 'poor%', 'outlier%']
+        headers = ['file', 'total', 'good', 'decent', 'poor', 'good%', 'decent%', 'poor%', 'outlier', 'outlier%']
         table = []
         total_all, g_all, d_all, p_all, o_all = 0, 0, 0, 0, 0
 
@@ -144,19 +144,21 @@ class ModelDevi:
             o_all += o
 
             table.append([
-                file, total, g, d, p, o,
+                file, total, g, d, p,
                 '{:.2%}'.format(g / total),
                 '{:.2%}'.format(d / total),
                 '{:.2%}'.format(p / total),
+                o,
                 '{:.2%}'.format(o / total),
             ])
 
         if total_all > 0:
             table.append([
-                'SUMMARY', total_all, g_all, d_all, p_all, o_all,
+                'SUMMARY', total_all, g_all, d_all, p_all,
                 '{:.2%}'.format(g_all / total_all),
                 '{:.2%}'.format(d_all / total_all),
                 '{:.2%}'.format(p_all / total_all),
+                o_all,
                 '{:.2%}'.format(o_all / total_all),
             ])
 

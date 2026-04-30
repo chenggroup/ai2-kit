@@ -1,4 +1,7 @@
 # Change Logs
+## v1.0.8
+
+* `ai2-kit tool ase to_dpdata` method support extra parameters
 
 ## v1.0.7
 * fix oh-my-batch version

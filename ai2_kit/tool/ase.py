@@ -184,7 +184,7 @@ class AseTool:
                 dump_dplr_lammps_data(f, atoms=atoms, type_map=type_map, sel_type=sel_type,
                                       sys_charge_map=sys_charge_map, model_charge_map=model_charge_map)
 
-    def to_dpdata(self, labeled=False):
+    def to_dpdata(self, labeled=False, **kwargs):
         """
         convert to dpdata format and use dpdata tool to handle
 
@@ -192,7 +192,7 @@ class AseTool:
         """
         from .dpdata import dpdata, DpdataTool
         System = dpdata.LabeledSystem if labeled else dpdata.System
-        systems = [System(atom, fmt='ase/structure') for atom in self._atoms_arr]
+        systems = [System(atom, fmt='ase/structure', **kwargs) for atom in self._atoms_arr]
         return DpdataTool(systems=systems)
 
     def _read(self, filename: str, **kwargs):

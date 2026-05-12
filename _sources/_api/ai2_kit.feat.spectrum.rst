@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   ai2_kit.feat.spectrum.md_spectra
    ai2_kit.feat.spectrum.smiviz
 
 Submodules
@@ -16,6 +15,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   ai2_kit.feat.spectrum.algorithm
    ai2_kit.feat.spectrum.viber
 
 Module contents

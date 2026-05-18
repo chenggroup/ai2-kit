@@ -16,7 +16,7 @@ class AseTool:
     def __init__(self, atoms_arr: Optional[List[Atoms]] = None):
         self._atoms_arr: List[Atoms] = [] if atoms_arr is None else atoms_arr
 
-    def read(self, *file_path_or_glob: str, nat_sort=False, **kwargs):
+    def read(self, *file_path_or_glob: str, nat_sort=False, ignore_error=False, **kwargs):
         """
         read atoms from file, support multiple files and glob pattern
 
@@ -26,10 +26,15 @@ class AseTool:
         """
 
         files = expand_globs(file_path_or_glob, nature_sort=nat_sort)
-        if len(files) == 0:
+        if len(files) == 0 and not ignore_error:
             raise FileNotFoundError(f'No file found for {file_path_or_glob}')
         for file in files:
-            self._read(file, **kwargs)
+            try:
+                self._read(file, **kwargs)
+            except Exception as e:
+                if not ignore_error:
+                    raise e
+                logger.warning(f'Skip file {file} due to error: {e} as --ignore_error is set to True')
         return self
 
     def set_cell(self, cell, scale_atoms=False, apply_constraint=True):

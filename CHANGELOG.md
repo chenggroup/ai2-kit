@@ -1,6 +1,9 @@
 # Change Logs
-## v1.0.8
 
+## v1.0.9
+* implement `--ignore-error` for `ai2-kit tool ase read`
+
+## v1.0.8
 * `ai2-kit tool ase to_dpdata` method support extra parameters
 
 ## v1.0.7

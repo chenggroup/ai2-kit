@@ -1,0 +1,10 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH -p fat
+#SBATCH --qos normal
+#SBATCH --job-name=spectra
+#SBATCH --mem=32GB
+
+python cal_dipole_polar.py
+python cal_spectra.py

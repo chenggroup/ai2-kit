@@ -1,0 +1,15 @@
+#! /bin/bash
+
+omb batch \
+    add_work_dirs ./workdir/run-01/iters-0*/label-cp2k/tasks/0* - \
+    add_header_files ./header.sh - \
+    add_cmds "mpirun cp2k.popt -i ./workdir/recalculate/input.inp &> input.out" - \
+    add_cmds "mpirun cp2k.popt -i ./workdir/recalculate/polar_x.inp &> polar_x.out" - \
+    add_cmds "mpirun cp2k.popt -i ./workdir/recalculate/polar_y.inp &> polar_y.out" - \
+    add_cmds "mpirun cp2k.popt -i ./workdir/recalculate/polar_z.inp &> polar_z.out" - \
+    make ./cp2k-{i}.slurm --concurrency 20
+
+ls -1 ./cp2k-*.slurm | xargs -I {} sbatch {}
+
+# cp2k/viber command
+ai2-kit tool dpdata read ./workdir/run-01/iters-0*/label-cp2k/tasks/0* --fmt cp2k/viber --lumped_dict '{O:4}' --cutoff 1.2 --output_file input.out --mode both --wannier wannier.xyz --wannier_x wannier_x.xyz --wannier_y wannier_y.xyz --wannier_z wannier_z.xyz - write ./dataset --v2 --sel_symbol="[O]"

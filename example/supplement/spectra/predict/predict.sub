@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH -N 1                                                                
+#SBATCH --ntasks-per-node=8                                                 
+#SBATCH --job-name=deepmd                                                   
+#SBATCH -p gpu
+#SBATCH --qos normal                                                   
+#SBATCH --gres=gpu:1                   
+                                                                    
+module load anaconda/2022.5                                                 
+module load cuda/11.8            
+source activate /public/groups/ai4ec/libs/conda/deepmd/2.2.9/gpu                                                                                                                                    
+
+python predict.py

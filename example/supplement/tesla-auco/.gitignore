@@ -1,0 +1,11 @@
+*-workdir/
+.vscode/
+*.out
+*.log
+*.png
+*.txt
+log/
+out/
+20-workdir/
+40-prod/
+__pycache__/

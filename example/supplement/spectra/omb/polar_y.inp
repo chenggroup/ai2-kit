@@ -1,0 +1,76 @@
+&GLOBAL
+  PROJECT DFT
+  RUN_TYPE ENERGY
+  PRINT_LEVEL medium
+  WALLTIME 864000
+  EXTENDED_FFT_LENGTHS T
+&END GLOBAL
+&FORCE_EVAL
+  METHOD Quickstep
+  &DFT
+    BASIS_SET_FILE_NAME /public/home/xldu/BASIS/BASIS_MOLOPT
+    POTENTIAL_FILE_NAME /public/home/xldu/POTENTIAL/GTH-SCAN-POTENTIAL
+    &LOCALIZE
+     METHOD JACOBI
+      EPS_LOCALIZATION 1.0E-6
+      &PRINT
+        &WANNIER_CENTERS
+           IONS+CENTERS .TRUE.
+           FILENAME =wannier_y.xyz
+        &END
+      &END
+    &END
+    &MGRID
+      CUTOFF 800
+      REL_CUTOFF 60
+    &END MGRID
+    &QS
+      EPS_DEFAULT 1.0E-12
+    &END QS
+    &SCF
+      IGNORE_CONVERGENCE_FAILURE
+      SCF_GUESS RESTART
+      EPS_SCF 1.0E-6
+      MAX_SCF 25
+      &OUTER_SCF
+        EPS_SCF 1.0E-6
+        MAX_SCF 5
+      &END
+      &OT
+         MINIMIZER DIIS
+         PRECONDITIONER FULL_SINGLE_INVERSE
+         ALGORITHM IRAC
+         STEPSIZE 0.15
+      &END
+      &PRINT
+        &RESTART 
+          BACKUP_COPIES 0
+        &END RESTART
+      &END PRINT
+    &END SCF
+    &XC
+      &XC_FUNCTIONAL
+        &MGGA_X_R2SCAN
+        &END MGGA_X_R2SCAN
+        &MGGA_C_R2SCAN
+        &END MGGA_C_R2SCAN
+      &END XC_FUNCTIONAL
+    &END XC
+    &PERIODIC_EFIELD
+      INTENSITY 1.0E-3
+      POLARISATION 0.0 1.0 0.0
+    &END
+  &END DFT
+
+  &SUBSYS
+    @include coord_n_cell.inc
+    &KIND H
+       BASIS_SET DZVP-MOLOPT-SR-GTH-q1
+       POTENTIAL GTH-SCAN-q1
+    &END KIND
+    &KIND O
+       BASIS_SET DZVP-MOLOPT-SR-GTH-q6
+       POTENTIAL GTH-SCAN-q6
+    &END KIND
+  &END SUBSYS
+&END FORCE_EVAL

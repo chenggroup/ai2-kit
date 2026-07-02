@@ -1,0 +1,42 @@
+variable    TAU_T            equal 0.1
+variable    TAU_P            equal 0.5
+variable    TIME_CONST       equal 0.1
+variable    TEMP             equal 330
+variable    PRES             equal 1
+variable    DATA_FILE        string "./water.lammps.data"
+variable    N_STEPS          equal 4000000
+variable    THERMO_FREQ      equal 100
+variable    DUMP_FREQ        equal 8
+variable    SAMPLE_FREQ      equal 100
+
+units           metal
+atom_style      atomic
+boundary p p p
+
+read_data	${DATA_FILE}
+
+variable    O                equal 1
+variable    H                equal 2
+
+mass ${O} 15.999
+mass ${H} 1.008
+
+pair_style deepmd ../train/energy_force/frozen_compressed_model.pb
+pair_coeff * *
+
+velocity all create ${TEMP} 100
+fix 1 all nvt temp ${TEMP} ${TEMP} ${TAU_T}
+
+thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz
+thermo       ${THERMO_FREQ}
+dump         1 all custom ${DUMP_FREQ} trj.xyz element x y z
+dump_modify 1 element O H
+dump_modify 1 sort id
+
+restart 100000 md.restart
+
+neighbor 2.0 bin
+neigh_modify    every 10 delay 0
+
+timestep 0.0005
+run      ${N_STEPS} upto

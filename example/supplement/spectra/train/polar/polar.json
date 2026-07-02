@@ -1,0 +1,88 @@
+{
+    "_comment1": "This input file is modified based on the data in the figshare of the reference (DOI: 10.1103/w27h-sclq)",
+    "model": {
+      "type_map": [
+        "O",
+        "H"
+      ],
+      "data_stat_nbatch": 10,
+      "descriptor": {
+        "type": "se_a",
+        "sel": [
+          100,
+            200
+        ],
+        "rcut_smth": 6.80,
+        "rcut": 8.00,
+        "neuron": [
+          25,
+          50,
+          100
+        ],
+        "resnet_dt": false,
+        "axis_neuron": 10,
+        "type_one_side": true,
+        "precision": "float64",
+        "seed": 1,
+        "_comment2": " that's all"
+      },
+      "fitting_net": {
+        "type": "polar",
+        "sel_type": [
+          0
+        ],
+        "fit_diag": false,
+        "neuron": [
+          150,
+          150,
+          150
+        ],
+        "resnet_dt": true,
+        "precision": "float64",
+        "seed": 1,
+        "_comment3": " that's all"
+      },
+      "_comment4": " that's all"
+    },
+  
+    "learning_rate": {
+      "type": "exp",
+      "start_lr": 0.01,
+      "stop_lr": 1e-8,
+      "decay_steps": 5000,
+      "_comment5": "that's all"
+    },
+    "loss": {
+      "type": "tensor",
+      "pref_atomic": 1.0,
+      "pref": 0.0,
+      "_comment6": "that's all"
+    },
+  
+    "_comment7": " traing controls",
+    "training": {
+  
+      "stop_batch": 1000000,
+      "_batch_size": 3,
+      "disp_file": "lcurve.out",
+      "disp_freq": 100,
+      "numb_test": 4,
+      "save_freq": 10000,
+      "save_ckpt": "model.ckpt",
+      "disp_training": true,
+      "time_training": true,
+      "profiling": false,
+      "profiling_file": "timeline.json",
+      "_comment": "that's all",
+      
+      "training_data": {
+	    "systems":	["../dataset/water",
+                     "../dataset/air_water"], 
+        "batch_size": 3,
+        "_comment8": "that's all"
+      },
+      "seed": 370105
+    },
+  
+    "_comment11": "that's all"
+  }

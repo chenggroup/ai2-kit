@@ -1,0 +1,70 @@
+{
+  "model": {
+    "descriptor": {
+      "type": "se_atten_v2",
+      "sel": [
+        100,
+        100,
+        100
+      ],
+      "rcut_smth": 0.5,
+      "rcut": 8.0,
+      "neuron": [
+        25,
+        50,
+        100
+      ],
+      "resnet_dt": false,
+      "axis_neuron": 16,
+      "attn": 128,
+      "attn_layer": 0,
+      "attn_dotr": true,
+      "attn_mask": false,
+      "seed": @SEED
+    },
+    "fitting_net": {
+      "neuron": [
+        240,
+        240,
+        240
+      ],
+      "resnet_dt": true,
+      "seed": @SEED
+    },
+    "type_map": [ "Au", "C", "O" ]
+  },
+  "learning_rate": {
+    "type": "exp",
+    "start_lr": 0.001,
+    "decay_steps": @DECAY_STEPS
+  },
+  "loss": {
+    "start_pref_e": 0.02,
+    "limit_pref_e": 2,
+    "start_pref_f": 1000,
+    "limit_pref_f": 1,
+    "start_pref_v": 0,
+    "limit_pref_v": 0
+  },
+  "training": {
+    "training_data": {
+      "set_prefix": "set",
+      "batch_size": "auto",
+      "sys_probs": null,
+      "systems": [
+        @DP_DATASET
+      ],
+      "auto_prob_style": "prob_sys_size"
+    },
+    "numb_steps": @TRAIN_STEPS,
+    "seed": @SEED,
+    "disp_file": "lcurve.out",
+    "disp_freq": 500,
+    "save_freq": 500,
+    "save_ckpt": "model.ckpt",
+    "disp_training": true,
+    "time_training": true,
+    "profiling": false,
+    "profiling_file": "timeline.json"
+  }
+}

@@ -1,0 +1,60 @@
+variable    DATA_FILE        string @DATA_FILE
+variable    N_STEPS          equal @STEPS
+variable    TEMP             equal @TEMP
+variable    SEED             equal @SEED
+
+variable    TAU_T            equal 0.1
+variable    TAU_P            equal 0.5
+variable    TIME_CONST       equal 0.1
+variable    PRES             equal -1
+variable    THERMO_FREQ      equal @SAMPLE_FREQ
+variable    DUMP_FREQ        equal @SAMPLE_FREQ
+
+units           metal
+boundary        p p p
+atom_style      atomic
+atom_modify     map yes
+
+neighbor        2.0 bin
+
+if "${restart} > 0" then "read_restart md.restart.*" else "read_data ${DATA_FILE} extra/atom/types 0"
+
+mass            1 196.9666  # Au
+mass            2 12.011  # C
+mass            3 15.999  # O
+
+pair_style      deepmd  @DP_MODELS out_freq ${DUMP_FREQ} out_file model_devi.out
+pair_coeff      * *
+
+thermo_style    custom step temp pe ke etotal press vol
+thermo          ${THERMO_FREQ}
+
+# compute atomic temperature
+compute         KE all ke/atom
+variable        KB equal 8.625e-5
+variable        TEMP_per_atom atom c_KE/1.5/${KB}
+compute         peratom all pe/atom
+
+dump            1 all custom ${DUMP_FREQ} dump.lammpstrj id type element x y z fx fy fz v_TEMP_per_atom c_peratom
+dump_modify     1 sort id
+dump_modify     1 element Au C O
+
+restart          10000 md.restart
+
+if "${restart} == 0" then "velocity all create ${TEMP} ${SEED}"
+
+fix             1 all nve
+fix             2 all temp/csvr ${TEMP} ${TEMP} 0.1 ${SEED}
+fix             dpgen_plm all plumed plumedfile plumed.in outfile plumed.out
+
+variable temp equal temp
+variable etotal equal etotal
+variable pe equal pe
+variable ke equal ke
+variable step equal step
+variable clustertemp equal c_cluster_temp
+fix             sys_info all print ${DUMP_FREQ} "${step} ${temp} ${pe} ${ke} ${etotal}" title "step temp pe ke etotal" file energy.log
+
+timestep        0.000500
+run             ${N_STEPS} upto
+

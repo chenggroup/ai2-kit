@@ -1,0 +1,42 @@
+variable    DATA_FILE        string @DATA_FILE
+variable    TEMP             equal @TEMP
+variable    PRES             equal @PRES
+variable    N_STEPS          equal @STEPS
+variable    THERMO_FREQ      equal 100
+variable    DUMP_FREQ        equal @SAMPLE_FREQ
+variable    SAMPLE_FREQ      equal @SAMPLE_FREQ
+variable    SEED             equal @SEED
+
+variable    TAU_T            equal 0.05
+variable    TAU_P            equal 0.5
+variable    TIME_CONST       equal 0.1
+
+units           metal
+atom_style      atomic
+boundary p p p
+
+atom_modify map yes
+neighbor 1.0 bin
+box      tilt large
+
+if "${restart} > 0" then "read_restart md.restart.*" else "read_data ${DATA_FILE} extra/atom/types 0"
+
+mass 1  15.999 # O
+mass 2  1.008  # H
+
+change_box all triclinic
+
+pair_style deepmd @DP_MODELS out_freq ${SAMPLE_FREQ} out_file model_devi.out
+pair_coeff * *
+
+if "${restart} == 0" then "velocity all create ${TEMP} ${SEED}"
+
+fix 1 all nvt temp ${TEMP} ${TEMP} ${TAU_T}
+thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz
+thermo       ${THERMO_FREQ}
+
+dump 1 all custom ${DUMP_FREQ} dump.lammpstrj id type x y z fx fy fz
+restart 10000 md.restart
+
+timestep 0.000500
+run      ${N_STEPS} upto

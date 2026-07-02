@@ -145,4 +145,3 @@ jupyter-book/_api
 *.ipynb
 # remove when it is ready
 tutorial/
-0*

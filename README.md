@@ -1,7 +1,7 @@
 [![PyPI version](https://badge.fury.io/py/ai2-kit.svg)](https://badge.fury.io/py/ai2-kit)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/ai2-kit)](https://pypi.org/project/ai2-kit/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ai2-kit)](https://pypi.org/project/ai2-kit/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15266041.svg)](https://doi.org/10.5281/zenodo.15266041)
+[![arXiv](https://img.shields.io/badge/arXiv-2607.00613-b31b1b.svg)](https://arxiv.org/abs/2607.00613)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/chenggroup/ai2-kit)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/y/chenggroup/ai2-kit/main)
 
@@ -10,7 +10,9 @@
 
 `ai2-kit` (pronounced as "AI Squared Kit")  is a command line and python toolkit featured _**a**rtificial **i**ntelligence × **a**b **i**nitio_ for complex chemistry systems research.
 
-*Please be advised that `ai2-kit` is still under heavy development and you should expect things to change often. We encourage people to play and explore with `ai2-kit`, and stay tuned with us for more features to come.*
+> [!NOTE]
+> Our `ai2-kit` paper has been submitted as a preprint: [arXiv:2607.00613](https://arxiv.org/abs/2607.00613).
+> The paper-related examples are available under [example/supplement](./example/supplement/).
 
 
 ## Feature Highlights

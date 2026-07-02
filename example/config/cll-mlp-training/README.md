@@ -1,5 +1,9 @@
 # How to use config samples
 
+> [!WARNING]
+> **Deprecated:** These config-driven workflow samples are deprecated and will be maintained only for backward compatibility.
+> For new projects and future updates, please prefer the example-driven workflow approach in this repository.
+
 ## Overview
 As `cll-mlp-training` workflow allows users to combine different configurations file to run the workflow, we provide some examples to show how to use them. You can just copy those files and update according to your needs.
 

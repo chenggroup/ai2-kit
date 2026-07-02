@@ -87,7 +87,11 @@ It provides more flexibility and transparency to run and customize their own wor
 
 
 #### Config Driven Workflows
-These workflows are driven by configuration files, which can be easily modified to fit your own research purpose. 
+> [!WARNING]
+> **Deprecated:** Config-driven workflows are deprecated and will be maintained only for backward compatibility.
+> For new projects and future updates, please use the example-driven workflows above, which will be the primary approach going forward.
+
+These workflows are driven by configuration files, which can be easily modified to fit your own research purpose.
 * [CLL MLP Training Workflow](doc/manual/cll-workflow.md) ([zh](doc/manual/cll-workflow.zh.md))
 
 ### General Tools

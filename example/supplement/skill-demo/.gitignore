@@ -1,0 +1,10 @@
+*-workdir/
+.vscode/
+*.out
+*.log
+*.png
+*.txt
+log/
+out/
+20-workdir/
+bak/

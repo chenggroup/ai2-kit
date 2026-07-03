@@ -1,0 +1,15 @@
+SYSTEM = single-point energy and forces for TESLA labeling
+ISTART = 0        ! start from scratch
+ICHARG = 2        ! initial charge from superposition of atomic charge densities
+PREC   = Accurate
+ENCUT  = 520      ! plane-wave cutoff in eV; adjust for your pseudopotentials
+EDIFF  = 1E-6     ! electronic convergence criterion (eV)
+NSW    = 0        ! single-point: no ionic relaxation steps
+IBRION = -1       ! no ion movement
+ISMEAR = 0        ! Gaussian smearing (appropriate for molecules / insulators)
+SIGMA  = 0.05     ! smearing width in eV
+ISPIN  = 1        ! spin-unpolarised; set to 2 for magnetic systems
+LWAVE  = .FALSE.  ! do not write WAVECAR (saves disk space)
+LCHARG = .FALSE.  ! do not write CHGCAR (saves disk space)
+LREAL  = Auto     ! real-space projection; Auto is safe for most systems
+NCORE  = 4        ! cores per band; tune to your MPI layout

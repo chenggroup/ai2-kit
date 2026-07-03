@@ -1,5 +1,9 @@
 # AI<sup>2</sup>-Kit HPC Executor
 
+> [!WARNING]
+> **Deprecated:** `ai2-kit` HPC executor 已进入弃用状态，后续仅做向后兼容维护。
+> 对于新项目和后续更新，请优先使用 [oh-my-batch](https://github.com/link89/oh-my-batch)。
+
 ## 介绍
 `ai2-kit` 实现了一个轻量级的 HPC 执行器用于提交和管理 HPC 集群上的作业。相比于其它的 HPC 调度器或者支持 HPC 的工作流框架 (如 DpDispatcher, parsl, DFlow, etc), `ai2-kit HPC executor` 具有以下特点:
 

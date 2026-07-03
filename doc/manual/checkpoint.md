@@ -1,5 +1,9 @@
 # Checkpoint
 
+> [!WARNING]
+> **Deprecated:** `ai2-kit` Checkpoint is deprecated and will be maintained only for backward compatibility.
+> For new projects and future updates, please use [oh-my-batch](https://github.com/link89/oh-my-batch) instead.
+
 ## Introduction
 `ai2-kit` implements a checkpoint mechanism to allow user to resume a workflow from a previous checkpoint. This mechanism is implemented by saving the state of the workflow into a checkpoint file. The checkpoint file is a pickle dump file that can be executed to restore the workflow state.
 

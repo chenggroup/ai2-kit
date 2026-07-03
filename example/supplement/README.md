@@ -20,3 +20,4 @@ An AI-agent-generated TESLA workflow example built with the `build-tesla` skill.
 
 * The contents of this directory are intended for workflow reproduction.
 * Raw or original datasets associated with the manuscript will be released separately.
+* If you have questions about these examples, please start a discussion in GitHub Discussions.

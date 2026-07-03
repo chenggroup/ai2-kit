@@ -10,6 +10,9 @@ A TESLA workflow example for bulk water.
 ### [tesla-auco](./tesla-auco/)
 A TESLA workflow example for the Au--CO$_2$ system.
 
+### [ec-mlp](./ec-mlp/)
+An ec-MLP workflow example for constant-potential molecular dynamics at the Cu(111)/water interface.
+
 ### [spectra](./spectra/)
 A spectroscopy workflow example for the air--water interface.
 

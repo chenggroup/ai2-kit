@@ -48,6 +48,9 @@ workflow:
       # Specific the number of steps to run.
       nsteps: 2000
 
+      # provide your own LAMMPS input template, which will be used to generate the LAMMPS input files for each variant.
+      input_template:
+
       # Specific ensemble.
       ensemble: nvt
 

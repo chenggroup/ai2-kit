@@ -2,19 +2,19 @@
 
 This directory contains supplementary example code referenced in the `ai2-kit` paper preprint: [arXiv:2607.00613](https://arxiv.org/abs/2607.00613).
 
-## Mapping to the manuscript
+These examples can be used as starting points for reproducing the workflows discussed in the manuscript.
 
 ### [tesla-h2o](./tesla-h2o/)
-Code for reproducing the bulk-water TESLA example described in the TESLA section of the manuscript.
+A TESLA workflow example for bulk water.
 
 ### [tesla-auco](./tesla-auco/)
-Code for reproducing the Au--CO$_2$ TESLA example described in the TESLA section of the manuscript.
+A TESLA workflow example for the Au--CO$_2$ system.
 
 ### [spectra](./spectra/)
-Code for reproducing the air--water interface spectroscopy workflow described in the spectroscopy section of the manuscript.
+A spectroscopy workflow example for the air--water interface.
 
 ### [skill-demo](./skill-demo/)
-Code for reproducing the AI-agent-generated TESLA workflow example described in the example-driven workflow distribution section of the manuscript.
+An AI-agent-generated TESLA workflow example built with the `build-tesla` skill.
 
 ## Notes
 

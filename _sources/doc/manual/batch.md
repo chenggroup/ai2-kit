@@ -6,9 +6,9 @@ ai2-kit tool batch --help
 
 A toolkit to generate batch scripts.
 
-## ⚠️ Deprecated Warning
-
-The **Batch Toolkit** is no longer maintained and will be removed in the future. Please use [oh-my-batch](https://github.com/link89/oh-my-batch) instead.
+> [!WARNING]
+> **Deprecated:** The Batch Toolkit is deprecated and will be maintained only for backward compatibility.
+> For new projects and future updates, please use [oh-my-batch](https://github.com/link89/oh-my-batch) instead.
 
 ## Usage
 

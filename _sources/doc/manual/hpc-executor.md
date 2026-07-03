@@ -1,5 +1,9 @@
 # AI<sup>2</sup>-Kit HPC Executor
 
+> [!WARNING]
+> **Deprecated:** `ai2-kit` HPC executor is deprecated and will be maintained only for backward compatibility.
+> For new projects and future updates, please use [oh-my-batch](https://github.com/link89/oh-my-batch) instead.
+
 ## Introduction
 `ai2-kit` implements a lightweight HPC executor for submitting and managing jobs on HPC clusters. Compared with other HPC schedulers or workflow frameworks that support HPC (such as DpDispatcher, parsl, DFlow, etc.), `ai2-kit HPC executor` has the following characteristics:
 

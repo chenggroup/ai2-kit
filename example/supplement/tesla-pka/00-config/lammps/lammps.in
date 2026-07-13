@@ -1,0 +1,62 @@
+variable    DATA_FILE        string @DATA_FILE
+variable    TEMP             equal @TEMP
+variable    PRES             equal @PRES
+variable    N_STEPS          equal @STEPS
+variable    THERMO_FREQ      equal @SAMPLE_FREQ
+variable    DUMP_FREQ        equal @SAMPLE_FREQ
+variable    SAMPLE_FREQ      equal @SAMPLE_FREQ
+variable    SEED             equal @SEED
+
+variable    LAMBDA_f         equal @LAMBDA_f
+variable    LAMBDA_i         equal 1-v_LAMBDA_f
+
+variable    TAU_T            equal 0.1
+variable    TAU_P            equal 0.5
+variable    TIME_CONST       equal 0.1
+variable    K_Bonds          equal 0.972
+variable    K_Angle          equal 1.36057
+
+units           metal
+atom_style      atomic
+boundary p p p
+
+atom_modify map yes
+neighbor 1.0 bin
+box      tilt large
+
+if "${restart} > 0" then "read_restart md.restart.*" else "read_data ${DATA_FILE} extra/atom/types 0"
+
+mass 1  15.999 # O
+mass 2  1.008  # H
+mass 3  1.008  # H, the proton to be removed 
+
+change_box all triclinic
+
+pair_style hybrid/overlay &
+           deepmd @DP_MODELS out_freq ${SAMPLE_FREQ} out_file model_devi_ini.out &
+           deepmd @DP_MODELS out_freq ${SAMPLE_FREQ} out_file model_devi_fin.out
+pair_coeff * * deepmd 1 O H H
+pair_coeff * * deepmd 2 O H NULL  # remove the proton
+
+fix     sampling_PES all adapt 0 &
+        pair deepmd:1 scale * * v_LAMBDA_i &
+        pair deepmd:2 scale * * v_LAMBDA_f
+
+if "${restart} == 0" then "velocity all create ${TEMP} ${SEED}"
+
+fix 1 all nvt temp ${TEMP} ${TEMP} ${TAU_T}
+fix       bondres all restrain &
+                 bond    1    2   ${K_Bonds} ${K_Bonds}  1.0 1.0 &
+                 bond    1    3   ${K_Bonds} ${K_Bonds}  1.0 1.0 &
+                 bond    1    4   ${K_Bonds} ${K_Bonds}  1.0 1.0 &
+                 angle    2 1 4   ${K_Angle} ${K_Angle}  111.2 &
+                 angle    3 1 4   ${K_Angle} ${K_Angle}  111.2
+
+thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz
+thermo       ${THERMO_FREQ}
+
+dump 1 all custom ${DUMP_FREQ} dump.lammpstrj id type x y z
+restart 10000 md.restart
+
+timestep 0.000500
+run      ${N_STEPS} upto

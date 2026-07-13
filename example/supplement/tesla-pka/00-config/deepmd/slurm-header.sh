@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#SBATCH -N 1
+#SBATCH --job-name=deepmd
+#SBATCH --partition=gpu-mig-2g-20gb,gpu
+#SBATCH --gres=gpu:1
+
+set -e
+conda deactivate || true
+module load anaconda/2022.5
+module load cuda/11.6
+source activate /public/groups/ai4ec/libs/conda/deepmd/2.2.6/gpu
+env
+
+
+export OMP_NUM_THREADS=2
+export TF_INTER_OP_PARALLELISM_THREADS=1
+export TF_INTRA_OP_PARALLELISM_THREADS=2

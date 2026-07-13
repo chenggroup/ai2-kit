@@ -8,7 +8,10 @@ These examples can be used as starting points for reproducing the workflows disc
 A TESLA workflow example for bulk water.
 
 ### [tesla-auco](./tesla-auco/)
-A TESLA workflow example for the Au--CO$_2$ system.
+A TESLA workflow example for the Au-CO2 system.
+
+### [tesla-pka](./tesla-pka/)
+A TESLA workflow example for the FEP pKa calculation.
 
 ### [ec-mlp](./ec-mlp/)
 An ec-MLP workflow example for constant-potential molecular dynamics at the Cu(111)/water interface.

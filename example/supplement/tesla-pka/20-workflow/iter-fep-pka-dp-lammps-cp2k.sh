@@ -4,6 +4,7 @@ set -eu
 
 # ensure the following environment variables are set
 omb shell require-env ITER_NAME CONFIG_DIR WORK_DIR TYPE_MAP \
+    DEEPMD_INIT_DIR LAMMPS_INIT_DIR \
     TRAIN_STEPS DECAY_STEPS MODEL_NUM \
     MD_STEPS MD_TEMP MD_WORKERS SAMPLE_FREQ LAMBDA_f ATOMS_TO_REMOVE \
     MODEL_DEVI_COND USE_BAD_CONFS UPDATE_MD_CONFS \
@@ -30,7 +31,7 @@ mkdir -p $DP_DIR
         add_randint SEED -n $MODEL_NUM -a 0 -b 999999 --uniq - \
         add_var TRAIN_STEPS $TRAIN_STEPS - \
         add_var DECAY_STEPS $DECAY_STEPS - \
-        add_file_set DP_DATASET "$DATA_DIR/deepmd-init/*" "$WORK_DIR/iter-*/new-dataset-*/*" --format json-item --abs - \
+        add_file_set DP_DATASET "$DEEPMD_INIT_DIR/*" "$WORK_DIR/iter-*/new-dataset-*/*" --format json-item --abs - \
         make_files $DP_DIR/model-{i}/input.json --template $CONFIG_DIR/deepmd/input.json - \
         make_files $DP_DIR/model-{i}/run.sh     --template $CONFIG_DIR/deepmd/run.sh --mode 755 - \
         done
@@ -53,7 +54,7 @@ mkdir -p $LMP_DIR
 
 [ -f $LMP_DIR/setup.done ] && echo "skip lammps setup" || {
     omb combo \
-        add_files DATA_FILE "$DATA_DIR/lammps-init/h3o/*.data" --abs -\
+        add_files DATA_FILE "$LAMMPS_INIT_DIR/*.data" --abs -\
         add_file_set DP_MODELS "$DP_DIR/model-*/compress.pb" --abs - \
         add_var TEMP $MD_TEMP  - \
         add_var STEPS $MD_STEPS - \
@@ -162,10 +163,10 @@ ai2-kit tool dpdata read $LABELING_DIR/job-fin-*/output --fmt='cp2k/output' --ty
 
 [ $UPDATE_MD_CONFS -gt 0 ] && {
     # replace the initial structures for MD to accelerate the sampling efficiency
-    rm -f $DATA_DIR/lammps-init/h3o/* || true
+    rm -f $LAMMPS_INIT_DIR/* || true
     ai2-kit tool ase read $SCREENING_DIR/candidate-ini.xyz -\
         sample $UPDATE_MD_CONFS --method random - \
-        write_frames $WORK_DIR/lammps-init/h3o/{i:03d}.data --format lammps-data --specorder "$TYPE_MAP"
+        write_frames $LAMMPS_INIT_DIR/{i:03d}.data --format lammps-data --specorder "$TYPE_MAP"
 }
 
 

@@ -8,6 +8,8 @@ export CONFIG_DIR=./00-config
 export DATA_DIR=./10-data
 export WORK_DIR=./30-workdir
 export TYPE_MAP="[O,H]"
+export DEEPMD_INIT_DIR="$DATA_DIR/deepmd-init"
+export LAMMPS_INIT_DIR="$DATA_DIR/lammps-init/h3o"
 
 export ATOMS_TO_REMOVE=4 # index of lammps atom id (1-based)
 export MODEL_NUM=4
@@ -43,5 +45,4 @@ export MD_TEMP="330 430 530 630"
 ITER_NAME="003" ./20-workflow/iter-fep-pka-dp-lammps-cp2k.sh
 ITER_NAME="004" ./20-workflow/iter-fep-pka-dp-lammps-cp2k.sh
 ITER_NAME="005" ./20-workflow/iter-fep-pka-dp-lammps-cp2k.sh
-
 

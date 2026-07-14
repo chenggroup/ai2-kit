@@ -62,8 +62,8 @@ mkdir -p $LMP_DIR
         add_var LAMBDA_f $LAMBDA_f -\
         add_randint SEED -n 10000 -a 0 -b 99999 --uniq - \
         set_broadcast SEED LAMBDA_f - \
-        make_files $LMP_DIR/job-{TEMP}K-{i:03d}/lammps.in --template $CONFIG_DIR/lammps/lammps.in - \
-        make_files $LMP_DIR/job-{TEMP}K-{i:03d}/run.sh    --template $CONFIG_DIR/lammps/run.sh --mode 755 - \
+        make_files $LMP_DIR/job-{TEMP}K-{LAMBDA_f}-{i:03d}/lammps.in --template $CONFIG_DIR/lammps/lammps.in - \
+        make_files $LMP_DIR/job-{TEMP}K-{LAMBDA_f}-{i:03d}/run.sh    --template $CONFIG_DIR/lammps/run.sh --mode 755 - \
         done
 
     omb batch \

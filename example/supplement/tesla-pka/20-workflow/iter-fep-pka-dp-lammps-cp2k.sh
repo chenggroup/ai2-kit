@@ -5,7 +5,7 @@ set -eu
 # ensure the following environment variables are set
 omb shell require-env ITER_NAME CONFIG_DIR WORK_DIR TYPE_MAP \
     TRAIN_STEPS DECAY_STEPS MODEL_NUM \
-    MD_STEPS MD_TEMP MD_WORKERS SAMPLE_FREQ LAMBDA_f \
+    MD_STEPS MD_TEMP MD_WORKERS SAMPLE_FREQ LAMBDA_f ATOMS_TO_REMOVE \
     MODEL_DEVI_COND USE_BAD_CONFS UPDATE_MD_CONFS \
     LABEL_WORKERS MAX_LABEL \
 
@@ -86,7 +86,7 @@ mkdir -p $SCREENING_DIR
     # use srun if your system has restrictions on the login node
     # for more information, please refer to: https://github.com/chenggroup/ai2-kit/blob/main/doc/manual/model-deviation.md
     ai2-kit tool model_devi \
-        read "$LMP_DIR/job-*/" --traj_file dump.lammpstrj --md_file model_devi_ini.out --specorder "$TYPE_MAP" --ignore_error - \
+        read "$LMP_DIR/job-*/" --traj_file dump.lammpstrj --md_file model_devi_ini.out --ignore_error - \
         slice "10:" - \
         grade $MODEL_DEVI_COND --col max_devi_f - \
         dump_stats $SCREENING_DIR/stats-ini.tsv - \
@@ -95,7 +95,7 @@ mkdir -p $SCREENING_DIR
         done
 
     ai2-kit tool model_devi \
-        read "$LMP_DIR/job-*/" --traj_file dump.lammpstrj --md_file model_devi_fin.out --specorder "$TYPE_MAP" --ignore_error - \
+        read "$LMP_DIR/job-*/" --traj_file dump.lammpstrj --md_file model_devi_fin.out --ignore_error - \
         slice "10:" - \
         grade $MODEL_DEVI_COND --col max_devi_f - \
         dump_stats $SCREENING_DIR/stats-fin.tsv - \
@@ -121,7 +121,7 @@ mkdir -p $LABELING_DIR
         write_frames $LABELING_DIR/job-ini-{i:03d}/cood_n_cell.inc --format cp2k-inc
 
     ai2-kit tool ase read $SCREENING_DIR/candidate-fin.xyz - sample $MAX_LABEL  - \
-        delete_atoms $PROTON_TO_REMOVE --start_idx 1 -\
+        delete_atoms $ATOMS_TO_REMOVE --start_idx 1 -\
         write_frames $LABELING_DIR/job-fin-{i:03d}/cood_n_cell.inc --format cp2k-inc
 
     # if USE_BAD_CONFS is greater than 0, we will also add some bad configurations to the labeling set,
@@ -131,12 +131,14 @@ mkdir -p $LABELING_DIR
             write_frames $LABELING_DIR/job-ini-bad-{i:03d}.inc --format cp2k-inc
 
         ai2-kit tool ase read $SCREENING_DIR/poor-fin.xyz - sample $USE_BAD_CONFS --method random - \
-            delete_atoms $PROTON_TO_REMOVE --start_idx 1 -\
+            delete_atoms $ATOMS_TO_REMOVE --start_idx 1 -\
             write_frames $LABELING_DIR/job-fin-bad-{i:03d}.inc --format cp2k-inc
     }
 
+    # the below use JOR_DIR name pattern to decide the chrage
     omb combo \
-        add_files JOR_DIR "$LABELING_DIR/job-*" --abs -\
+        add_files JOR_DIR "$LABELING_DIR/job-*" --abs - \
+        compute CHARGE "1 if "job-ini-" in JOB_DIR else 0" - \
         make_files $LABELING_DIR/{JOB_DIR}/cp2k.inp --template $CONFIG_DIR/cp2k/cp2k.inp - \
         make_files $LABELING_DIR/{JOB_DIR}/run.sh   --template $CONFIG_DIR/cp2k/run.sh --mode 755 - \
         done

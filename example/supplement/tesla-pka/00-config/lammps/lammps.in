@@ -24,11 +24,12 @@ atom_modify map yes
 neighbor 1.0 bin
 box      tilt large
 
-if "${restart} > 0" then "read_restart md.restart.*" else "read_data ${DATA_FILE} extra/atom/types 0"
+if "${restart} > 0" then "read_restart md.restart.*" else "read_data ${DATA_FILE} extra/atom/types 1"  # add an extra type
+set atom 4 type 3  # assign a new type for atoms to be removed
 
 mass 1  15.999 # O
 mass 2  1.008  # H
-mass 3  1.008  # H, the proton to be removed 
+mass 3  1.008  # H, the proton to be removed
 
 change_box all triclinic
 
@@ -38,9 +39,9 @@ pair_style hybrid/overlay &
 pair_coeff * * deepmd 1 O H H
 pair_coeff * * deepmd 2 O H NULL  # remove the proton
 
-fix     sampling_PES all adapt 0 &
-        pair deepmd:1 scale * * v_LAMBDA_i &
-        pair deepmd:2 scale * * v_LAMBDA_f
+fix  sampling_PES all adapt 0 &
+     pair deepmd:1 scale * * v_LAMBDA_i &
+     pair deepmd:2 scale * * v_LAMBDA_f
 
 if "${restart} == 0" then "velocity all create ${TEMP} ${SEED}"
 
@@ -55,7 +56,9 @@ fix       bondres all restrain &
 thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz
 thermo       ${THERMO_FREQ}
 
-dump 1 all custom ${DUMP_FREQ} dump.lammpstrj id type x y z
+dump        1 all custom ${DUMP_FREQ} dump.lammpstrj element x y z
+dump_modify 1 element O H H  # remap extra type back to the right element
+
 restart 10000 md.restart
 
 timestep 0.000500

@@ -8,12 +8,13 @@ export CONFIG_DIR=./00-config
 export WORK_DIR=./20-workdir
 export TYPE_MAP="[O,H]"
 
-export PROTON_TO_REOMVE=4 # index of lammps atom id (1-based)
+export ATOMS_TO_REOMVE=4 # index of lammps atom id (1-based)
 export MODEL_NUM=4
 export MD_WORKERS=10
 export LABEL_WORKERS=20
 export MD_TEMP="330 430 530"
 export LAMBDA_f="0.00 0.25 0.50 0.75 1.00"
+
 export MODEL_DEVI_COND="--lo 0.2 --hi 0.4"
 export TRAIN_STEPS=100000
 export DECAY_STEPS=1000

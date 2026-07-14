@@ -30,7 +30,7 @@ mkdir -p $DP_DIR
         add_randint SEED -n $MODEL_NUM -a 0 -b 999999 --uniq - \
         add_var TRAIN_STEPS $TRAIN_STEPS - \
         add_var DECAY_STEPS $DECAY_STEPS - \
-        add_file_set DP_DATASET "$WORK_DIR/deepmd-init/*" "$WORK_DIR/iter-*/new-dataset-*/*" --format json-item --abs - \
+        add_file_set DP_DATASET "$DATA_DIR/deepmd-init/*" "$WORK_DIR/iter-*/new-dataset-*/*" --format json-item --abs - \
         make_files $DP_DIR/model-{i}/input.json --template $CONFIG_DIR/deepmd/input.json - \
         make_files $DP_DIR/model-{i}/run.sh     --template $CONFIG_DIR/deepmd/run.sh --mode 755 - \
         done
@@ -54,7 +54,7 @@ mkdir -p $LMP_DIR
 
 [ -f $LMP_DIR/setup.done ] && echo "skip lammps setup" || {
     omb combo \
-        add_files DATA_FILE "$WORK_DIR/lammps-init/h3o/*.data" --abs -\
+        add_files DATA_FILE "$DATA_DIR/lammps-init/h3o/*.data" --abs -\
         add_file_set DP_MODELS "$DP_DIR/model-*/compress.pb" --abs - \
         add_var TEMP $MD_TEMP  - \
         add_var STEPS $MD_STEPS - \
@@ -163,7 +163,7 @@ ai2-kit tool dpdata read $LABELING_DIR/job-fin-*/output --fmt='cp2k/output' --ty
 
 [ $UPDATE_MD_CONFS -gt 0 ] && {
     # replace the initial structures for MD to accelerate the sampling efficiency
-    rm -f $WORK_DIR/lammps-init/h3o/* || true
+    rm -f $DATA_DIR/lammps-init/h3o/* || true
     ai2-kit tool ase read $SCREENING_DIR/candidate-ini.xyz -\
         sample $UPDATE_MD_CONFS --method random - \
         write_frames $WORK_DIR/lammps-init/h3o/{i:03d}.data --format lammps-data --specorder "$TYPE_MAP"

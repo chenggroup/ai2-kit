@@ -3,3 +3,4 @@ example/supplement/tesla-auco/00-config/aimd.xyz filter=lfs diff=lfs merge=lfs -
 example/supplement/skill-demo/00-config/aimd.xyz filter=lfs diff=lfs merge=lfs -text
 /example/supplement/spectra/train/dataset/** filter=lfs diff=lfs merge=lfs -text
 /example/supplement/ec-mlp/01-init/** filter=lfs diff=lfs merge=lfs -text
+example/supplement/tesla-pka/10-data/** filter=lfs diff=lfs merge=lfs -text

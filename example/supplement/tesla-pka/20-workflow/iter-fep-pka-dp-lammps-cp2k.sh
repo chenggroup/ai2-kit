@@ -47,7 +47,6 @@ mkdir -p $DP_DIR
 # Submit multiple script to Slurm
 omb job slurm submit "$DP_DIR/dp-train*.slurm" --max_tries 2 --wait --recovery $DP_DIR/slurm-recovery.json
 
-
 # step 2: explore
 LMP_DIR=$ITER_DIR/lammps
 mkdir -p $LMP_DIR
@@ -121,7 +120,7 @@ mkdir -p $LABELING_DIR
         write_frames $LABELING_DIR/job-ini-{i:03d}/cood_n_cell.inc --format cp2k-inc
 
     ai2-kit tool ase read $SCREENING_DIR/candidate-fin.xyz - sample $MAX_LABEL  - \
-        delete_atoms $ATOMS_TO_REMOVE --start_idx 1 -\
+        delete_atoms $ATOMS_TO_REMOVE --start_id 1 -\
         write_frames $LABELING_DIR/job-fin-{i:03d}/cood_n_cell.inc --format cp2k-inc
 
     # if USE_BAD_CONFS is greater than 0, we will also add some bad configurations to the labeling set,
@@ -131,7 +130,7 @@ mkdir -p $LABELING_DIR
             write_frames $LABELING_DIR/job-ini-bad-{i:03d}.inc --format cp2k-inc
 
         ai2-kit tool ase read $SCREENING_DIR/poor-fin.xyz - sample $USE_BAD_CONFS --method random - \
-            delete_atoms $ATOMS_TO_REMOVE --start_idx 1 -\
+            delete_atoms $ATOMS_TO_REMOVE --start_id 1 -\
             write_frames $LABELING_DIR/job-fin-bad-{i:03d}.inc --format cp2k-inc
     }
 

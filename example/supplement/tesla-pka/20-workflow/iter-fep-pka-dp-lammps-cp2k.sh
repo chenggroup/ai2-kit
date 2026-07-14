@@ -117,11 +117,11 @@ mkdir -p $LABELING_DIR
 [ -f $LABELING_DIR/setup.done ] && echo "skip cp2k setup" || {
 
     ai2-kit tool ase read $SCREENING_DIR/candidate-ini.xyz - sample $MAX_LABEL  - \
-        write_frames $LABELING_DIR/job-ini-{i:03d}/cood_n_cell.inc --format cp2k-inc
+        write_frames $LABELING_DIR/job-ini-{i:03d}/coord_n_cell.inc --format cp2k-inc
 
     ai2-kit tool ase read $SCREENING_DIR/candidate-fin.xyz - sample $MAX_LABEL  - \
         delete_atoms $ATOMS_TO_REMOVE --start_id 1 -\
-        write_frames $LABELING_DIR/job-fin-{i:03d}/cood_n_cell.inc --format cp2k-inc
+        write_frames $LABELING_DIR/job-fin-{i:03d}/coord_n_cell.inc --format cp2k-inc
 
     # if USE_BAD_CONFS is greater than 0, we will also add some bad configurations to the labeling set,
     # which can help the model learn better
@@ -134,12 +134,12 @@ mkdir -p $LABELING_DIR
             write_frames $LABELING_DIR/job-fin-bad-{i:03d}.inc --format cp2k-inc
     }
 
-    # the below use JOR_DIR name pattern to decide the chrage
+    # the below use JOB_DIR name pattern to decide the chrage
     omb combo \
-        add_files JOR_DIR "$LABELING_DIR/job-*" --abs - \
-        compute CHARGE "1 if "job-ini-" in JOB_DIR else 0" - \
-        make_files $LABELING_DIR/{JOB_DIR}/cp2k.inp --template $CONFIG_DIR/cp2k/cp2k.inp - \
-        make_files $LABELING_DIR/{JOB_DIR}/run.sh   --template $CONFIG_DIR/cp2k/run.sh --mode 755 - \
+        add_files JOB_DIR "$LABELING_DIR/job-*" --abs - \
+        compute CHARGE "1 if 'job-ini-' in JOB_DIR else 0" - \
+        make_files {JOB_DIR}/cp2k.inp --template $CONFIG_DIR/cp2k/cp2k.inp - \
+        make_files {JOB_DIR}/run.sh   --template $CONFIG_DIR/cp2k/run.sh --mode 755 - \
         done
 
     omb batch \

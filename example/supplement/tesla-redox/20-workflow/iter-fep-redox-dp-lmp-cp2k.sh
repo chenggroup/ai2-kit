@@ -18,7 +18,7 @@ echo "starting iteration at $ITER_DIR"
 DP_DIR=$ITER_DIR/deepmd
 mkdir -p $DP_DIR
 
-[ -f $DP_DIR/setup-neu.done ] && echo "skip deepmd-neu setup" || {
+[ -f $DP_DIR/setup.done ] && echo "skip deepmd setup" || {
     omb combo \
         add_randint SEED -n $MODEL_NUM -a 0 -b 999999 --uniq - \
         add_var TRAIN_STEPS $TRAIN_STEPS - \
@@ -28,16 +28,6 @@ mkdir -p $DP_DIR
         make_files $DP_DIR/model-neu-{i}/run.sh     --template $CONFIG_DIR/deepmd/run.sh --mode 755 - \
         done
 
-    omb batch \
-        add_work_dirs "$DP_DIR/model-neu-*" - \
-        add_header_files $CONFIG_DIR/deepmd/slurm-header.sh - \
-        add_cmds "bash ./run.sh" - \
-        make $DP_DIR/dp-train-neu-{i}.slurm
-
-    touch $DP_DIR/setup-neu.done
-}
-
-[ -f $DP_DIR/setup-red.done ] && echo "skip deepmd-red setup" || {
     omb combo \
         add_randint SEED -n $MODEL_NUM -a 0 -b 999999 --uniq - \
         add_var TRAIN_STEPS $TRAIN_STEPS - \
@@ -48,17 +38,16 @@ mkdir -p $DP_DIR
         done
 
     omb batch \
-        add_work_dirs "$DP_DIR/model-red-*" - \
+        add_work_dirs "$DP_DIR/model-*" - \
         add_header_files $CONFIG_DIR/deepmd/slurm-header.sh - \
         add_cmds "bash ./run.sh" - \
-        make $DP_DIR/dp-train-red-{i}.slurm
+        make $DP_DIR/dp-train-{i}.slurm
 
-    touch $DP_DIR/setup-red.done
+    touch $DP_DIR/setup.done
 }
 
 omb job slurm submit \
-    "$DP_DIR/dp-train-neu-*.slurm" \
-    "$DP_DIR/dp-train-red-*.slurm" \
+    "$DP_DIR/dp-train-*.slurm" \
     --max_tries 2 --wait \
     --recovery $DP_DIR/slurm-recovery.json
 
@@ -131,10 +120,16 @@ mkdir -p $LABELING_DIR
     ai2-kit tool ase read $SCREENING_DIR/candidate-red.xyz - sample $MAX_LABEL - \
         write_frames $LABELING_DIR/job-red-{i:03d}/coord_n_cell.inc --format cp2k-inc
 
+    # neu and red state should use different cp2k template to label
     omb combo \
-        add_files JOB_DIR "$LABELING_DIR/job-*" --abs - \
-        compute STATE "'neu' if 'job-neu-' in JOB_DIR else 'red'" - \
-        make_files {JOB_DIR}/cp2k.inp --template "$CONFIG_DIR/cp2k/cp2k-{STATE}.inp" - \
+        add_files JOB_DIR "$LABELING_DIR/job-neu-*" --abs - \
+        make_files {JOB_DIR}/cp2k.inp --template $CONFIG_DIR/cp2k/cp2k-neu.inp - \
+        make_files {JOB_DIR}/run.sh   --template $CONFIG_DIR/cp2k/run.sh --mode 755 - \
+        done
+
+    omb combo \
+        add_files JOB_DIR "$LABELING_DIR/job-red-*" --abs - \
+        make_files {JOB_DIR}/cp2k.inp --template $CONFIG_DIR/cp2k/cp2k-red.inp - \
         make_files {JOB_DIR}/run.sh   --template $CONFIG_DIR/cp2k/run.sh --mode 755 - \
         done
 

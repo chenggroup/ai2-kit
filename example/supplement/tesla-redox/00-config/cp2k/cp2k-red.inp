@@ -1,0 +1,85 @@
+@SET data /data/fengw/data
+@set project_name labeling
+&GLOBAL
+  PROJECT_NAME ${project_name}
+  RUN_TYPE ENERGY_FORCE
+  PRINT_LEVEL MEDIUM
+  WALLTIME 860000
+&END GLOBAL
+
+&FORCE_EVAL
+  METHOD QUICKSTEP
+  STRESS_TENSOR ANALYTICAL
+  &DFT
+    BASIS_SET_FILE_NAME ${data}/GTH_BASIS_SETS
+    POTENTIAL_FILE_NAME ${data}/GTH_POTENTIALS
+    WFN_RESTART_FILE_NAME ./${project_name}-RESTART.wfn
+    CHARGE -1
+    UKS F
+    &MGRID
+      CUTOFF 500
+      REL_CUTOFF 60
+      NGRIDS 4
+    &END MGRID
+    &QS
+      EPS_DEFAULT 1.0E-12
+      EPS_PGF_ORB 1.0E-15
+      EXTRAPOLATION ASPC
+      EXTRAPOLATION_ORDER 2
+    &END QS
+    &SCF
+      SCF_GUESS RESTART
+      EPS_SCF 1.0E-6
+      MAX_SCF 50
+      &OUTER_SCF
+        EPS_SCF 1.0E-6
+        MAX_SCF 10
+        STEP_SIZE 0.03000000
+      &END OUTER_SCF
+      &OT
+        MINIMIZER DIIS
+        PRECONDITIONER FULL_SINGLE_INVERSE
+        ENERGY_GAP 0.1
+      &END OT
+    &END SCF
+    &XC
+        &XC_FUNCTIONAL BLYP
+        &END XC_FUNCTIONAL
+        &XC_GRID
+         XC_SMOOTH_RHO NN50
+         XC_DERIV NN50_SMOOTH
+        &END
+        &vdW_POTENTIAL
+            DISPERSION_FUNCTIONAL PAIR_POTENTIAL
+            &PAIR_POTENTIAL
+                TYPE DFTD3
+                PARAMETER_FILE_NAME ${data}/dftd3.dat
+                REFERENCE_FUNCTIONAL BLYP
+            &END PAIR_POTENTIAL
+        &END vdW_POTENTIAL
+   &END XC
+  &END DFT
+  &SUBSYS
+    &CELL
+      ABC [angstrom] 12.42 12.42 12.42
+      PERIODIC XYZ
+    &END CELL
+@include coord_n_cell.inc
+         &KIND O
+             ELEMENT O
+             BASIS_SET TZV2P-GTH
+             POTENTIAL GTH-BLYP-q6
+         &END KIND
+         &KIND H
+             ELEMENT H
+             BASIS_SET TZV2P-GTH
+             POTENTIAL GTH-BLYP-q1
+         &END KIND
+  &END SUBSYS
+  &PRINT
+          &FORCES ON
+          &END FORCES
+          &STRESS_TENSOR ON
+          &END STRESS_TENSOR
+  &END PRINT
+&END FORCE_EVAL

@@ -13,6 +13,9 @@ A TESLA workflow example for the Au-CO2 system.
 ### [tesla-pka](./tesla-pka/)
 A TESLA workflow example for the FEP pKa calculation.
 
+### [tesla-redox](./tesla-redox/)
+A TESLA workflow example for the FEP redox-potential calculation.
+
 ### [ec-mlp](./ec-mlp/)
 An ec-MLP workflow example for constant-potential molecular dynamics at the Cu(111)/water interface.
 

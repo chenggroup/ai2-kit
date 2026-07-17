@@ -1,0 +1,51 @@
+variable    DATA_FILE        string @DATA_FILE
+variable    TEMP             equal @TEMP
+variable    PRES             equal 1.0
+variable    N_STEPS          equal @STEPS
+variable    THERMO_FREQ      equal @SAMPLE_FREQ
+variable    DUMP_FREQ        equal @SAMPLE_FREQ
+variable    SAMPLE_FREQ      equal @SAMPLE_FREQ
+variable    SEED             equal @SEED
+
+variable    LAMBDA_RED       equal @LAMBDA_RED
+variable    LAMBDA_NEU       equal 1-v_LAMBDA_RED
+
+variable    TAU_T            equal 0.1
+
+units           metal
+atom_style      atomic
+boundary        p p p
+
+atom_modify map yes
+neighbor 1.0 bin
+box      tilt large
+
+if "${restart} > 0" then "read_restart md.restart.*" else "read_data ${DATA_FILE}"
+
+mass 1 15.999
+mass 2 1.008
+
+pair_style hybrid/overlay &
+           deepmd @DP_MODELS_NEU out_freq ${SAMPLE_FREQ} out_file model_devi_neu.out &
+           deepmd @DP_MODELS_RED out_freq ${SAMPLE_FREQ} out_file model_devi_red.out
+pair_coeff * * deepmd 1 O H
+pair_coeff * * deepmd 2 O H
+
+fix sampling_PES all adapt 0 &
+    pair deepmd:1 scale * * v_LAMBDA_NEU &
+    pair deepmd:2 scale * * v_LAMBDA_RED
+
+if "${restart} == 0" then "velocity all create ${TEMP} ${SEED}"
+
+fix 1 all nvt temp ${TEMP} ${TEMP} ${TAU_T}
+
+thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz
+thermo       ${THERMO_FREQ}
+
+dump        1 all custom ${DUMP_FREQ} dump.lammpstrj element x y z
+dump_modify 1 element O H
+
+restart 10000 md.restart
+
+timestep 0.000500
+run      ${N_STEPS} upto

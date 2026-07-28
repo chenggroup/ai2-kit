@@ -107,10 +107,13 @@ class ModelDevi:
         """
         Slice the atoms based on the expression
 
-        :param expr: the expression to slice the atoms, e.g. '0:10'
+        a decimal value is treated as a fraction of the data size, for example
+        `:0.9` selects the first 90% of the data, `0.9:` and `-0.1:` the last 10%
+
+        :param expr: the expression to slice the atoms, e.g. '0:10', ':0.9'
         """
-        _slice = slice_from_str(expr)
         for item in self._items:
+            _slice = slice_from_str(expr, len(item['md_df']))
             item['md_df'] = item['md_df'].iloc[_slice]
             # item['atoms'] = item['atoms'][_slice]
             if 'good' in item:

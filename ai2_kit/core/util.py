@@ -1,4 +1,4 @@
-from typing import List, TypeVar, Union, Iterable, Literal
+from typing import List, Optional, TypeVar, Union, Iterable, Literal
 from ruamel.yaml import YAML, ScalarNode, SequenceNode
 from itertools import zip_longest
 from pathlib import Path
@@ -397,14 +397,38 @@ def expand_globs(patterns: Iterable[str], raise_invalid=False, nature_sort=False
     return paths
 
 
-def slice_from_str(index: str):
+def slice_from_str(index: str, length: Optional[int] = None):
     """
     get slice object from a string expression,
     for example: "1:10" -> slice(1, 10), ":10" -> slice(None, 10), etc
+
+    a value written as a decimal is treated as a fraction of `length`,
+    for example, with length=1000: ":0.9" -> slice(None, 900), the first 90%,
+    "0.9:" and "-0.1:" -> slice(900, None), the last 10%
+
+    :param index: the slice expression
+    :param length: the length of the data to slice, required by fractional expression
     """
-    parse = lambda s: int(s) if s else None
-    parts = index.split(':')
-    return slice(*(parse(s) for s in parts))
+    def parse(s: str, is_step: bool):
+        if not s:
+            return None
+        try:
+            return int(s)
+        except ValueError:
+            pass
+        frac = float(s)  # a malformed value will raise here
+        if is_step:
+            raise ValueError(f'fractional step is not supported: {index!r}')
+        if length is None:
+            raise ValueError(f'cannot use fractional slice {index!r} here, '
+                             'as the length of data is unknown')
+        i = round(frac * length)
+        return length + i if frac < 0 else i
+
+    parts = str(index).split(':')
+    if len(parts) > 3:
+        raise ValueError(f'invalid slice expression: {index!r}')
+    return slice(*(parse(s, i == 2) for i, s in enumerate(parts)))
 
 
 def perf_log(msg):

@@ -409,21 +409,15 @@ def slice_from_str(index: str, length: Optional[int] = None):
     :param index: the slice expression
     :param length: the length of the data to slice, required by fractional expression
     """
-    def parse(s: str, is_step: bool):
-        if not s:
-            return None
+    def int_or_float(s):
         try:
             return int(s)
         except ValueError:
-            pass
-        frac = float(s)  # a malformed value will raise here
-        if is_step:
-            raise ValueError(f'fractional step is not supported: {index!r}')
-        if length is None:
-            raise ValueError(f'cannot use fractional slice {index!r} here, '
-                             'as the length of data is unknown')
-        i = round(frac * length)
-        return length + i if frac < 0 else i
+            return float(s)
+    
+    def parse(s):
+        v = int_or_float(s)
+        return length * v if abs(v) < 1 else v
 
     parts = str(index).split(':')
     if len(parts) > 3:

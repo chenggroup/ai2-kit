@@ -13,7 +13,8 @@ import os
 import glob
 import random
 
-from typing import Optional
+from pathlib import Path
+from typing import List, Optional, Tuple
 from dpdata.data_type import Axis, DataType
 import numpy as np
 import dpdata
@@ -58,6 +59,9 @@ class DpdataTool:
         :param file_path_or_glob: path or glob pattern to locate data path
         :param fmt: format to read, default is deepmd/npy
         :param label: default is True, use dpdata.LabeledSystem if True, else use dpdata.System
+        :param recursive: if True, walk each given directory recursively and read every dataset found in it
+        :param file_name: the file name to search for when recursive is True,
+            if not given it is inferred from fmt, wildcard is supported, e.g. `*OUTCAR`
         :param kwargs: arguments to pass to dpdata.System or dpdata.LabeledSystem
         """
         systems = read(*file_path_or_glob, **kwargs)
@@ -234,6 +238,82 @@ def set_fparam(system, fparam):
     return system
 
 
+# fmt -> (file name to search for, whether the parent dir is the data path)
+# a format whose reader takes a directory is marked by the file that identifies
+# such a directory, and the parent dir of the match is what gets read
+FMT_FILE_NAME = {
+    "deepmd/npy": ("type.raw", True),
+    "deepmd/raw": ("type.raw", True),
+    "deepmd/comp": ("type.raw", True),
+    "deepmd/hdf5": ("*.hdf5", False),
+    "vasp/outcar": ("OUTCAR", False),
+    "vasp/xml": ("vasprun.xml", False),
+    "vasp/poscar": ("POSCAR", False),
+    "vasp/contcar": ("CONTCAR", False),
+    "cp2k/output": ("cp2k.out", False),
+    "cp2k/aimd_output": ("cp2k.out", True),
+    "lammps/dump": ("*.dump", False),
+    "lammps/lmp": ("*.lmp", False),
+    "abacus/stru": ("STRU", False),
+    "xyz": ("*.xyz", False),
+}
+
+
+def _resolve_file_name(fmt: str, file_name: Optional[str], kwargs: dict) -> Tuple[str, bool]:
+    """
+    resolve the file name to search for in recursive mode, and whether the data path
+    is the parent dir of the match instead of the match itself
+
+    :param fmt: format to read
+    :param file_name: file name given by user, if None it is inferred from fmt
+    :param kwargs: the remaining arguments to pass to the reader, used by cp2k formats
+    """
+    # cp2k/dplr and cp2k/viber read a directory whose output file name is an argument
+    if fmt == "cp2k/dplr":
+        default = (kwargs.get("cp2k_output", "output"), True)
+    elif fmt == "cp2k/viber":
+        default = (kwargs.get("output_file", "output"), True)
+    else:
+        default = FMT_FILE_NAME.get(fmt)  # type: ignore
+
+    if file_name is not None:
+        return file_name, False if default is None else default[1]
+    if default is None:
+        raise ValueError(
+            f"Cannot infer file_name for fmt {fmt}, please specify it explicitly, "
+            f"e.g. --file_name OUTCAR. Known formats are: "
+            f"{', '.join(sorted([*FMT_FILE_NAME, 'cp2k/dplr', 'cp2k/viber']))}"
+        )
+    return default
+
+
+def _expand_recursive(roots: List[str], file_name: str, use_parent: bool) -> List[str]:
+    """
+    walk each directory in roots recursively and collect all path matching file_name,
+    a root that is not a directory is kept as it is
+
+    :param roots: list of paths to walk
+    :param file_name: file name to search for, wildcard is supported
+    :param use_parent: if True, collect the parent dir of the match instead of the match
+    """
+    paths = []
+    for root in roots:
+        if not os.path.isdir(root):
+            result = [root]
+        else:
+            result = sorted(
+                str(p.parent if use_parent else p) for p in Path(root).rglob(file_name)
+            )
+            if len(result) == 0:
+                logger.warning(f'No {file_name} found in {root}')
+        for p in result:
+            if p not in paths:
+                paths.append(p)
+            else:
+                logger.warning(f'path {p} already exists in the list')
+    return paths
+
+
 def read(*file_path_or_glob: str, **kwargs):
     """
     read data from multiple paths, support glob pattern
@@ -243,13 +323,24 @@ def read(*file_path_or_glob: str, **kwargs):
     :param fmt: format to read, default is deepmd/npy
     :param label: default is True, use dpdata.LabeledSystem if True, else use dpdata.System
     :parse ignore_error: if True, ignore error when read data, default is False
+    :param recursive: if True, walk each given directory recursively and read every dataset found in it
+    :param file_name: the file name to search for when recursive is True,
+        if not given it is inferred from fmt, wildcard is supported, e.g. `*OUTCAR`
     :param kwargs: arguments to pass to dpdata.System or dpdata.LabeledSystem
     """
     kwargs.setdefault("fmt", "deepmd/npy")
     ignore_error = kwargs.pop("ignore_error", False)
+    recursive = kwargs.pop("recursive", False)
+    file_name = kwargs.pop("file_name", None)
     files = expand_globs(file_path_or_glob)
+    if recursive:
+        file_name, use_parent = _resolve_file_name(kwargs["fmt"], file_name, kwargs)
+        files = _expand_recursive(files, file_name, use_parent)
+    elif file_name is not None:
+        logger.warning('file_name is ignored as recursive is not set')
     if len(files) == 0:
-        raise FileNotFoundError(f"No file found in {file_path_or_glob}")
+        hint = f' (recursive search of {file_name})' if recursive else ''
+        raise FileNotFoundError(f"No file found in {file_path_or_glob}{hint}")
     systems = []
     for file in files:
         try:

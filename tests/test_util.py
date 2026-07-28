@@ -1,5 +1,5 @@
 from ai2_kit.core.queue_system import inject_cmd_to_script
-from ai2_kit.core.util import dict_remove_dot_keys, num_text_split, nat_sort, slice_from_str
+from ai2_kit.core.util import dict_remove_dot_keys, expand_globs, num_text_split, nat_sort, slice_from_str
 from ai2_kit.domain.dplr import dump_dplr_lammps_data
 from ai2_kit.domain.lammps import get_types_template_vars, get_ensemble
 from unittest import TestCase
@@ -169,3 +169,44 @@ class TestUtil(TestCase):
             slice_from_str('1:2:3:4', 1000)
         with self.assertRaises(ValueError):
             slice_from_str('a:b', 1000)
+
+    def test_expand_globs(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir) / 'root'
+            for data_dir in ('iter-0/a', 'iter-1/b'):
+                (root / data_dir / 'set.000').mkdir(parents=True)
+                (root / data_dir / 'type.raw').touch()
+            (root / 'plain.txt').touch()
+
+            # note: patterns must be built as string, as pathlib drops the `.` of `/./`
+            def expand(*patterns: str, **kwargs):
+                return expand_globs([f'{root}/{p}' for p in patterns], **kwargs)
+
+            # plain glob is not affected
+            self.assertListEqual(expand('*/*/type.raw'), [
+                str(root / 'iter-0/a/type.raw'),
+                str(root / 'iter-1/b/type.raw'),
+            ])
+            # `/./` navigates from the match to its parent dir
+            self.assertListEqual(expand('**/type.raw/./..'), [
+                str(root / 'iter-0/a'),
+                str(root / 'iter-1/b'),
+            ])
+            # the suffix is joined literally and the result is normalized
+            self.assertListEqual(expand('**/set.000/./../..'), [
+                str(root / 'iter-0'),
+                str(root / 'iter-1'),
+            ])
+            # multiple patterns are merged, and a literal `/./` in a plain path still works
+            self.assertListEqual(expand('./plain.txt', '*/*/type.raw/./..'), [
+                str(root / 'plain.txt'),
+                str(root / 'iter-0/a'),
+                str(root / 'iter-1/b'),
+            ])
+            # a suffix pointing to nowhere yields nothing
+            self.assertListEqual(expand('**/type.raw/./../missing'), [])
+            self.assertListEqual(expand('no-such-file'), [])
+            with self.assertRaises(FileNotFoundError):
+                expand('**/type.raw/./../missing', raise_invalid=True)

@@ -370,17 +370,42 @@ def ensure_dir(path: str):
         os.makedirs(dirname, exist_ok=True)
 
 
+PATH_PIVOT = '/./'
+
+
+def _expand_glob(pattern: str) -> List[str]:
+    """
+    Expand a single glob pattern, with support of the `/./` pivot dialect borrowed from rsync:
+    the part after the first `/./` is a literal path suffix joined to each match of the part
+    before it, so that the matched path itself can be navigated, for example
+    `./workdir/**/type.raw/./..` matches every directory that contains a `type.raw` file
+
+    :param pattern: path or glob pattern
+    :return: list of existed paths
+    """
+    head, sep, tail = pattern.partition(PATH_PIVOT)
+    if not sep:
+        return glob.glob(pattern, recursive=True)
+    paths = []
+    for m in glob.glob(head or '/', recursive=True):
+        p = os.path.normpath(os.path.join(m, tail))
+        # multiple matches may be mapped to the same path by design, so dedup quietly here
+        if p not in paths and os.path.exists(p):
+            paths.append(p)
+    return paths
+
+
 def expand_globs(patterns: Iterable[str], raise_invalid=False, nature_sort=False) -> List[str]:
     """
     Expand glob patterns in paths
 
-    :param patterns: list of paths or glob patterns
+    :param patterns: list of paths or glob patterns, `/./` pivot is supported, see `_expand_glob`
     :param raise_invalid: if True, will raise error if no file found for a glob pattern
     :return: list of expanded paths
     """
     paths = []
     for pattern in patterns:
-        result = glob.glob(pattern, recursive=True)
+        result = _expand_glob(pattern)
         if len(result) == 0:
             logger.warning(f'No file found for {pattern}')
             if raise_invalid:

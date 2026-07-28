@@ -11,6 +11,7 @@ from ai2_kit.core.log import get_logger
 
 import os
 import glob
+import random
 
 from typing import Optional
 from dpdata.data_type import Axis, DataType
@@ -84,6 +85,17 @@ class DpdataTool:
         """
         s = slice_from_str(expr)
         self._systems = self._systems[s]
+        return self
+
+    def shuffle(self, seed=None):
+        """
+        shuffle systems in random order
+
+        :param seed: seed for random shuffle, set it to get reproducible result
+        """
+        if seed is not None:
+            random.seed(seed)
+        random.shuffle(self._systems)
         return self
 
     def sample(self, size: int, method: SAMPLE_METHOD = "even", **kwargs):

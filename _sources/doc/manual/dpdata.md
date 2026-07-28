@@ -24,6 +24,7 @@ This toolkit include the following commands:
 | filter     | Use lambda expression to filter dataset by system data.                                                                     | See in `Example`                                                                               |                                             |
 | set_fparam | add `fparam` to dataset, can be float or list of float                                                                      | See in `Example`                                                                               |                                             |
 | slice      | use slice expression to process systems                                                                                     | see in `Example`                                                                               |                                             |
+| shuffle    | shuffle systems in random order, use `--seed` to get reproducible result                                                    | see in `Example`                                                                               |                                             |
 | sample     | sample data by different methods, current supported method are `even` and `random`                                          | see in `Example`                                                                               |                                             |
 | eval       | use `deepmd DeepPot` to (re)label loaded data                                                                               | see in `Example`                                                                               |                                             |
 | to_ase     | convert dpdata format to ase format and use [ase tool](./ase.md) to process                                                 | see in `Example`                                                                               |                                             |
@@ -51,6 +52,9 @@ ai2-kit tool dpdata read dp-h2o --nolabel - eval dp-frozen.pb - write new-dp-h2o
 
 # Drop the first 10 frames and then sample 10 frames use random method, and save it as xyz format
 ai2-kit tool dpdata read dp-h2o --fmt deepmd/npy - slice 10: - sample 10 --method random - to_ase - write h2o.xyz
+
+# Shuffle the dataset with a fixed seed and take the first 100 frames as training set
+ai2-kit tool dpdata read dp-h2o --fmt deepmd/npy - shuffle --seed 42 - slice :100 - write ./train-set
 
 # Convert dpdata to ase format and write VASP POSCAR files
 ai2-kit tool dpdata read dp-h2o --fmt deepmd/npy - to_ase - write_frames "./vasp-{i-04d}/POSCAR" --format vasp 

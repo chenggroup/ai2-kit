@@ -540,17 +540,22 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"
 <td><p>see in <code class="docutils literal notranslate"><span class="pre">Example</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p>sample</p></td>
+<tr class="row-odd"><td><p>shuffle</p></td>
+<td><p>shuffle systems in random order, use <code class="docutils literal notranslate"><span class="pre">--seed</span></code> to get reproducible result</p></td>
+<td><p>see in <code class="docutils literal notranslate"><span class="pre">Example</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>sample</p></td>
 <td><p>sample data by different methods, current supported method are <code class="docutils literal notranslate"><span class="pre">even</span></code> and <code class="docutils literal notranslate"><span class="pre">random</span></code></p></td>
 <td><p>see in <code class="docutils literal notranslate"><span class="pre">Example</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p>eval</p></td>
+<tr class="row-odd"><td><p>eval</p></td>
 <td><p>use <code class="docutils literal notranslate"><span class="pre">deepmd</span> <span class="pre">DeepPot</span></code> to (re)label loaded data</p></td>
 <td><p>see in <code class="docutils literal notranslate"><span class="pre">Example</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p>to_ase</p></td>
+<tr class="row-even"><td><p>to_ase</p></td>
 <td><p>convert dpdata format to ase format and use <a class="reference internal" href="ase.html"><span class="doc std std-doc">ase tool</span></a> to process</p></td>
 <td><p>see in <code class="docutils literal notranslate"><span class="pre">Example</span></code></p></td>
 <td><p></p></td>
@@ -580,6 +585,9 @@ ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"
 
 <span class="c1"># Drop the first 10 frames and then sample 10 frames use random method, and save it as xyz format</span>
 ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>dp-h2o<span class="w"> </span>--fmt<span class="w"> </span>deepmd/npy<span class="w"> </span>-<span class="w"> </span>slice<span class="w"> </span><span class="m">10</span>:<span class="w"> </span>-<span class="w"> </span>sample<span class="w"> </span><span class="m">10</span><span class="w"> </span>--method<span class="w"> </span>random<span class="w"> </span>-<span class="w"> </span>to_ase<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>h2o.xyz
+
+<span class="c1"># Shuffle the dataset with a fixed seed and take the first 100 frames as training set</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>dp-h2o<span class="w"> </span>--fmt<span class="w"> </span>deepmd/npy<span class="w"> </span>-<span class="w"> </span>shuffle<span class="w"> </span>--seed<span class="w"> </span><span class="m">42</span><span class="w"> </span>-<span class="w"> </span>slice<span class="w"> </span>:100<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./train-set
 
 <span class="c1"># Convert dpdata to ase format and write VASP POSCAR files</span>
 ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>dp-h2o<span class="w"> </span>--fmt<span class="w"> </span>deepmd/npy<span class="w"> </span>-<span class="w"> </span>to_ase<span class="w"> </span>-<span class="w"> </span>write_frames<span class="w"> </span><span class="s2">&quot;./vasp-{i-04d}/POSCAR&quot;</span><span class="w"> </span>--format<span class="w"> </span>vasp<span class="w"> </span>

@@ -190,7 +190,11 @@ def get_pbc_atomic_efield(
     ewald_h,
     ewald_beta,
 ):
-    from deepmd.infer.ewald_recp import EwaldRecp
+    try:
+        from deepmd.infer.ewald_recp import EwaldRecp
+    except ImportError:
+        from deepmd.tf.infer.ewald_recp import EwaldRecp
+        # FIXME: there seems to be a issue of deepmd-kit>=3 that EwaldRecp will stuck forever
 
     er = EwaldRecp(ewald_h, ewald_beta)
     natoms = dp_sys.get_natoms()

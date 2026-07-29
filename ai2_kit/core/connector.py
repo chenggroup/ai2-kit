@@ -6,6 +6,7 @@ from io import StringIO
 import shlex
 import invoke
 import os
+import shutil
 import stat
 import json
 import glob
@@ -160,13 +161,21 @@ class LocalConnector(BaseConnector):
 
     def upload(self, from_path: str, to_dir: str) -> str:
         os.makedirs(to_dir, exist_ok=True)
-        os.system(f'cp -r {from_path} {to_dir}')
-        return os.path.join(to_dir, safe_basename(from_path))
+        to_path = os.path.join(to_dir, safe_basename(from_path))
+        if os.path.isdir(from_path):
+            shutil.copytree(from_path, to_path, dirs_exist_ok=True)
+        else:
+            shutil.copy2(from_path, to_path)
+        return to_path
 
     def download(self, from_path: str, to_dir: str) -> str:
         os.makedirs(to_dir, exist_ok=True)
-        os.system(f'cp -r {from_path} {to_dir}')
-        return os.path.join(to_dir, safe_basename(from_path))
+        to_path = os.path.join(to_dir, safe_basename(from_path))
+        if os.path.isdir(from_path):
+            shutil.copytree(from_path, to_path, dirs_exist_ok=True)
+        else:
+            shutil.copy2(from_path, to_path)
+        return to_path
 
 
 def get_ln_cmd(from_path: str, to_path: str):

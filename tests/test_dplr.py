@@ -27,49 +27,63 @@ def calc_coord_number(atoms, c_ids, neigh_ids, cutoff):
     return out
 
 
-class CP2kTestData:
-    def __init__(self):
-        # both dplr and dpff
-        self.cp2k_dir = str(
-            Path(__file__).parent / "data-sample/cp2k_nacl_finite_field"
-        )
-        self.cp2k_output = "output"
-        self.wannier_file = "wannier.xyz"
-        self.type_map = ["O", "H", "Na", "Cl"]
-        self.sys_charge_map = [6.0, 1.0, 9.0, 7.0]
-        self.model_charge_map = [-8.0, -8.0, -8.0]
-        self.sel_type = [0, 2, 3]
-        self.wannier_file_with_ion = "wannier_with_ion.xyz"
+def load_cp2k_nacl_finite_field_data(dplr_only=False):
+    cp2k_dir = str(
+        Path(__file__).parent / "data-sample/cp2k_nacl_finite_field"
+    )
+    cp2k_output = "output"
+    wannier_file = "wannier.xyz"
+    wannier_file_with_ion = "wannier_with_ion.xyz"
+    type_map = ["O", "H", "Na", "Cl"]
+    sel_type = [0, 2, 3]
 
-        # dpff only
-        self.ewald_h = 0.5
-        self.ewald_beta = 0.4
-        # E-field: a.u. to V/angstrom
-        coeff = (
-            constants.physical_constants["atomic unit of electric field"][0]
-            * constants.angstrom
-        )
-        self.ext_efield = [0.0, 0.0, 0.0002 * coeff]
+    data = dpdata_read_cp2k_dplr_data(
+        cp2k_dir,
+        cp2k_output,
+        wannier_file,
+        type_map,
+        sel_type,
+    )
+    data_with_ion = dpdata_read_cp2k_dplr_data(
+        cp2k_dir,
+        cp2k_output,
+        wannier_file_with_ion,
+        type_map,
+        sel_type,
+    )
+
+    if dplr_only:
+        return data, data_with_ion, type_map, sel_type
+
+    sys_charge_map = [6.0, 1.0, 9.0, 7.0]
+    model_charge_map = [-8.0, -8.0, -8.0]
+    ewald_h = 0.5
+    ewald_beta = 0.4
+    coeff = (
+        constants.physical_constants["atomic unit of electric field"][0]
+        * constants.angstrom
+    )
+    ext_efield = [0.0, 0.0, 0.0002 * coeff]
+
+    dpff_data = dpdata_read_cp2k_dpff_data(
+        cp2k_dir,
+        cp2k_output,
+        wannier_file,
+        type_map,
+        sys_charge_map,
+        model_charge_map,
+        ewald_h,
+        ewald_beta,
+        ext_efield,
+        sel_type,
+    )
+
+    return dpff_data, data_with_ion, type_map, sel_type
 
 
-class TestDPLRDPData(unittest.TestCase, CP2kTestData):
+class TestDPLRDP(unittest.TestCase):
     def setUp(self):
-        CP2kTestData.__init__(self)
-
-        self.data = dpdata_read_cp2k_dplr_data(
-            self.cp2k_dir,
-            self.cp2k_output,
-            self.wannier_file,
-            self.type_map,
-            self.sel_type,
-        )
-        self.data_with_ion = dpdata_read_cp2k_dplr_data(
-            self.cp2k_dir,
-            self.cp2k_output,
-            self.wannier_file_with_ion,
-            self.type_map,
-            self.sel_type,
-        )
+        self.data, self.data_with_ion, self.type_map, self.sel_type = load_cp2k_nacl_finite_field_data(dplr_only=True)
         self.sel_ids = get_sel_ids(self.data, self.type_map, self.sel_type)
 
     def test_shape(self):
@@ -85,23 +99,23 @@ class TestDPLRDPData(unittest.TestCase, CP2kTestData):
         )
 
 
-class TestDPFFDPData(TestDPLRDPData):
+class TestDPFFDPData(unittest.TestCase):
     def setUp(self):
-        CP2kTestData.__init__(self)
-
-        self.data = dpdata_read_cp2k_dpff_data(
-            self.cp2k_dir,
-            self.cp2k_output,
-            self.wannier_file,
-            self.type_map,
-            self.sys_charge_map,
-            self.model_charge_map,
-            self.ewald_h,
-            self.ewald_beta,
-            self.ext_efield,
-            self.sel_type,
-        )
+        self.data, self.data_with_ion, self.type_map, self.sel_type = load_cp2k_nacl_finite_field_data(dplr_only=False)
         self.sel_ids = get_sel_ids(self.data, self.type_map, self.sel_type)
+
+    def test_shape(self):
+        natoms = self.data.get_natoms()
+
+        assert self.data.data["atomic_dipole"].shape[1] == natoms
+        assert self.data.data["atomic_dipole"].shape[2] == 3
+
+    def test_consistent(self):
+        np.testing.assert_allclose(
+            self.data.data["atomic_dipole"][0],
+            self.data_with_ion.data["atomic_dipole"][0],
+        )
+
 
 
 class TestWriteDPData(unittest.TestCase):

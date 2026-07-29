@@ -205,8 +205,13 @@ class TestUtil(TestCase):
                 str(root / 'iter-0/a'),
                 str(root / 'iter-1/b'),
             ])
-            # a suffix pointing to nowhere yields nothing
-            self.assertListEqual(expand('**/type.raw/./../missing'), [])
+            # the suffix is joined without checking existence, that is up to the caller
+            self.assertListEqual(expand('**/type.raw/./../missing'), [
+                str(root / 'iter-0/a/missing'),
+                str(root / 'iter-1/b/missing'),
+            ])
+            # a head matching nothing still yields nothing
             self.assertListEqual(expand('no-such-file'), [])
+            self.assertListEqual(expand('no-such-dir/./..'), [])
             with self.assertRaises(FileNotFoundError):
-                expand('**/type.raw/./../missing', raise_invalid=True)
+                expand('no-such-file', raise_invalid=True)

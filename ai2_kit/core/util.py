@@ -381,18 +381,13 @@ def _expand_glob(pattern: str) -> List[str]:
     `./workdir/**/type.raw/./..` matches every directory that contains a `type.raw` file
 
     :param pattern: path or glob pattern
-    :return: list of existed paths
+    :return: list of expanded paths, whose existence is left to the caller to check
     """
     head, sep, tail = pattern.partition(PATH_PIVOT)
     if not sep:
         return glob.glob(pattern, recursive=True)
-    paths = []
-    for m in glob.glob(head or '/', recursive=True):
-        p = os.path.normpath(os.path.join(m, tail))
-        # multiple matches may be mapped to the same path by design, so dedup quietly here
-        if p not in paths and os.path.exists(p):
-            paths.append(p)
-    return paths
+    return [os.path.normpath(os.path.join(m, tail))
+            for m in glob.glob(head, recursive=True)]
 
 
 def expand_globs(patterns: Iterable[str], raise_invalid=False, nature_sort=False) -> List[str]:

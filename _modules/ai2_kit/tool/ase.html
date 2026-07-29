@@ -507,11 +507,12 @@ document.write(`
 <span class="sd">        slice systems by python slice expression, for example</span>
 <span class="sd">        `10:`, `:10`, `::2`, etc</span>
 
-<span class="sd">        :param start: start index</span>
-<span class="sd">        :param stop: stop index</span>
-<span class="sd">        :param step: step</span>
+<span class="sd">        a decimal value is treated as a fraction of the data size, for example</span>
+<span class="sd">        `:0.9` selects the first 90% of the data, `0.9:` and `-0.1:` the last 10%</span>
+
+<span class="sd">        :param expr: the slice expression</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">slice_from_str</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">slice_from_str</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_atoms_arr</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_atoms_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms_arr</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -559,13 +560,13 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        write atoms to file</span>
 <span class="sd">        :param filename: the filename to write</span>
-<span class="sd">        :param slice: slice expression to select data</span>
+<span class="sd">        :param slice: slice expression to select data, e.g. `10:`, `:0.9` (the first 90%)</span>
 <span class="sd">        :param chain: if True, return self, useful for chain operation</span>
 <span class="sd">        :param kwargs: other arguments for ase.io.write</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">atoms_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms_arr</span>
         <span class="k">if</span> <span class="nb">slice</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">atoms_arr</span> <span class="o">=</span> <span class="n">atoms_arr</span><span class="p">[</span><span class="n">slice_from_str</span><span class="p">(</span><span class="nb">slice</span><span class="p">)]</span>
+            <span class="n">atoms_arr</span> <span class="o">=</span> <span class="n">atoms_arr</span><span class="p">[</span><span class="n">slice_from_str</span><span class="p">(</span><span class="nb">slice</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_arr</span><span class="p">))]</span>
 
         <span class="n">ensure_dir</span><span class="p">(</span><span class="n">filename</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">atoms_arr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -577,13 +578,13 @@ document.write(`
 <span class="sd">        write each frame to a separate file, useful to write to format only support single frame, POSCAR for example</span>
 
 <span class="sd">        :param filename: the filename template, use {i} to represent the index, for example, &#39;frame_{i}.xyz&#39;</span>
-<span class="sd">        :param slice: slice expression to select data</span>
+<span class="sd">        :param slice: slice expression to select data, e.g. `10:`, `:0.9` (the first 90%)</span>
 <span class="sd">        :param chain: if True, return self, useful for chain operation</span>
 <span class="sd">        :param kwargs: other arguments for ase.io.write</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">atoms_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms_arr</span>
         <span class="k">if</span> <span class="nb">slice</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">atoms_arr</span> <span class="o">=</span> <span class="n">atoms_arr</span><span class="p">[</span><span class="n">slice_from_str</span><span class="p">(</span><span class="nb">slice</span><span class="p">)]</span>
+            <span class="n">atoms_arr</span> <span class="o">=</span> <span class="n">atoms_arr</span><span class="p">[</span><span class="n">slice_from_str</span><span class="p">(</span><span class="nb">slice</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms_arr</span><span class="p">))]</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">atoms_arr</span><span class="p">):</span>
             <span class="n">_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>

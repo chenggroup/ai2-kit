@@ -569,13 +569,11 @@ if you want to generate different sample each time, you should set random seed m
 <span class="sig-name descname"><span class="pre">slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/ase.html#AseTool.slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.ase.AseTool.slice" title="Permalink to this definition">#</a></dt>
 <dd><p>slice systems by python slice expression, for example
 <cite>10:</cite>, <cite>:10</cite>, <cite>::2</cite>, etc</p>
+<p>a decimal value is treated as a fraction of the data size, for example
+<cite>:0.9</cite> selects the first 90% of the data, <cite>0.9:</cite> and <cite>-0.1:</cite> the last 10%</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>start</strong> – start index</p></li>
-<li><p><strong>stop</strong> – stop index</p></li>
-<li><p><strong>step</strong> – step</p></li>
-</ul>
+<dd class="field-odd"><p><strong>expr</strong> – the slice expression</p>
 </dd>
 </dl>
 </dd></dl>
@@ -596,7 +594,7 @@ if you want to generate different sample each time, you should set random seed m
 <span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/ase.html#AseTool.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.ase.AseTool.write" title="Permalink to this definition">#</a></dt>
 <dd><p>write atoms to file
 :param filename: the filename to write
-:param slice: slice expression to select data
+:param slice: slice expression to select data, e.g. <cite>10:</cite>, <cite>:0.9</cite> (the first 90%)
 :param chain: if True, return self, useful for chain operation
 :param kwargs: other arguments for ase.io.write</p>
 </dd></dl>
@@ -634,7 +632,7 @@ about fitting tensor: <a class="reference external" href="https://docs.deepmodel
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> – the filename template, use {i} to represent the index, for example, ‘frame_{i}.xyz’</p></li>
-<li><p><strong>slice</strong> – slice expression to select data</p></li>
+<li><p><strong>slice</strong> – slice expression to select data, e.g. <cite>10:</cite>, <cite>:0.9</cite> (the first 90%)</p></li>
 <li><p><strong>chain</strong> – if True, return self, useful for chain operation</p></li>
 <li><p><strong>kwargs</strong> – other arguments for ase.io.write</p></li>
 </ul>

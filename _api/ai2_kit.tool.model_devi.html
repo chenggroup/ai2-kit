@@ -548,9 +548,11 @@ outlier is an independent indicator, default is 2 * hi if not provided.</p>
 <dt class="sig sig-object py" id="ai2_kit.tool.model_devi.ModelDevi.slice">
 <span class="sig-name descname"><span class="pre">slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ai2_kit/tool/model_devi.html#ModelDevi.slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai2_kit.tool.model_devi.ModelDevi.slice" title="Permalink to this definition">#</a></dt>
 <dd><p>Slice the atoms based on the expression</p>
+<p>a decimal value is treated as a fraction of the data size, for example
+<cite>:0.9</cite> selects the first 90% of the data, <cite>0.9:</cite> and <cite>-0.1:</cite> the last 10%</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>expr</strong> – the expression to slice the atoms, e.g. ‘0:10’</p>
+<dd class="field-odd"><p><strong>expr</strong> – the expression to slice the atoms, e.g. ‘0:10’, ‘:0.9’</p>
 </dd>
 </dl>
 </dd></dl>

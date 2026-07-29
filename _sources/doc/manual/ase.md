@@ -25,7 +25,7 @@ This toolkit include the following commands:
 | set_pbc | Set the periodic boundary condition of all frames in the trajectory. | see in `Example` | [ase.Atoms.set_pbc](https://wiki.fysik.dtu.dk/ase/ase/atoms.html#ase.Atoms.set_pbc) |  
 | delete_atoms | Delete atoms from all frames in the trajectory. | see in `Example` | |
 | write_dplr_lammps_data | Write data in the format LAMMPS data for DPLR | see in `Example` | |
-| slice | use slice expression to process systems | see in `Example` | |
+| slice | use slice expression to process systems, a decimal value is treated as a fraction of the data size, e.g. `:0.9` for the first 90%, `0.9:` (or `-0.1:`) for the last 10% | see in `Example` | |
 | sample | sample data by different methods, current supported method are `even` and `random` | see in `Example` | |
 | to_dpdata | convert ase.Atoms to dpdata and use [dpdata tool](./dpdata.md) to process | see in `Example` |  |
 
@@ -66,4 +66,7 @@ ai2-kit tool ase read h2o.lammpstrj --specorder [H,O] - slice 10: - sample 10 --
 
 # Split the trajectory into multiple parts, for example, pick 10 frames randomly and save it to 10.xyz, and the rest to rest.xyz
 ai2-kit tool ase read all.xyz - shuffle - write 10.xyz --slice :10 --chain - write rest.xyz --slice 10: 
+
+# Split the trajectory by ratio, for example, the first 90% frames as training set and the last 10% as test set
+ai2-kit tool ase read all.xyz - shuffle - write train.xyz --slice :0.9 --chain - write test.xyz --slice 0.9:
 ```

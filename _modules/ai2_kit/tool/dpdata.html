@@ -513,11 +513,12 @@ document.write(`
 <span class="sd">        slice systems by python slice expression, for example</span>
 <span class="sd">        `10:`, `:10`, `::2`, etc</span>
 
-<span class="sd">        :param start: start index</span>
-<span class="sd">        :param stop: stop index</span>
-<span class="sd">        :param step: step</span>
+<span class="sd">        a decimal value is treated as a fraction of the data size, for example</span>
+<span class="sd">        `:0.9` selects the first 90% of the data, `0.9:` and `-0.1:` the last 10%</span>
+
+<span class="sd">        :param expr: the slice expression</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">slice_from_str</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">slice_from_str</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_systems</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 

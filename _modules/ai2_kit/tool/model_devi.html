@@ -541,10 +541,13 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Slice the atoms based on the expression</span>
 
-<span class="sd">        :param expr: the expression to slice the atoms, e.g. &#39;0:10&#39;</span>
+<span class="sd">        a decimal value is treated as a fraction of the data size, for example</span>
+<span class="sd">        `:0.9` selects the first 90% of the data, `0.9:` and `-0.1:` the last 10%</span>
+
+<span class="sd">        :param expr: the expression to slice the atoms, e.g. &#39;0:10&#39;, &#39;:0.9&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">_slice</span> <span class="o">=</span> <span class="n">slice_from_str</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_items</span><span class="p">:</span>
+            <span class="n">_slice</span> <span class="o">=</span> <span class="n">slice_from_str</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;md_df&#39;</span><span class="p">]))</span>
             <span class="n">item</span><span class="p">[</span><span class="s1">&#39;md_df&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;md_df&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">_slice</span><span class="p">]</span>
             <span class="c1"># item[&#39;atoms&#39;] = item[&#39;atoms&#39;][_slice]</span>
             <span class="k">if</span> <span class="s1">&#39;good&#39;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>

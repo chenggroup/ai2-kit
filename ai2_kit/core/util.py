@@ -13,6 +13,7 @@ import random
 import shlex
 import json
 import glob
+import math
 import os
 import re
 
@@ -409,20 +410,23 @@ def slice_from_str(index: str, length: Optional[int] = None):
     :param index: the slice expression
     :param length: the length of the data to slice, required by fractional expression
     """
-    def int_or_float(s):
-        try:
-            return int(s)
-        except ValueError:
-            return float(s)
-    
     def parse(s):
+        if not s:
+            return None
         v = int_or_float(s)
-        return length * v if abs(v) < 1 else v
+        return round(length * v) if abs(v) < 1 else round(v)
 
     parts = str(index).split(':')
     if len(parts) > 3:
         raise ValueError(f'invalid slice expression: {index!r}')
-    return slice(*(parse(s, i == 2) for i, s in enumerate(parts)))
+    return slice(*(parse(s) for s in parts))
+
+
+def int_or_float(s):
+    try:
+        return int(s)
+    except ValueError:
+        return float(s)
 
 
 def perf_log(msg):

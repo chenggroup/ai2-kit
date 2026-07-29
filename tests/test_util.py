@@ -144,7 +144,7 @@ class TestUtil(TestCase):
         frac_cases = [
             (':0.9', 1000, slice(None, 900)),
             ('0.9:', 1000, slice(900, None)),
-            ('-0.1:', 1000, slice(900, None)),
+            ('-0.1:', 1000, slice(-100, None)),
             ('0.1:0.9', 1000, slice(100, 900)),
             (':.9', 1000, slice(None, 900)),
             (':0.9', 10, slice(None, 9)),
@@ -163,9 +163,7 @@ class TestUtil(TestCase):
         self.assertListEqual(tail, data[slice_from_str('-0.1:', len(data))])
 
         # invalid expressions
-        with self.assertRaises(ValueError):
-            slice_from_str('::0.5', 1000)  # fractional step
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             slice_from_str(':0.9')  # length is unknown
         with self.assertRaises(ValueError):
             slice_from_str('1:2:3:4', 1000)

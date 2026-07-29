@@ -479,6 +479,10 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#change-logging-level">Change logging level</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#path-pattern">Path pattern</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-notation">The <code class="docutils literal notranslate"><span class="pre">/./</span></code> notation</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-custom-tags-to-simplify-yaml-configuration">Use custom tags to simplify YAML configuration</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-text"><code class="docutils literal notranslate"><span class="pre">!load_text</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-yaml"><code class="docutils literal notranslate"><span class="pre">!load_yaml</span></code></a></li>
@@ -506,6 +510,38 @@ document.write(`
 ai2-kit<span class="w"> </span>...
 </pre></div>
 </div>
+</section>
+<section id="path-pattern">
+<h2>Path pattern<a class="headerlink" href="#path-pattern" title="Permalink to this heading">#</a></h2>
+<p>Most commands that take file or directory paths accept glob patterns, and they all share the same
+pattern syntax, which is the standard Python glob syntax with one extension.</p>
+<p>Besides the usual <code class="docutils literal notranslate"><span class="pre">*</span></code> and <code class="docutils literal notranslate"><span class="pre">?</span></code>, <code class="docutils literal notranslate"><span class="pre">**</span></code> matches any number of directories, so you don’t need to know
+how deep the files are nested:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># read every xyz file under workdir, no matter how deep it is</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="s1">&#39;./workdir/**/*.xyz&#39;</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./merged.xyz
+</pre></div>
+</div>
+<blockquote>
+<div><p>Note: always quote the pattern, or else your shell may expand it before <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> sees it,
+and most shells don’t support <code class="docutils literal notranslate"><span class="pre">**</span></code> in the way described here.</p>
+</div></blockquote>
+<section id="the-notation">
+<h3>The <code class="docutils literal notranslate"><span class="pre">/./</span></code> notation<a class="headerlink" href="#the-notation" title="Permalink to this heading">#</a></h3>
+<p>Sometimes what you want to select is not the file that you can match, but a directory identified
+by a file inside it. A typical case is a <code class="docutils literal notranslate"><span class="pre">deepmd/npy</span></code> dataset: the directory to read is the one
+that contains a <code class="docutils literal notranslate"><span class="pre">type.raw</span></code> file, and there is no pattern for “directory containing X”.</p>
+<p>For this, <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> supports a <code class="docutils literal notranslate"><span class="pre">/./</span></code> notation borrowed from <code class="docutils literal notranslate"><span class="pre">rsync</span></code>. The part after <code class="docutils literal notranslate"><span class="pre">/./</span></code> is a
+literal path suffix that is joined to each match of the part before it, so you can match a file
+and then navigate from it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># match every type.raw under workdir, then go up to its parent directory,</span>
+<span class="c1"># which is the dataset directory to read</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="s1">&#39;./workdir/**/type.raw/./..&#39;</span><span class="w"> </span>--fmt<span class="w"> </span>deepmd/npy<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./merged_dataset
+</pre></div>
+</div>
+<p>The suffix is not a pattern, it is taken literally, and the joined path is normalized afterwards.
+So <code class="docutils literal notranslate"><span class="pre">./workdir/**/set.000/./../..</span></code> selects the grandparent of every <code class="docutils literal notranslate"><span class="pre">set.000</span></code> directory. Paths that
+do not exist after joining are dropped, and duplicated results are removed.</p>
+</section>
 </section>
 <section id="use-custom-tags-to-simplify-yaml-configuration">
 <h2>Use custom tags to simplify YAML configuration<a class="headerlink" href="#use-custom-tags-to-simplify-yaml-configuration" title="Permalink to this heading">#</a></h2>
@@ -629,6 +665,10 @@ jupyter<span class="w"> </span>nbextension<span class="w"> </span><span class="n
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#change-logging-level">Change logging level</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#path-pattern">Path pattern</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-notation">The <code class="docutils literal notranslate"><span class="pre">/./</span></code> notation</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-custom-tags-to-simplify-yaml-configuration">Use custom tags to simplify YAML configuration</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-text"><code class="docutils literal notranslate"><span class="pre">!load_text</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-yaml"><code class="docutils literal notranslate"><span class="pre">!load_yaml</span></code></a></li>

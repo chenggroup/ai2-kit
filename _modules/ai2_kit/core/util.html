@@ -804,17 +804,37 @@ document.write(`
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
+<span class="n">PATH_PIVOT</span> <span class="o">=</span> <span class="s1">&#39;/./&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_expand_glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Expand a single glob pattern, with support of the `/./` pivot dialect borrowed from rsync:</span>
+<span class="sd">    the part after the first `/./` is a literal path suffix joined to each match of the part</span>
+<span class="sd">    before it, so that the matched path itself can be navigated, for example</span>
+<span class="sd">    `./workdir/**/type.raw/./..` matches every directory that contains a `type.raw` file</span>
+
+<span class="sd">    :param pattern: path or glob pattern</span>
+<span class="sd">    :return: list of expanded paths, whose existence is left to the caller to check</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">head</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">tail</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="n">PATH_PIVOT</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sep</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">tail</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+
+
 <div class="viewcode-block" id="expand_globs"><a class="viewcode-back" href="../../../_api/ai2_kit.core.util.html#ai2_kit.core.util.expand_globs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">expand_globs</span><span class="p">(</span><span class="n">patterns</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">raise_invalid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nature_sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Expand glob patterns in paths</span>
 
-<span class="sd">    :param patterns: list of paths or glob patterns</span>
+<span class="sd">    :param patterns: list of paths or glob patterns, `/./` pivot is supported, see `_expand_glob`</span>
 <span class="sd">    :param raise_invalid: if True, will raise error if no file found for a glob pattern</span>
 <span class="sd">    :return: list of expanded paths</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">paths</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">_expand_glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No file found for </span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">raise_invalid</span><span class="p">:</span>

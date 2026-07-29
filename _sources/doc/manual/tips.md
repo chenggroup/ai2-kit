@@ -8,6 +8,42 @@ export LOG_LEVEL=DEBUG
 ai2-kit ...
 ```
 
+## Path pattern
+
+Most commands that take file or directory paths accept glob patterns, and they all share the same
+pattern syntax, which is the standard Python glob syntax with one extension.
+
+Besides the usual `*` and `?`, `**` matches any number of directories, so you don't need to know
+how deep the files are nested:
+
+```bash
+# read every xyz file under workdir, no matter how deep it is
+ai2-kit tool ase read './workdir/**/*.xyz' - write ./merged.xyz
+```
+
+> Note: always quote the pattern, or else your shell may expand it before `ai2-kit` sees it,
+> and most shells don't support `**` in the way described here.
+
+### The `/./` notation
+
+Sometimes what you want to select is not the file that you can match, but a directory identified
+by a file inside it. A typical case is a `deepmd/npy` dataset: the directory to read is the one
+that contains a `type.raw` file, and there is no pattern for "directory containing X".
+
+For this, `ai2-kit` supports a `/./` notation borrowed from `rsync`. The part after `/./` is a
+literal path suffix that is joined to each match of the part before it, so you can match a file
+and then navigate from it:
+
+```bash
+# match every type.raw under workdir, then go up to its parent directory,
+# which is the dataset directory to read
+ai2-kit tool dpdata read './workdir/**/type.raw/./..' --fmt deepmd/npy - write ./merged_dataset
+```
+
+The suffix is not a pattern, it is taken literally, and the joined path is normalized afterwards.
+So `./workdir/**/set.000/./../..` selects the grandparent of every `set.000` directory. Paths that
+do not exist after joining are dropped, and duplicated results are removed.
+
 ## Use custom tags to simplify YAML configuration
 
 `ai2-kit` implement some customized tags for YAML parser to simplify the configuration. 

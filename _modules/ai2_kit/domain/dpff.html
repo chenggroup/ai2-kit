@@ -624,7 +624,11 @@ document.write(`
     <span class="n">ewald_h</span><span class="p">,</span>
     <span class="n">ewald_beta</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">deepmd.infer.ewald_recp</span><span class="w"> </span><span class="kn">import</span> <span class="n">EwaldRecp</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">deepmd.infer.ewald_recp</span><span class="w"> </span><span class="kn">import</span> <span class="n">EwaldRecp</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">deepmd.tf.infer.ewald_recp</span><span class="w"> </span><span class="kn">import</span> <span class="n">EwaldRecp</span>
+        <span class="c1"># FIXME: there seems to be a issue of deepmd-kit&gt;=3 that EwaldRecp will stuck forever</span>
 
     <span class="n">er</span> <span class="o">=</span> <span class="n">EwaldRecp</span><span class="p">(</span><span class="n">ewald_h</span><span class="p">,</span> <span class="n">ewald_beta</span><span class="p">)</span>
     <span class="n">natoms</span> <span class="o">=</span> <span class="n">dp_sys</span><span class="o">.</span><span class="n">get_natoms</span><span class="p">()</span>

@@ -1,5 +1,10 @@
 # Change Logs
 
+## v1.1.0
+* general: enhance glob pattern to support backward reference
+* general: slice pattern support specify by ratio of full list/array
+* dpdata: support shuffle dataset
+
 ## v1.0.9
 * implement `--ignore-error` for `ai2-kit tool ase read`
 

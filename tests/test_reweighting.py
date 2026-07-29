@@ -26,10 +26,4 @@ class TestReweighting(TestCase):
         cvs, bias = plumed.get_cvs_bias_from_df(df, ['d1', 'd2'], 'opes.bias')
 
         ret = reweighting.compute_fes(cvs, bias, temp=800, grid_size=0.01)
-
-        plt.imshow(np.rot90(ret.fes), cmap=plt.cm.gist_earth, extent=ret.extend)
-        plt.colorbar()
-        plt.xlabel('d1')
-        plt.ylabel('d2')
-        plt.title('2D Gaussian KDE')
-        plt.show()
+        # TODO: add assertion

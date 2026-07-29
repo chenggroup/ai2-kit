@@ -31,4 +31,4 @@ jobs:
 
     - name: Run tests with pytest
       run: |
-        pytest --ignore=tests/test_md_spectrum.py
+        pytest --ignore=tests/test_md_spectra.py

@@ -46,11 +46,12 @@ class FrameTool:
         slice frame by python slice expression, for example
         `10:`, `:10`, `::2`, etc
 
-        :param start: start index
-        :param stop: stop index
-        :param step: step
+        a decimal value is treated as a fraction of the frame number, for example
+        `:0.9` selects the first 90% of the frames, `0.9:` and `-0.1:` the last 10%
+
+        :param expr: the slice expression
         """
-        s = slice_from_str(expr)
+        s = slice_from_str(expr, len(self.frames))
         self.frames = self.frames[s]
         return self
 

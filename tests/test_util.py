@@ -1,5 +1,5 @@
 from ai2_kit.core.queue_system import inject_cmd_to_script
-from ai2_kit.core.util import dict_remove_dot_keys, num_text_split, nat_sort
+from ai2_kit.core.util import dict_remove_dot_keys, num_text_split, nat_sort, slice_from_str
 from ai2_kit.domain.dplr import dump_dplr_lammps_data
 from ai2_kit.domain.lammps import get_types_template_vars, get_ensemble
 from unittest import TestCase
@@ -125,3 +125,49 @@ class TestUtil(TestCase):
         ]
         for s, expect in cases:
             self.assertListEqual(nat_sort(s), expect)
+
+    def test_slice_from_str(self):
+        # integer expression, the length should not affect the result
+        int_cases = [
+            ('1:10', slice(1, 10)),
+            (':10', slice(None, 10)),
+            ('10:', slice(10, None)),
+            ('::2', slice(None, None, 2)),
+            ('-10:', slice(-10, None)),
+            (':', slice(None, None)),
+        ]
+        for expr, expect in int_cases:
+            self.assertEqual(slice_from_str(expr), expect)
+            self.assertEqual(slice_from_str(expr, 1000), expect)
+
+        # fractional expression
+        frac_cases = [
+            (':0.9', 1000, slice(None, 900)),
+            ('0.9:', 1000, slice(900, None)),
+            ('-0.1:', 1000, slice(900, None)),
+            ('0.1:0.9', 1000, slice(100, 900)),
+            (':.9', 1000, slice(None, 900)),
+            (':0.9', 10, slice(None, 9)),
+            ('0.9:', 10, slice(9, None)),
+            ('0.95:', 1001, slice(951, None)),  # round instead of truncate
+            (':0.5:2', 10, slice(None, 5, 2)),
+        ]
+        for expr, length, expect in frac_cases:
+            self.assertEqual(slice_from_str(expr, length), expect)
+
+        # `:f` and `f:` should partition the data exactly
+        data = list(range(1001))
+        head = data[slice_from_str(':0.9', len(data))]
+        tail = data[slice_from_str('0.9:', len(data))]
+        self.assertListEqual(head + tail, data)
+        self.assertListEqual(tail, data[slice_from_str('-0.1:', len(data))])
+
+        # invalid expressions
+        with self.assertRaises(ValueError):
+            slice_from_str('::0.5', 1000)  # fractional step
+        with self.assertRaises(ValueError):
+            slice_from_str(':0.9')  # length is unknown
+        with self.assertRaises(ValueError):
+            slice_from_str('1:2:3:4', 1000)
+        with self.assertRaises(ValueError):
+            slice_from_str('a:b', 1000)

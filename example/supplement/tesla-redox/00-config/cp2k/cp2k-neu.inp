@@ -1,4 +1,3 @@
-@SET data /data/fengw/data
 @set project_name labeling
 &GLOBAL
   PROJECT_NAME ${project_name}
@@ -11,8 +10,8 @@
   METHOD QUICKSTEP
   STRESS_TENSOR ANALYTICAL
   &DFT
-    BASIS_SET_FILE_NAME ${data}/GTH_BASIS_SETS
-    POTENTIAL_FILE_NAME ${data}/GTH_POTENTIALS
+    BASIS_SET_FILE_NAME GTH_BASIS_SETS
+    POTENTIAL_FILE_NAME GTH_POTENTIALS
     WFN_RESTART_FILE_NAME ./${project_name}-RESTART.wfn
     CHARGE 0
     UKS T
@@ -54,17 +53,13 @@
             DISPERSION_FUNCTIONAL PAIR_POTENTIAL
             &PAIR_POTENTIAL
                 TYPE DFTD3
-                PARAMETER_FILE_NAME ${data}/dftd3.dat
+                PARAMETER_FILE_NAME dftd3.dat
                 REFERENCE_FUNCTIONAL BLYP
             &END PAIR_POTENTIAL
         &END vdW_POTENTIAL
    &END XC
   &END DFT
   &SUBSYS
-    &CELL
-      ABC [angstrom] 12.42 12.42 12.42
-      PERIODIC XYZ
-    &END CELL
 @include coord_n_cell.inc
          &KIND O
              ELEMENT O

@@ -73,12 +73,11 @@ ai2-kit tool dpdata read --help
 ```
 
 ## Manuals
-### Featuring Tools
-* [NMRNet](doc/manual/nmrnet.md): A toolkit for predict NMR with deep learning network.
-* [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
-* [Amorphous Oxides Structure Analysis Toolkit](doc/manual/aos-analysis.md)
-* [Re-weighting Toolkit](doc/manual/reweighting.md)
-* [ai2-cat](doc/manual/ai2cat.md): A toolkit for dynamic catalysis researching.
+
+### General Tools
+* [ASE Toolkit](doc/manual/ase.md): commands to process trajectory files with [ASE](https://wiki.fysik.dtu.dk/ase/)
+* [DPData Toolkit](doc/manual/dpdata.md): commands to process system data with [dpdata](https://github.com/deepmodeling/dpdata/)
+* [Model Deviation Toolkit](doc/manual/model-deviation.md): a toolkit to filter structures by model deviation
 
 ### Workflows
 #### Example Driven Workflows (Recommended)
@@ -98,15 +97,19 @@ It provides more flexibility and transparency to run and customize their own wor
 These workflows are driven by configuration files, which can be easily modified to fit your own research purpose.
 * [CLL MLP Training Workflow](doc/manual/cll-workflow.md) ([zh](doc/manual/cll-workflow.zh.md))
 
-### General Tools
-* [ASE Toolkit](doc/manual/ase.md): commands to process trajectory files with [ASE](https://wiki.fysik.dtu.dk/ase/)
-* [DPData Toolkit](doc/manual/dpdata.md): commands to process system data with [dpdata](https://github.com/deepmodeling/dpdata/)
-* [Model Deviation Toolkit](doc/manual/model-deviation.md): a toolkit to filter structures by model deviation
+
+### Featuring Tools
+* [NMRNet](doc/manual/nmrnet.md): A toolkit for predict NMR with deep learning network.
+* [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
+* [Amorphous Oxides Structure Analysis Toolkit](doc/manual/aos-analysis.md)
+* [Re-weighting Toolkit](doc/manual/reweighting.md)
+* [ai2-cat](doc/manual/ai2cat.md): A toolkit for dynamic catalysis researching.
+
 
 ### Online Apps and Notebooks
+* [NMRPeak Online App](https://chenggroup.xmu.edu.cn/apps/nmrpeak): AI tools for NMR analysis.
 * [Electrolyte Designer](https://ai4ec.ac.cn/apps/op-elyte-emulator): run electrolyte simulations with ease.
 * [NMRNet Prediction](https://ai4ec.ac.cn/apps/nmrnet-predict): an online app to predict NMR chemical shifts with pre-trained NMRNet models.
-* [ai2cat](notebook/ai2cat.ipynb): an interactive notebook for dynamic catalysis research.
 
 ## Tips
 * [Tips](doc/manual/tips.md): useful tips for using `ai2-kit`

@@ -160,12 +160,12 @@ class LocalConnector(BaseConnector):
 
     def upload(self, from_path: str, to_dir: str) -> str:
         os.makedirs(to_dir, exist_ok=True)
-        os.system(f'cp -r {from_path} {to_dir}')
+        os.system(f'cp -r {shlex.quote(from_path)} {shlex.quote(to_dir)}')
         return os.path.join(to_dir, safe_basename(from_path))
 
     def download(self, from_path: str, to_dir: str) -> str:
         os.makedirs(to_dir, exist_ok=True)
-        os.system(f'cp -r {from_path} {to_dir}')
+        os.system(f'cp -r {shlex.quote(from_path)} {shlex.quote(to_dir)}')
         return os.path.join(to_dir, safe_basename(from_path))
 
 

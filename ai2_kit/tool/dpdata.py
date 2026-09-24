@@ -15,6 +15,8 @@ import random
 
 from typing import Optional
 from dpdata.data_type import Axis, DataType
+from dpdata.format import Format
+from dpdata.plugins.cp2k import CP2KOutputFormat
 import numpy as np
 import dpdata
 
@@ -38,6 +40,10 @@ def register_data_types():
     ]
     dpdata.System.register_data_type(*DATA_TYPES)  # type: ignore
     dpdata.LabeledSystem.register_data_type(*DATA_TYPES)  # type: ignore
+    # cp2kdata's dpdata plugin re-registers "cp2k/output" with a parser that
+    # cannot read newer CP2K output (ENERGY| ... [hartree], FORCES| block),
+    # so put dpdata's built-in one back.
+    Format.register("cp2k/output")(CP2KOutputFormat)
     dpdata.__registed__ = True  # type: ignore
 
 

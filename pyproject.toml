@@ -16,7 +16,11 @@ invoke = "^1.7.3"
 ruamel-yaml = "^0.17.21"
 cloudpickle = "^2.2.0"
 shortuuid = "^1.0.11"
-dpdata = "0.2.18"
+# dpdata >= 1.1.0 parses newer CP2K output but needs python >= 3.10
+dpdata = [
+    { version = "0.2.18", python = "<3.10" },
+    { version = ">=1.1.0", python = ">=3.10" },
+]
 pandas = "^1.5.3"
 ase = "^3.22.1"
 mdanalysis = "^2.4.3"

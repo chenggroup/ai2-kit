@@ -1,4 +1,6 @@
 # Change Logs
+## v1.1.1
+* dpdata: upgrade dpdata for cp2k 2025 support
 
 ## v1.1.0
 * general: enhance glob pattern to support backward reference

@@ -437,22 +437,22 @@ document.write(`
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
-<div class="viewcode-block" id="exit_on_error_statment"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.exit_on_error_statment">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">exit_on_error_statment</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="s1">&#39;__EXITCODE__&#39;</span><span class="p">):</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">=$?; if [ $</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2"> -ne 0 ]; then exit $</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">; fi&quot;</span></div>
+<div class="viewcode-block" id="exit_on_error_statment"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.exit_on_error_statment">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">exit_on_error_statment</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="s1">'__EXITCODE__'</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">=$?; if [ $</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2"> -ne 0 ]; then exit $</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">; fi"</span></div>
 
 
 <div class="viewcode-block" id="eoe_step"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.eoe_step">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">eoe_step</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    exit on error step</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">cmd</span><span class="p">,</span> <span class="n">exit_on_error_statment</span><span class="p">()])</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">cmd</span><span class="p">,</span> <span class="n">exit_on_error_statment</span><span class="p">()])</span></div>
 
 
 <div class="viewcode-block" id="BashTemplate"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashTemplate">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BashTemplate</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">shebang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;#!/bin/bash&#39;</span>
-    <span class="n">header</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    <span class="n">setup</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    <span class="n">teardown</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
+    <span class="n">shebang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'#!/bin/bash'</span>
+    <span class="n">header</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span>
+    <span class="n">setup</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span>
+    <span class="n">teardown</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span></div>
 
 
 <div class="viewcode-block" id="BashStep"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashStep">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BashStep</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -463,36 +463,36 @@ document.write(`
 
 <div class="viewcode-block" id="BashStep.render"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.BashStep.render">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">)</span>
 
-        <span class="n">rendered_step</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-            <span class="s1">&#39;#&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">,</span>
+        <span class="n">rendered_step</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+            <span class="s1">'#'</span> <span class="o">*</span> <span class="mi">80</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">,</span>
-            <span class="s1">&#39;#&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">,</span>
+            <span class="s1">'#'</span> <span class="o">*</span> <span class="mi">80</span><span class="p">,</span>
         <span class="p">])</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exit_on_error</span><span class="p">:</span>
-            <span class="n">rendered_step</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+            <span class="n">rendered_step</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
                 <span class="n">rendered_step</span><span class="p">,</span>
                 <span class="n">exit_on_error_statment</span><span class="p">()</span>
             <span class="p">])</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint</span><span class="p">:</span>
-            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkpoint</span> <span class="o">+</span> <span class="s1">&#39;.checkpoint&#39;</span><span class="p">)</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;hit </span><span class="si">{</span><span class="n">checkpoint</span><span class="si">}</span><span class="s2">, skip&quot;</span><span class="p">)</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkpoint</span> <span class="o">+</span> <span class="s1">'.checkpoint'</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="sa">f</span><span class="s2">"hit </span><span class="si">{</span><span class="n">checkpoint</span><span class="si">}</span><span class="s2">, skip"</span><span class="p">)</span>
 
-            <span class="n">rendered_step</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-                <span class="sa">f</span><span class="s1">&#39;if [ -f </span><span class="si">{</span><span class="n">checkpoint</span><span class="si">}</span><span class="s1"> ]; then echo </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s1">; else&#39;</span><span class="p">,</span>
+            <span class="n">rendered_step</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                <span class="sa">f</span><span class="s1">'if [ -f </span><span class="si">{</span><span class="n">checkpoint</span><span class="si">}</span><span class="s1"> ]; then echo </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s1">; else'</span><span class="p">,</span>
                 <span class="n">rendered_step</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;touch </span><span class="si">{</span><span class="n">checkpoint</span><span class="si">}</span><span class="s1">; fi  # create checkpoint on success&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'touch </span><span class="si">{</span><span class="n">checkpoint</span><span class="si">}</span><span class="s1">; fi  # create checkpoint on success'</span><span class="p">,</span>
             <span class="p">])</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cwd</span><span class="p">:</span>
             <span class="n">cwd</span> <span class="o">=</span> <span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cwd</span><span class="p">)</span>
-            <span class="n">rendered_step</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-                <span class="sa">f</span><span class="s1">&#39;pushd </span><span class="si">{</span><span class="n">cwd</span><span class="si">}</span><span class="s1"> || exit 1&#39;</span><span class="p">,</span>
+            <span class="n">rendered_step</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                <span class="sa">f</span><span class="s1">'pushd </span><span class="si">{</span><span class="n">cwd</span><span class="si">}</span><span class="s1"> || exit 1'</span><span class="p">,</span>
                 <span class="n">rendered_step</span><span class="p">,</span>
-                <span class="s1">&#39;popd&#39;</span><span class="p">,</span>
+                <span class="s1">'popd'</span><span class="p">,</span>
             <span class="p">])</span>
 
         <span class="k">return</span> <span class="n">rendered_step</span></div></div>
@@ -509,7 +509,7 @@ document.write(`
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_render_bash_steps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+        <span class="k">return</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">shebang</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">header</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">setup</span><span class="p">,</span>
@@ -527,32 +527,32 @@ document.write(`
         <span class="k">else</span><span class="p">:</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">)</span>
             <span class="n">rendered_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
-    <span class="n">rendered_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rendered_steps</span><span class="p">)</span>
+    <span class="n">rendered_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rendered_steps</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="make_gpu_parallel_steps"><a class="viewcode-back" href="../../../_api/ai2_kit.core.script.html#ai2_kit.core.script.make_gpu_parallel_steps">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">make_gpu_parallel_steps</span><span class="p">(</span><span class="n">step_groups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">BashSteps</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]):</span>
     <span class="n">p_steps</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;IFS=&quot;,&quot; read -r -a _GPUS&lt;&lt;&lt; &quot;$CUDA_VISIBLE_DEVICES&quot;&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;_TOTAL_GPUS=${#_GPUS[@]}&#39;</span><span class="p">,</span>
+    <span class="s1">'IFS="," read -r -a _GPUS&lt;&lt;&lt; "$CUDA_VISIBLE_DEVICES"'</span><span class="p">,</span>
+    <span class="s1">'_TOTAL_GPUS=${#_GPUS[@]}'</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">steps</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">step_groups</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">):</span>
             <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">steps</span><span class="p">]</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;expect list of steps, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="sa">f</span><span class="s1">'expect list of steps, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="n">p_steps</span> <span class="o">+=</span> <span class="p">[</span>
-            <span class="sa">f</span><span class="s1">&#39;_NTH_GPU=$((</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> % $_TOTAL_GPUS))&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;_GPU=$</span><span class="si">{_GPUS[$_NTH_GPU]}</span><span class="s1">&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;touch &quot;_gpu_$_GPU.lock&quot;&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;{&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;export CUDA_VISIBLE_DEVICES=$_GPU&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;flock 3&#39;</span><span class="p">,</span>
-            <span class="sa">f</span><span class="s1">&#39;echo &quot;run steps group </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> on $_GPU, CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES&quot;&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">'_NTH_GPU=$((</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> % $_TOTAL_GPUS))'</span><span class="p">,</span>
+            <span class="s1">'_GPU=$</span><span class="si">{_GPUS[$_NTH_GPU]}</span><span class="s1">'</span><span class="p">,</span>
+            <span class="s1">'touch "_gpu_$_GPU.lock"'</span><span class="p">,</span>
+            <span class="s1">'{'</span><span class="p">,</span>
+            <span class="s1">'export CUDA_VISIBLE_DEVICES=$_GPU'</span><span class="p">,</span>
+            <span class="s1">'flock 3'</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">'echo "run steps group </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> on $_GPU, CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES"'</span><span class="p">,</span>
             <span class="o">*</span><span class="n">steps</span><span class="p">,</span>
-            <span class="s1">&#39;} 3&lt;&quot;_gpu_$_GPU.lock&quot; &amp;&#39;</span><span class="p">,</span>
+            <span class="s1">'} 3&lt;"_gpu_$_GPU.lock" &amp;'</span><span class="p">,</span>
         <span class="p">]</span>
-    <span class="n">p_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;wait&#39;</span><span class="p">)</span>
+    <span class="n">p_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'wait'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">p_steps</span></div>
 </pre></div>
 

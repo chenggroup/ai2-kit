@@ -443,32 +443,32 @@ document.write(`
 
 
 <div class="viewcode-block" id="FrameTool"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FrameTool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    This tool is design to sampling frames from large trajectory file without parsing them.</span>
 <span class="sd">    You can use this tool to merge, sample frames from multiple files, and write them to a new file.</span>
 
 <span class="sd">    A frame file is a file that contains multiple frames, each frame is separated by a fixed number of lines.</span>
 <span class="sd">    For example, jsonl data file, or trajectory files in LAMMPS, xyz, etc format.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="FrameTool.read"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.read">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">frame_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rp</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">header_size</span><span class="p">:</span><span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Load trajectory files from multiple paths, support glob pattern</span>
 
 <span class="sd">        :param path_or_glob: path or glob pattern to locate data path</span>
 <span class="sd">        :param frame_size: line number of each frame</span>
-<span class="sd">        :param rp: repeated pattern, can be string or regex, e.g. &#39;ITEM: TIMESTEP&#39;, &#39;Lattice.+&#39;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        :param rp: repeated pattern, can be string or regex, e.g. 'ITEM: TIMESTEP', 'Lattice.+'</span>
+<span class="sd">        """</span>
         <span class="n">header</span><span class="p">,</span> <span class="n">frames</span> <span class="o">=</span> <span class="n">load_frames</span><span class="p">(</span><span class="o">*</span><span class="n">path_or_glob</span><span class="p">,</span> <span class="n">frame_size</span><span class="o">=</span><span class="n">frame_size</span><span class="p">,</span> <span class="n">rp</span><span class="o">=</span><span class="n">rp</span><span class="p">,</span> <span class="n">header_size</span><span class="o">=</span><span class="n">header_size</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="ow">and</span> <span class="n">header</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">!=</span> <span class="n">header</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Header is different from previous loaded data&#39;</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Previous header: </span><span class="si">{</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Current header: </span><span class="si">{</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">header</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'Header is different from previous loaded data'</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Previous header: </span><span class="si">{</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Current header: </span><span class="si">{</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">header</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">header</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
@@ -476,7 +476,7 @@ document.write(`
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FrameTool.slice"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.slice">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        slice frame by python slice expression, for example</span>
 <span class="sd">        `10:`, `:10`, `::2`, etc</span>
 
@@ -484,35 +484,35 @@ document.write(`
 <span class="sd">        `:0.9` selects the first 90% of the frames, `0.9:` and `-0.1:` the last 10%</span>
 
 <span class="sd">        :param expr: the slice expression</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">slice_from_str</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="FrameTool.sample"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.sample">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">SAMPLE_METHOD</span><span class="o">=</span><span class="s1">&#39;even&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="FrameTool.sample"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.sample">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="n">SAMPLE_METHOD</span><span class="o">=</span><span class="s1">'even'</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        sample frame by different method</span>
 
 <span class="sd">        :param size: size of sample, if size is larger than data size, return all data</span>
-<span class="sd">        :param method: method to sample, can be &#39;even&#39;, &#39;random&#39;, &#39;truncate&#39;, default is &#39;even&#39;</span>
-<span class="sd">        :param seed: seed for random sample, only used when method is &#39;random&#39;</span>
+<span class="sd">        :param method: method to sample, can be 'even', 'random', 'truncate', default is 'even'</span>
+<span class="sd">        :param seed: seed for random sample, only used when method is 'random'</span>
 
 <span class="sd">        Note that by default the seed is length of input list,</span>
 <span class="sd">        if you want to generate different sample each time, you should set random seed manually</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="n">list_sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FrameTool.size"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.size">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        size of loaded frames</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FrameTool.write"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.FrameTool.write">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keep_header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">ensure_dir</span><span class="p">(</span><span class="n">out_file</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">keep_header</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">:</span>
@@ -520,16 +520,16 @@ document.write(`
 
 
 <div class="viewcode-block" id="load_frames"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.load_frames">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_frames</span><span class="p">(</span><span class="o">*</span><span class="n">path_or_glob</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">frame_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rp</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">header_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Load frames from multiple files</span>
 
 <span class="sd">    :param path_or_glob: path or glob pattern to locate data path</span>
 <span class="sd">    :param frame_size: line number of each frame</span>
-<span class="sd">    :param rp: repeated pattern, can be string or regex, e.g. &#39;ITEM: TIMESTEP&#39;, &#39;Lattice.+&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    :param rp: repeated pattern, can be string or regex, e.g. 'ITEM: TIMESTEP', 'Lattice.+'</span>
+<span class="sd">    """</span>
     <span class="n">files</span> <span class="o">=</span> <span class="n">expand_globs</span><span class="p">(</span><span class="n">path_or_glob</span><span class="p">,</span> <span class="n">raise_invalid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No file found in </span><span class="si">{</span><span class="n">path_or_glob</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'No file found in </span><span class="si">{</span><span class="n">path_or_glob</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
     <span class="n">header</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">all_frames</span> <span class="o">=</span> <span class="p">[]</span>
@@ -542,14 +542,14 @@ document.write(`
 
 
 <div class="viewcode-block" id="parse_frames"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.parse_frames">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">parse_frames</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">frame_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rp</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">header_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    parse frames from lines</span>
 
 <span class="sd">    :param lines: lines of data</span>
 <span class="sd">    :param frame_size: line number of each frame</span>
-<span class="sd">    :param rp: repeated pattern, can be string or regex, e.g. &#39;ITEM: TIMESTEP&#39;, &#39;Lattice.+&#39;</span>
+<span class="sd">    :param rp: repeated pattern, can be string or regex, e.g. 'ITEM: TIMESTEP', 'Lattice.+'</span>
 <span class="sd">    :param header_size: size of header lines</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">header_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">header</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[:</span><span class="n">header_size</span><span class="p">]</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">header_size</span><span class="p">:]</span>
@@ -557,31 +557,31 @@ document.write(`
         <span class="n">header</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">frame_size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">rp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;either frame_size or rp (repeat pattern) should be set&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'either frame_size or rp (repeat pattern) should be set'</span><span class="p">)</span>
         <span class="n">frame_size</span> <span class="o">=</span> <span class="n">detect_frame_size</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">rp</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">%</span> <span class="n">frame_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid frame lines </span><span class="si">{</span><span class="n">frame_size</span><span class="si">}</span><span class="s1">, cannot divide </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="si">}</span><span class="s1"> lines into frames&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Invalid frame lines </span><span class="si">{</span><span class="n">frame_size</span><span class="si">}</span><span class="s1">, cannot divide </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="si">}</span><span class="s1"> lines into frames'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">header</span><span class="p">,</span> <span class="p">[</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">frame_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="n">frame_size</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="detect_frame_size"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.frame.html#ai2_kit.tool.frame.detect_frame_size">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">detect_frame_size</span><span class="p">(</span><span class="n">l</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">rp</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    detect frame size of a file by repeating pattern</span>
-<span class="sd">    :param rp: repeated pattern, can be string or regex, e.g. &#39;TIMESTEP&#39; (for lammpstrj), &#39;Lattice&#39; (for xyz)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    :param rp: repeated pattern, can be string or regex, e.g. 'TIMESTEP' (for lammpstrj), 'Lattice' (for xyz)</span>
+<span class="sd">    """</span>
     <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">rp</span><span class="p">)</span>
     <span class="n">lno</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Detected pattern: </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s1"> at line </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> by pattern </span><span class="si">{</span><span class="n">rp</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Detected pattern: </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s1"> at line </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> by pattern </span><span class="si">{</span><span class="n">rp</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">lno</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">lno</span> <span class="o">=</span> <span class="n">i</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ret</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">lno</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Detected frame lines: </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Detected frame lines: </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">ret</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot detect frame lines in </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="si">}</span><span class="s1"> lines&#39;</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Cannot detect frame lines in </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="si">}</span><span class="s1"> lines'</span><span class="p">)</span></div>
 </pre></div>
 
                 </article>

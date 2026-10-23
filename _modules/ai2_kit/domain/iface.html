@@ -441,7 +441,7 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
 
-<span class="n">TRAINING_MODE</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="s1">&#39;dpff&#39;</span><span class="p">,</span> <span class="s1">&#39;fep-redox&#39;</span><span class="p">,</span> <span class="s1">&#39;fep-pka&#39;</span><span class="p">]</span>
+<span class="n">TRAINING_MODE</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">'default'</span><span class="p">,</span> <span class="s1">'dpff'</span><span class="p">,</span> <span class="s1">'fep-redox'</span><span class="p">,</span> <span class="s1">'fep-pka'</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="BaseCllContext"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.iface.html#ai2_kit.domain.iface.BaseCllContext">[docs]</a><span class="nd">@dataclass</span>
@@ -485,7 +485,7 @@ document.write(`
 
 <div class="viewcode-block" id="init_artifacts"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.iface.html#ai2_kit.domain.iface.init_artifacts">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">init_artifacts</span><span class="p">(</span><span class="n">artifacts</span><span class="p">:</span> <span class="n">ArtifactMap</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">artifact</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">artifact</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;ancestor&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></div>
+        <span class="n">artifact</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">'ancestor'</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></div>
 </pre></div>
 
                 </article>

@@ -450,7 +450,7 @@ document.write(`
         <span class="n">n_atoms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">191</span><span class="p">,</span>
         <span class="n">save_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot and analyze the error between DFT and MLP for energy and force, for both neutral and reduced systems.</span>
 
 <span class="sd">    Parameters</span>
@@ -474,7 +474,7 @@ document.write(`
 <span class="sd">        The function creates and optionally saves or shows a figure with two subplots:</span>
 <span class="sd">        (1) DFT vs. MLP energy scatter and RMSE/STD annotations.</span>
 <span class="sd">        (2) DFT vs. MLP force scatter and RMSE/STD annotations.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">lw2</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">fs</span> <span class="o">=</span><span class="mi">18</span>
     <span class="n">energy_scale</span> <span class="o">=</span> <span class="mf">0.04</span>
@@ -500,14 +500,14 @@ document.write(`
     <span class="n">ener_fp_red</span> <span class="o">=</span> <span class="p">(</span><span class="n">ener_red</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">mean_x</span><span class="p">)</span><span class="o">/</span><span class="n">n_atoms</span>
     <span class="n">ener_ml_red</span> <span class="o">=</span> <span class="p">(</span><span class="n">ener_red</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">mean_x</span><span class="p">)</span><span class="o">/</span><span class="n">n_atoms</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ener_fp_neu</span><span class="p">,</span> <span class="n">ener_ml_neu</span><span class="p">,</span> <span class="s2">&quot;b.&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ener_fp_red</span><span class="p">,</span> <span class="n">ener_ml_red</span><span class="p">,</span> <span class="s2">&quot;r.&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_red_energy</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ener_fp_neu</span><span class="p">,</span> <span class="n">ener_ml_neu</span><span class="p">,</span> <span class="s2">"b."</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ener_fp_red</span><span class="p">,</span> <span class="n">ener_ml_red</span><span class="p">,</span> <span class="s2">"r."</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_red_energy</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="n">energy_scale</span><span class="p">,</span> <span class="n">energy_scale</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="n">energy_scale</span><span class="p">,</span> <span class="n">energy_scale</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">energy_scale</span><span class="p">,</span> <span class="n">energy_scale</span> <span class="o">+</span> <span class="mf">0.001</span><span class="p">,</span> <span class="n">energy_scale</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">energy_scale</span><span class="p">,</span> <span class="n">energy_scale</span> <span class="o">+</span> <span class="mf">0.001</span><span class="p">,</span> <span class="n">energy_scale</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="s2">&quot;k--&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="s2">"k--"</span><span class="p">)</span>
 
     <span class="c1"># RMSE and STD for neutral</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">ener_fp_neu</span>
@@ -515,8 +515,8 @@ document.write(`
     <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
     <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">0.020</span> <span class="o">/</span> <span class="mf">0.045</span> <span class="o">*</span> <span class="n">energy_scale</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.040</span> <span class="o">/</span> <span class="mf">0.045</span> <span class="o">*</span> <span class="n">energy_scale</span><span class="p">,</span>
-             <span class="s2">&quot;RMSE:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot; </span><span class="si">%4.2e</span><span class="s2"> $\pm$ </span><span class="si">%4.2e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="n">std</span><span class="p">),</span>
-             <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;navy&quot;</span><span class="p">)</span>
+             <span class="s2">"RMSE:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">" </span><span class="si">%4.2e</span><span class="s2"> $\pm$ </span><span class="si">%4.2e</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="n">std</span><span class="p">),</span>
+             <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"navy"</span><span class="p">)</span>
 
     <span class="c1"># RMSE and STD for reduced</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">ener_fp_red</span>
@@ -524,11 +524,11 @@ document.write(`
     <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
     <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">0.040</span> <span class="o">/</span> <span class="mf">0.045</span> <span class="o">*</span> <span class="n">energy_scale</span><span class="p">,</span> <span class="mf">0.025</span> <span class="o">/</span> <span class="mf">0.045</span> <span class="o">*</span> <span class="n">energy_scale</span><span class="p">,</span>
-             <span class="s2">&quot;RMSE:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot; </span><span class="si">%4.2e</span><span class="s2"> $\pm$ </span><span class="si">%4.2e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="n">std</span><span class="p">),</span>
-             <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+             <span class="s2">"RMSE:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">" </span><span class="si">%4.2e</span><span class="s2"> $\pm$ </span><span class="si">%4.2e</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="n">std</span><span class="p">),</span>
+             <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"red"</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;rel. $\rm E_</span><span class="si">{MLP}</span><span class="s2">$ (eV/atom)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;rel. $\rm E_</span><span class="si">{DFT}</span><span class="s2">$ (eV/atom)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"rel. $\rm E_</span><span class="si">{MLP}</span><span class="s2">$ (eV/atom)"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"rel. $\rm E_</span><span class="si">{DFT}</span><span class="s2">$ (eV/atom)"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
 
     <span class="c1"># Force subplot</span>
     <span class="n">sp_1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
@@ -541,17 +541,17 @@ document.write(`
     <span class="n">frcs_fp_red</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">frcs_red</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
     <span class="n">frcs_ml_red</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">frcs_red</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frcs_fp_neu</span><span class="p">,</span> <span class="n">frcs_ml_neu</span><span class="p">,</span> <span class="s2">&quot;.b&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frcs_fp_red</span><span class="p">,</span> <span class="n">frcs_ml_red</span><span class="p">,</span> <span class="s2">&quot;.r&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_red_force</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frcs_fp_neu</span><span class="p">,</span> <span class="n">frcs_ml_neu</span><span class="p">,</span> <span class="s2">".b"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frcs_fp_red</span><span class="p">,</span> <span class="n">frcs_ml_red</span><span class="p">,</span> <span class="s2">".r"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_red_force</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="n">force_scale</span><span class="p">,</span> <span class="n">force_scale</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="n">force_scale</span><span class="p">,</span> <span class="n">force_scale</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">force_scale</span><span class="p">,</span> <span class="n">force_scale</span> <span class="o">+</span> <span class="mf">0.001</span><span class="p">,</span> <span class="n">force_scale</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">force_scale</span><span class="p">,</span> <span class="n">force_scale</span> <span class="o">+</span> <span class="mf">0.001</span><span class="p">,</span> <span class="n">force_scale</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="o">-</span><span class="n">force_scale</span><span class="p">,</span> <span class="n">force_scale</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">force_scale</span><span class="p">,</span> <span class="n">force_scale</span><span class="p">],</span> <span class="s2">&quot;k--&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="o">-</span><span class="n">force_scale</span><span class="p">,</span> <span class="n">force_scale</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">force_scale</span><span class="p">,</span> <span class="n">force_scale</span><span class="p">],</span> <span class="s2">"k--"</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\rm F_</span><span class="si">{MLP}</span><span class="s2">$ (eV/$\rm \AA$)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\rm F^i_</span><span class="si">{DFT}</span><span class="s2">$ (eV/$\rm \AA$)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\rm F_</span><span class="si">{MLP}</span><span class="s2">$ (eV/$\rm \AA$)"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\rm F^i_</span><span class="si">{DFT}</span><span class="s2">$ (eV/$\rm \AA$)"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
 
     <span class="c1"># RMSE and STD for neutral</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">frcs_fp_neu</span>
@@ -559,8 +559,8 @@ document.write(`
     <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
     <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">0.020</span> <span class="o">/</span> <span class="mf">0.045</span> <span class="o">*</span> <span class="n">force_scale</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.040</span> <span class="o">/</span> <span class="mf">0.045</span> <span class="o">*</span> <span class="n">force_scale</span><span class="p">,</span>
-             <span class="s2">&quot;RMSE:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot; </span><span class="si">%4.2e</span><span class="s2"> $\pm$ </span><span class="si">%4.2e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="n">std</span><span class="p">),</span>
-             <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;navy&quot;</span><span class="p">)</span>
+             <span class="s2">"RMSE:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">" </span><span class="si">%4.2e</span><span class="s2"> $\pm$ </span><span class="si">%4.2e</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="n">std</span><span class="p">),</span>
+             <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"navy"</span><span class="p">)</span>
 
     <span class="c1"># RMSE and STD for reduced</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">frcs_fp_red</span>
@@ -568,11 +568,11 @@ document.write(`
     <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
     <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">0.040</span> <span class="o">/</span> <span class="mf">0.045</span> <span class="o">*</span> <span class="n">force_scale</span><span class="p">,</span> <span class="mf">0.025</span> <span class="o">/</span> <span class="mf">0.045</span> <span class="o">*</span> <span class="n">force_scale</span><span class="p">,</span>
-             <span class="s2">&quot;RMSE:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot; </span><span class="si">%4.2e</span><span class="s2"> $\pm$ </span><span class="si">%4.2e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="n">std</span><span class="p">),</span>
-             <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+             <span class="s2">"RMSE:</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">" </span><span class="si">%4.2e</span><span class="s2"> $\pm$ </span><span class="si">%4.2e</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="n">std</span><span class="p">),</span>
+             <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"red"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">save_plot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
@@ -584,7 +584,7 @@ document.write(`
     <span class="n">vegs_fp</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
     <span class="n">save_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot thermodynamic integration (TI) results for MLMD and FP data, and compute integrals.</span>
 
 <span class="sd">    Parameters</span>
@@ -604,16 +604,16 @@ document.write(`
 <span class="sd">    -------</span>
 <span class="sd">    (float, float)</span>
 <span class="sd">        Tuple of (MLMD integral, FP integral).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">lw2</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">fs</span> <span class="o">=</span> <span class="mi">18</span>
     <span class="n">y_ticks</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
-    <span class="n">mlmd_color</span> <span class="o">=</span> <span class="s2">&quot;navy&quot;</span>
-    <span class="n">fp_color</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span>
-    <span class="n">mlmd_line</span> <span class="o">=</span> <span class="s2">&quot;-o&quot;</span>
-    <span class="n">fp_line</span> <span class="o">=</span> <span class="s2">&quot;r--x&quot;</span>
-    <span class="n">mlmd_markeredgecolor</span> <span class="o">=</span> <span class="s2">&quot;k&quot;</span>
+    <span class="n">mlmd_color</span> <span class="o">=</span> <span class="s2">"navy"</span>
+    <span class="n">fp_color</span> <span class="o">=</span> <span class="s2">"r"</span>
+    <span class="n">mlmd_line</span> <span class="o">=</span> <span class="s2">"-o"</span>
+    <span class="n">fp_line</span> <span class="o">=</span> <span class="s2">"r--x"</span>
+    <span class="n">mlmd_markeredgecolor</span> <span class="o">=</span> <span class="s2">"k"</span>
 
     <span class="n">figure_1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
     <span class="n">gs1</span> <span class="o">=</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -625,8 +625,8 @@ document.write(`
     <span class="k">for</span> <span class="n">spine</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
         <span class="n">spine</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="n">lw2</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\langle\Delta E\rangle_{\eta}$ / $\rm eV$&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;t / ns&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'$\langle\Delta E\rangle_{\eta}$ / $\rm eV$'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'t / ns'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">y_ticks</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">*</span><span class="n">ylim</span><span class="p">)</span>
@@ -639,8 +639,8 @@ document.write(`
 
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">etas</span><span class="p">,</span> <span class="n">vegs</span><span class="p">,</span> <span class="n">mlmd_line</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">mlmd_color</span><span class="p">,</span> <span class="n">markeredgecolor</span><span class="o">=</span><span class="n">mlmd_markeredgecolor</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">etas_fp</span><span class="p">,</span> <span class="n">vegs_fp</span><span class="p">,</span> <span class="n">fp_line</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\eta$&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\langle\Delta E\rangle_{\eta}$ / $\rm eV$&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'$\eta$'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'$\langle\Delta E\rangle_{\eta}$ / $\rm eV$'</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">*</span><span class="n">ylim</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">y_ticks</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span>
@@ -648,11 +648,11 @@ document.write(`
     <span class="n">integral</span> <span class="o">=</span> <span class="n">trapz</span><span class="p">(</span><span class="n">vegs</span><span class="p">,</span> <span class="n">etas</span><span class="p">)</span>
     <span class="n">integral_fp</span> <span class="o">=</span> <span class="n">trapz</span><span class="p">(</span><span class="n">vegs_fp</span><span class="p">,</span> <span class="n">etas_fp</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s2">&quot; MLMD: </span><span class="si">%5.3f</span><span class="s2"> eV&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">integral</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">mlmd_color</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="s2">&quot; BLYP-D3: </span><span class="si">%5.3f</span><span class="s2"> eV&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">integral_fp</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">fp_color</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s2">" MLMD: </span><span class="si">%5.3f</span><span class="s2"> eV"</span> <span class="o">%</span> <span class="p">(</span><span class="n">integral</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">mlmd_color</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">"right"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="s2">" BLYP-D3: </span><span class="si">%5.3f</span><span class="s2"> eV"</span> <span class="o">%</span> <span class="p">(</span><span class="n">integral_fp</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">fp_color</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">"right"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">save_plot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">integral</span><span class="p">,</span> <span class="n">integral_fp</span></div>
 
@@ -661,35 +661,35 @@ document.write(`
     <span class="n">gap_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">save_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot vertical energy gaps for multiple columns in a DataFrame.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    gap_data : pd.DataFrame</span>
-<span class="sd">        DataFrame with a &#39;time&#39; column and one or more energy gap columns.</span>
+<span class="sd">        DataFrame with a 'time' column and one or more energy gap columns.</span>
 <span class="sd">    save_plot : Optional[str], default=None</span>
 <span class="sd">        If not None, save the figure to this path.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># plt magic number</span>
     <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
     <span class="n">dpi</span> <span class="o">=</span> <span class="mi">500</span>
-    <span class="n">legend_loc</span> <span class="o">=</span> <span class="s1">&#39;upper right&#39;</span>
+    <span class="n">legend_loc</span> <span class="o">=</span> <span class="s1">'upper right'</span>
     <span class="n">legend_bbox</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">xlabel</span> <span class="o">=</span> <span class="s1">&#39;t/ps&#39;</span>
-    <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$\langle \Delta E\rangle_\eta$ / eV&#39;</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;vertical energy gaps&#39;</span>
+    <span class="n">xlabel</span> <span class="o">=</span> <span class="s1">'t/ps'</span>
+    <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">'$\langle \Delta E\rangle_\eta$ / eV'</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s1">'vertical energy gaps'</span>
     <span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">xlim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1050</span><span class="p">)</span>
     <span class="n">yticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">gap_data</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gap_data</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">gap_data</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gap_data</span><span class="p">[</span><span class="s1">'time'</span><span class="p">],</span> <span class="n">gap_data</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">column</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">legend_loc</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="n">legend_bbox</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
@@ -698,7 +698,7 @@ document.write(`
     <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">*</span><span class="n">xlim</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">yticks</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">save_plot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
@@ -707,28 +707,28 @@ document.write(`
     <span class="n">gap_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">save_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot smoothed vertical energy gaps for multiple columns in a DataFrame using moving average.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    gap_data : pd.DataFrame</span>
-<span class="sd">        DataFrame with a &#39;time&#39; column and one or more energy gap columns.</span>
+<span class="sd">        DataFrame with a 'time' column and one or more energy gap columns.</span>
 <span class="sd">    save_plot : Optional[str], default=None</span>
 <span class="sd">        If not None, save the figure to this path.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Plotting magic numbers</span>
     <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
     <span class="n">dpi</span> <span class="o">=</span> <span class="mi">500</span>
-    <span class="n">legend_loc</span> <span class="o">=</span> <span class="s1">&#39;upper right&#39;</span>
+    <span class="n">legend_loc</span> <span class="o">=</span> <span class="s1">'upper right'</span>
     <span class="n">legend_bbox</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.25</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">xlabel</span> <span class="o">=</span> <span class="s1">&#39;t/ps&#39;</span>
-    <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$\langle \Delta E\rangle_\eta$ / eV&#39;</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;mean vertical energy gaps&#39;</span>
+    <span class="n">xlabel</span> <span class="o">=</span> <span class="s1">'t/ps'</span>
+    <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">'$\langle \Delta E\rangle_\eta$ / eV'</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s1">'mean vertical energy gaps'</span>
     <span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">xlim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1050</span><span class="p">)</span>
     <span class="n">yticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
@@ -738,7 +738,7 @@ document.write(`
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">gap_data</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
         <span class="n">smoothed_data</span> <span class="o">=</span> <span class="n">gap_data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="n">min_periods</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gap_data</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span> <span class="n">smoothed_data</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">column</span> <span class="o">+</span> <span class="s1">&#39; (mean)&#39;</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gap_data</span><span class="p">[</span><span class="s1">'time'</span><span class="p">],</span> <span class="n">smoothed_data</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">column</span> <span class="o">+</span> <span class="s1">' (mean)'</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">legend_loc</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="n">legend_bbox</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
@@ -747,7 +747,7 @@ document.write(`
     <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">*</span><span class="n">xlim</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">yticks</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">save_plot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
@@ -756,36 +756,36 @@ document.write(`
     <span class="n">mean_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">save_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot thermodynamic integration curve from mean energy gap data.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    mean_data : pd.DataFrame</span>
-<span class="sd">        DataFrame with columns &#39;eta&#39; and &#39;Mean&#39;.</span>
+<span class="sd">        DataFrame with columns 'eta' and 'Mean'.</span>
 <span class="sd">    save_plot : Optional[str], default=None</span>
 <span class="sd">        If not None, save the figure to this path.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Plotting magic numbers</span>
     <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
     <span class="n">dpi</span> <span class="o">=</span> <span class="mi">500</span>
-    <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span>
-    <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
-    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span>
-    <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$\eta$&#39;</span>
-    <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$\langle \Delta E\rangle_\eta$ / eV&#39;</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;thermodynamic integration&#39;</span>
+    <span class="n">marker</span> <span class="o">=</span> <span class="s1">'o'</span>
+    <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">'-'</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">'blue'</span>
+    <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">'$\eta$'</span>
+    <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">'$\langle \Delta E\rangle_\eta$ / eV'</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s1">'thermodynamic integration'</span>
     <span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">xlim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">xticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
     <span class="n">yticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mean_data</span><span class="p">[</span><span class="s1">&#39;eta&#39;</span><span class="p">],</span> <span class="n">mean_data</span><span class="p">[</span><span class="s1">&#39;Mean&#39;</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mean_data</span><span class="p">[</span><span class="s1">'eta'</span><span class="p">],</span> <span class="n">mean_data</span><span class="p">[</span><span class="s1">'Mean'</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
@@ -794,7 +794,7 @@ document.write(`
     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">xticks</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">yticks</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">save_plot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_plot</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 </pre></div>
 

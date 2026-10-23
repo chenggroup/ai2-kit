@@ -641,9 +641,9 @@ document.write(`
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ai2-kit<span class="w"> </span>algorithm<span class="w"> </span>proton-transfer<span class="w"> </span>analyze<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--input_traj<span class="w"> </span>./doc/res/proton-transfer-test-trajectory.xyz<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--out_dir<span class="w"> </span>./result<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--cell<span class="w"> </span><span class="s2">&quot;[12.740,13.399,40.985,90,90,90]&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--acceptor_elements<span class="w"> </span><span class="s1">&#39;[&quot;O&quot;]&#39;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--initial_donors<span class="w"> </span><span class="s1">&#39;[240,255,246]&#39;</span>
+<span class="w">    </span>--cell<span class="w"> </span><span class="s2">"[12.740,13.399,40.985,90,90,90]"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--acceptor_elements<span class="w"> </span><span class="s1">'["O"]'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--initial_donors<span class="w"> </span><span class="s1">'[240,255,246]'</span>
 </pre></div>
 </div>
 <p>The output of the above command will be in a directory named <code class="docutils literal notranslate"><span class="pre">result</span></code>. Files in the directory are named after the index of initial donors, <code class="docutils literal notranslate"><span class="pre">240.jsonl</span></code> for example. The content of a output files is like below:</p>
@@ -714,7 +714,7 @@ document.write(`
 <span class="w">    </span>--input_traj<span class="w"> </span>./doc/res/proton-transfer-test-trajectory.xyz<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--output_traj<span class="w"> </span>./labeled-traj.xyz<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--initial_donor<span class="w"> </span><span class="m">240</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--cell<span class="w"> </span><span class="s1">&#39;[12.745,13.399,40.985,90,90,90]&#39;</span>
+<span class="w">    </span>--cell<span class="w"> </span><span class="s1">'[12.745,13.399,40.985,90,90,90]'</span>
 </pre></div>
 </div>
 <p>Now we can use tools such as ASE or VMD to visualize the output trajectory.</p>
@@ -822,8 +822,8 @@ document.write(`
 <h4>Examples<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>ai2-kit<span class="w"> </span>algorithm<span class="w"> </span>proton-transfer<span class="w"> </span>show-type-change<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--analysis_result<span class="w"> </span>./result<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--atom_type<span class="w"> </span><span class="s1">&#39;{&quot;Bridge_O&quot;:[169,139,229,199,49,19,109,79,40,10,70,100,160,130,220,190],&quot;Water_O&quot;:[258,255,252,261,64,240,249,246,279,276,285,282,267,264,273,270]}&#39;</span><span class="w"> </span><span class="se">\ </span>
-<span class="w">    </span>--donors<span class="w"> </span><span class="s1">&#39;[240,255]&#39;</span>
+<span class="w">    </span>--atom_type<span class="w"> </span><span class="s1">'{"Bridge_O":[169,139,229,199,49,19,109,79,40,10,70,100,160,130,220,190],"Water_O":[258,255,252,261,64,240,249,246,279,276,285,282,267,264,273,270]}'</span><span class="w"> </span><span class="se">\ </span>
+<span class="w">    </span>--donors<span class="w"> </span><span class="s1">'[240,255]'</span>
 </pre></div>
 </div>
 <p>The output of the above command will be like below:</p>
@@ -910,8 +910,8 @@ document.write(`
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>ai2-kit<span class="w"> </span>algorithm<span class="w"> </span>proton-transfer<span class="w"> </span>calculate-distances<span class="w"> </span><span class="se">\ </span>
 <span class="w">    </span>--analysis_result<span class="w"> </span>./result<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--input_traj<span class="w"> </span>./test.xyz<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--upper_index<span class="w"> </span><span class="s1">&#39;[1,2]&#39;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--lower_index<span class="w"> </span><span class="s1">&#39;[3,4]&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--upper_index<span class="w"> </span><span class="s1">'[1,2]'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--lower_index<span class="w"> </span><span class="s1">'[3,4]'</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--initial_donor<span class="w"> </span><span class="m">255</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--interval<span class="w"> </span><span class="m">1</span>
 </pre></div>

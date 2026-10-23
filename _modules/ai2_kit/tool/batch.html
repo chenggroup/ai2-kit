@@ -445,34 +445,34 @@ document.write(`
 
 
 <div class="viewcode-block" id="BatchTool"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.batch.html#ai2_kit.tool.batch.BatchTool">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BatchTool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A toolkit to help generate batch scripts.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="BatchTool.run_cmd"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.batch.html#ai2_kit.tool.batch.BatchTool.run_cmd">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">work_dirs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cmd</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run command in each work directory.</span>
 
 <span class="sd">        :param work_dirs: path or glob of work directories</span>
 <span class="sd">        :param cmd: command to run, use {work_dir} to represent the work directory</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">paths</span> <span class="o">=</span> <span class="n">expand_globs</span><span class="p">(</span><span class="n">work_dirs</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> is not a directory&#39;</span>
-            <span class="n">_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cd </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="si">}</span><span class="s2"> &amp;&amp; </span><span class="si">{</span><span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">work_dir</span><span class="o">=</span><span class="n">path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> is not a directory'</span>
+            <span class="n">_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"cd </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="si">}</span><span class="s2"> &amp;&amp; </span><span class="si">{</span><span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">work_dir</span><span class="o">=</span><span class="n">path</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
             <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">_cmd</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Run command: </span><span class="si">{</span><span class="n">_cmd</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Run command: </span><span class="si">{</span><span class="n">_cmd</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="BatchTool.map_path"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.batch.html#ai2_kit.tool.batch.BatchTool.map_path">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">map_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">sources</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">copy</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Map source files or directory to target path, use link by default.</span>
 
 <span class="sd">        :param sources: path or glob of source files or directories</span>
 <span class="sd">        :param target: target path, use {i} to represent the index of the source path,</span>
 <span class="sd">        or {basename} to represent the basename of the source path</span>
 <span class="sd">        :param copy: use copy instead of link</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">paths</span> <span class="o">=</span> <span class="n">expand_globs</span><span class="p">(</span><span class="n">sources</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">paths</span><span class="p">):</span>
             <span class="n">target_path</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
@@ -480,14 +480,14 @@ document.write(`
             <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
                     <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">target_path</span><span class="p">)</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Copy directory </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">target_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Copy directory </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">target_path</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">target_path</span><span class="p">)</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Copy file </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">target_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Copy file </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">target_path</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">target_path</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Link </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">target_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Link </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">target_path</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="BatchTool.gen_batches"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.batch.html#ai2_kit.tool.batch.BatchTool.gen_batches">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">gen_batches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">work_dirs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -497,10 +497,10 @@ document.write(`
                     <span class="n">header_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">suppress_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                     <span class="n">checkpoint</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                    <span class="n">checkpoint_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;done.ckpt&#39;</span><span class="p">,</span>
+                    <span class="n">checkpoint_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'done.ckpt'</span><span class="p">,</span>
                     <span class="n">rel_path</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate batch scripts for each work directory.</span>
 
 <span class="sd">        This command will apply `cmd` to each work directory and generate batch scripts according to `concurrency`.</span>
@@ -515,16 +515,16 @@ document.write(`
 <span class="sd">        :param checkpoint: if True, will add checkpoint to each batch script, and skip the work directory if checkpoint exists</span>
 <span class="sd">        :param checkpoint_file: checkpoint file name</span>
 <span class="sd">        :param rel_path: if True, will use relative path in batch script</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">_work_dirs</span> <span class="o">=</span> <span class="n">expand_globs</span><span class="p">(</span><span class="n">work_dirs</span><span class="p">)</span>
         <span class="c1"># read cmd</span>
         <span class="k">if</span> <span class="n">cmd</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
         <span class="c1"># read template</span>
-        <span class="n">header</span> <span class="o">=</span> <span class="s1">&#39;#!/bin/bash&#39;</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="s1">'#!/bin/bash'</span>
         <span class="k">if</span> <span class="n">header_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">header_file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">header_file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">header</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
         <span class="c1"># generate batch scripts</span>
@@ -534,44 +534,44 @@ document.write(`
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">job_group</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">list_split</span><span class="p">(</span><span class="n">_work_dirs</span><span class="p">,</span> <span class="n">concurrency</span><span class="p">)):</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="p">[</span> <span class="n">header</span> <span class="p">]</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">suppress_error</span><span class="p">:</span>
-                <span class="n">batch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;set -e&#39;</span><span class="p">)</span>
+                <span class="n">batch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'set -e'</span><span class="p">)</span>
 
-            <span class="n">batch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;for work_dir in </span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">batch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"for work_dir in </span><span class="se">\\</span><span class="s2">"</span><span class="p">)</span>
             <span class="c1"># generate batch script</span>
             <span class="k">for</span> <span class="n">work_dir</span> <span class="ow">in</span> <span class="n">job_group</span><span class="p">:</span>
-                <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">work_dir</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">work_dir</span><span class="si">}</span><span class="s1"> is not a directory&#39;</span>
+                <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">work_dir</span><span class="p">),</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">work_dir</span><span class="si">}</span><span class="s1"> is not a directory'</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">rel_path</span><span class="p">:</span>
                     <span class="n">work_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span>
-                <span class="n">batch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span><span class="si">}</span><span class="s1"> </span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">batch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  </span><span class="si">{</span><span class="n">shlex</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span><span class="si">}</span><span class="s1"> </span><span class="se">\\</span><span class="s1">'</span><span class="p">)</span>
             <span class="n">batch</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
-                <span class="sa">f</span><span class="s1">&#39;  ; do&#39;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;    pushd $work_dir&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'  ; do'</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'    pushd $work_dir'</span><span class="p">,</span>
             <span class="p">])</span>
             <span class="k">if</span> <span class="n">checkpoint</span><span class="p">:</span>
                 <span class="n">batch</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
-                    <span class="sa">f</span><span class="s1">&#39;    if [ -f </span><span class="si">{</span><span class="n">checkpoint_file</span><span class="si">}</span><span class="s1"> ]; then&#39;</span><span class="p">,</span>
-                    <span class="sa">f</span><span class="s1">&#39;      echo &quot;hit checkpoint, skip&quot;&#39;</span><span class="p">,</span>
-                    <span class="sa">f</span><span class="s1">&#39;      continue&#39;</span><span class="p">,</span>
-                    <span class="sa">f</span><span class="s1">&#39;    fi&#39;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">'    if [ -f </span><span class="si">{</span><span class="n">checkpoint_file</span><span class="si">}</span><span class="s1"> ]; then'</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">'      echo "hit checkpoint, skip"'</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">'      continue'</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">'    fi'</span><span class="p">,</span>
                 <span class="p">])</span>
             <span class="n">batch</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
-                <span class="sa">f</span><span class="s1">&#39;    </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;    touch </span><span class="si">{</span><span class="n">checkpoint_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;    popd&#39;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;  done&#39;</span>
+                <span class="sa">f</span><span class="s1">'    </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'    touch </span><span class="si">{</span><span class="n">checkpoint_file</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'    popd'</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'  done'</span>
             <span class="p">])</span>
 
             <span class="c1"># write batch script</span>
             <span class="n">out_path</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
             <span class="n">ensure_dir</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">batch</span><span class="p">))</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Write batch script to </span><span class="si">{</span><span class="n">out_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">batch</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Write batch script to </span><span class="si">{</span><span class="n">out_path</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># suppress fire help message</span>
-        <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
+        <span class="k">return</span> <span class="s1">''</span></div>
 
 </pre></div>
 

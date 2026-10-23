@@ -535,21 +535,21 @@ For new projects and future updates, please use <a class="reference external" hr
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.executor</span><span class="w"> </span><span class="kn">import</span> <span class="n">HpcExecutor</span>
 
 <span class="n">executor</span> <span class="o">=</span> <span class="n">HpcExecutor</span><span class="o">.</span><span class="n">from_config</span><span class="p">({</span>
-    <span class="s1">&#39;ssh&#39;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># Specify ssh connection information, if omitted, local execution is used</span>
-        <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;user01@hpc-login01&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;gateway&#39;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># If you need to connect through a jump server, you can specify this configuration (optional)</span>
-          <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;user01@jump-host&#39;</span><span class="p">,</span>  
+    <span class="s1">'ssh'</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># Specify ssh connection information, if omitted, local execution is used</span>
+        <span class="s1">'host'</span><span class="p">:</span> <span class="s1">'user01@hpc-login01'</span><span class="p">,</span>
+        <span class="s1">'gateway'</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># If you need to connect through a jump server, you can specify this configuration (optional)</span>
+          <span class="s1">'host'</span><span class="p">:</span> <span class="s1">'user01@jump-host'</span><span class="p">,</span>  
         <span class="p">}</span>
     <span class="p">},</span>
-    <span class="s1">&#39;queue_system&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;slurm&#39;</span><span class="p">:</span> <span class="p">{}</span>  <span class="c1"># Specify the job system as Slurm</span>
+    <span class="s1">'queue_system'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'slurm'</span><span class="p">:</span> <span class="p">{}</span>  <span class="c1"># Specify the job system as Slurm</span>
     <span class="p">},</span>
-    <span class="s1">&#39;work_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/user01/ai2-kit/work_dir&#39;</span><span class="p">,</span>  <span class="c1"># Specify the working directory</span>
-    <span class="s1">&#39;python_cmd&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/user01/conda/env/py39/bin/python&#39;</span><span class="p">,</span>  <span class="c1"># Specify the Python interpreter</span>
-<span class="p">},</span> <span class="s1">&#39;cheng-lab&#39;</span><span class="p">)</span>  <span class="c1"># Specify the cluster name (optional)</span>
+    <span class="s1">'work_dir'</span><span class="p">:</span> <span class="s1">'/home/user01/ai2-kit/work_dir'</span><span class="p">,</span>  <span class="c1"># Specify the working directory</span>
+    <span class="s1">'python_cmd'</span><span class="p">:</span> <span class="s1">'/home/user01/conda/env/py39/bin/python'</span><span class="p">,</span>  <span class="c1"># Specify the Python interpreter</span>
+<span class="p">},</span> <span class="s1">'cheng-lab'</span><span class="p">)</span>  <span class="c1"># Specify the cluster name (optional)</span>
 
 <span class="n">executor</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>  <span class="c1"># Initialize the executor</span>
-<span class="n">executor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;echo &quot;hello world&quot;&#39;</span><span class="p">)</span>  <span class="c1"># Execute command on login node</span>
+<span class="n">executor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">'echo "hello world"'</span><span class="p">)</span>  <span class="c1"># Execute command on login node</span>
 </pre></div>
 </div>
 <p>The above example completes the following tasks:</p>
@@ -597,7 +597,7 @@ For new projects and future updates, please use <a class="reference external" hr
 <section id="submit-jobs">
 <h3>Submit jobs<a class="headerlink" href="#submit-jobs" title="Permalink to this heading">#</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> provides the <code class="docutils literal notranslate"><span class="pre">submit</span></code> interface for submitting jobs to HPC clusters. The following is an example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">script</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">script</span> <span class="o">=</span> <span class="s1">'''</span><span class="se">\</span>
 <span class="s1">#! /bin/bash</span>
 <span class="s1">#SBATCH --job-name=demo</span>
 <span class="s1">#SBATCH -N 1</span>
@@ -605,8 +605,8 @@ For new projects and future updates, please use <a class="reference external" hr
 <span class="s1">#SBATCH --partition=cpu-small</span>
 <span class="s1">#SBATCH --mem=1G</span>
 
-<span class="s1">echo &quot;hello world&quot; &gt; output.txt</span>
-<span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">echo "hello world" &gt; output.txt</span>
+<span class="s1">'''</span>
 
 <span class="n">job</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>  <span class="c1"># submit job</span>
 </pre></div>
@@ -614,24 +614,24 @@ For new projects and future updates, please use <a class="reference external" hr
 <p>Except for the method of directly writing scripts mentioned above, you can also generate scripts through the tool class provided by <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code>, as shown below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.script</span><span class="w"> </span><span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashTemplate</span>
 
-<span class="n">header</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="n">header</span> <span class="o">=</span> <span class="s1">'''</span><span class="se">\</span>
 <span class="s1">#SBATCH --job-name=demo</span>
 <span class="s1">#SBATCH -N 1</span>
 <span class="s1">#SBATCH --ntasks-per-node=4</span>
 <span class="s1">#SBATCH --partition=cpu-small</span>
 <span class="s1">#SBATCH --mem=1G</span>
-<span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">'''</span>
 
 <span class="n">script</span> <span class="o">=</span> <span class="n">BashScript</span><span class="p">(</span>
     <span class="n">template</span><span class="o">=</span><span class="n">BashTemplate</span><span class="p">(</span>
         <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">steps</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">BashStep</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="s1">&#39;echo &quot;hello world&quot;&#39;</span><span class="p">),</span>
+        <span class="n">BashStep</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="s1">'echo "hello world"'</span><span class="p">),</span>
     <span class="p">]</span>
 <span class="p">)</span>
 
-<span class="n">job</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">script</span><span class="o">.</span><span class="n">render</span><span class="p">(),</span> <span class="n">cwd</span><span class="o">=</span><span class="s1">&#39;/path/to/cwd&#39;</span><span class="p">)</span> 
+<span class="n">job</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">script</span><span class="o">.</span><span class="n">render</span><span class="p">(),</span> <span class="n">cwd</span><span class="o">=</span><span class="s1">'/path/to/cwd'</span><span class="p">)</span> 
 </pre></div>
 </div>
 <p>Besides, you can specify additional parameters when submitting jobs to meet different needs, such as setting the execution directory and the checkpoint file for error recovery.</p>

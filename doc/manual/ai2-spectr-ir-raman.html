@@ -540,7 +540,7 @@ cat<span class="w"> </span><span class="s">&lt;&lt; EOF &gt; slurm-cp2k.template
 
 <span class="c1"># generate CP2K labeling tasks</span>
 <span class="c1"># note that the tag decide the output file name, </span>
-<span class="c1"># for example, --tag dipole&#39;s output file will be dipole.out</span>
+<span class="c1"># for example, --tag dipole's output file will be dipole.out</span>
 ai2-kit<span class="w"> </span>feat<span class="w"> </span>spectr<span class="w"> </span>viber<span class="w"> </span>cp2k-labeling<span class="w"> </span><span class="se">\</span>
 -<span class="w"> </span>add_system<span class="w"> </span>Al3O2.xyz<span class="w"> </span><span class="se">\</span>
 -<span class="w"> </span>add_cp2k_input<span class="w"> </span>cp2k-dipole.inp<span class="w"> </span>--tag<span class="w"> </span>dipole<span class="w"> </span><span class="se">\</span>
@@ -548,9 +548,9 @@ ai2-kit<span class="w"> </span>feat<span class="w"> </span>spectr<span class="w"
 -<span class="w"> </span>add_cp2k_input<span class="w"> </span>cp2k-polar-y.inp<span class="w"> </span>--tag<span class="w"> </span>polar-y<span class="w"> </span><span class="se">\</span>
 -<span class="w"> </span>add_cp2k_input<span class="w"> </span>cp2k-polar-z.inp<span class="w"> </span>--tag<span class="w"> </span>polar-z<span class="w"> </span><span class="se">\</span>
 -<span class="w"> </span>make_tasks<span class="w"> </span>./run-01<span class="w"> </span><span class="se">\</span>
--<span class="w"> </span>make_scripts<span class="w"> </span><span class="s2">&quot;./run-01/cpk2-batch-{i:02d}.sub&quot;</span><span class="w"> </span><span class="se">\</span>
+-<span class="w"> </span>make_scripts<span class="w"> </span><span class="s2">"./run-01/cpk2-batch-{i:02d}.sub"</span><span class="w"> </span><span class="se">\</span>
 --concurrency<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="se">\</span>
---cp2k_cmd<span class="w"> </span><span class="s2">&quot;mpirun cp2k.popt&quot;</span><span class="w"> </span><span class="se">\</span>
+--cp2k_cmd<span class="w"> </span><span class="s2">"mpirun cp2k.popt"</span><span class="w"> </span><span class="se">\</span>
 --template<span class="w"> </span>slurm-cp2k.template<span class="w"> </span><span class="se">\</span>
 -<span class="w"> </span><span class="k">done</span>
 
@@ -561,7 +561,7 @@ find<span class="w"> </span>./run-01<span class="w"> </span>
 ai2-kit<span class="w"> </span>tool<span class="w"> </span>hpc<span class="w"> </span>slurm<span class="w"> </span>submit<span class="w"> </span>./run-01/cpk2-batch-*.sub<span class="w"> </span>-<span class="w"> </span><span class="nb">wait</span>
 
 <span class="c1"># generate dataset</span>
-ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>run-01/*<span class="w"> </span>--fmt<span class="w"> </span>cp2k/viber<span class="w"> </span>--lumped_dict<span class="w"> </span><span class="s1">&#39;{O:4}&#39;</span><span class="w"> </span>--output_file<span class="w"> </span>dipole.out<span class="w"> </span><span class="se">\</span>
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span>run-01/*<span class="w"> </span>--fmt<span class="w"> </span>cp2k/viber<span class="w"> </span>--lumped_dict<span class="w"> </span><span class="s1">'{O:4}'</span><span class="w"> </span>--output_file<span class="w"> </span>dipole.out<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--wannier<span class="w"> </span>wannier.xyz<span class="w"> </span>--wannier_x<span class="w"> </span>wannier_x.xyz<span class="w"> </span>--wannier_y<span class="w"> </span>wannier_y.xyz<span class="w"> </span>--wannier_z<span class="w"> </span>wannier_z.xyz<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-<span class="w"> </span>write<span class="w"> </span>./al2o3-dataset
 </pre></div>

@@ -463,55 +463,55 @@ document.write(`
 <div class="viewcode-block" id="AnywareConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.AnywareConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AnywareConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 
     <span class="n">system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Artifact keys to the system</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">template_files</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Templates files that will generate for each explore tasks,</span>
 <span class="sd">    You can use $$VAR_NAME to reference the variables defined in product_vars and broadcast_vars.</span>
 
 <span class="sd">    Besides, the following build-in variables are also available:</span>
 <span class="sd">    - SYSTEM_FILE: the path of the system file</span>
-<span class="sd">    - DP_MODELS: the path of the deep potential models, in the format of &#39;1.pb 2.pb 3.pb 4.pb&#39;</span>
+<span class="sd">    - DP_MODELS: the path of the deep potential models, in the format of '1.pb 2.pb 3.pb 4.pb'</span>
 
 <span class="sd">    You can use literal string to define the template file,</span>
 <span class="sd">    or use !load_text to load the content from a file.</span>
 
-<span class="sd">    For example, if you define a template file named &#39;cp2k.inp&#39; with the following content:</span>
+<span class="sd">    For example, if you define a template file named 'cp2k.inp' with the following content:</span>
 <span class="sd">        cp2k-warmup.inp: |</span>
 <span class="sd">          &amp;GLOBAL</span>
 <span class="sd">          ...</span>
 <span class="sd">          &amp;END GLOBAL</span>
 <span class="sd">        cp2k.inp: !load_text cp2k.inp</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">product_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Define template variables by Cartesian product</span>
 <span class="sd">    The variable can be referenced in the template file with the following format:</span>
 <span class="sd">    If there are too many variables, it will generate a large number of tasks,</span>
 <span class="sd">    in this case, you can use broadcast_vars to reduce the number of tasks.</span>
 
 <span class="sd">    $$VAR_NAME</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">broadcast_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Define template variables by broadcast (broadcast as in numpy).</span>
-<span class="sd">    It&#39;s the same as product_vars, except that it will broadcast the variable to all other variables.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    It's the same as product_vars, except that it will broadcast the variable to all other variables.</span>
+<span class="sd">    """</span>
 
     <span class="n">system_file_name</span><span class="p">:</span> <span class="nb">str</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The name of the system file you want to generate,</span>
-<span class="sd">    for example, &#39;system.xyz&#39;, &#39;coord_n_cell.inc&#39;, etc</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    for example, 'system.xyz', 'coord_n_cell.inc', etc</span>
+<span class="sd">    """</span>
 
     <span class="n">system_file_format</span><span class="p">:</span> <span class="nb">str</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The format of the system file you want to generate,</span>
 <span class="sd">    for example, `lammps-data`, `cp2k-inc`,  etc</span>
 
@@ -520,18 +520,18 @@ document.write(`
 
 <span class="sd">    Custom formats:</span>
 <span class="sd">    - cp2k-inc: coord &amp; cell in the format of CP2K include file, can be used in CP2K input file via `@include coord_n_cell.inc`</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">submit_script</span><span class="p">:</span> <span class="nb">str</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A bash script that will be executed in each task directory to submit the task.</span>
 <span class="sd">    For example,</span>
 
 <span class="sd">    mpirun cp2k.popt -i cp2k.inp &amp;&gt; cp2k.out</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">post_process_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A python function that will be executed after the task is finished.</span>
 <span class="sd">    You may use this function to post-process the results.</span>
 
@@ -542,24 +542,24 @@ document.write(`
 <span class="sd">        def post_process_fn(task_dirs):</span>
 <span class="sd">            import glob</span>
 <span class="sd">            for task_dir in task_dirs:</span>
-<span class="sd">                files = glob.glob(os.path.join(task_dir, &#39;*.out&#39;))  # file to merge</span>
-<span class="sd">                with open(os.path.join(task_dir, &#39;merged.out&#39;), &#39;w&#39;) as fp:</span>
+<span class="sd">                files = glob.glob(os.path.join(task_dir, '*.out'))  # file to merge</span>
+<span class="sd">                with open(os.path.join(task_dir, 'merged.out'), 'w') as fp:</span>
 <span class="sd">                    for file in files:</span>
-<span class="sd">                        with open(file, &#39;r&#39;) as f:</span>
+<span class="sd">                        with open(file, 'r') as f:</span>
 <span class="sd">                            lines = f.readlines()</span>
 <span class="sd">                            if len(lines) &gt; 0:</span>
 <span class="sd">                                fp.write(lines[-1])</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">delimiter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;$$&#39;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="n">delimiter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'$$'</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    delimiter for template</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    shuffle the combination of system_files, product_vars and broadcast_vars</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
+<span class="sd">    """</span></div>
 
 <div class="viewcode-block" id="AnywareInput"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.AnywareInput">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AnywareInput</span><span class="p">:</span>
@@ -591,7 +591,7 @@ document.write(`
         <span class="n">data_files</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">new_system_files</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">data_files</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">system_files</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;no data files found&#39;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'no data files found'</span>
 
     <span class="n">task_artifacts</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">make_anyware_task_dirs</span><span class="p">)(</span>
         <span class="n">work_dir</span><span class="o">=</span><span class="n">work_dir</span><span class="p">,</span>
@@ -610,7 +610,7 @@ document.write(`
     <span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">task_artifact</span> <span class="ow">in</span> <span class="n">task_artifacts</span><span class="p">:</span>
         <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BashStep</span><span class="p">(</span>
-            <span class="n">cwd</span><span class="o">=</span><span class="n">task_artifact</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">cmd</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">submit_script</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="s1">&#39;submit&#39;</span><span class="p">)</span>
+            <span class="n">cwd</span><span class="o">=</span><span class="n">task_artifact</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">cmd</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">submit_script</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="s1">'submit'</span><span class="p">)</span>
         <span class="p">)</span>
 
     <span class="c1"># # submit jobs by the number of concurrency</span>
@@ -639,7 +639,7 @@ document.write(`
 <div class="viewcode-block" id="run_post_process_fn"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.run_post_process_fn">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">run_post_process_fn</span><span class="p">(</span><span class="n">post_process_fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">task_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
     <span class="n">_locals</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">exec</span><span class="p">(</span><span class="n">post_process_fn</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">_locals</span><span class="p">)</span>
-    <span class="n">_locals</span><span class="p">[</span><span class="s1">&#39;post_process_fn&#39;</span><span class="p">](</span><span class="n">task_dirs</span><span class="p">)</span></div>
+    <span class="n">_locals</span><span class="p">[</span><span class="s1">'post_process_fn'</span><span class="p">](</span><span class="n">task_dirs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="make_anyware_task_dirs"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.anyware.html#ai2_kit.domain.anyware.make_anyware_task_dirs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">make_anyware_task_dirs</span><span class="p">(</span><span class="n">work_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -659,19 +659,19 @@ document.write(`
         <span class="n">delimiter</span> <span class="o">=</span> <span class="n">template_delimiter</span>
 
     <span class="c1"># handle data files</span>
-    <span class="n">systems_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;systems&#39;</span><span class="p">)</span>
+    <span class="n">systems_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'systems'</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">systems_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">atoms_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">atoms_list</span> <span class="o">=</span> <span class="n">artifacts_to_ase_atoms_v2</span><span class="p">(</span><span class="n">data_files</span><span class="p">)</span>
 
     <span class="n">system_artifacts</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">artifact</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">atoms_list</span><span class="p">):</span>
-        <span class="n">ancestor</span> <span class="o">=</span> <span class="n">artifact</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;ancestor&#39;</span><span class="p">]</span>
-        <span class="n">data_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">systems_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ancestor</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">06d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">system_file_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">system_file_format</span> <span class="o">==</span> <span class="s1">&#39;cp2k-inc&#39;</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">ancestor</span> <span class="o">=</span> <span class="n">artifact</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'ancestor'</span><span class="p">]</span>
+        <span class="n">data_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">systems_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">ancestor</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">06d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">system_file_name</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">system_file_format</span> <span class="o">==</span> <span class="s1">'cp2k-inc'</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                 <span class="n">dump_coord_n_cell</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">system_file_format</span> <span class="o">==</span> <span class="s1">&#39;lammps-data&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">system_file_format</span> <span class="o">==</span> <span class="s1">'lammps-data'</span><span class="p">:</span>
             <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">system_file_format</span><span class="p">,</span> <span class="n">specorder</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">system_file_format</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
@@ -680,7 +680,7 @@ document.write(`
         <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">system_artifacts</span><span class="p">)</span>
 
     <span class="c1"># handle task dirs</span>
-    <span class="n">combination_fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SYSTEM_FILE&#39;</span><span class="p">]</span>
+    <span class="n">combination_fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'SYSTEM_FILE'</span><span class="p">]</span>
     <span class="n">combination_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">system_artifacts</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">product_vars</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -698,26 +698,26 @@ document.write(`
             <span class="n">combination</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_vars</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">_vars</span><span class="p">)])</span>
 
     <span class="n">task_artifacts</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">tasks_base_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;tasks&#39;</span><span class="p">)</span>
+    <span class="n">tasks_base_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'tasks'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">combination</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">combinations</span><span class="p">):</span>
-        <span class="n">task_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tasks_base_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">06d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">task_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tasks_base_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">06d</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">template_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">combination_fields</span><span class="p">,</span> <span class="n">combination</span><span class="p">))</span>
 
         <span class="c1"># link system_file to task_dir</span>
-        <span class="n">system_artifact</span><span class="p">:</span> <span class="n">Artifact</span> <span class="o">=</span> <span class="n">template_vars</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;SYSTEM_FILE&#39;</span><span class="p">)</span>
+        <span class="n">system_artifact</span><span class="p">:</span> <span class="n">Artifact</span> <span class="o">=</span> <span class="n">template_vars</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'SYSTEM_FILE'</span><span class="p">)</span>
         <span class="n">system_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="n">system_file_name</span><span class="p">)</span>
         <span class="c1"># the reason of not using os.symlink is that it will raise an error if the link already exists</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">get_ln_cmd</span><span class="p">(</span><span class="n">system_artifact</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">system_file</span><span class="p">))</span>
-        <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SYSTEM_FILE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">system_file_name</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s1">'SYSTEM_FILE'</span><span class="p">]</span> <span class="o">=</span> <span class="n">system_file_name</span>
         <span class="c1"># dp models variables</span>
         <span class="n">dp_vars</span> <span class="o">=</span> <span class="n">_get_dp_models_variables</span><span class="p">(</span><span class="n">dp_models</span><span class="p">)</span>
         <span class="c1"># generate template files</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">template_files</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">template_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-            <span class="n">dump_text</span><span class="p">(</span><span class="n">_Template</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="o">**</span><span class="n">template_vars</span><span class="p">,</span> <span class="o">**</span><span class="n">dp_vars</span><span class="p">),</span> <span class="n">template_file_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+            <span class="n">dump_text</span><span class="p">(</span><span class="n">_Template</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="o">**</span><span class="n">template_vars</span><span class="p">,</span> <span class="o">**</span><span class="n">dp_vars</span><span class="p">),</span> <span class="n">template_file_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">)</span>
         <span class="n">task_artifacts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Artifact</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">task_dir</span><span class="p">,</span>
-                                       <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="o">**</span><span class="n">system_artifact</span><span class="o">.</span><span class="n">attrs</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="n">system_artifact</span><span class="o">.</span><span class="n">url</span><span class="p">},</span>
+                                       <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="o">**</span><span class="n">system_artifact</span><span class="o">.</span><span class="n">attrs</span><span class="p">,</span> <span class="s1">'source'</span><span class="p">:</span> <span class="n">system_artifact</span><span class="o">.</span><span class="n">url</span><span class="p">},</span>
                                        <span class="nb">format</span><span class="o">=</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">ANYWARE_OUTPUT_DIR</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">task_artifacts</span></div>
 </pre></div>

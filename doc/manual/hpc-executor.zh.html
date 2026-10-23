@@ -535,21 +535,21 @@ document.write(`
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.executor</span><span class="w"> </span><span class="kn">import</span> <span class="n">HpcExecutor</span>
 
 <span class="n">executor</span> <span class="o">=</span> <span class="n">HpcExecutor</span><span class="o">.</span><span class="n">from_config</span><span class="p">({</span>
-    <span class="s1">&#39;ssh&#39;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># 指定 ssh 连接信息，如果缺省则使用本地执行</span>
-        <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;user01@hpc-login01&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;gateway&#39;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># 如果需要通过跳板机连接,可指定此配置 (可选) </span>
-          <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;user01@jump-host&#39;</span><span class="p">,</span>  
+    <span class="s1">'ssh'</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># 指定 ssh 连接信息，如果缺省则使用本地执行</span>
+        <span class="s1">'host'</span><span class="p">:</span> <span class="s1">'user01@hpc-login01'</span><span class="p">,</span>
+        <span class="s1">'gateway'</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># 如果需要通过跳板机连接,可指定此配置 (可选) </span>
+          <span class="s1">'host'</span><span class="p">:</span> <span class="s1">'user01@jump-host'</span><span class="p">,</span>  
         <span class="p">}</span>
     <span class="p">},</span>
-    <span class="s1">&#39;queue_system&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;slurm&#39;</span><span class="p">:</span> <span class="p">{}</span>  <span class="c1"># 指定作业系统为 Slurm </span>
+    <span class="s1">'queue_system'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'slurm'</span><span class="p">:</span> <span class="p">{}</span>  <span class="c1"># 指定作业系统为 Slurm </span>
     <span class="p">},</span>
-    <span class="s1">&#39;work_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/user01/ai2-kit/work_dir&#39;</span><span class="p">,</span>  <span class="c1"># 指定工作目录</span>
-    <span class="s1">&#39;python_cmd&#39;</span><span class="p">:</span> <span class="s1">&#39;/home/user01/conda/env/py39/bin/python&#39;</span><span class="p">,</span>  <span class="c1"># 指定 Python 解释器</span>
-<span class="p">},</span> <span class="s1">&#39;cheng-lab&#39;</span><span class="p">)</span>  <span class="c1"># 指定集群名称 （可选）</span>
+    <span class="s1">'work_dir'</span><span class="p">:</span> <span class="s1">'/home/user01/ai2-kit/work_dir'</span><span class="p">,</span>  <span class="c1"># 指定工作目录</span>
+    <span class="s1">'python_cmd'</span><span class="p">:</span> <span class="s1">'/home/user01/conda/env/py39/bin/python'</span><span class="p">,</span>  <span class="c1"># 指定 Python 解释器</span>
+<span class="p">},</span> <span class="s1">'cheng-lab'</span><span class="p">)</span>  <span class="c1"># 指定集群名称 （可选）</span>
 
 <span class="n">executor</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>  <span class="c1"># 初始化执行器</span>
-<span class="n">executor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;echo &quot;hello world&quot;&#39;</span><span class="p">)</span>  <span class="c1"># 在登录节点执行命令</span>
+<span class="n">executor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">'echo "hello world"'</span><span class="p">)</span>  <span class="c1"># 在登录节点执行命令</span>
 </pre></div>
 </div>
 <p>上述示例完成如下工作：</p>
@@ -597,7 +597,7 @@ document.write(`
 <section id="id4">
 <h3>提交作业<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">ai2-kit</span> <span class="pre">HPC</span> <span class="pre">executor</span></code> 提供了 <code class="docutils literal notranslate"><span class="pre">submit</span></code> 接口用于提交作业到 HPC 集群。 示例如下</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">script</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">script</span> <span class="o">=</span> <span class="s1">'''</span><span class="se">\</span>
 <span class="s1">#! /bin/bash</span>
 <span class="s1">#SBATCH --job-name=demo</span>
 <span class="s1">#SBATCH -N 1</span>
@@ -605,8 +605,8 @@ document.write(`
 <span class="s1">#SBATCH --partition=cpu-small</span>
 <span class="s1">#SBATCH --mem=1G</span>
 
-<span class="s1">echo &quot;hello world&quot; &gt; output.txt</span>
-<span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">echo "hello world" &gt; output.txt</span>
+<span class="s1">'''</span>
 
 <span class="n">job</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>  <span class="c1"># 提交作业</span>
 </pre></div>
@@ -614,24 +614,24 @@ document.write(`
 <p>除了上述直接编写脚本的方式外，也可以通过 <code class="docutils literal notranslate"><span class="pre">ai2-kit</span></code> 提供的工具类生成脚本，示例如下：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.core.script</span><span class="w"> </span><span class="kn">import</span> <span class="n">BashScript</span><span class="p">,</span> <span class="n">BashStep</span><span class="p">,</span> <span class="n">BashTemplate</span>
 
-<span class="n">header</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="n">header</span> <span class="o">=</span> <span class="s1">'''</span><span class="se">\</span>
 <span class="s1">#SBATCH --job-name=demo</span>
 <span class="s1">#SBATCH -N 1</span>
 <span class="s1">#SBATCH --ntasks-per-node=4</span>
 <span class="s1">#SBATCH --partition=cpu-small</span>
 <span class="s1">#SBATCH --mem=1G</span>
-<span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">'''</span>
 
 <span class="n">script</span> <span class="o">=</span> <span class="n">BashScript</span><span class="p">(</span>
     <span class="n">template</span><span class="o">=</span><span class="n">BashTemplate</span><span class="p">(</span>
         <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">steps</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">BashStep</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="s1">&#39;echo &quot;hello world&quot;&#39;</span><span class="p">),</span>
+        <span class="n">BashStep</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="s1">'echo "hello world"'</span><span class="p">),</span>
     <span class="p">]</span>
 <span class="p">)</span>
 
-<span class="n">job</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">script</span><span class="o">.</span><span class="n">render</span><span class="p">(),</span> <span class="n">cwd</span><span class="o">=</span><span class="s1">&#39;/path/to/cwd&#39;</span><span class="p">)</span>  <span class="c1"># 提交作业</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">script</span><span class="o">.</span><span class="n">render</span><span class="p">(),</span> <span class="n">cwd</span><span class="o">=</span><span class="s1">'/path/to/cwd'</span><span class="p">)</span>  <span class="c1"># 提交作业</span>
 </pre></div>
 </div>
 <p>同时，提交作业时可以指定额外的参数满足不同的需求，如设定执行目录和用于错误恢复的checkpoint文件。</p>

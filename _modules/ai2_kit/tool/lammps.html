@@ -438,28 +438,28 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
 <div class="viewcode-block" id="LammpsTool"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.lammps.html#ai2_kit.tool.lammps.LammpsTool">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">LammpsTool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A tool for LAMMPS related operations.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="LammpsTool.analysis_density_convergence"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.lammps.html#ai2_kit.tool.lammps.LammpsTool.analysis_density_convergence">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">analysis_density_convergence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">out_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                                     <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="mf">0.0005</span><span class="p">,</span> <span class="n">col_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;density&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+                                     <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="mf">0.0005</span><span class="p">,</span> <span class="n">col_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'density'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Select a frame by density from a property file.</span>
 
 <span class="sd">        :param in_file: input properties file, e.g. properties.out</span>
 <span class="sd">        :param out_file: output file to save the selected frame, if None, return the result</span>
-<span class="sd">        :param col_name: column name to select by, default is &#39;density&#39;</span>
+<span class="sd">        :param col_name: column name to select by, default is 'density'</span>
 <span class="sd">        :param debug: if True, return the average density for each frame</span>
 <span class="sd">        :param err: error threshold for convergence, default is 0.0005</span>
 
 <span class="sd">        :return: a dictionary with converged density and frames, or save to out_file</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># skip the leading &#39;#&#39;</span>
+<span class="sd">        """</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">in_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># skip the leading '#'</span>
             <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">col_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Column </span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s1"> not found in </span><span class="si">{</span><span class="n">in_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Column </span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s1"> not found in </span><span class="si">{</span><span class="n">in_file</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="n">density</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span>
 
         <span class="n">avg_density</span> <span class="o">=</span> <span class="n">density</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
@@ -467,23 +467,23 @@ document.write(`
         <span class="n">converged_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">density</span> <span class="o">-</span> <span class="n">converged_density</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">err</span><span class="p">]</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;converged_density&#39;</span><span class="p">:</span> <span class="n">converged_density</span><span class="p">,</span>
-            <span class="s1">&#39;converged_frames&#39;</span><span class="p">:</span> <span class="n">converged_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s1">'converged_density'</span><span class="p">:</span> <span class="n">converged_density</span><span class="p">,</span>
+            <span class="s1">'converged_frames'</span><span class="p">:</span> <span class="n">converged_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;avg_density&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_density</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">'time'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'time'</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">'avg_density'</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_density</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">out_file</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="LammpsTool.gen_mass_map"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.lammps.html#ai2_kit.tool.lammps.LammpsTool.gen_mass_map">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">gen_mass_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom_types</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">out_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate a mass map for LAMMPS.</span>
-<span class="sd">        :param atom_types: tuple of atom types, e.g. (&#39;C&#39;, &#39;H&#39;, &#39;O&#39;)</span>
+<span class="sd">        :param atom_types: tuple of atom types, e.g. ('C', 'H', 'O')</span>
 <span class="sd">        :return: LAMMPS mass map string</span>
 <span class="sd">        :param out_file: output file to save the mass map, if None, return the string</span>
 
@@ -493,18 +493,18 @@ document.write(`
 <span class="sd">        mass 2 1.008 # H</span>
 <span class="sd">        mass 3 15.999 # O</span>
 <span class="sd">        ```</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">mass_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># lookup mass from ase</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom_type</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">atom_types</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">atom_no</span> <span class="o">=</span> <span class="n">atomic_numbers</span><span class="p">[</span><span class="n">atom_type</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">atom_no</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown atom type: </span><span class="si">{</span><span class="n">atom_type</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Unknown atom type: </span><span class="si">{</span><span class="n">atom_type</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
             <span class="n">mass</span> <span class="o">=</span> <span class="n">atomic_masses</span><span class="p">[</span><span class="n">atom_no</span><span class="p">]</span>
-            <span class="n">mass_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;mass </span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">&gt;4</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">mass</span><span class="si">:</span><span class="s1">&gt;8</span><span class="si">}</span><span class="s1">  # </span><span class="si">{</span><span class="n">atom_type</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">mass_map</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mass_list</span><span class="p">)</span>
+            <span class="n">mass_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'mass </span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">&gt;4</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">mass</span><span class="si">:</span><span class="s1">&gt;8</span><span class="si">}</span><span class="s1">  # </span><span class="si">{</span><span class="n">atom_type</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">mass_map</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mass_list</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">out_file</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">mass_map</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">mass_map</span></div></div>
 </pre></div>

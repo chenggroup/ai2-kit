@@ -439,12 +439,12 @@ document.write(`
 
 
 <div class="viewcode-block" id="ArtifactDict"><a class="viewcode-back" href="../../../_api/ai2_kit.core.artifact.html#ai2_kit.core.artifact.ArtifactDict">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ArtifactDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A dict representation of Artifact.</span>
 <span class="sd">    Use this when you need to run a remote function call as pydantic model is not pickleable.</span>
 
 <span class="sd">    referrer is not included in this dict as it is not pickleable.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="n">executor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
@@ -470,10 +470,10 @@ document.write(`
            <span class="n">includes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
            <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
            <span class="nb">format</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create an Artifact instance. Use this instead of __init__ to avoid type error of pydantic</span>
 <span class="sd">        This method should be deprecated.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
                    <span class="n">executor</span><span class="o">=</span><span class="n">executor</span><span class="p">,</span>
                    <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span>
@@ -482,8 +482,8 @@ document.write(`
                    <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Artifact.to_dict"><a class="viewcode-back" href="../../../_api/ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact.to_dict">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArtifactDict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert to a dict representation.</span>
-<span class="sd">        Use this when you need to run a remote function call as pydantic model is not pickleable.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Convert to a dict representation.</span>
+<span class="sd">        Use this when you need to run a remote function call as pydantic model is not pickleable."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span> <span class="c1"># type: ignore</span></div>
 
 <div class="viewcode-block" id="Artifact.join"><a class="viewcode-back" href="../../../_api/ai2_kit.core.artifact.html#ai2_kit.core.artifact.Artifact.join">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">paths</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

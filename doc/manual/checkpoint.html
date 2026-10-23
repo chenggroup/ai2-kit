@@ -512,12 +512,12 @@ For new projects and future updates, please use <a class="reference external" hr
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
 
 <span class="c1"># enable the checkpoint mechanism by setting a checkpoint directory</span>
-<span class="n">set_checkpoint_dir</span><span class="p">(</span><span class="s2">&quot;./checkpoint&quot;</span><span class="p">)</span>
+<span class="n">set_checkpoint_dir</span><span class="p">(</span><span class="s2">"./checkpoint"</span><span class="p">)</span>
 
 <span class="c1"># instead of calling the time consuming step directly,</span>
 <span class="c1"># `a_time_consuming_step(10)`</span>
 <span class="c1"># You should apply the checkpoint to the time consuming step</span>
-<span class="n">apply_checkpoint</span><span class="p">(</span><span class="s1">&#39;time_consuming_step&#39;</span><span class="p">)(</span><span class="n">a_time_consuming_step</span><span class="p">)(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">apply_checkpoint</span><span class="p">(</span><span class="s1">'time_consuming_step'</span><span class="p">)(</span><span class="n">a_time_consuming_step</span><span class="p">)(</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="c1"># The first time you run this script, it will take 10 seconds to finish.</span>
 <span class="c1"># The second time you run this script, it will skip the time consuming step and finish immediately.</span>

@@ -462,15 +462,15 @@ document.write(`
 
 
 <div class="viewcode-block" id="ecn_analysis"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.aos_analysis.html#ai2_kit.algorithm.aos_analysis.ecn_analysis">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">ecn_analysis</span><span class="p">(</span><span class="n">input_traj</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">center</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ligand</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Calculate ECN (effective coordination number) and l_av (average bond length).</span>
 
 <span class="sd">    :param input_traj: path of input trajectory file</span>
 <span class="sd">    :param out_dir: path of output directory</span>
-<span class="sd">    :param center: central atoms, in the format of MDA atom selection string, e.g. &#39;name In&#39;</span>
-<span class="sd">    :param ligand: atoms that surround the central atoms, in the format of MDA atom selection string, e.g. &#39;name O&#39;</span>
+<span class="sd">    :param center: central atoms, in the format of MDA atom selection string, e.g. 'name In'</span>
+<span class="sd">    :param ligand: atoms that surround the central atoms, in the format of MDA atom selection string, e.g. 'name O'</span>
 <span class="sd">    :param cell: cell dimensions</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">universe</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">input_traj</span><span class="p">)</span>
     <span class="n">universe</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
@@ -490,12 +490,12 @@ document.write(`
 
     <span class="c1"># dump results</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;raw.txt&#39;</span><span class="p">),</span> <span class="n">results_arr</span><span class="p">,</span>
-               <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;    </span><span class="si">%d</span><span class="s1">        </span><span class="si">%.4f</span><span class="s1">   </span><span class="si">%.4f</span><span class="s1">&#39;</span><span class="p">,</span>
-               <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;   &#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;frame_index   l_av   ECN&#39;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;stats.txt&#39;</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;l_av = </span><span class="si">{</span><span class="n">avr_arr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-           <span class="sa">f</span><span class="s1">&#39;ECN = </span><span class="si">{</span><span class="n">avr_arr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]))</span></div>
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">'raw.txt'</span><span class="p">),</span> <span class="n">results_arr</span><span class="p">,</span>
+               <span class="n">fmt</span><span class="o">=</span><span class="s1">'    </span><span class="si">%d</span><span class="s1">        </span><span class="si">%.4f</span><span class="s1">   </span><span class="si">%.4f</span><span class="s1">'</span><span class="p">,</span>
+               <span class="n">delimiter</span><span class="o">=</span><span class="s1">'   '</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">'frame_index   l_av   ECN'</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">'stats.txt'</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">'l_av = </span><span class="si">{</span><span class="n">avr_arr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+           <span class="sa">f</span><span class="s1">'ECN = </span><span class="si">{</span><span class="n">avr_arr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">]))</span></div>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_count_shared_polyhedra_per_frame</span><span class="p">(</span><span class="n">frame_index</span><span class="p">,</span> <span class="n">reference_group</span><span class="p">,</span> <span class="n">configuration_group</span><span class="p">,</span> <span class="n">universe</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">,</span> <span class="n">coordination_num</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
@@ -523,17 +523,17 @@ document.write(`
 
 
 <div class="viewcode-block" id="count_shared_polyhedra"><a class="viewcode-back" href="../../../_api/ai2_kit.algorithm.aos_analysis.html#ai2_kit.algorithm.aos_analysis.count_shared_polyhedra">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">count_shared_polyhedra</span><span class="p">(</span><span class="n">input_traj</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">center</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ligand</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">coord_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Count the number of shared polyhedra in each frame of the trajectory.</span>
 
 <span class="sd">    :param input_traj: path of input trajectory file</span>
 <span class="sd">    :param out_dir: path of output directory</span>
-<span class="sd">    :param center: central atoms, in the format of MDA atom selection string, e.g. &#39;name In&#39;</span>
-<span class="sd">    :param ligand: atoms that surround the central atoms, in the format of MDA atom selection string, e.g. &#39;name O&#39;</span>
+<span class="sd">    :param center: central atoms, in the format of MDA atom selection string, e.g. 'name In'</span>
+<span class="sd">    :param ligand: atoms that surround the central atoms, in the format of MDA atom selection string, e.g. 'name O'</span>
 <span class="sd">    :param cell: cell dimensions</span>
 <span class="sd">    :param cutoff: cutoff distance</span>
 <span class="sd">    :param coord_num: coordination number</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">universe</span> <span class="o">=</span> <span class="n">mda</span><span class="o">.</span><span class="n">Universe</span><span class="p">(</span><span class="n">input_traj</span><span class="p">)</span>
     <span class="n">universe</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
     <span class="n">atomgroup</span> <span class="o">=</span> <span class="n">universe</span><span class="o">.</span><span class="n">atoms</span>
@@ -555,23 +555,23 @@ document.write(`
 
     <span class="c1"># dump results</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;raw.txt&#39;</span><span class="p">),</span> <span class="n">results_arr</span><span class="p">,</span>
-               <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;    </span><span class="si">%d</span><span class="s1">        </span><span class="si">%.4f</span><span class="s1">   </span><span class="si">%.4f</span><span class="s1">   </span><span class="si">%.4f</span><span class="s1">&#39;</span><span class="p">,</span>
-               <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;   &#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;frame_index   corner   edge   face&#39;</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">'raw.txt'</span><span class="p">),</span> <span class="n">results_arr</span><span class="p">,</span>
+               <span class="n">fmt</span><span class="o">=</span><span class="s1">'    </span><span class="si">%d</span><span class="s1">        </span><span class="si">%.4f</span><span class="s1">   </span><span class="si">%.4f</span><span class="s1">   </span><span class="si">%.4f</span><span class="s1">'</span><span class="p">,</span>
+               <span class="n">delimiter</span><span class="o">=</span><span class="s1">'   '</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">'frame_index   corner   edge   face'</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;stats.txt&#39;</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;Corner-share = </span><span class="si">{</span><span class="n">avg_arr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                            <span class="sa">f</span><span class="s1">&#39;Edge-share = </span><span class="si">{</span><span class="n">avg_arr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                            <span class="sa">f</span><span class="s1">&#39;Face-share = </span><span class="si">{</span><span class="n">avg_arr</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="p">]))</span></div>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">'stats.txt'</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">'Corner-share = </span><span class="si">{</span><span class="n">avg_arr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                            <span class="sa">f</span><span class="s1">'Edge-share = </span><span class="si">{</span><span class="n">avg_arr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                            <span class="sa">f</span><span class="s1">'Face-share = </span><span class="si">{</span><span class="n">avg_arr</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="p">]))</span></div>
 
 
 <span class="n">cli_entry</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;ecn-analysis&#39;</span><span class="p">:</span> <span class="n">ecn_analysis</span><span class="p">,</span>
-    <span class="s1">&#39;count-shared-polyhedra&#39;</span><span class="p">:</span> <span class="n">count_shared_polyhedra</span><span class="p">,</span>
+    <span class="s1">'ecn-analysis'</span><span class="p">:</span> <span class="n">ecn_analysis</span><span class="p">,</span>
+    <span class="s1">'count-shared-polyhedra'</span><span class="p">:</span> <span class="n">count_shared_polyhedra</span><span class="p">,</span>
 <span class="p">}</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
     <span class="n">fire</span><span class="o">.</span><span class="n">Fire</span><span class="p">(</span><span class="n">cli_entry</span><span class="p">)</span>
 </pre></div>
 

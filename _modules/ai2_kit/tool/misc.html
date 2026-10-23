@@ -435,7 +435,7 @@ document.write(`
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <div class="viewcode-block" id="format_cp2k_inp"><a class="viewcode-back" href="../../../_api/ai2_kit.tool.misc.html#ai2_kit.tool.misc.format_cp2k_inp">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">format_cp2k_inp</span><span class="p">(</span><span class="n">indent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    cp2k uses `&amp;keyword` to start a block, and `&amp;end` to end a block, for example,</span>
 <span class="sd">    &amp;block1 xxx</span>
 <span class="sd">      clause 1</span>
@@ -449,23 +449,23 @@ document.write(`
 <span class="sd">    1. remove leding and trailing whitespaces</span>
 <span class="sd">    2. autoindent the file</span>
 <span class="sd">    3. print the file to stdout</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">indent_level</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
-        <span class="k">assert</span> <span class="n">indent_level</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;indent level should not be negative&#39;</span>
+        <span class="k">assert</span> <span class="n">indent_level</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'indent level should not be negative'</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="n">line_low</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">line_low</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&amp;end&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">line_low</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'&amp;end'</span><span class="p">):</span>
             <span class="n">indent_level</span> <span class="o">-=</span> <span class="n">indent</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="n">indent_level</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">' '</span> <span class="o">*</span> <span class="n">indent_level</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="n">indent_level</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">line_low</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&amp;&#39;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">' '</span> <span class="o">*</span> <span class="n">indent_level</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">line_low</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'&amp;'</span><span class="p">):</span>
                 <span class="n">indent_level</span> <span class="o">+=</span> <span class="n">indent</span></div>
 
 <span class="n">cmd_entry</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;format_cp2k_inp&#39;</span><span class="p">:</span> <span class="n">format_cp2k_inp</span><span class="p">,</span>
+    <span class="s1">'format_cp2k_inp'</span><span class="p">:</span> <span class="n">format_cp2k_inp</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 

@@ -536,9 +536,9 @@ document.write(`
 To support multiple process we need to have a dedicated background process to read/write checkpoint,
 which will require message queue (e.g. nanomsg or nng) to implement it.</p>
 <p>Example:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">set_checkpoint_file</span><span class="p">(</span><span class="s1">&#39;/tmp/test.ckpt&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">set_checkpoint_file</span><span class="p">(</span><span class="s1">'/tmp/test.ckpt'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">task_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">checkpoint</span><span class="p">(</span><span class="s1">&#39;task_1+2&#39;</span><span class="p">)(</span><span class="n">task_fn</span><span class="p">)(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">checkpoint</span><span class="p">(</span><span class="s1">'task_1+2'</span><span class="p">)(</span><span class="n">task_fn</span><span class="p">)(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>

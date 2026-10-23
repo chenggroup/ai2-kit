@@ -518,7 +518,7 @@ pattern syntax, which is the standard Python glob syntax with one extension.</p>
 <p>Besides the usual <code class="docutils literal notranslate"><span class="pre">*</span></code> and <code class="docutils literal notranslate"><span class="pre">?</span></code>, <code class="docutils literal notranslate"><span class="pre">**</span></code> matches any number of directories, so you don’t need to know
 how deep the files are nested:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># read every xyz file under workdir, no matter how deep it is</span>
-ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="s1">&#39;./workdir/**/*.xyz&#39;</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./merged.xyz
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="s1">'./workdir/**/*.xyz'</span><span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./merged.xyz
 </pre></div>
 </div>
 <blockquote>
@@ -535,7 +535,7 @@ literal path suffix that is joined to each match of the part before it, so you c
 and then navigate from it:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># match every type.raw under workdir, then go up to its parent directory,</span>
 <span class="c1"># which is the dataset directory to read</span>
-ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="s1">&#39;./workdir/**/type.raw/./..&#39;</span><span class="w"> </span>--fmt<span class="w"> </span>deepmd/npy<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./merged_dataset
+ai2-kit<span class="w"> </span>tool<span class="w"> </span>dpdata<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="s1">'./workdir/**/type.raw/./..'</span><span class="w"> </span>--fmt<span class="w"> </span>deepmd/npy<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./merged_dataset
 </pre></div>
 </div>
 <p>The suffix is not a pattern, it is taken literally, and the joined path is normalized afterwards.

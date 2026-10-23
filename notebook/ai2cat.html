@@ -553,20 +553,20 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.feat.catalysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">ui</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="n">AI4EC_DIR</span>              <span class="o">=</span> <span class="s1">&#39;/public/groups/ai4ec/data&#39;</span>
-<span class="n">CP2K_DATA</span>              <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/cp2k&#39;</span>
-<span class="n">CP2K_BATCH_TEMPLATE</span>    <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/slurm/ai2cat-cp2k.sbatch&#39;</span>
-<span class="n">LAMMPS_BATCH_TEMPLATE</span>  <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/slurm/ai2cat-lammps.sbatch&#39;</span>
-<span class="n">AI2KIT_EXECUTOR_CONFIG</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/ai2-kit/executor.yml&#39;</span>
+<span class="n">AI4EC_DIR</span>              <span class="o">=</span> <span class="s1">'/public/groups/ai4ec/data'</span>
+<span class="n">CP2K_DATA</span>              <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/cp2k'</span>
+<span class="n">CP2K_BATCH_TEMPLATE</span>    <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/slurm/ai2cat-cp2k.sbatch'</span>
+<span class="n">LAMMPS_BATCH_TEMPLATE</span>  <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/slurm/ai2cat-lammps.sbatch'</span>
+<span class="n">AI2KIT_EXECUTOR_CONFIG</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">AI4EC_DIR</span><span class="si">}</span><span class="s1">/ai2-kit/executor.yml'</span>
 
 <span class="n">CP2K_DEFAULTS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">basis_set_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CP2K_DATA</span><span class="p">,</span> <span class="s1">&#39;BASIS_MOLOPT&#39;</span><span class="p">),</span>
-    <span class="n">potential_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CP2K_DATA</span><span class="p">,</span> <span class="s1">&#39;GTH_POTENTIALS&#39;</span><span class="p">),</span>
-    <span class="n">parameter_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CP2K_DATA</span><span class="p">,</span> <span class="s1">&#39;dftd3.dat&#39;</span><span class="p">),</span>
+    <span class="n">basis_set_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CP2K_DATA</span><span class="p">,</span> <span class="s1">'BASIS_MOLOPT'</span><span class="p">),</span>
+    <span class="n">potential_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CP2K_DATA</span><span class="p">,</span> <span class="s1">'GTH_POTENTIALS'</span><span class="p">),</span>
+    <span class="n">parameter_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CP2K_DATA</span><span class="p">,</span> <span class="s1">'dftd3.dat'</span><span class="p">),</span>
 <span class="p">)</span>
 
 <span class="n">ui_helper</span> <span class="o">=</span> <span class="n">ui</span><span class="o">.</span><span class="n">get_the_ui_helper</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Current Directory Is: &quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Current Directory Is: "</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
@@ -575,28 +575,28 @@ document.write(`
 <span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
 <span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># 每次新打开 notebook 或者重启 kernel 后，该模块均需要执行一次</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;widget&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">&#39;gui&#39;</span><span class="p">,</span> <span class="s1">&#39;asyncio&#39;</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">'matplotlib'</span><span class="p">,</span> <span class="s1">'widget'</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">'gui'</span><span class="p">,</span> <span class="s1">'asyncio'</span><span class="p">)</span>
 <span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.feat</span><span class="w"> </span><span class="kn">import</span> <span class="n">catalysis</span> <span class="k">as</span> <span class="n">ai2cat</span>
 
 <span class="nn">File ~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/IPython/core/interactiveshell.py:2456,</span> in <span class="ni">InteractiveShell.run_line_magic</span><span class="nt">(self, magic_name, line, _stack_depth)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2454</span>     <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;local_ns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_local_scope</span><span class="p">(</span><span class="n">stack_depth</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2454</span>     <span class="n">kwargs</span><span class="p">[</span><span class="s1">'local_ns'</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_local_scope</span><span class="p">(</span><span class="n">stack_depth</span><span class="p">)</span>
 <span class="g g-Whitespace">   </span><span class="mi">2455</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">builtin_trap</span><span class="p">:</span>
 <span class="ne">-&gt; </span><span class="mi">2456</span>     <span class="n">result</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="g g-Whitespace">   </span><span class="mi">2458</span> <span class="c1"># The code below prevents the output from being displayed</span>
 <span class="g g-Whitespace">   </span><span class="mi">2459</span> <span class="c1"># when using magics with decorator @output_can_be_silenced</span>
-<span class="g g-Whitespace">   </span><span class="mi">2460</span> <span class="c1"># when the last Python token in the expression is a &#39;;&#39;.</span>
+<span class="g g-Whitespace">   </span><span class="mi">2460</span> <span class="c1"># when the last Python token in the expression is a ';'.</span>
 <span class="g g-Whitespace">   </span><span class="mi">2461</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">magic</span><span class="o">.</span><span class="n">MAGIC_OUTPUT_CAN_BE_SILENCED</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
 
 <span class="nn">File ~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/IPython/core/magics/pylab.py:99,</span> in <span class="ni">PylabMagics.matplotlib</span><span class="nt">(self, line)</span>
-<span class="g g-Whitespace">     </span><span class="mi">97</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Available matplotlib backends: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">backends_list</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">97</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">"Available matplotlib backends: </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">backends_list</span><span class="p">)</span>
 <span class="g g-Whitespace">     </span><span class="mi">98</span> <span class="k">else</span><span class="p">:</span>
 <span class="ne">---&gt; </span><span class="mi">99</span>     <span class="n">gui</span><span class="p">,</span> <span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">enable_matplotlib</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">gui</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">gui</span><span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">100</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_show_matplotlib_backend</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">gui</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
 
 <span class="nn">File ~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/IPython/core/interactiveshell.py:3645,</span> in <span class="ni">InteractiveShell.enable_matplotlib</span><span class="nt">(self, gui)</span>
-<span class="g g-Whitespace">   </span><span class="mi">3641</span>         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Cannot change to a different GUI toolkit: </span><span class="si">%s</span><span class="s1">.&#39;</span>
-<span class="g g-Whitespace">   </span><span class="mi">3642</span>                 <span class="s1">&#39; Using </span><span class="si">%s</span><span class="s1"> instead.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">gui</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pylab_gui_select</span><span class="p">))</span>
+<span class="g g-Whitespace">   </span><span class="mi">3641</span>         <span class="nb">print</span><span class="p">(</span><span class="s1">'Warning: Cannot change to a different GUI toolkit: </span><span class="si">%s</span><span class="s1">.'</span>
+<span class="g g-Whitespace">   </span><span class="mi">3642</span>                 <span class="s1">' Using </span><span class="si">%s</span><span class="s1"> instead.'</span> <span class="o">%</span> <span class="p">(</span><span class="n">gui</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pylab_gui_select</span><span class="p">))</span>
 <span class="g g-Whitespace">   </span><span class="mi">3643</span>         <span class="n">gui</span><span class="p">,</span> <span class="n">backend</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">find_gui_and_backend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pylab_gui_select</span><span class="p">)</span>
 <span class="ne">-&gt; </span><span class="mi">3645</span> <span class="n">pt</span><span class="o">.</span><span class="n">activate_matplotlib</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
 <span class="g g-Whitespace">   </span><span class="mi">3646</span> <span class="n">configure_inline_support</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
@@ -608,7 +608,7 @@ document.write(`
 <span class="g g-Whitespace">    </span><span class="mi">358</span> <span class="c1"># Matplotlib had a bug where even switch_backend could not force</span>
 <span class="g g-Whitespace">    </span><span class="mi">359</span> <span class="c1"># the rcParam to update. This needs to be set *before* the module</span>
 <span class="g g-Whitespace">    </span><span class="mi">360</span> <span class="c1"># magic of switch_backend().</span>
-<span class="ne">--&gt; </span><span class="mi">361</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;backend&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">backend</span>
+<span class="ne">--&gt; </span><span class="mi">361</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">'backend'</span><span class="p">]</span> <span class="o">=</span> <span class="n">backend</span>
 <span class="g g-Whitespace">    </span><span class="mi">363</span> <span class="c1"># Due to circular imports, pyplot may be only partially initialised</span>
 <span class="g g-Whitespace">    </span><span class="mi">364</span> <span class="c1"># when this function runs.</span>
 <span class="g g-Whitespace">    </span><span class="mi">365</span> <span class="c1"># So avoid needing matplotlib attribute-lookup to access pyplot.</span>
@@ -617,11 +617,11 @@ document.write(`
 <span class="nn">File ~/.cache/pypoetry/virtualenvs/ai2-kit-AqYCtgTs-py3.9/lib/python3.9/site-packages/matplotlib/__init__.py:741,</span> in <span class="ni">RcParams.__setitem__</span><span class="nt">(self, key, val)</span>
 <span class="g g-Whitespace">    </span><span class="mi">739</span>         <span class="n">cval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">[</span><span class="n">key</span><span class="p">](</span><span class="n">val</span><span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">740</span>     <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">ve</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">741</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ve</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+<span class="ne">--&gt; </span><span class="mi">741</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Key </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ve</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 <span class="g g-Whitespace">    </span><span class="mi">742</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">cval</span><span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">743</span> <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
 
-<span class="ne">ValueError</span>: Key backend: &#39;module://ipympl.backend_nbagg&#39; is not a valid value for backend; supported values are [&#39;gtk3agg&#39;, &#39;gtk3cairo&#39;, &#39;gtk4agg&#39;, &#39;gtk4cairo&#39;, &#39;macosx&#39;, &#39;nbagg&#39;, &#39;notebook&#39;, &#39;qtagg&#39;, &#39;qtcairo&#39;, &#39;qt5agg&#39;, &#39;qt5cairo&#39;, &#39;tkagg&#39;, &#39;tkcairo&#39;, &#39;webagg&#39;, &#39;wx&#39;, &#39;wxagg&#39;, &#39;wxcairo&#39;, &#39;agg&#39;, &#39;cairo&#39;, &#39;pdf&#39;, &#39;pgf&#39;, &#39;ps&#39;, &#39;svg&#39;, &#39;template&#39;, &#39;inline&#39;]
+<span class="ne">ValueError</span>: Key backend: 'module://ipympl.backend_nbagg' is not a valid value for backend; supported values are ['gtk3agg', 'gtk3cairo', 'gtk4agg', 'gtk4cairo', 'macosx', 'nbagg', 'notebook', 'qtagg', 'qtcairo', 'qt5agg', 'qt5cairo', 'tkagg', 'tkcairo', 'webagg', 'wx', 'wxagg', 'wxcairo', 'agg', 'cairo', 'pdf', 'pgf', 'ps', 'svg', 'template', 'inline']
 </pre></div>
 </div>
 </div>
@@ -636,8 +636,8 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">ase.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">read</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Code</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">Markdown</span>
 
-<span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;./POSCAR&#39;</span><span class="p">)</span>  <span class="c1"># 可更改此路径以改变要显示的文件</span>
-<span class="n">v</span> <span class="o">=</span> <span class="n">view</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">viewer</span><span class="o">=</span><span class="s1">&#39;ngl&#39;</span><span class="p">)</span>
+<span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">'./POSCAR'</span><span class="p">)</span>  <span class="c1"># 可更改此路径以改变要显示的文件</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">view</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">viewer</span><span class="o">=</span><span class="s1">'ngl'</span><span class="p">)</span>
 <span class="n">v</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">add_ball_and_stick</span><span class="p">()</span>
 <span class="n">display</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 </pre></div>
@@ -656,7 +656,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>./00-aimd
-<span class="n">ui_helper</span><span class="o">.</span><span class="n">gen_aimd_config</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;./00-aimd&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">CP2K_DEFAULTS</span><span class="p">)</span>
+<span class="n">ui_helper</span><span class="o">.</span><span class="n">gen_aimd_config</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="s1">'./00-aimd'</span><span class="p">,</span> <span class="o">**</span><span class="n">CP2K_DEFAULTS</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -720,7 +720,7 @@ document.write(`
 <span class="c1"># 使用 `set_by_ref` 从原始结构文件获取 cell, pbc 等缺失信息</span>
 <span class="c1"># 然后以 xyz 格式写入指定位置</span>
 <span class="c1"># 实际使用时可根据实际需求对参数进行调整</span>
-<span class="o">!</span><span class="w"> </span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./00-aimd/*-pos-1.xyz<span class="w"> </span>--index<span class="w"> </span><span class="s1">&#39;::20&#39;</span><span class="w"> </span>-<span class="w"> </span>limit<span class="w"> </span><span class="m">20</span><span class="w"> </span>-<span class="w"> </span>set_by_ref<span class="w"> </span>POSCAR<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./data/explore/init.xyz
+<span class="o">!</span><span class="w"> </span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>ase<span class="w"> </span><span class="nb">read</span><span class="w"> </span>./00-aimd/*-pos-1.xyz<span class="w"> </span>--index<span class="w"> </span><span class="s1">'::20'</span><span class="w"> </span>-<span class="w"> </span>limit<span class="w"> </span><span class="m">20</span><span class="w"> </span>-<span class="w"> </span>set_by_ref<span class="w"> </span>POSCAR<span class="w"> </span>-<span class="w"> </span>write<span class="w"> </span>./data/explore/init.xyz
 </pre></div>
 </div>
 </div>
@@ -742,7 +742,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>./01-train
-<span class="n">ui_helper</span><span class="o">.</span><span class="n">gen_train_vendors_config</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;./01-train&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">CP2K_DEFAULTS</span><span class="p">)</span>
+<span class="n">ui_helper</span><span class="o">.</span><span class="n">gen_train_vendors_config</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="s1">'./01-train'</span><span class="p">,</span> <span class="o">**</span><span class="n">CP2K_DEFAULTS</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -755,10 +755,10 @@ document.write(`
 </div></blockquote>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;./01-train/work_dir&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">'./01-train/work_dir'</span><span class="p">)</span>
 <span class="o">!</span><span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w">  </span><span class="o">{</span>train_dir<span class="o">}</span>
-<span class="n">ui_helper</span><span class="o">.</span><span class="n">gen_train_config</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;./01-train&#39;</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">400000</span><span class="p">)</span>
-<span class="o">!</span><span class="w"> </span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>yaml<span class="w"> </span>load<span class="w"> </span><span class="o">{</span>AI2KIT_EXECUTOR_CONFIG<span class="o">}</span><span class="w"> </span>-<span class="w"> </span>set_value<span class="w"> </span><span class="s2">&quot;executors.ikkem.work_dir&quot;</span><span class="w"> </span><span class="o">{</span>train_dir<span class="o">}</span><span class="w"> </span>-<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>./01-train/executor.yml
+<span class="n">ui_helper</span><span class="o">.</span><span class="n">gen_train_config</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="s1">'./01-train'</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">400000</span><span class="p">)</span>
+<span class="o">!</span><span class="w"> </span>ai2-kit<span class="w"> </span>tool<span class="w"> </span>yaml<span class="w"> </span>load<span class="w"> </span><span class="o">{</span>AI2KIT_EXECUTOR_CONFIG<span class="o">}</span><span class="w"> </span>-<span class="w"> </span>set_value<span class="w"> </span><span class="s2">"executors.ikkem.work_dir"</span><span class="w"> </span><span class="o">{</span>train_dir<span class="o">}</span><span class="w"> </span>-<span class="w"> </span>dump<span class="w"> </span>&gt;<span class="w"> </span>./01-train/executor.yml
 </pre></div>
 </div>
 </div>
@@ -786,8 +786,8 @@ document.write(`
 <p>配置确认无误后，即可使用以下命令在后台启动训练。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">project_prefix</span> <span class="o">=</span> <span class="s1">&#39;run-01&#39;</span>  <span class="c1"># 请根据项目的工作目录修改</span>
-<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(cd ./01-train &amp;&amp; nohup ai2-kit workflow cll-mlp-training *.yml --executor ikkem --path-prefix </span><span class="si">{</span><span class="n">project_prefix</span><span class="si">}</span><span class="s2"> --checkpoint </span><span class="si">{</span><span class="n">project_prefix</span><span class="si">}</span><span class="s2">.pickle &amp;&gt; nohup.out&amp;)&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">project_prefix</span> <span class="o">=</span> <span class="s1">'run-01'</span>  <span class="c1"># 请根据项目的工作目录修改</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s2">"(cd ./01-train &amp;&amp; nohup ai2-kit workflow cll-mlp-training *.yml --executor ikkem --path-prefix </span><span class="si">{</span><span class="n">project_prefix</span><span class="si">}</span><span class="s2"> --checkpoint </span><span class="si">{</span><span class="n">project_prefix</span><span class="si">}</span><span class="s2">.pickle &amp;&gt; nohup.out&amp;)"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -810,7 +810,7 @@ document.write(`
 <p>检查势函数训练的力误差与能量误差随训练步数的演化关系，误差的演化应为指数下降的趋势最后在一个相对较小的值附近震荡</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ui_helper</span><span class="o">.</span><span class="n">inspect_deepmd_output</span><span class="p">(</span><span class="s1">&#39;./01-train/work_dir&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ui_helper</span><span class="o">.</span><span class="n">inspect_deepmd_output</span><span class="p">(</span><span class="s1">'./01-train/work_dir'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -821,7 +821,7 @@ document.write(`
 <p>检查模拟采样过程中，模型最大力偏差随模拟时间的变化关系，在初期几轮采样过程中该模型偏差会较大属于正常现象，迭代到后期模型偏差应大部分落在精确区间内，检查反应坐标随时间的变化关系，当模拟时间较短，反应坐标变化不会太大应在某个特定值（如反应始态或者终态反应坐标所对应的值）附近震荡，当模拟时间较长，反应坐标会出现较大变化（应在反应始态和终态反应坐标所对应的值之间来回震荡）</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ui_helper</span><span class="o">.</span><span class="n">inspect_lammps_output</span><span class="p">(</span><span class="s1">&#39;./01-train/work_dir&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ui_helper</span><span class="o">.</span><span class="n">inspect_lammps_output</span><span class="p">(</span><span class="s1">'./01-train/work_dir'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -845,7 +845,7 @@ document.write(`
 <p>以下命令可以在 生成基本的作业模板，模板生成后可进入 <code class="docutils literal notranslate"><span class="pre">./02-simluation</span></code> 目录对其进行检查和编辑</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ui_helper</span><span class="o">.</span><span class="n">gen_lammps_config</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;./02-simulation&#39;</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="s1">&#39;./01-train/work_dir/&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ui_helper</span><span class="o">.</span><span class="n">gen_lammps_config</span><span class="p">(</span><span class="n">out_dir</span><span class="o">=</span><span class="s1">'./02-simulation'</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="s1">'./01-train/work_dir/'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -894,15 +894,15 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="n">fes_data_path</span> <span class="o">=</span> <span class="s1">&#39;./02-simulation/fes.dat&#39;</span>
+<span class="n">fes_data_path</span> <span class="o">=</span> <span class="s1">'./02-simulation/fes.dat'</span>
 
 <span class="n">cv_fes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fes_data_path</span><span class="p">)</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cv_fes</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">cv_fes</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$CV$&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$Free \ energy \ (kJ/mol)$&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$Free \ energy \ curve$&#39;</span><span class="p">);</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'$CV$'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'$Free \ energy \ (kJ/mol)$'</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">'$Free \ energy \ curve$'</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>

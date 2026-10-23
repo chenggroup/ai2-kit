@@ -575,7 +575,7 @@ document.write(`
     <span class="n">v2</span> <span class="o">=</span> <span class="n">B</span><span class="p">[:</span><span class="n">window</span> <span class="o">+</span> <span class="n">NMAX</span><span class="p">]</span>
     <span class="n">pad_width</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">*</span> <span class="n">A</span><span class="o">.</span><span class="n">ndim</span>
     <span class="n">pad_width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">NMAX</span><span class="p">)</span>
-    <span class="n">v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="s2">"constant"</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">corr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
     <span class="k">return</span> <span class="n">corr</span><span class="p">[</span><span class="n">window</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span><span class="n">window</span> <span class="o">+</span> <span class="n">NMAX</span><span class="p">]</span> <span class="o">/</span> <span class="n">window</span></div>
 
@@ -776,7 +776,7 @@ document.write(`
 <div class="viewcode-block" id="FT"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.FT">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">FT</span><span class="p">(</span><span class="n">DT</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="n">NMAX</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="n">NMAX</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;NMAX (=len(C)-1) must be even for the cosine transform.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"NMAX (=len(C)-1) must be even for the cosine transform."</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">M</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">M</span> <span class="o">=</span> <span class="n">NMAX</span>
     <span class="k">elif</span> <span class="n">M</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -795,7 +795,7 @@ document.write(`
 <div class="viewcode-block" id="FT_sin"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.FT_sin">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">FT_sin</span><span class="p">(</span><span class="n">DT</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="n">NMAX</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="n">NMAX</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;NMAX (=len(C)-1) must be even for the sine transform.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"NMAX (=len(C)-1) must be even for the sine transform."</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">M</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">M</span> <span class="o">=</span> <span class="n">NMAX</span>
     <span class="k">elif</span> <span class="n">M</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -855,70 +855,70 @@ document.write(`
     <span class="k">return</span> <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT</span></div>
 
 
-<div class="viewcode-block" id="calculate_ir"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.calculate_ir">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_ir</span><span class="p">(</span><span class="n">corr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="calculate_ir"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.calculate_ir">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_ir</span><span class="p">(</span><span class="n">corr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"gaussian"</span><span class="p">):</span>
     <span class="n">nmax</span> <span class="o">=</span> <span class="n">corr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="n">nmax</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">nmax</span> <span class="o">-=</span> <span class="mi">1</span>
         <span class="n">corr</span> <span class="o">=</span> <span class="n">corr</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">tmax</span> <span class="o">=</span> <span class="n">nmax</span> <span class="o">*</span> <span class="n">dt_ps</span>
     <span class="n">filter_type</span> <span class="o">=</span> <span class="n">filter_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;nmax         =&quot;</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dt   (ps)    =&quot;</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tmax (ps)    =&quot;</span><span class="p">,</span> <span class="n">tmax</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Filter type  =&quot;</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Smooth width =&quot;</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"nmax         ="</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"dt   (ps)    ="</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"tmax (ps)    ="</span><span class="p">,</span> <span class="n">tmax</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Filter type  ="</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Smooth width ="</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">"gaussian"</span><span class="p">:</span>
         <span class="n">C</span> <span class="o">=</span> <span class="n">apply_gussian_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">width</span> <span class="o">*</span> <span class="n">tmax</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">&quot;lorenz&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">"lorenz"</span><span class="p">:</span>
         <span class="n">C</span> <span class="o">=</span> <span class="n">apply_lorenz_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown filter type: </span><span class="si">{</span><span class="n">filter_type</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown filter type: </span><span class="si">{</span><span class="n">filter_type</span><span class="si">}</span><span class="s2">!"</span><span class="p">)</span>
     <span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT</span> <span class="o">=</span> <span class="n">FT</span><span class="p">(</span><span class="n">dt_ps</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
     <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT</span> <span class="o">=</span> <span class="n">change_unit_ir</span><span class="p">(</span><span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">CHAT</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT</span></div>
 
 
-<div class="viewcode-block" id="calculate_raman"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.calculate_raman">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_raman</span><span class="p">(</span><span class="n">corr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="calculate_raman"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.calculate_raman">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_raman</span><span class="p">(</span><span class="n">corr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"gaussian"</span><span class="p">):</span>
     <span class="n">nmax</span> <span class="o">=</span> <span class="n">corr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="n">nmax</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">nmax</span> <span class="o">-=</span> <span class="mi">1</span>
         <span class="n">corr</span> <span class="o">=</span> <span class="n">corr</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">tmax</span> <span class="o">=</span> <span class="n">nmax</span> <span class="o">*</span> <span class="n">dt_ps</span>
     <span class="n">filter_type</span> <span class="o">=</span> <span class="n">filter_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;nmax         =&quot;</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dt   (ps)    =&quot;</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tmax (ps)    =&quot;</span><span class="p">,</span> <span class="n">tmax</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Filter type  =&quot;</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;width        = &quot;</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"nmax         ="</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"dt   (ps)    ="</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"tmax (ps)    ="</span><span class="p">,</span> <span class="n">tmax</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Filter type  ="</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"width        = "</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">"gaussian"</span><span class="p">:</span>
         <span class="n">C</span> <span class="o">=</span> <span class="n">apply_gussian_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">width</span> <span class="o">*</span> <span class="n">tmax</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">&quot;lorenz&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">"lorenz"</span><span class="p">:</span>
         <span class="n">C</span> <span class="o">=</span> <span class="n">apply_lorenz_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown filter type: </span><span class="si">{</span><span class="n">filter_type</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown filter type: </span><span class="si">{</span><span class="n">filter_type</span><span class="si">}</span><span class="s2">!"</span><span class="p">)</span>
     <span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT</span> <span class="o">=</span> <span class="n">FT</span><span class="p">(</span><span class="n">dt_ps</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
     <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT</span> <span class="o">=</span> <span class="n">change_unit_raman</span><span class="p">(</span><span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">CHAT</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT</span></div>
 
 
-<div class="viewcode-block" id="calculate_sfg"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.calculate_sfg">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_sfg</span><span class="p">(</span><span class="n">corr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="calculate_sfg"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.calculate_sfg">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_sfg</span><span class="p">(</span><span class="n">corr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"gaussian"</span><span class="p">):</span>
     <span class="n">nmax</span> <span class="o">=</span> <span class="n">corr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="n">nmax</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">nmax</span> <span class="o">-=</span> <span class="mi">1</span>
         <span class="n">corr</span> <span class="o">=</span> <span class="n">corr</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">tmax</span> <span class="o">=</span> <span class="n">nmax</span> <span class="o">*</span> <span class="n">dt_ps</span>
     <span class="n">filter_type</span> <span class="o">=</span> <span class="n">filter_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;nmax         =&quot;</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dt   (ps)    =&quot;</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tmax (ps)    =&quot;</span><span class="p">,</span> <span class="n">tmax</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Filter type  =&quot;</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;width        = &quot;</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"nmax         ="</span><span class="p">,</span> <span class="n">nmax</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"dt   (ps)    ="</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"tmax (ps)    ="</span><span class="p">,</span> <span class="n">tmax</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Filter type  ="</span><span class="p">,</span> <span class="n">filter_type</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"width        = "</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">"gaussian"</span><span class="p">:</span>
         <span class="n">C</span> <span class="o">=</span> <span class="n">apply_gussian_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">width</span> <span class="o">*</span> <span class="n">tmax</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">&quot;lorenz&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">filter_type</span> <span class="o">==</span> <span class="s2">"lorenz"</span><span class="p">:</span>
         <span class="n">C</span> <span class="o">=</span> <span class="n">apply_lorenz_filter</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">dt_ps</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown filter type: </span><span class="si">{</span><span class="n">filter_type</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown filter type: </span><span class="si">{</span><span class="n">filter_type</span><span class="si">}</span><span class="s2">!"</span><span class="p">)</span>
     <span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT_COS</span> <span class="o">=</span> <span class="n">FT</span><span class="p">(</span><span class="n">dt_ps</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">CHAT_SIN</span> <span class="o">=</span> <span class="n">FT_sin</span><span class="p">(</span><span class="n">dt_ps</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
     <span class="n">d_omega</span><span class="p">,</span> <span class="n">CHAT_COS</span> <span class="o">=</span> <span class="n">change_unit_sfg</span><span class="p">(</span><span class="n">freq_ps</span><span class="p">,</span> <span class="n">CHAT_COS</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span>
@@ -931,7 +931,7 @@ document.write(`
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_normalize_for_plot</span><span class="p">(</span><span class="n">wavenumber</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">intensity</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">x_min</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">x_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Helper function to normalize the intensity array based on its maximum absolute value</span>
 <span class="sd">    within a specific wavenumber window [x_min, x_max].</span>
 <span class="sd">    </span>
@@ -943,7 +943,7 @@ document.write(`
 
 <span class="sd">    Returns:</span>
 <span class="sd">        np.ndarray: Intensity (a.u.) array for plotting.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">wavenumber</span> <span class="o">&gt;=</span> <span class="n">x_min</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wavenumber</span> <span class="o">&lt;=</span> <span class="n">x_max</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
         <span class="n">max_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">intensity</span><span class="p">[</span><span class="n">mask</span><span class="p">]))</span>
@@ -955,7 +955,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="compute_atomic_dipole_h2o"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.compute_atomic_dipole_h2o">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">compute_atomic_dipole_h2o</span><span class="p">(</span>
-    <span class="n">traj</span><span class="p">:</span> <span class="s2">&quot;dpdata.System&quot;</span><span class="p">,</span>
+    <span class="n">traj</span><span class="p">:</span> <span class="s2">"dpdata.System"</span><span class="p">,</span>
     <span class="n">wannier</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">type_O</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">type_H</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -963,7 +963,7 @@ document.write(`
     <span class="n">save_h2o</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save_atomic_dipole</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute atomic dipole moments for water molecules from trajectory and Wannier center data.</span>
 
 <span class="sd">    Args:</span>
@@ -981,10 +981,10 @@ document.write(`
 <span class="sd">        tuple[np.ndarray, np.ndarray]: </span>
 <span class="sd">            - h2o_O: Coordinates of the Oxygen atoms of water molecules.</span>
 <span class="sd">            - atomic_dipole: The computed atomic dipole array for each water molecule.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">coords</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">]</span>
-    <span class="n">cells</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">]</span>
-    <span class="n">types</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="s2">&quot;atom_types&quot;</span><span class="p">]</span>
+<span class="sd">    """</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="s2">"coords"</span><span class="p">]</span>
+    <span class="n">cells</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">]</span>
+    <span class="n">types</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="s2">"atom_types"</span><span class="p">]</span>
     <span class="n">coords</span> <span class="o">=</span> <span class="n">do_pbc</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
     <span class="n">coords_O</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="n">types</span> <span class="o">==</span> <span class="n">type_O</span><span class="p">,</span> <span class="p">:]</span>
     <span class="n">coords_H</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="n">types</span> <span class="o">==</span> <span class="n">type_H</span><span class="p">,</span> <span class="p">:]</span>
@@ -1006,14 +1006,14 @@ document.write(`
 
 
 <div class="viewcode-block" id="extract_atomic_polar_from_traj_h2o"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.extract_atomic_polar_from_traj_h2o">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">extract_atomic_polar_from_traj_h2o</span><span class="p">(</span>
-    <span class="n">traj</span><span class="p">:</span> <span class="s2">&quot;dpdata.System&quot;</span><span class="p">,</span>
+    <span class="n">traj</span><span class="p">:</span> <span class="s2">"dpdata.System"</span><span class="p">,</span>
     <span class="n">polar</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">type_O</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">type_H</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">r_bond</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
     <span class="n">save_atomic_polar</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Extract atomic polarizability tensors specifically for water molecules.</span>
 
 <span class="sd">    Args:</span>
@@ -1027,10 +1027,10 @@ document.write(`
 
 <span class="sd">    Returns:</span>
 <span class="sd">        np.ndarray: The extracted atomic polarizability array for water molecules.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">coords</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">]</span>
-    <span class="n">cells</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">]</span>
-    <span class="n">types</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="s2">&quot;atom_types&quot;</span><span class="p">]</span>
+<span class="sd">    """</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="s2">"coords"</span><span class="p">]</span>
+    <span class="n">cells</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">]</span>
+    <span class="n">types</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="s2">"atom_types"</span><span class="p">]</span>
 
     <span class="n">coords</span> <span class="o">=</span> <span class="n">do_pbc</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
     <span class="n">coords_O</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[:,</span> <span class="n">types</span> <span class="o">==</span> <span class="n">type_O</span><span class="p">,</span> <span class="p">:]</span>
@@ -1059,12 +1059,12 @@ document.write(`
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">240</span><span class="p">,</span>
     <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">330.0</span><span class="p">,</span>
     <span class="n">M</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">,</span>
-    <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lorenz&quot;</span><span class="p">,</span>
+    <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lorenz"</span><span class="p">,</span>
     <span class="n">nuclear_quantum_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span>
     <span class="n">save_ir_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save_ir_spectrum</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute and optionally save/plot the bulk IR spectrum from atomic dipole data.</span>
 
 <span class="sd">    Args:</span>
@@ -1080,7 +1080,7 @@ document.write(`
 <span class="sd">        width (int, optional): Smoothing width parameter for the IR spectrum. Defaults to 240.</span>
 <span class="sd">        temperature (float, optional): Simulation temperature in Kelvin. Defaults to 330.0.</span>
 <span class="sd">        M (int, optional): Number of points for IR Fourier transform. Defaults to 20000.</span>
-<span class="sd">        filter_type (str, optional): Filter type (&quot;lorenz&quot; or &quot;gaussian&quot;). Defaults to &quot;lorenz&quot;.</span>
+<span class="sd">        filter_type (str, optional): Filter type ("lorenz" or "gaussian"). Defaults to "lorenz".</span>
 <span class="sd">        nuclear_quantum_factor (float, optional): Correction factor for nuclear quantum effects. Defaults to 0.96.</span>
 <span class="sd">        save_ir_plot (Optional[str], optional): Path to save the IR plot figure. Defaults to None.</span>
 <span class="sd">        save_ir_spectrum (Optional[str], optional): Path to save the IR spectrum data. Defaults to None.</span>
@@ -1089,7 +1089,7 @@ document.write(`
 <span class="sd">        tuple[np.ndarray, np.ndarray]:</span>
 <span class="sd">            - wavenumber: Array of evaluated frequencies (cm^-1).</span>
 <span class="sd">            - ir: The computed total IR intensity.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">cutoff_z</span><span class="p">(</span><span class="n">h2o</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">z0</span><span class="p">,</span> <span class="n">zc</span><span class="p">,</span> <span class="n">zw</span><span class="p">)</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">h2o</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">h2o</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">-</span> <span class="n">weight</span>
 
@@ -1109,14 +1109,14 @@ document.write(`
         <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span>
         <span class="n">norm_ir</span> <span class="o">=</span> <span class="n">_normalize_for_plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">ir</span><span class="p">,</span> <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
         
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_ir</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;bulk water&quot;</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_ir</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"bulk water"</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavenumber ($\rm cm^{-1}$)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Intensity (a.u.)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Wavenumber ($\rm cm^{-1}$)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Intensity (a.u.)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;IR spectra&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_ir_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"IR spectra"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_ir_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">save_ir_spectrum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1138,14 +1138,14 @@ document.write(`
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">240</span><span class="p">,</span>
     <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">330.0</span><span class="p">,</span>
     <span class="n">M</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">,</span>
-    <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lorenz&quot;</span><span class="p">,</span>
+    <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lorenz"</span><span class="p">,</span>
     <span class="n">nuclear_quantum_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span>
     <span class="n">save_iso_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save_aniso_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save_low_freq_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save_raman_spectrum</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute and optionally save/plot the bulk Raman spectra (isotropic, anisotropic, and low-frequency).</span>
 
 <span class="sd">    Args:</span>
@@ -1161,7 +1161,7 @@ document.write(`
 <span class="sd">        width (int, optional): Smoothing width parameter for the Raman spectrum. Defaults to 240.</span>
 <span class="sd">        temperature (float, optional): Simulation temperature in Kelvin. Defaults to 330.0.</span>
 <span class="sd">        M (int, optional): Number of points for Raman Fourier transform. Defaults to 20000.</span>
-<span class="sd">        filter_type (str, optional): Filter type (&quot;lorenz&quot; or &quot;gaussian&quot;). Defaults to &quot;lorenz&quot;.</span>
+<span class="sd">        filter_type (str, optional): Filter type ("lorenz" or "gaussian"). Defaults to "lorenz".</span>
 <span class="sd">        nuclear_quantum_factor (float, optional): Correction factor for nuclear quantum effects. Defaults to 0.96.</span>
 <span class="sd">        save_iso_plot (Optional[str], optional): Path to save the isotropic Raman plot. Defaults to None.</span>
 <span class="sd">        save_aniso_plot (Optional[str], optional): Path to save the anisotropic Raman plot. Defaults to None.</span>
@@ -1174,7 +1174,7 @@ document.write(`
 <span class="sd">            - total_iso: Isotropic Raman intensity.</span>
 <span class="sd">            - total_aniso: Anisotropic Raman intensity.</span>
 <span class="sd">            - low_range: Low-frequency Raman intensity.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">cutoff_z</span><span class="p">(</span><span class="n">h2o</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">z0</span><span class="p">,</span> <span class="n">zc</span><span class="p">,</span> <span class="n">zw</span><span class="p">)</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">h2o</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">h2o</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">-</span> <span class="n">weight</span>
 
@@ -1200,42 +1200,42 @@ document.write(`
         <span class="n">scaled_wavenumber</span> <span class="o">=</span> <span class="n">wavenumber</span> <span class="o">*</span> <span class="n">nuclear_quantum_factor</span>
         <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span> <span class="o">=</span> <span class="mi">2800</span><span class="p">,</span> <span class="mi">4000</span>
         <span class="n">norm_iso</span> <span class="o">=</span> <span class="n">_normalize_for_plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">total_iso</span><span class="p">,</span> <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_iso</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;bulk water&quot;</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_iso</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"bulk water"</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavenumber ($\rm cm^{-1}$)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Intensity (a.u.)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Wavenumber ($\rm cm^{-1}$)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Intensity (a.u.)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Raman spectra (iso)&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_iso_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Raman spectra (iso)"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_iso_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">save_aniso_plot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">scaled_wavenumber</span> <span class="o">=</span> <span class="n">wavenumber</span> <span class="o">*</span> <span class="n">nuclear_quantum_factor</span>
         <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span> <span class="o">=</span> <span class="mi">2800</span><span class="p">,</span> <span class="mi">4000</span>
         <span class="n">norm_aniso</span> <span class="o">=</span> <span class="n">_normalize_for_plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">total_aniso</span><span class="p">,</span> <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_aniso</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;bulk water&quot;</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_aniso</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"bulk water"</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavenumber ($\rm cm^{-1}$)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Intensity (a.u.)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Wavenumber ($\rm cm^{-1}$)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Intensity (a.u.)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Raman spectra (aniso)&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_aniso_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Raman spectra (aniso)"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_aniso_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">save_low_freq_plot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">scaled_wavenumber</span> <span class="o">=</span> <span class="n">wavenumber</span> <span class="o">*</span> <span class="n">nuclear_quantum_factor</span>
         <span class="n">xlim_min_low</span><span class="p">,</span> <span class="n">xlim_max_low</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2500</span>
         <span class="n">norm_low</span> <span class="o">=</span> <span class="n">_normalize_for_plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">low_range</span><span class="p">,</span> <span class="n">xlim_min_low</span><span class="p">,</span> <span class="n">xlim_max_low</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_low</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;bulk water&quot;</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_low</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"bulk water"</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xlim_min_low</span><span class="p">,</span> <span class="n">xlim_max_low</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavenumber ($\rm cm^{-1}$)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Intensity (a.u.)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Wavenumber ($\rm cm^{-1}$)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Intensity (a.u.)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Low-frequency Raman spectra (aniso)&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_low_freq_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Low-frequency Raman spectra (aniso)"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_low_freq_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">save_raman_spectrum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1257,12 +1257,12 @@ document.write(`
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">240</span><span class="p">,</span>
     <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">330.0</span><span class="p">,</span>
     <span class="n">M</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">,</span>
-    <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lorenz&quot;</span><span class="p">,</span>
+    <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lorenz"</span><span class="p">,</span>
     <span class="n">nuclear_quantum_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span>
     <span class="n">save_ir_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save_ir_spectrum</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute and optionally plot/save surface IR spectra for interfacial water.</span>
 
 <span class="sd">    Args:</span>
@@ -1278,7 +1278,7 @@ document.write(`
 <span class="sd">        width (int, optional): Smoothing width parameter for IR spectrum. Defaults to 240.</span>
 <span class="sd">        temperature (float, optional): Simulation temperature in Kelvin. Defaults to 330.0.</span>
 <span class="sd">        M (int, optional): Number of points for Fourier transform. Defaults to 20000.</span>
-<span class="sd">        filter_type (str, optional): Filter type (&quot;lorenz&quot; or &quot;gaussian&quot;). Defaults to &quot;lorenz&quot;.</span>
+<span class="sd">        filter_type (str, optional): Filter type ("lorenz" or "gaussian"). Defaults to "lorenz".</span>
 <span class="sd">        nuclear_quantum_factor (float, optional): Correction factor for nuclear quantum effects. Defaults to 0.96.</span>
 <span class="sd">        save_ir_plot (Optional[str], optional): Path to save the IR plot figure. Defaults to None.</span>
 <span class="sd">        save_ir_spectrum (Optional[str], optional): Path to save the IR spectrum data. Defaults to None.</span>
@@ -1287,7 +1287,7 @@ document.write(`
 <span class="sd">        tuple[np.ndarray, np.ndarray]:</span>
 <span class="sd">            - wavenumber: Array of evaluated frequencies (cm^-1).</span>
 <span class="sd">            - ir_h2o: The computed IR intensity for surface water.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">cutoff_z</span><span class="p">(</span><span class="n">h2o</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">z0</span><span class="p">,</span> <span class="n">zc</span><span class="p">,</span> <span class="n">zw</span><span class="p">)</span>
 
     <span class="n">corr_intra</span><span class="p">,</span> <span class="n">corr_inter</span> <span class="o">=</span> <span class="n">calculate_corr_vdipole</span><span class="p">(</span><span class="n">atomic_dipole</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">h2o</span><span class="p">,</span> <span class="n">cells</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">rc</span><span class="o">=</span><span class="n">rc</span><span class="p">)</span>
@@ -1306,14 +1306,14 @@ document.write(`
         <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span>
         <span class="n">norm_ir</span> <span class="o">=</span> <span class="n">_normalize_for_plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">ir_h2o</span><span class="p">,</span> <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
         
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_ir</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;interfacial water&quot;</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_ir</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"interfacial water"</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavenumber($\rm cm^{-1}$)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Intensity (a.u.)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Wavenumber($\rm cm^{-1}$)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Intensity (a.u.)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;IR spectra&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_ir_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"IR spectra"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_ir_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">save_ir_spectrum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1335,14 +1335,14 @@ document.write(`
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">240</span><span class="p">,</span>
     <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">330.0</span><span class="p">,</span>
     <span class="n">M</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">,</span>
-    <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lorenz&quot;</span><span class="p">,</span>
+    <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lorenz"</span><span class="p">,</span>
     <span class="n">nuclear_quantum_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span>
     <span class="n">save_iso_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save_aniso_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save_low_freq_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save_raman_spectrum</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute and optionally save the surface Raman spectra for interfacial water.</span>
 
 <span class="sd">    Args:</span>
@@ -1358,7 +1358,7 @@ document.write(`
 <span class="sd">        width (int, optional): Smoothing width parameter for the Raman spectrum. Defaults to 240.</span>
 <span class="sd">        temperature (float, optional): Simulation temperature in Kelvin. Defaults to 330.0.</span>
 <span class="sd">        M (int, optional): Number of points for Fourier transform. Defaults to 20000.</span>
-<span class="sd">        filter_type (str, optional): Filter type (&quot;lorenz&quot; or &quot;gaussian&quot;). Defaults to &quot;lorenz&quot;.</span>
+<span class="sd">        filter_type (str, optional): Filter type ("lorenz" or "gaussian"). Defaults to "lorenz".</span>
 <span class="sd">        nuclear_quantum_factor (float, optional): Correction factor for nuclear quantum effects. Defaults to 0.96.</span>
 <span class="sd">        save_iso_plot (Optional[str], optional): Path to save the isotropic Raman plot. Defaults to None.</span>
 <span class="sd">        save_aniso_plot (Optional[str], optional): Path to save the anisotropic Raman plot. Defaults to None.</span>
@@ -1371,7 +1371,7 @@ document.write(`
 <span class="sd">            - total_iso: Isotropic Raman intensity.</span>
 <span class="sd">            - total_aniso: Anisotropic Raman intensity.</span>
 <span class="sd">            - low_range: Low-frequency Raman intensity.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">cutoff_z</span><span class="p">(</span><span class="n">h2o</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">z0</span><span class="p">,</span> <span class="n">zc</span><span class="p">,</span> <span class="n">zw</span><span class="p">)</span>
 
     <span class="n">corr_iso_intra</span><span class="p">,</span> <span class="n">corr_aniso_intra</span><span class="p">,</span> <span class="n">corr_iso_inter</span><span class="p">,</span> <span class="n">corr_aniso_inter</span> <span class="o">=</span> <span class="n">calculate_corr_polar</span><span class="p">(</span>
@@ -1396,42 +1396,42 @@ document.write(`
         <span class="n">scaled_wavenumber</span> <span class="o">=</span> <span class="n">wavenumber</span> <span class="o">*</span> <span class="n">nuclear_quantum_factor</span>
         <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span> <span class="o">=</span> <span class="mi">2800</span><span class="p">,</span> <span class="mi">4000</span>
         <span class="n">norm_iso</span> <span class="o">=</span> <span class="n">_normalize_for_plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">total_iso</span><span class="p">,</span> <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_iso</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;interfacial water&quot;</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_iso</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"interfacial water"</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavenumber ($\rm cm^{-1}$)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Intensity (a.u.)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Wavenumber ($\rm cm^{-1}$)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Intensity (a.u.)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Raman spectra (iso)&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_iso_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Raman spectra (iso)"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_iso_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">save_aniso_plot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">scaled_wavenumber</span> <span class="o">=</span> <span class="n">wavenumber</span> <span class="o">*</span> <span class="n">nuclear_quantum_factor</span>
         <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span> <span class="o">=</span> <span class="mi">2800</span><span class="p">,</span> <span class="mi">4000</span>
         <span class="n">norm_aniso</span> <span class="o">=</span> <span class="n">_normalize_for_plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">total_aniso</span><span class="p">,</span> <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_aniso</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;interfacial water&quot;</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_aniso</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"interfacial water"</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavenumber ($\rm cm^{-1}$)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Intensity (a.u.)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Wavenumber ($\rm cm^{-1}$)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Intensity (a.u.)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Raman spectra (aniso)&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_aniso_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Raman spectra (aniso)"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_aniso_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">save_low_freq_plot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">scaled_wavenumber</span> <span class="o">=</span> <span class="n">wavenumber</span> <span class="o">*</span> <span class="n">nuclear_quantum_factor</span>
         <span class="n">xlim_min_low</span><span class="p">,</span> <span class="n">xlim_max_low</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2500</span>
         <span class="n">norm_low</span> <span class="o">=</span> <span class="n">_normalize_for_plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">low_range</span><span class="p">,</span> <span class="n">xlim_min_low</span><span class="p">,</span> <span class="n">xlim_max_low</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_low</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;interfacial water&quot;</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_low</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"interfacial water"</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xlim_min_low</span><span class="p">,</span> <span class="n">xlim_max_low</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavenumber ($\rm cm^{-1}$)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Intensity (a.u.)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Wavenumber ($\rm cm^{-1}$)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Intensity (a.u.)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Low-frequency Raman spectra (aniso)&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_low_freq_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Low-frequency Raman spectra (aniso)"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_low_freq_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         
     <span class="k">if</span> <span class="n">save_raman_spectrum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1454,12 +1454,12 @@ document.write(`
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">240</span><span class="p">,</span>
     <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">330.0</span><span class="p">,</span>
     <span class="n">M</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">,</span>
-    <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lorenz&quot;</span><span class="p">,</span>
+    <span class="n">filter_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lorenz"</span><span class="p">,</span>
     <span class="n">nuclear_quantum_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.96</span><span class="p">,</span>
     <span class="n">save_sfg_plot</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save_sfg_spectrum</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute and optionally plot/save the surface SFG spectrum (xxz/yyz).</span>
 
 <span class="sd">    Args:</span>
@@ -1476,7 +1476,7 @@ document.write(`
 <span class="sd">        width (int, optional): Smoothing width parameter for the SFG spectrum. Defaults to 240.</span>
 <span class="sd">        temperature (float, optional): Simulation temperature in Kelvin. Defaults to 330.0.</span>
 <span class="sd">        M (int, optional): Number of points for Fourier transform. Defaults to 20000.</span>
-<span class="sd">        filter_type (str, optional): Filter type (&quot;lorenz&quot; or &quot;gaussian&quot;). Defaults to &quot;lorenz&quot;.</span>
+<span class="sd">        filter_type (str, optional): Filter type ("lorenz" or "gaussian"). Defaults to "lorenz".</span>
 <span class="sd">        nuclear_quantum_factor (float, optional): Correction factor for nuclear quantum effects. Defaults to 0.96.</span>
 <span class="sd">        save_sfg_plot (Optional[str], optional): Path to save the SFG plot figure. Defaults to None.</span>
 <span class="sd">        save_sfg_spectrum (Optional[str], optional): Path to save the SFG spectrum data. Defaults to None.</span>
@@ -1485,7 +1485,7 @@ document.write(`
 <span class="sd">        tuple[np.ndarray, np.ndarray]:</span>
 <span class="sd">            - wavenumber: Array of evaluated frequencies (cm^-1).</span>
 <span class="sd">            - sfg_imag_h2o: The computed imaginary part of the SFG susceptibility (Im[chi^(2)]).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">cutoff_z</span><span class="p">(</span><span class="n">h2o</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">z0</span><span class="p">,</span> <span class="n">zc</span><span class="p">,</span> <span class="n">zw</span><span class="p">)</span>
 
     <span class="n">corr_intra</span><span class="p">,</span> <span class="n">corr_inter</span> <span class="o">=</span> <span class="n">cal_corr_sfg_method2</span><span class="p">(</span>
@@ -1507,14 +1507,14 @@ document.write(`
         <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span> <span class="o">=</span> <span class="mi">2800</span><span class="p">,</span> <span class="mi">4000</span>
         <span class="n">norm_sfg</span> <span class="o">=</span> <span class="n">_normalize_for_plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">sfg_imag_h2o</span><span class="p">,</span> <span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
         
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_sfg</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;interfacial water&quot;</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scaled_wavenumber</span><span class="p">,</span> <span class="n">norm_sfg</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"interfacial water"</span><span class="p">,</span> <span class="n">scalex</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">scaley</span><span class="o">=</span><span class="mf">2.2</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xlim_min</span><span class="p">,</span> <span class="n">xlim_max</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Wavenumber($\rm cm^{-1}$)&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Im[$\chi^{(2)}$ (a.u.)]&quot;</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Wavenumber($\rm cm^{-1}$)"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Im[$\chi^{(2)}$ (a.u.)]"</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;SFG spectra (xxz)&quot;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_sfg_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"SFG spectra (xxz)"</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_sfg_plot</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">save_sfg_spectrum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1524,7 +1524,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="set_cells_h2o"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.set_cells_h2o">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_cells_h2o</span><span class="p">(</span><span class="n">stc_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Atoms</span><span class="p">],</span> <span class="n">cell</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Write the length and pbc conditions to the bounding box.</span>
 
 <span class="sd">    Args:</span>
@@ -1533,7 +1533,7 @@ document.write(`
 
 <span class="sd">    Returns:</span>
 <span class="sd">        List[Atoms]: The modified list of ASE Atoms objects with updated cell/PBC info.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">for</span> <span class="n">stc</span> <span class="ow">in</span> <span class="n">stc_list</span><span class="p">:</span>
         <span class="n">stc</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
         <span class="n">stc</span><span class="o">.</span><span class="n">set_pbc</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -1541,7 +1541,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="get_lumped_wacent_poses_rel_h2o"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.get_lumped_wacent_poses_rel_h2o">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_lumped_wacent_poses_rel_h2o</span><span class="p">(</span><span class="n">stc</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span> <span class="n">elem_symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">expected_cn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Determine the positions of the Wannier centers around a target element (e.g., O) </span>
 <span class="sd">    and lump them into a mean relative displacement centroid.</span>
 
@@ -1553,9 +1553,9 @@ document.write(`
 
 <span class="sd">    Returns:</span>
 <span class="sd">        np.ndarray: Matrix of relative lumped Wannier centroid vectors for each targeted atom.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">elem_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">stc</span><span class="o">.</span><span class="n">symbols</span> <span class="o">==</span> <span class="n">elem_symbol</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">wacent_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">stc</span><span class="o">.</span><span class="n">symbols</span> <span class="o">==</span> <span class="s2">&quot;X&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">wacent_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">stc</span><span class="o">.</span><span class="n">symbols</span> <span class="o">==</span> <span class="s2">"X"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">elem_poses</span> <span class="o">=</span> <span class="n">stc</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">elem_idx</span><span class="p">]</span>
     <span class="n">wacent_poses</span> <span class="o">=</span> <span class="n">stc</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">wacent_idx</span><span class="p">]</span>
 
@@ -1575,11 +1575,11 @@ document.write(`
 
         <span class="k">if</span> <span class="n">cn</span> <span class="o">!=</span> <span class="n">expected_cn</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">&quot;The atom index is :&quot;</span><span class="p">,</span>
+                <span class="s2">"The atom index is :"</span><span class="p">,</span>
                 <span class="n">elem_idx</span><span class="p">[</span><span class="n">elem_entry</span><span class="p">],</span>
-                <span class="s2">&quot;The atom position is &quot;</span><span class="p">,</span>
+                <span class="s2">"The atom position is "</span><span class="p">,</span>
                 <span class="n">elem_poses</span><span class="p">[</span><span class="n">elem_entry</span><span class="p">],</span>
-                <span class="s2">&quot;The coordination number is :&quot;</span><span class="p">,</span>
+                <span class="s2">"The coordination number is :"</span><span class="p">,</span>
                 <span class="n">cn</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="n">lumped_wacent_poses_rel</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lumped_wacent_pos_rel</span><span class="p">)</span>
@@ -1588,7 +1588,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="set_lumped_wfc_h2o"><a class="viewcode-back" href="../../../../_api/ai2_kit.feat.spectrum.algorithm.html#ai2_kit.feat.spectrum.algorithm.set_lumped_wfc_h2o">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_lumped_wfc_h2o</span><span class="p">(</span><span class="n">stc_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Atoms</span><span class="p">],</span> <span class="n">lumped_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Use get_lumped_wacent_poses_rel every frame to compute and return the absolute </span>
 <span class="sd">    coordinates of Wannier centroids.</span>
 
@@ -1599,7 +1599,7 @@ document.write(`
 
 <span class="sd">    Returns:</span>
 <span class="sd">        np.ndarray: Evaluated coordinates of the lumped Wannier centroids across all frames.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">X_pos</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">stc</span> <span class="ow">in</span> <span class="n">stc_list</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">elem_symbol</span><span class="p">,</span> <span class="n">expected_cn</span> <span class="ow">in</span> <span class="n">lumped_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>

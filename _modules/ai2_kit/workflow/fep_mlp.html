@@ -501,7 +501,7 @@ document.write(`
                  <span class="n">executor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">path_prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">checkpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Training ML potential for FEP</span>
 
 <span class="sd">    Args:</span>
@@ -509,7 +509,7 @@ document.write(`
 <span class="sd">        executor: name of executor, should be defined in config `executors` section</span>
 <span class="sd">        path_prefix: path prefix for output</span>
 <span class="sd">        checkpoint: checkpoint file</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">checkpoint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">set_checkpoint_dir</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">)</span>
 
@@ -517,9 +517,9 @@ document.write(`
     <span class="n">config</span> <span class="o">=</span> <span class="n">FepWorkflowConfig</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">config_data</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">executor</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">executors</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;executor </span><span class="si">{</span><span class="n">executor</span><span class="si">}</span><span class="s1"> is not found&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'executor </span><span class="si">{</span><span class="n">executor</span><span class="si">}</span><span class="s1"> is not found'</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">path_prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;path_prefix should not be empty&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'path_prefix should not be empty'</span><span class="p">)</span>
 
     <span class="n">iface</span><span class="o">.</span><span class="n">init_artifacts</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">artifacts</span><span class="p">)</span>
     <span class="n">resource_manager</span> <span class="o">=</span> <span class="n">ResourceManager</span><span class="p">(</span>
@@ -554,7 +554,7 @@ document.write(`
         <span class="c1"># parse workflow config</span>
         <span class="n">workflow_config</span> <span class="o">=</span> <span class="n">WorkflowConfig</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">raw_workflow_config</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">max_iters</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iteration </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> exceeds max_iters, stop iteration.&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Iteration </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> exceeds max_iters, stop iteration.'</span><span class="p">)</span>
             <span class="k">break</span>
 
         <span class="c1"># shortcut for type_map and mass_map</span>
@@ -562,9 +562,9 @@ document.write(`
         <span class="n">mass_map</span> <span class="o">=</span> <span class="n">workflow_config</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">mass_map</span>
 
         <span class="c1"># decide path prefix for each iteration</span>
-        <span class="n">iter_path_prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path_prefix</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;iters-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">iter_path_prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path_prefix</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'iters-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="c1"># prefix of checkpoint</span>
-        <span class="n">cp_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;iters-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">cp_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'iters-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">03d</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="c1"># label: cp2k</span>
         <span class="n">red_cp2k_input</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kInput</span><span class="p">(</span>
@@ -575,7 +575,7 @@ document.write(`
         <span class="p">)</span>
         <span class="n">red_cpk2_context</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kContext</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">cp2k</span><span class="p">,</span>
-            <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;red-label-cp2k&#39;</span><span class="p">),</span>
+            <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">'red-label-cp2k'</span><span class="p">),</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -587,13 +587,13 @@ document.write(`
         <span class="p">)</span>
         <span class="n">neu_cp2k_context</span> <span class="o">=</span> <span class="n">cp2k</span><span class="o">.</span><span class="n">CllCp2kContext</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">cp2k</span><span class="p">,</span>
-            <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;neu-label-cp2k&#39;</span><span class="p">),</span>
+            <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">'neu-label-cp2k'</span><span class="p">),</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">red_label_output</span><span class="p">,</span> <span class="n">neu_label_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/cp2k/red&#39;</span><span class="p">)(</span><span class="n">cp2k</span><span class="o">.</span><span class="n">cll_cp2k</span><span class="p">)(</span><span class="n">red_cp2k_input</span><span class="p">,</span> <span class="n">red_cpk2_context</span><span class="p">),</span>
-            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/cp2k/neu&#39;</span><span class="p">)(</span><span class="n">cp2k</span><span class="o">.</span><span class="n">cll_cp2k</span><span class="p">)(</span><span class="n">neu_cp2k_input</span><span class="p">,</span> <span class="n">neu_cp2k_context</span><span class="p">),</span>
+            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/cp2k/red'</span><span class="p">)(</span><span class="n">cp2k</span><span class="o">.</span><span class="n">cll_cp2k</span><span class="p">)(</span><span class="n">red_cp2k_input</span><span class="p">,</span> <span class="n">red_cpk2_context</span><span class="p">),</span>
+            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/cp2k/neu'</span><span class="p">)(</span><span class="n">cp2k</span><span class="o">.</span><span class="n">cll_cp2k</span><span class="p">)(</span><span class="n">neu_cp2k_input</span><span class="p">,</span> <span class="n">neu_cp2k_context</span><span class="p">),</span>
         <span class="p">)</span>
 
         <span class="c1"># Train</span>
@@ -604,7 +604,7 @@ document.write(`
             <span class="n">new_dataset</span><span class="o">=</span><span class="n">red_label_output</span><span class="o">.</span><span class="n">get_labeled_system_dataset</span><span class="p">(),</span>
         <span class="p">)</span>
         <span class="n">red_deepmd_context</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdContext</span><span class="p">(</span>
-            <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;red-train-deepmd&#39;</span><span class="p">),</span>
+            <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">'red-train-deepmd'</span><span class="p">),</span>
             <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">deepmd</span><span class="p">,</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
@@ -615,14 +615,14 @@ document.write(`
             <span class="n">new_dataset</span><span class="o">=</span><span class="n">neu_label_output</span><span class="o">.</span><span class="n">get_labeled_system_dataset</span><span class="p">(),</span>
         <span class="p">)</span>
         <span class="n">neu_deepmd_context</span> <span class="o">=</span> <span class="n">deepmd</span><span class="o">.</span><span class="n">CllDeepmdContext</span><span class="p">(</span>
-            <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;neu-train-deepmd&#39;</span><span class="p">),</span>
+            <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">'neu-train-deepmd'</span><span class="p">),</span>
             <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">deepmd</span><span class="p">,</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">red_train_output</span><span class="p">,</span> <span class="n">neu_train_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/deepmd/red&#39;</span><span class="p">)(</span><span class="n">deepmd</span><span class="o">.</span><span class="n">cll_deepmd</span><span class="p">)(</span><span class="n">red_deepmd_input</span><span class="p">,</span> <span class="n">red_deepmd_context</span><span class="p">),</span>
-            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/deepmd/neu&#39;</span><span class="p">)(</span><span class="n">deepmd</span><span class="o">.</span><span class="n">cll_deepmd</span><span class="p">)(</span><span class="n">neu_deepmd_input</span><span class="p">,</span> <span class="n">neu_deepmd_context</span><span class="p">),</span>
+            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/deepmd/red'</span><span class="p">)(</span><span class="n">deepmd</span><span class="o">.</span><span class="n">cll_deepmd</span><span class="p">)(</span><span class="n">red_deepmd_input</span><span class="p">,</span> <span class="n">red_deepmd_context</span><span class="p">),</span>
+            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/deepmd/neu'</span><span class="p">)(</span><span class="n">deepmd</span><span class="o">.</span><span class="n">cll_deepmd</span><span class="p">)(</span><span class="n">neu_deepmd_input</span><span class="p">,</span> <span class="n">neu_deepmd_context</span><span class="p">),</span>
         <span class="p">)</span>
 
         <span class="c1"># explore</span>
@@ -632,17 +632,17 @@ document.write(`
             <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
             <span class="n">mass_map</span><span class="o">=</span><span class="n">mass_map</span><span class="p">,</span>
             <span class="n">dp_models</span><span class="o">=</span><span class="p">{</span>
-                <span class="s1">&#39;NEU&#39;</span><span class="p">:</span> <span class="n">neu_train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">(),</span>
-                <span class="s1">&#39;RED&#39;</span><span class="p">:</span> <span class="n">red_train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">(),</span>
+                <span class="s1">'NEU'</span><span class="p">:</span> <span class="n">neu_train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">(),</span>
+                <span class="s1">'RED'</span><span class="p">:</span> <span class="n">red_train_output</span><span class="o">.</span><span class="n">get_mlp_models</span><span class="p">(),</span>
             <span class="p">},</span>
-            <span class="n">preset_template</span><span class="o">=</span><span class="s1">&#39;fep-2m&#39;</span>
+            <span class="n">preset_template</span><span class="o">=</span><span class="s1">'fep-2m'</span>
         <span class="p">)</span>
         <span class="n">lammps_context</span> <span class="o">=</span> <span class="n">lammps</span><span class="o">.</span><span class="n">CllLammpsContext</span><span class="p">(</span>
-            <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;explore-lammps&#39;</span><span class="p">),</span>
+            <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">'explore-lammps'</span><span class="p">),</span>
             <span class="n">config</span><span class="o">=</span><span class="n">context_config</span><span class="o">.</span><span class="n">lammps</span><span class="p">,</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">explore_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/lammps&#39;</span><span class="p">)(</span><span class="n">lammps</span><span class="o">.</span><span class="n">cll_lammps</span><span class="p">)(</span><span class="n">lammps_input</span><span class="p">,</span> <span class="n">lammps_context</span><span class="p">)</span>
+        <span class="n">explore_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/lammps'</span><span class="p">)(</span><span class="n">lammps</span><span class="o">.</span><span class="n">cll_lammps</span><span class="p">)(</span><span class="n">lammps_input</span><span class="p">,</span> <span class="n">lammps_context</span><span class="p">)</span>
 
         <span class="c1"># select</span>
         <span class="n">red_selector_input</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDeviSelectorInput</span><span class="p">(</span>
@@ -653,7 +653,7 @@ document.write(`
         <span class="p">)</span>
         <span class="n">red_selector_context</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDevSelectorContext</span><span class="p">(</span>
             <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;red-selector-threshold&#39;</span><span class="p">),</span>
+                <span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">'red-selector-threshold'</span><span class="p">),</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -664,13 +664,13 @@ document.write(`
             <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">neu_selector_context</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">CllModelDevSelectorContext</span><span class="p">(</span>
-            <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">&#39;neu-selector-threshold&#39;</span><span class="p">),</span>
+            <span class="n">path_prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iter_path_prefix</span><span class="p">,</span> <span class="s1">'neu-selector-threshold'</span><span class="p">),</span>
             <span class="n">resource_manager</span><span class="o">=</span><span class="n">resource_manager</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">red_selector_output</span><span class="p">,</span> <span class="n">neu_selector_output</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
-            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/selector/red&#39;</span><span class="p">)(</span><span class="n">selector</span><span class="o">.</span><span class="n">cll_model_devi_selector</span><span class="p">)(</span><span class="n">red_selector_input</span><span class="p">,</span> <span class="n">red_selector_context</span><span class="p">),</span>
-            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/selector/neu&#39;</span><span class="p">)(</span><span class="n">selector</span><span class="o">.</span><span class="n">cll_model_devi_selector</span><span class="p">)(</span><span class="n">neu_selector_input</span><span class="p">,</span> <span class="n">neu_selector_context</span><span class="p">),</span>
+            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/selector/red'</span><span class="p">)(</span><span class="n">selector</span><span class="o">.</span><span class="n">cll_model_devi_selector</span><span class="p">)(</span><span class="n">red_selector_input</span><span class="p">,</span> <span class="n">red_selector_context</span><span class="p">),</span>
+            <span class="n">apply_checkpoint</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">cp_prefix</span><span class="si">}</span><span class="s1">/selector/neu'</span><span class="p">)(</span><span class="n">selector</span><span class="o">.</span><span class="n">cll_model_devi_selector</span><span class="p">)(</span><span class="n">neu_selector_input</span><span class="p">,</span> <span class="n">neu_selector_context</span><span class="p">),</span>
         <span class="p">)</span>
 
         <span class="c1"># Update</span>
@@ -686,7 +686,7 @@ document.write(`
         <span class="n">update_cursor</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
     <span class="c1"># use python-fire to parse command line arguments</span>
     <span class="n">Fire</span><span class="p">(</span><span class="n">run_workflow</span><span class="p">)</span>
 </pre></div>

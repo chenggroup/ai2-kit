@@ -468,15 +468,15 @@ document.write(`
 
 <div class="viewcode-block" id="CllLammpsInputConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CllLammpsInputConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">n_wise</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The way of combining variants.</span>
 <span class="sd">    if n_wise is less than 2 or greater than total fields, the full combination will be used.</span>
 <span class="sd">    Or else, the n_wise combination will be used.</span>
 <span class="sd">    It is strongly recommended to use n_wise when the full combination is too large.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">explore_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Variants to be explore by full combination or n_wise combination.</span>
 
 <span class="sd">    Variables defined here will become **LAMMPS variables**.</span>
@@ -489,13 +489,13 @@ document.write(`
 <span class="sd">    PRES: 1                # Can be a vector, e.g. [1, 2, 3]</span>
 <span class="sd">    ```</span>
 <span class="sd">    Then you can reference them in the LAMMPS input template as ${TEMP}, ${LAMBDA_f}, ${N_STEPS}, etc.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">broadcast_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Variants to be explore by broadcast.</span>
 
-<span class="sd">    Variables defined here won&#39;t join the combination,</span>
+<span class="sd">    Variables defined here won't join the combination,</span>
 <span class="sd">    but will be broadcasted to all combinations.</span>
 
 <span class="sd">    This can be used to avoid combination explosion.</span>
@@ -503,33 +503,33 @@ document.write(`
 <span class="sd">    ```yaml</span>
 <span class="sd">    LAMBDA_f: [0.0, 0.25, 0.5, 0.75, 1.0]</span>
 <span class="sd">    ```</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">preset_template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Name of the preset template.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">input_template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    LAMMPS input template file content.</span>
 <span class="sd">    If set, the preset_template will be ignored.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">template_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    input_template may provide extra injection points for user to inject custom settings.</span>
 <span class="sd">    Those value could be set here.</span>
 
 <span class="sd">    Those vars can be referenced in the LAMMPS input template as $$VAR_NAME.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">plumed_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plumed config file content.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Plumed config file content."""</span>
 
     <span class="n">system_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Artifacts key of lammps input data</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">ensemble</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;nvt&#39;</span><span class="p">,</span> <span class="s1">&#39;npt&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-i&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-a&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-iso&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-aniso&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-t&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-tri&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-x&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-y&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-z&#39;</span><span class="p">,</span> <span class="s1">&#39;nve&#39;</span><span class="p">,</span> <span class="s1">&#39;csvr&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ensemble</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s1">'nvt'</span><span class="p">,</span> <span class="s1">'npt'</span><span class="p">,</span> <span class="s1">'npt-i'</span><span class="p">,</span> <span class="s1">'npt-a'</span><span class="p">,</span> <span class="s1">'npt-iso'</span><span class="p">,</span> <span class="s1">'npt-aniso'</span><span class="p">,</span> <span class="s1">'npt-t'</span><span class="p">,</span> <span class="s1">'npt-tri'</span><span class="p">,</span> <span class="s1">'npt-x'</span><span class="p">,</span> <span class="s1">'npt-y'</span><span class="p">,</span> <span class="s1">'npt-z'</span><span class="p">,</span> <span class="s1">'nve'</span><span class="p">,</span> <span class="s1">'csvr'</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">fix_statement</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">no_pbc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
@@ -539,7 +539,7 @@ document.write(`
     <span class="n">ignore_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="n">type_alias</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">'''</span>
 <span class="sd">    Type alias for atoms. For example, if you want to distinguish ghost H and H of HF molecule from other H atoms,</span>
 <span class="sd">    you can define the alias as follows:</span>
 <span class="sd">    ```yaml</span>
@@ -551,10 +551,10 @@ document.write(`
 <span class="sd">    set atom 1 type ${H_hf}</span>
 <span class="sd">    set atom 2 type ${H_ghost}</span>
 <span class="sd">    ```</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    '''</span>
 
     <span class="n">custom_ff</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">'''</span>
 <span class="sd">    Allow user to set custom force field. If set, the custom force field will be used instead of the default one.</span>
 <span class="sd">    The use can use $$DP_MODELS to reference the deepmd models, and $$SPECORDER to reference the atom type order.</span>
 <span class="sd">    For example:</span>
@@ -565,21 +565,21 @@ document.write(`
 
 <span class="sd">    pair_coeff  * * deepmd 1 $$SPECORDER</span>
 <span class="sd">    pair_coeff  * * buck/coul/long 10.0 10.0</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    '''</span>
 
     <span class="n">fep_opts</span><span class="p">:</span> <span class="n">FepOptions</span> <span class="o">=</span> <span class="n">FepOptions</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="CllLammpsInputConfig.validate_explore_variants"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig.validate_explore_variants">[docs]</a>    <span class="nd">@field_validator</span><span class="p">(</span><span class="s1">&#39;explore_vars&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;before&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="CllLammpsInputConfig.validate_explore_variants"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig.validate_explore_variants">[docs]</a>    <span class="nd">@field_validator</span><span class="p">(</span><span class="s1">'explore_vars'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'before'</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate_explore_variants</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;explore_vars must be a dict&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'explore_vars must be a dict'</span><span class="p">)</span>
         <span class="c1"># override default values</span>
         <span class="n">value</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;TAU_T&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-            <span class="s1">&#39;TAU_P&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-            <span class="s1">&#39;TIME_CONST&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+            <span class="s1">'TAU_T'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+            <span class="s1">'TAU_P'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s1">'TIME_CONST'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
             <span class="o">**</span><span class="n">value</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
@@ -590,41 +590,41 @@ document.write(`
         <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="CllLammpsInputConfig.validate_domain"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig.validate_domain">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;before&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="CllLammpsInputConfig.validate_domain"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig.validate_domain">[docs]</a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">'before'</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate_domain</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="n">ensemble</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ensemble&#39;</span><span class="p">)</span>
+        <span class="n">ensemble</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ensemble'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ensemble</span><span class="p">:</span>
-            <span class="n">no_pbc</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;no_pbc&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">ensemble</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;npt&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">no_pbc</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ensemble npt conflict with no_pcb&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">ensemble</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;npt&#39;</span><span class="p">):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;ensemble is not npt, force PRES to -1&#39;</span><span class="p">)</span>
-                <span class="n">values</span><span class="p">[</span><span class="s1">&#39;explore_vars&#39;</span><span class="p">][</span><span class="s1">&#39;PRES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">no_pbc</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'no_pbc'</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ensemble</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'npt'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">no_pbc</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'ensemble npt conflict with no_pcb'</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ensemble</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'npt'</span><span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'ensemble is not npt, force PRES to -1'</span><span class="p">)</span>
+                <span class="n">values</span><span class="p">[</span><span class="s1">'explore_vars'</span><span class="p">][</span><span class="s1">'PRES'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="c1"># get all alias types</span>
-        <span class="n">type_alias</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type_alias&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">type_alias</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'type_alias'</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">alias_type</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="n">type_alias</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
 
         <span class="c1"># ensure all ghost type are defined in type_alias</span>
-        <span class="n">fep_opts</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fep_opts&#39;</span><span class="p">)</span>
+        <span class="n">fep_opts</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'fep_opts'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">fep_opts</span><span class="p">:</span>
             <span class="n">ghost_types</span> <span class="o">=</span> <span class="n">fep_opts</span><span class="o">.</span><span class="n">ini_ghost_types</span> <span class="o">+</span> <span class="n">fep_opts</span><span class="o">.</span><span class="n">fin_ghost_types</span>
             <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ghost_types</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">alias_type</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ghost type </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s1"> is not defined in type_alias&#39;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'ghost type </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s1"> is not defined in type_alias'</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">values</span></div>
 
-<div class="viewcode-block" id="CllLammpsInputConfig.assert_var"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig.assert_var">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">assert_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="CllLammpsInputConfig.assert_var"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsInputConfig.assert_var">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">assert_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">msg</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1"> is not defined in explore_vars or broadcast_vars&#39;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1"> is not defined in explore_vars or broadcast_vars'</span>
         <span class="k">assert</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">explore_vars</span> <span class="ow">or</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">broadcast_vars</span><span class="p">,</span> <span class="n">msg</span></div></div>
 
 
 <div class="viewcode-block" id="CllLammpsContextConfig"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.CllLammpsContextConfig">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CllLammpsContextConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">script_template</span><span class="p">:</span> <span class="n">BashTemplate</span>
-    <span class="n">lammps_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;lmp&#39;</span>
+    <span class="n">lammps_cmd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'lmp'</span>
     <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">multi_gpus_per_job</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
 
@@ -664,18 +664,18 @@ document.write(`
     <span class="k">else</span><span class="p">:</span>
         <span class="n">data_files</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resource_manager</span><span class="o">.</span><span class="n">resolve_artifacts</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">system_files</span><span class="p">)</span>
 
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;no data files found&#39;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'no data files found'</span>
 
     <span class="n">preset_template</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">preset_template</span>
     <span class="k">if</span> <span class="n">preset_template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;fep-pka&#39;</span><span class="p">:</span>
-            <span class="n">preset_template</span> <span class="o">=</span> <span class="s1">&#39;fep-pka&#39;</span>
-        <span class="k">elif</span> <span class="nb">input</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;fep-redox&#39;</span><span class="p">:</span>
-            <span class="n">preset_template</span> <span class="o">=</span> <span class="s1">&#39;fep-redox&#39;</span>
-        <span class="k">elif</span> <span class="nb">input</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;dpff&#39;</span><span class="p">:</span>
-            <span class="n">preset_template</span> <span class="o">=</span> <span class="s1">&#39;dpff&#39;</span>
+        <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">'fep-pka'</span><span class="p">:</span>
+            <span class="n">preset_template</span> <span class="o">=</span> <span class="s1">'fep-pka'</span>
+        <span class="k">elif</span> <span class="nb">input</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">'fep-redox'</span><span class="p">:</span>
+            <span class="n">preset_template</span> <span class="o">=</span> <span class="s1">'fep-redox'</span>
+        <span class="k">elif</span> <span class="nb">input</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">'dpff'</span><span class="p">:</span>
+            <span class="n">preset_template</span> <span class="o">=</span> <span class="s1">'dpff'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">preset_template</span> <span class="o">=</span> <span class="s1">&#39;custom-ff&#39;</span> <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">custom_ff</span> <span class="k">else</span> <span class="s1">&#39;default&#39;</span>
+            <span class="n">preset_template</span> <span class="o">=</span> <span class="s1">'custom-ff'</span> <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">custom_ff</span> <span class="k">else</span> <span class="s1">'default'</span>
 
     <span class="n">tasks_dir</span><span class="p">,</span> <span class="n">task_dirs</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">run_python_fn</span><span class="p">(</span><span class="n">make_lammps_task_dirs</span><span class="p">)(</span>
         <span class="n">combination_vars</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">explore_vars</span><span class="p">,</span>
@@ -705,14 +705,14 @@ document.write(`
     <span class="p">)</span>
 
     <span class="c1"># build scripts and submit</span>
-    <span class="n">base_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">lammps_cmd</span><span class="si">}</span><span class="s1"> -i lammps.input&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;if [ -f md.restart.* ]; then </span><span class="si">{</span><span class="n">base_cmd</span><span class="si">}</span><span class="s1"> -v restart 1; else </span><span class="si">{</span><span class="n">base_cmd</span><span class="si">}</span><span class="s1"> -v restart 0; fi&#39;&#39;&#39;</span>
+    <span class="n">base_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">lammps_cmd</span><span class="si">}</span><span class="s1"> -i lammps.input'</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'''if [ -f md.restart.* ]; then </span><span class="si">{</span><span class="n">base_cmd</span><span class="si">}</span><span class="s1"> -v restart 1; else </span><span class="si">{</span><span class="n">base_cmd</span><span class="si">}</span><span class="s1"> -v restart 0; fi'''</span>
 
     <span class="c1"># generate steps</span>
     <span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">task_dir</span> <span class="ow">in</span> <span class="n">task_dirs</span><span class="p">:</span>
         <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BashStep</span><span class="p">(</span>
-            <span class="n">cwd</span><span class="o">=</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="s1">&#39;lammps&#39;</span><span class="p">,</span> <span class="n">exit_on_error</span><span class="o">=</span><span class="ow">not</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ignore_error</span><span class="p">))</span>
+            <span class="n">cwd</span><span class="o">=</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">'url'</span><span class="p">],</span> <span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">checkpoint</span><span class="o">=</span><span class="s1">'lammps'</span><span class="p">,</span> <span class="n">exit_on_error</span><span class="o">=</span><span class="ow">not</span> <span class="nb">input</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ignore_error</span><span class="p">))</span>
 
     <span class="c1"># submit jobs by the number of concurrency</span>
     <span class="n">jobs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -737,51 +737,51 @@ document.write(`
     <span class="c1"># build outputs</span>
     <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">task_dir</span> <span class="ow">in</span> <span class="n">task_dirs</span><span class="p">:</span>
-        <span class="n">common</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">executor</span><span class="o">=</span><span class="n">executor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">LAMMPS_OUTPUT_DIR</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;fep-pka&#39;</span><span class="p">:</span>
+        <span class="n">common</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">'url'</span><span class="p">],</span> <span class="n">executor</span><span class="o">=</span><span class="n">executor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">DataFormat</span><span class="o">.</span><span class="n">LAMMPS_OUTPUT_DIR</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">'fep-pka'</span><span class="p">:</span>
             <span class="c1"># in fep-pka mode,</span>
             <span class="c1"># ini and fin states have different structures, so their structure files are different</span>
             <span class="c1"># their label method is different too, so we need to unpack `fep-ini` and `fep-fin` accordingly</span>
             <span class="n">outputs</span> <span class="o">+=</span> <span class="p">[</span>
                 <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="n">common</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span>
-                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;model_devi_file&#39;</span><span class="p">:</span> <span class="s1">&#39;model_devi_ini.out&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;structures&#39;</span><span class="p">:</span> <span class="s1">&#39;traj-fep-ini.lammpstrj&#39;</span><span class="p">,</span>
-                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;fep-ini&#39;</span><span class="p">],</span>
+                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">],</span>
+                    <span class="s1">'model_devi_file'</span><span class="p">:</span> <span class="s1">'model_devi_ini.out'</span><span class="p">,</span>
+                    <span class="s1">'structures'</span><span class="p">:</span> <span class="s1">'traj-fep-ini.lammpstrj'</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">][</span><span class="s1">'fep-ini'</span><span class="p">],</span>
                 <span class="p">}),</span>
                 <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="n">common</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span>
-                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;model_devi_file&#39;</span><span class="p">:</span> <span class="s1">&#39;model_devi_fin.out&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;structures&#39;</span><span class="p">:</span> <span class="s1">&#39;traj-fep-fin.lammpstrj&#39;</span><span class="p">,</span>
-                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;fep-fin&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;ancestor&#39;</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-fin&#39;</span><span class="p">,</span>  <span class="c1"># only fin needs</span>
+                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">],</span>
+                    <span class="s1">'model_devi_file'</span><span class="p">:</span> <span class="s1">'model_devi_fin.out'</span><span class="p">,</span>
+                    <span class="s1">'structures'</span><span class="p">:</span> <span class="s1">'traj-fep-fin.lammpstrj'</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">][</span><span class="s1">'fep-fin'</span><span class="p">],</span>
+                    <span class="s1">'ancestor'</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">][</span><span class="s1">'ancestor'</span><span class="p">]</span> <span class="o">+</span> <span class="s1">'-fin'</span><span class="p">,</span>  <span class="c1"># only fin needs</span>
                 <span class="p">}),</span>
             <span class="p">]</span>
-        <span class="k">elif</span> <span class="nb">input</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;fep-redox&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">input</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">'fep-redox'</span><span class="p">:</span>
             <span class="c1"># in fep-redox mode,</span>
             <span class="c1"># ini and fin states have the same structure, so just use the default one,</span>
             <span class="c1"># but their label method is different, so we need to unpack `fep-ini` and `fep-fin` accordingly</span>
             <span class="n">outputs</span> <span class="o">+=</span> <span class="p">[</span>
                 <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="n">common</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span>
-                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span> <span class="s1">&#39;model_devi_file&#39;</span><span class="p">:</span> <span class="s1">&#39;model_devi_ini.out&#39;</span><span class="p">,</span>
-                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;fep-ini&#39;</span><span class="p">],</span>
+                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">],</span> <span class="s1">'model_devi_file'</span><span class="p">:</span> <span class="s1">'model_devi_ini.out'</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">][</span><span class="s1">'fep-ini'</span><span class="p">],</span>
                 <span class="p">}),</span>
                 <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="n">common</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span>
-                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span> <span class="s1">&#39;model_devi_file&#39;</span><span class="p">:</span> <span class="s1">&#39;model_devi_fin.out&#39;</span><span class="p">,</span>
-                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;fep-fin&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;ancestor&#39;</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-fin&#39;</span><span class="p">,</span>  <span class="c1"># only fin needs</span>
+                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">],</span> <span class="s1">'model_devi_file'</span><span class="p">:</span> <span class="s1">'model_devi_fin.out'</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">][</span><span class="s1">'fep-fin'</span><span class="p">],</span>
+                    <span class="s1">'ancestor'</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">][</span><span class="s1">'ancestor'</span><span class="p">]</span> <span class="o">+</span> <span class="s1">'-fin'</span><span class="p">,</span>  <span class="c1"># only fin needs</span>
                 <span class="p">}),</span>
             <span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">outputs</span> <span class="o">+=</span> <span class="p">[</span>
-                <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="n">common</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span> <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span> <span class="p">}),</span>
+                <span class="n">Artifact</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="o">**</span><span class="n">common</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span> <span class="o">**</span><span class="n">task_dir</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">]</span> <span class="p">}),</span>
             <span class="p">]</span>
 
     <span class="k">return</span> <span class="n">GenericLammpsOutput</span><span class="p">(</span><span class="n">model_devi_outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LammpsInputTemplate"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.LammpsInputTemplate">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">LammpsInputTemplate</span><span class="p">(</span><span class="n">Template</span><span class="p">):</span>
-    <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;$$&#39;</span></div>
+    <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">'$$'</span></div>
 
 
 <div class="viewcode-block" id="make_lammps_task_dirs"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.make_lammps_task_dirs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">make_lammps_task_dirs</span><span class="p">(</span><span class="n">combination_vars</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span>
@@ -811,8 +811,8 @@ document.write(`
                           <span class="n">custom_ff</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                           <span class="p">):</span>
     <span class="c1"># setup workspace</span>
-    <span class="n">input_data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;input_data&#39;</span><span class="p">)</span>
-    <span class="n">tasks_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">&#39;tasks&#39;</span><span class="p">)</span>
+    <span class="n">input_data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'input_data'</span><span class="p">)</span>
+    <span class="n">tasks_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">work_dir</span><span class="p">,</span> <span class="s1">'tasks'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">(</span><span class="n">input_data_dir</span><span class="p">,</span> <span class="n">tasks_dir</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -821,33 +821,33 @@ document.write(`
     <span class="n">atoms_list</span> <span class="o">=</span> <span class="n">artifacts_to_ase_atoms</span><span class="p">(</span><span class="n">data_files</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">artifact</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">atoms_list</span><span class="p">):</span>
         <span class="c1">#  create data file</span>
-        <span class="n">ancestor</span> <span class="o">=</span> <span class="n">artifact</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ancestor&#39;</span><span class="p">]</span>
-        <span class="n">data_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_data_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ancestor</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">06d</span><span class="si">}</span><span class="s1">.lammps.data&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;dpff&#39;</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">dp_modifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dp_sel_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;dp_modifier &amp; dp_sel_type is required for dpff mode&#39;</span>
-            <span class="n">sys_charge_map</span> <span class="o">=</span> <span class="n">dp_modifier</span><span class="p">[</span><span class="s1">&#39;sys_charge_map&#39;</span><span class="p">]</span>
-            <span class="n">model_charge_map</span> <span class="o">=</span> <span class="n">dp_modifier</span><span class="p">[</span><span class="s1">&#39;model_charge_map&#39;</span><span class="p">]</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">ancestor</span> <span class="o">=</span> <span class="n">artifact</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">][</span><span class="s1">'ancestor'</span><span class="p">]</span>
+        <span class="n">data_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">input_data_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">ancestor</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">06d</span><span class="si">}</span><span class="s1">.lammps.data'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'dpff'</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">dp_modifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dp_sel_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">'dp_modifier &amp; dp_sel_type is required for dpff mode'</span>
+            <span class="n">sys_charge_map</span> <span class="o">=</span> <span class="n">dp_modifier</span><span class="p">[</span><span class="s1">'sys_charge_map'</span><span class="p">]</span>
+            <span class="n">model_charge_map</span> <span class="o">=</span> <span class="n">dp_modifier</span><span class="p">[</span><span class="s1">'model_charge_map'</span><span class="p">]</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                 <span class="n">dump_dplr_lammps_data</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">,</span> <span class="n">sel_type</span><span class="o">=</span><span class="n">dp_sel_type</span><span class="p">,</span>
                                       <span class="n">sys_charge_map</span><span class="o">=</span><span class="n">sys_charge_map</span><span class="p">,</span> <span class="n">model_charge_map</span><span class="o">=</span><span class="n">model_charge_map</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;lammps-data&#39;</span><span class="p">,</span> <span class="n">specorder</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="n">ase</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'lammps-data'</span><span class="p">,</span> <span class="n">specorder</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="n">input_dataset</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-            <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">data_file</span><span class="p">,</span>
-            <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="n">artifact</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span>
+            <span class="s1">'url'</span><span class="p">:</span> <span class="n">data_file</span><span class="p">,</span>
+            <span class="s1">'attrs'</span><span class="p">:</span> <span class="n">artifact</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">],</span>
         <span class="p">})</span>
 
     <span class="c1"># generate combinations of variants</span>
-    <span class="n">combination_fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DATA_FILE&#39;</span><span class="p">]</span>
+    <span class="n">combination_fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'DATA_FILE'</span><span class="p">]</span>
     <span class="n">combination_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_dataset</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">combination_vars</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">combination_fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
         <span class="n">combination_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
     <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n_wise</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">combination_fields</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;using </span><span class="si">{</span><span class="n">n_wise</span><span class="si">}</span><span class="s1">-wise combination&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'using </span><span class="si">{</span><span class="n">n_wise</span><span class="si">}</span><span class="s1">-wise combination'</span><span class="p">)</span>
         <span class="n">combinations</span> <span class="o">=</span> <span class="n">AllPairs</span><span class="p">(</span><span class="n">combination_values</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n_wise</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;using full combination&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'using full combination'</span><span class="p">)</span>
         <span class="n">combinations</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">combination_values</span><span class="p">)</span>
 
     <span class="n">combinations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">combinations</span><span class="p">))</span>
@@ -855,7 +855,7 @@ document.write(`
     <span class="c1"># broadcast broadcast_vars to all combinations</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">broadcast_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="c1"># TODO: moving this check to pydatnic validator</span>
-        <span class="k">assert</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">combination_fields</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;broadcast_vars </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> is already in explore_vars&#39;</span>
+        <span class="k">assert</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">combination_fields</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'broadcast_vars </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> is already in explore_vars'</span>
 
     <span class="n">combination_fields</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">broadcast_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">combination</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">combinations</span><span class="p">):</span>
@@ -868,25 +868,25 @@ document.write(`
         <span class="n">lammps_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">combination_fields</span><span class="p">,</span> <span class="n">combination</span><span class="p">))</span>
         <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
             <span class="o">**</span><span class="n">lammps_vars</span><span class="p">,</span>
-            <span class="s1">&#39;CUSTOM_FF&#39;</span><span class="p">:</span> <span class="n">custom_ff</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            <span class="s1">'CUSTOM_FF'</span><span class="p">:</span> <span class="n">custom_ff</span> <span class="ow">or</span> <span class="s1">''</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="c1"># setup task dir</span>
-        <span class="n">task_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tasks_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">06d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">task_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tasks_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">06d</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">data_file</span> <span class="o">=</span> <span class="n">lammps_vars</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;DATA_FILE&#39;</span><span class="p">)</span>
+        <span class="n">data_file</span> <span class="o">=</span> <span class="n">lammps_vars</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'DATA_FILE'</span><span class="p">)</span>
 
         <span class="c1"># override default values with data file attrs</span>
-        <span class="n">overridable_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">dict_nested_get</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">,</span> <span class="s1">&#39;lammps&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
-        <span class="n">_plumed_config</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plumed_config&#39;</span><span class="p">,</span> <span class="n">plumed_config</span><span class="p">)</span>
-        <span class="n">_fix_statement</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fix_statement&#39;</span><span class="p">,</span> <span class="n">fix_statement</span><span class="p">)</span>
-        <span class="n">_ensemble</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ensemble&#39;</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">)</span>
-        <span class="n">_type_alias</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type_alias&#39;</span><span class="p">,</span> <span class="n">type_alias</span><span class="p">)</span>
-        <span class="n">_fep_opts</span> <span class="o">=</span> <span class="n">FepOptions</span><span class="p">(</span><span class="o">**</span><span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fep_opts&#39;</span><span class="p">,</span> <span class="n">fep_opts</span><span class="o">.</span><span class="n">dict</span><span class="p">()))</span>
+        <span class="n">overridable_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">dict_nested_get</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="p">[</span><span class="s1">'attrs'</span><span class="p">,</span> <span class="s1">'lammps'</span><span class="p">],</span> <span class="nb">dict</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
+        <span class="n">_plumed_config</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plumed_config'</span><span class="p">,</span> <span class="n">plumed_config</span><span class="p">)</span>
+        <span class="n">_fix_statement</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'fix_statement'</span><span class="p">,</span> <span class="n">fix_statement</span><span class="p">)</span>
+        <span class="n">_ensemble</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ensemble'</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">)</span>
+        <span class="n">_type_alias</span> <span class="o">=</span> <span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'type_alias'</span><span class="p">,</span> <span class="n">type_alias</span><span class="p">)</span>
+        <span class="n">_fep_opts</span> <span class="o">=</span> <span class="n">FepOptions</span><span class="p">(</span><span class="o">**</span><span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'fep_opts'</span><span class="p">,</span> <span class="n">fep_opts</span><span class="o">.</span><span class="n">dict</span><span class="p">()))</span>
 
         <span class="c1"># be careful to override template_vars without changing the original dict</span>
-        <span class="n">_extra_template_vars</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">extra_template_vars</span><span class="p">,</span> <span class="o">**</span><span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;template_vars&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())}</span>
+        <span class="n">_extra_template_vars</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">extra_template_vars</span><span class="p">,</span> <span class="o">**</span><span class="n">overridable_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'template_vars'</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())}</span>
 
         <span class="c1"># generate types related template vars</span>
         <span class="n">types_template_vars</span> <span class="o">=</span> <span class="n">get_types_template_vars</span><span class="p">(</span>
@@ -898,110 +898,110 @@ document.write(`
 
         <span class="c1">## build variables section</span>
         <span class="k">if</span> <span class="n">rel_path</span><span class="p">:</span>
-            <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">&#39;DATA_FILE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">data_file</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span> <span class="n">task_dir</span><span class="p">)</span>
+            <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">'DATA_FILE'</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">data_file</span><span class="p">[</span><span class="s1">'url'</span><span class="p">],</span> <span class="n">task_dir</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">&#39;DATA_FILE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_file</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
+            <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">'DATA_FILE'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_file</span><span class="p">[</span><span class="s1">'url'</span><span class="p">]</span>
 
-        <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">&#39;N_STEPS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_steps</span>
-        <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">&#39;THERMO_FREQ&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_freq</span>
-        <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">&#39;DUMP_FREQ&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_freq</span>
-        <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">&#39;SAMPLE_FREQ&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_freq</span>
-        <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">&#39;DEFAULT_GROUP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
+        <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">'N_STEPS'</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_steps</span>
+        <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">'THERMO_FREQ'</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_freq</span>
+        <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">'DUMP_FREQ'</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_freq</span>
+        <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">'SAMPLE_FREQ'</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_freq</span>
+        <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">'DEFAULT_GROUP'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'all'</span>
 
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;dpff&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'dpff'</span><span class="p">:</span>
             <span class="k">assert</span> <span class="n">dp_modifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">&#39;DEFAULT_GROUP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;real_atom&#39;</span>
-            <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">&#39;EWALD_BETA&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp_modifier</span><span class="p">[</span><span class="s1">&#39;ewald_beta&#39;</span><span class="p">]</span>
-        <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">&#39;DUMP_GROUP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">&#39;DEFAULT_GROUP&#39;</span><span class="p">]</span>
+            <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">'DEFAULT_GROUP'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'real_atom'</span>
+            <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">'EWALD_BETA'</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp_modifier</span><span class="p">[</span><span class="s1">'ewald_beta'</span><span class="p">]</span>
+        <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">'DUMP_GROUP'</span><span class="p">]</span> <span class="o">=</span> <span class="n">lammps_vars</span><span class="p">[</span><span class="s1">'DEFAULT_GROUP'</span><span class="p">]</span>
 
-        <span class="n">dump_json</span><span class="p">(</span><span class="n">lammps_vars</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;debug.lammps_vars.json&#39;</span><span class="p">))</span>  <span class="c1"># for debug</span>
-        <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;VARIABLES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_lammps_variables</span><span class="p">(</span><span class="n">lammps_vars</span><span class="p">)</span>
+        <span class="n">dump_json</span><span class="p">(</span><span class="n">lammps_vars</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">'debug.lammps_vars.json'</span><span class="p">))</span>  <span class="c1"># for debug</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s1">'VARIABLES'</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_lammps_variables</span><span class="p">(</span><span class="n">lammps_vars</span><span class="p">)</span>
         <span class="c1">## build init settings</span>
-        <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;INITIALIZE&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-            <span class="s1">&#39;units           metal&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;atom_style      </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;full&#39;</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;dpff&#39;</span> <span class="k">else</span> <span class="s1">&#39;atomic&#39;</span><span class="p">),</span>
-            <span class="s1">&#39;boundary &#39;</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;f f f&#39;</span> <span class="k">if</span> <span class="n">no_pbc</span> <span class="k">else</span> <span class="s1">&#39;p p p&#39;</span><span class="p">),</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s1">'INITIALIZE'</span><span class="p">]</span> <span class="o">=</span>  <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+            <span class="s1">'units           metal'</span><span class="p">,</span>
+            <span class="s1">'atom_style      </span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="s1">'full'</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'dpff'</span> <span class="k">else</span> <span class="s1">'atomic'</span><span class="p">),</span>
+            <span class="s1">'boundary '</span> <span class="o">+</span> <span class="p">(</span><span class="s1">'f f f'</span> <span class="k">if</span> <span class="n">no_pbc</span> <span class="k">else</span> <span class="s1">'p p p'</span><span class="p">),</span>
         <span class="p">])</span>
         <span class="c1">## build read data section</span>
         <span class="n">extra_types</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">_type_alias</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>  <span class="c1"># how many alias type are defined</span>
-        <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;READ_DATA&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-<span class="w">            </span><span class="sd">&#39;&#39;&#39;if &quot;${restart} &gt; 0&quot; &#39;&#39;&#39;</span>
-<span class="w">            </span><span class="sd">&#39;&#39;&#39;then &quot;read_restart md.restart.*&quot; &#39;&#39;&#39;</span>
-<span class="w">            </span><span class="sd">&#39;&#39;&#39;else &quot;read_data ${DATA_FILE} extra/atom/types %s&quot;&#39;&#39;&#39;</span> <span class="o">%</span> <span class="n">extra_types</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s1">'READ_DATA'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+<span class="w">            </span><span class="sd">'''if "${restart} &gt; 0" '''</span>
+<span class="w">            </span><span class="sd">'''then "read_restart md.restart.*" '''</span>
+<span class="w">            </span><span class="sd">'''else "read_data ${DATA_FILE} extra/atom/types %s"'''</span> <span class="o">%</span> <span class="n">extra_types</span>
         <span class="p">)</span>
 
         <span class="c1">## build simulation section</span>
         <span class="n">simulation</span> <span class="o">=</span> <span class="p">[</span>
-<span class="w">            </span><span class="sd">&#39;&#39;&#39;if &quot;${restart} == 0&quot; then &quot;velocity ${DEFAULT_GROUP} create ${TEMP} %d&quot;&#39;&#39;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">10</span> <span class="o">^</span> <span class="mi">6</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="sd">'''if "${restart} == 0" then "velocity ${DEFAULT_GROUP} create ${TEMP} %d"'''</span> <span class="o">%</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">10</span> <span class="o">^</span> <span class="mi">6</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="p">]</span>
 
         <span class="k">if</span> <span class="n">_fix_statement</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">_ensemble</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;either fix_statement or ensemble is required&#39;</span>
-            <span class="n">_fix_statement</span> <span class="o">=</span> <span class="n">get_ensemble</span><span class="p">(</span><span class="n">_ensemble</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;$</span><span class="si">{DEFAULT_GROUP}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">_ensemble</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">'either fix_statement or ensemble is required'</span>
+            <span class="n">_fix_statement</span> <span class="o">=</span> <span class="n">get_ensemble</span><span class="p">(</span><span class="n">_ensemble</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">'$</span><span class="si">{DEFAULT_GROUP}</span><span class="s1">'</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;dpff&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'dpff'</span><span class="p">:</span>
             <span class="n">simulation</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
-                <span class="s1">&#39;compute  real_temp real_atom temp&#39;</span><span class="p">,</span>
+                <span class="s1">'compute  real_temp real_atom temp'</span><span class="p">,</span>
                 <span class="n">_fix_statement</span><span class="p">,</span>
-                <span class="s1">&#39;fix_modify 1 temp real_temp&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="s1">'fix_modify 1 temp real_temp'</span><span class="p">,</span>
+                <span class="s1">''</span><span class="p">,</span>
             <span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">simulation</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_fix_statement</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">_plumed_config</span><span class="p">:</span>
             <span class="n">_plumed_config</span> <span class="o">=</span> <span class="n">LammpsInputTemplate</span><span class="p">(</span><span class="n">_plumed_config</span><span class="p">)</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="o">**</span><span class="n">template_vars</span><span class="p">)</span>
-            <span class="n">plumed_config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;plumed.input&#39;</span><span class="p">)</span>
+            <span class="n">plumed_config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">'plumed.input'</span><span class="p">)</span>
             <span class="n">dump_text</span><span class="p">(</span><span class="n">_plumed_config</span><span class="p">,</span> <span class="n">plumed_config_file</span><span class="p">)</span>
-            <span class="n">simulation</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;fix cll_plumed $</span><span class="se">{{</span><span class="s1">DEFAULT_GROUP</span><span class="se">}}</span><span class="s1"> plumed plumedfile plumed.input outfile plumed.out&#39;</span><span class="p">)</span>
+            <span class="n">simulation</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'fix cll_plumed $</span><span class="se">{{</span><span class="s1">DEFAULT_GROUP</span><span class="se">}}</span><span class="s1"> plumed plumedfile plumed.input outfile plumed.out'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">no_pbc</span><span class="p">:</span>
             <span class="n">simulation</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
-                <span class="s1">&#39;velocity $</span><span class="si">{DEFAULT_GROUP}</span><span class="s1"> zero linear&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;fix      fm $</span><span class="si">{DEFAULT_GROUP}</span><span class="s1"> momentum 1 linear 1 1 1&#39;</span><span class="p">,</span>
+                <span class="s1">'velocity $</span><span class="si">{DEFAULT_GROUP}</span><span class="s1"> zero linear'</span><span class="p">,</span>
+                <span class="s1">'fix      fm $</span><span class="si">{DEFAULT_GROUP}</span><span class="s1"> momentum 1 linear 1 1 1'</span><span class="p">,</span>
             <span class="p">])</span>
         <span class="n">simulation</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
-            <span class="s1">&#39;thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;thermo       $</span><span class="si">{THERMO_FREQ}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="s1">'thermo_style custom step temp pe ke etotal press vol lx ly lz xy xz yz'</span><span class="p">,</span>
+            <span class="s1">'thermo       $</span><span class="si">{THERMO_FREQ}</span><span class="s1">'</span><span class="p">,</span>
         <span class="p">])</span>
 
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;fep-pka&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'fep-pka'</span><span class="p">:</span>
             <span class="n">simulation</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
-                <span class="s1">&#39;dump 1 fep_ini_atoms custom $</span><span class="si">{DUMP_FREQ}</span><span class="s1"> traj-fep-ini.lammpstrj id type element x y z fx fy fz&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;dump 2 fep_fin_atoms custom $</span><span class="si">{DUMP_FREQ}</span><span class="s1"> traj-fep-fin.lammpstrj id type element x y z fx fy fz&#39;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;dump_modify 1 element </span><span class="si">{</span><span class="n">types_template_vars</span><span class="p">[</span><span class="s2">&quot;SPECORDER&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;dump_modify 2 element </span><span class="si">{</span><span class="n">types_template_vars</span><span class="p">[</span><span class="s2">&quot;SPECORDER&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="s1">'dump 1 fep_ini_atoms custom $</span><span class="si">{DUMP_FREQ}</span><span class="s1"> traj-fep-ini.lammpstrj id type element x y z fx fy fz'</span><span class="p">,</span>
+                <span class="s1">'dump 2 fep_fin_atoms custom $</span><span class="si">{DUMP_FREQ}</span><span class="s1"> traj-fep-fin.lammpstrj id type element x y z fx fy fz'</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'dump_modify 1 element </span><span class="si">{</span><span class="n">types_template_vars</span><span class="p">[</span><span class="s2">"SPECORDER"</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'dump_modify 2 element </span><span class="si">{</span><span class="n">types_template_vars</span><span class="p">[</span><span class="s2">"SPECORDER"</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
             <span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">simulation</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
-                <span class="s1">&#39;dump 1 $</span><span class="si">{DUMP_GROUP}</span><span class="s1"> custom $</span><span class="si">{DUMP_FREQ}</span><span class="s1"> traj.lammpstrj id type element x y z fx fy fz&#39;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;dump_modify 1 element </span><span class="si">{</span><span class="n">types_template_vars</span><span class="p">[</span><span class="s2">&quot;SPECORDER&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="s1">'dump 1 $</span><span class="si">{DUMP_GROUP}</span><span class="s1"> custom $</span><span class="si">{DUMP_FREQ}</span><span class="s1"> traj.lammpstrj id type element x y z fx fy fz'</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">'dump_modify 1 element </span><span class="si">{</span><span class="n">types_template_vars</span><span class="p">[</span><span class="s2">"SPECORDER"</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
             <span class="p">])</span>
-        <span class="n">simulation</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;restart 10000 md.restart&#39;</span><span class="p">)</span>
+        <span class="n">simulation</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'restart 10000 md.restart'</span><span class="p">)</span>
 
-        <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SIMULATION&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">simulation</span><span class="p">)</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s1">'SIMULATION'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">simulation</span><span class="p">)</span>
         <span class="c1">## build run section</span>
-        <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;RUN&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-            <span class="s1">&#39;timestep </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">timestep</span><span class="p">,</span>
-            <span class="s1">&#39;run      $</span><span class="si">{N_STEPS}</span><span class="s1"> upto&#39;</span><span class="p">,</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s1">'RUN'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+            <span class="s1">'timestep </span><span class="si">%f</span><span class="s1">'</span> <span class="o">%</span> <span class="n">timestep</span><span class="p">,</span>
+            <span class="s1">'run      $</span><span class="si">{N_STEPS}</span><span class="s1"> upto'</span><span class="p">,</span>
         <span class="p">])</span>
 
         <span class="n">dp_models_vars</span> <span class="o">=</span> <span class="n">_get_dp_models_variables</span><span class="p">(</span><span class="n">dp_models</span><span class="p">)</span>
         <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">template_vars</span><span class="p">,</span> <span class="o">**</span><span class="n">types_template_vars</span><span class="p">,</span> <span class="o">**</span><span class="n">dp_models_vars</span><span class="p">,</span> <span class="o">**</span><span class="n">_extra_template_vars</span><span class="p">}</span>
-        <span class="n">dump_json</span><span class="p">(</span><span class="n">template_vars</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;debug.template_vars.json&#39;</span><span class="p">))</span>
+        <span class="n">dump_json</span><span class="p">(</span><span class="n">template_vars</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">'debug.template_vars.json'</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">input_template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">input_template</span> <span class="o">=</span> <span class="n">PRESET_LAMMPS_INPUT_TEMPLATE</span><span class="p">[</span><span class="n">preset_template</span><span class="p">]</span>
-        <span class="n">dump_text</span><span class="p">(</span><span class="n">input_template</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;debug.input_template.txt&#39;</span><span class="p">))</span>
+        <span class="n">dump_text</span><span class="p">(</span><span class="n">input_template</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">'debug.input_template.txt'</span><span class="p">))</span>
         <span class="n">lammps_input</span> <span class="o">=</span> <span class="n">LammpsInputTemplate</span><span class="p">(</span><span class="n">input_template</span><span class="p">)</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span><span class="o">**</span><span class="n">template_vars</span><span class="p">)</span>
-        <span class="n">dump_text</span><span class="p">(</span><span class="n">lammps_input</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">&#39;lammps.input&#39;</span><span class="p">))</span>
+        <span class="n">dump_text</span><span class="p">(</span><span class="n">lammps_input</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">task_dir</span><span class="p">,</span> <span class="s1">'lammps.input'</span><span class="p">))</span>
 
         <span class="c1"># the `source` field is required as model_devi will use it to update init structures</span>
-        <span class="n">task_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">,</span>
-                          <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span>
-                              <span class="o">**</span><span class="n">data_file</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span>
-                              <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="n">data_file</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
-                              <span class="s1">&#39;efield&#39;</span><span class="p">:</span> <span class="n">lammps_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;EFIELD&#39;</span><span class="p">),</span>
+        <span class="n">task_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">'url'</span><span class="p">:</span> <span class="n">task_dir</span><span class="p">,</span>
+                          <span class="s1">'attrs'</span><span class="p">:</span> <span class="p">{</span>
+                              <span class="o">**</span><span class="n">data_file</span><span class="p">[</span><span class="s1">'attrs'</span><span class="p">],</span>
+                              <span class="s1">'source'</span><span class="p">:</span> <span class="n">data_file</span><span class="p">[</span><span class="s1">'url'</span><span class="p">],</span>
+                              <span class="s1">'efield'</span><span class="p">:</span> <span class="n">lammps_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'EFIELD'</span><span class="p">),</span>
                           <span class="p">}})</span>  <span class="c1"># type: ignore</span>
     <span class="k">return</span> <span class="n">tasks_dir</span><span class="p">,</span> <span class="n">task_dirs</span></div>
 
@@ -1009,12 +1009,12 @@ document.write(`
 <div class="viewcode-block" id="get_types_template_vars"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.get_types_template_vars">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_types_template_vars</span><span class="p">(</span><span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">mass_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
                             <span class="n">type_alias</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">sel_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
                             <span class="n">fep_ini_ghost_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">fep_fin_ghost_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    generate template vars that related to type_map, mass_map, type_alias, sel_type</span>
 
 <span class="sd">    the order of atom type index is:</span>
 <span class="sd">    real atoms (defined in type_map), virtual atoms (defined in sel_type) and then alias (defined in type_alias)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">type_to_mass</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">type_map</span><span class="p">,</span> <span class="n">mass_map</span><span class="p">))</span>
 
@@ -1030,11 +1030,11 @@ document.write(`
         <span class="n">n_real_atom</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">type_map</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sel_type</span><span class="p">):</span>
             <span class="c1"># add placeholder for sel_type</span>
-            <span class="n">ext_type_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;_X_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">ext_type_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'_X_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
             <span class="n">ext_mass_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
             <span class="c1"># type association is to define relationship between virtual and real atom type in lammps</span>
             <span class="n">type_association</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_real_atom</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-        <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;DPLR_TYPE_ASSOCIATION&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">type_association</span><span class="p">))</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s1">'DPLR_TYPE_ASSOCIATION'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">type_association</span><span class="p">))</span>
 
     <span class="c1"># SPECORDER is used to specify the order of types in the lammps data file</span>
     <span class="c1"># For example, if the complete type_map is [H, O, O_1, O_2, H_1, H_2],</span>
@@ -1048,11 +1048,11 @@ document.write(`
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">alias</span><span class="p">:</span>
             <span class="n">specorder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">real_type</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">fep_ini_ghost_types</span><span class="p">:</span>
-                <span class="n">fep_ini_specorder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;NULL&#39;</span><span class="p">)</span>
+                <span class="n">fep_ini_specorder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'NULL'</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">fep_ini_specorder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">real_type</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">fep_fin_ghost_types</span><span class="p">:</span>
-                <span class="n">fep_fin_specorder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;NULL&#39;</span><span class="p">)</span>
+                <span class="n">fep_fin_specorder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'NULL'</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">fep_fin_specorder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">real_type</span><span class="p">)</span>
 
@@ -1065,9 +1065,9 @@ document.write(`
     <span class="n">fep_ini_type_vars</span> <span class="o">=</span> <span class="n">_to_lammps_type_vars</span><span class="p">([</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">all_types</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fep_ini_ghost_types</span><span class="p">])</span>
     <span class="n">fep_fin_type_vars</span> <span class="o">=</span> <span class="n">_to_lammps_type_vars</span><span class="p">([</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">all_types</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fep_fin_ghost_types</span><span class="p">])</span>
 
-    <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;FEP_GROUPS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-        <span class="sa">f</span><span class="s1">&#39;group fep_ini_atoms type </span><span class="si">{</span><span class="n">fep_ini_type_vars</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-        <span class="sa">f</span><span class="s1">&#39;group fep_fin_atoms type </span><span class="si">{</span><span class="n">fep_fin_type_vars</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">template_vars</span><span class="p">[</span><span class="s1">'FEP_GROUPS'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+        <span class="sa">f</span><span class="s1">'group fep_ini_atoms type </span><span class="si">{</span><span class="n">fep_ini_type_vars</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s1">'group fep_fin_atoms type </span><span class="si">{</span><span class="n">fep_fin_type_vars</span><span class="si">}</span><span class="s1">'</span>
     <span class="p">])</span>
 
     <span class="c1"># define group for dpff mode</span>
@@ -1080,19 +1080,19 @@ document.write(`
         <span class="n">dpff_real_atom</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="n">real_atom_start</span><span class="p">,</span> <span class="n">real_atom_end</span><span class="p">),</span>  <span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="n">virtual_atom_end</span><span class="p">,</span> <span class="n">alias_end</span><span class="p">)]</span>
         <span class="n">dpff_virtual_atom</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">real_atom_end</span><span class="p">,</span> <span class="n">virtual_atom_end</span><span class="p">)</span>
 
-        <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;DPFF_REAL_ATOM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">dpff_real_atom</span><span class="p">))</span>
-        <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;DPFF_VIRTUAL_ATOM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">dpff_virtual_atom</span><span class="p">))</span>
-        <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;DPFF_GROUPS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
-            <span class="sa">f</span><span class="s1">&#39;group real_atom    type </span><span class="si">{</span><span class="n">template_vars</span><span class="p">[</span><span class="s2">&quot;DPFF_REAL_ATOM&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-            <span class="sa">f</span><span class="s1">&#39;group virtual_atom type </span><span class="si">{</span><span class="n">template_vars</span><span class="p">[</span><span class="s2">&quot;DPFF_VIRTUAL_ATOM&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-            <span class="sa">f</span><span class="s1">&#39;neigh_modify    every 10 delay 0 check no exclude group real_atom virtual_atom&#39;</span><span class="p">,</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s1">'DPFF_REAL_ATOM'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">dpff_real_atom</span><span class="p">))</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s1">'DPFF_VIRTUAL_ATOM'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">dpff_virtual_atom</span><span class="p">))</span>
+        <span class="n">template_vars</span><span class="p">[</span><span class="s1">'DPFF_GROUPS'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+            <span class="sa">f</span><span class="s1">'group real_atom    type </span><span class="si">{</span><span class="n">template_vars</span><span class="p">[</span><span class="s2">"DPFF_REAL_ATOM"</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">'group virtual_atom type </span><span class="si">{</span><span class="n">template_vars</span><span class="p">[</span><span class="s2">"DPFF_VIRTUAL_ATOM"</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">'neigh_modify    every 10 delay 0 check no exclude group real_atom virtual_atom'</span><span class="p">,</span>
         <span class="p">])</span>
 
     <span class="c1"># specorder in the format of H O H NULL, for lammps pair coeff input</span>
-    <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;SPECORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">specorder</span><span class="p">)</span>
+    <span class="n">template_vars</span><span class="p">[</span><span class="s1">'SPECORDER'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">specorder</span><span class="p">)</span>
 
-    <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;FEP_INI_SPECORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fep_ini_specorder</span><span class="p">)</span>
-    <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;FEP_FIN_SPECORDER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fep_fin_specorder</span><span class="p">)</span>
+    <span class="n">template_vars</span><span class="p">[</span><span class="s1">'FEP_INI_SPECORDER'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fep_ini_specorder</span><span class="p">)</span>
+    <span class="n">template_vars</span><span class="p">[</span><span class="s1">'FEP_FIN_SPECORDER'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fep_fin_specorder</span><span class="p">)</span>
 
     <span class="c1"># mass map is in the form of</span>
     <span class="c1"># variable   H               equal 1</span>
@@ -1101,7 +1101,7 @@ document.write(`
     <span class="c1"># mass ${H} 1.007</span>
     <span class="c1"># mass ${O} 15.999</span>
     <span class="c1"># mass ${H_null} 1.0</span>
-    <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;MASS_MAP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_masses</span><span class="p">(</span><span class="n">type_map</span> <span class="o">+</span> <span class="n">ext_type_map</span><span class="p">,</span> <span class="n">mass_map</span> <span class="o">+</span> <span class="n">ext_mass_map</span><span class="p">)</span>
+    <span class="n">template_vars</span><span class="p">[</span><span class="s1">'MASS_MAP'</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_masses</span><span class="p">(</span><span class="n">type_map</span> <span class="o">+</span> <span class="n">ext_type_map</span><span class="p">,</span> <span class="n">mass_map</span> <span class="o">+</span> <span class="n">ext_mass_map</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">template_vars</span></div>
 
 
@@ -1112,20 +1112,20 @@ document.write(`
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_masses</span><span class="p">(</span><span class="n">type_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">mass_map</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]):</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">_get_lammps_variables</span><span class="p">(</span><span class="n">_get_type_map_vars</span><span class="p">(</span><span class="n">type_map</span><span class="p">)),</span>
-        <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">''</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">type_map</span><span class="p">,</span> <span class="n">mass_map</span><span class="p">):</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;mass $</span><span class="se">{{</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="se">}}</span><span class="s1"> </span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'mass $</span><span class="se">{{</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="se">}}</span><span class="s1"> </span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_dp_models_variables</span><span class="p">(</span><span class="n">models</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
     <span class="nb">vars</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;DP_MODELS&#39;</span> <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;DP_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">_MODELS&#39;</span>
-        <span class="nb">vars</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">'DP_MODELS'</span> <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">''</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">'DP_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">_MODELS'</span>
+        <span class="nb">vars</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-            <span class="nb">vars</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span>
+            <span class="nb">vars</span><span class="p">[</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span>
     <span class="k">return</span> <span class="nb">vars</span>
 
 
@@ -1134,43 +1134,43 @@ document.write(`
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="c1"># TODO: should escape `v` in case of special characters</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;variable    </span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">16</span><span class="si">}</span><span class="s1"> string &quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'variable    </span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">16</span><span class="si">}</span><span class="s1"> string "</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">"'</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>  <span class="c1"># vector or args</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;variable    </span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">16</span><span class="si">}</span><span class="s1"> string </span><span class="se">\&quot;</span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="se">\&quot;</span><span class="s1">&#39;</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'variable    </span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">16</span><span class="si">}</span><span class="s1"> string </span><span class="se">\"</span><span class="si">{</span><span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="se">\"</span><span class="s1">'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;variable    </span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">16</span><span class="si">}</span><span class="s1"> equal </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'variable    </span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s1">16</span><span class="si">}</span><span class="s1"> equal </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">'</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_ensemble"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.get_ensemble">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_ensemble</span><span class="p">(</span><span class="n">ensemble</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_ensemble"><a class="viewcode-back" href="../../../_api/ai2_kit.domain.lammps.html#ai2_kit.domain.lammps.get_ensemble">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_ensemble</span><span class="p">(</span><span class="n">ensemble</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">'all'</span><span class="p">):</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;npt&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-i&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-iso&#39;</span><span class="p">,):</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fix 1 </span><span class="si">%(group)s</span><span class="s1"> npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> iso $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;npt-a&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-aniso&#39;</span><span class="p">,):</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fix 1 </span><span class="si">%(group)s</span><span class="s1"> npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> aniso $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;npt-t&#39;</span><span class="p">,</span> <span class="s1">&#39;npt-tri&#39;</span><span class="p">,):</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fix 1 </span><span class="si">%(group)s</span><span class="s1"> npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> tri $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;npt-x&#39;</span><span class="p">,):</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fix 1 </span><span class="si">%(group)s</span><span class="s1"> npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> x $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1"> y 0 0 $</span><span class="si">{TAU_P}</span><span class="s1"> z 0 0 $</span><span class="si">{TAU_P}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;npt-y&#39;</span><span class="p">,):</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fix 1 </span><span class="si">%(group)s</span><span class="s1"> npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> y $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1"> x 0 0 $</span><span class="si">{TAU_P}</span><span class="s1"> z 0 0 $</span><span class="si">{TAU_P}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;npt-z&#39;</span><span class="p">,):</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fix 1 </span><span class="si">%(group)s</span><span class="s1"> npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> z $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1"> x 0 0 $</span><span class="si">{TAU_P}</span><span class="s1"> y 0 0 $</span><span class="si">{TAU_P}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;nvt&#39;</span><span class="p">,):</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fix 1 </span><span class="si">%(group)s</span><span class="s1"> nvt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;nve&#39;</span><span class="p">,):</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fix 1 </span><span class="si">%(group)s</span><span class="s1"> nve&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;csvr&#39;</span><span class="p">,):</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fix 1 </span><span class="si">%(group)s</span><span class="s1"> nve&#39;</span><span class="p">)</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fix 2 </span><span class="si">%(group)s</span><span class="s1"> temp/csvr $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TIME_CONST}</span><span class="s1"> </span><span class="si">%(seed)d</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'npt'</span><span class="p">,</span> <span class="s1">'npt-i'</span><span class="p">,</span> <span class="s1">'npt-iso'</span><span class="p">,):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'fix 1 </span><span class="si">%(group)s</span><span class="s1"> npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> iso $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'npt-a'</span><span class="p">,</span> <span class="s1">'npt-aniso'</span><span class="p">,):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'fix 1 </span><span class="si">%(group)s</span><span class="s1"> npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> aniso $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'npt-t'</span><span class="p">,</span> <span class="s1">'npt-tri'</span><span class="p">,):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'fix 1 </span><span class="si">%(group)s</span><span class="s1"> npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> tri $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'npt-x'</span><span class="p">,):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'fix 1 </span><span class="si">%(group)s</span><span class="s1"> npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> x $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1"> y 0 0 $</span><span class="si">{TAU_P}</span><span class="s1"> z 0 0 $</span><span class="si">{TAU_P}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'npt-y'</span><span class="p">,):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'fix 1 </span><span class="si">%(group)s</span><span class="s1"> npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> y $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1"> x 0 0 $</span><span class="si">{TAU_P}</span><span class="s1"> z 0 0 $</span><span class="si">{TAU_P}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'npt-z'</span><span class="p">,):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'fix 1 </span><span class="si">%(group)s</span><span class="s1"> npt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1"> z $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{PRES}</span><span class="s1"> $</span><span class="si">{TAU_P}</span><span class="s1"> x 0 0 $</span><span class="si">{TAU_P}</span><span class="s1"> y 0 0 $</span><span class="si">{TAU_P}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'nvt'</span><span class="p">,):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'fix 1 </span><span class="si">%(group)s</span><span class="s1"> nvt temp $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TAU_T}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'nve'</span><span class="p">,):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'fix 1 </span><span class="si">%(group)s</span><span class="s1"> nve'</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">ensemble</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'csvr'</span><span class="p">,):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'fix 1 </span><span class="si">%(group)s</span><span class="s1"> nve'</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'fix 2 </span><span class="si">%(group)s</span><span class="s1"> temp/csvr $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TEMP}</span><span class="s1"> $</span><span class="si">{TIME_CONST}</span><span class="s1"> </span><span class="si">%(seed)d</span><span class="s1">'</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;unknown ensemble: &#39;</span> <span class="o">+</span> <span class="n">ensemble</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">%</span> <span class="p">{</span><span class="s1">&#39;group&#39;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span> <span class="s1">&#39;seed&#39;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">10</span><span class="o">^</span><span class="mi">6</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">}</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'unknown ensemble: '</span> <span class="o">+</span> <span class="n">ensemble</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">%</span> <span class="p">{</span><span class="s1">'group'</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span> <span class="s1">'seed'</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">10</span><span class="o">^</span><span class="mi">6</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">}</span></div>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_to_lammps_type_vars</span><span class="p">(</span><span class="n">types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-    <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;$</span><span class="se">{{</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="se">}}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">types</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">'$</span><span class="se">{{</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="se">}}</span><span class="s1">'</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">types</span><span class="p">)</span>
 </pre></div>
 
                 </article>

@@ -444,36 +444,36 @@ document.write(`
 
 
 <div class="viewcode-block" id="AlgorithmGroup"><a class="viewcode-back" href="../../_api/ai2_kit.main.html#ai2_kit.main.AlgorithmGroup">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AlgorithmGroup</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Algorithms for specific domains.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="AlgorithmGroup.proton_transfer"><a class="viewcode-back" href="../../_api/ai2_kit.main.html#ai2_kit.main.AlgorithmGroup.proton_transfer">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">proton_transfer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Proton transfer analysis toolkit.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.algorithm</span><span class="w"> </span><span class="kn">import</span> <span class="n">proton_transfer</span>
         <span class="k">return</span> <span class="n">proton_transfer</span><span class="o">.</span><span class="n">cli_entry</span></div>
 
 <div class="viewcode-block" id="AlgorithmGroup.aosa"><a class="viewcode-back" href="../../_api/ai2_kit.main.html#ai2_kit.main.AlgorithmGroup.aosa">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">aosa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Amorphous oxides structure analysis toolkit.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.algorithm</span><span class="w"> </span><span class="kn">import</span> <span class="n">aos_analysis</span>
         <span class="k">return</span> <span class="n">aos_analysis</span><span class="o">.</span><span class="n">cli_entry</span></div>
 
 <div class="viewcode-block" id="AlgorithmGroup.reweighting"><a class="viewcode-back" href="../../_api/ai2_kit.main.html#ai2_kit.main.AlgorithmGroup.reweighting">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">reweighting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Reweightning toolkit</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.algorithm.reweighting</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReweightingTool</span>
         <span class="k">return</span> <span class="n">ReweightingTool</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="WorkflowGroup"><a class="viewcode-back" href="../../_api/ai2_kit.main.html#ai2_kit.main.WorkflowGroup">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">WorkflowGroup</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Workflows for specific domains.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">cll_mlp_training</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -486,9 +486,9 @@ document.write(`
         <span class="k">return</span> <span class="n">run_workflow</span></div>
 
 <div class="viewcode-block" id="ToolGroup"><a class="viewcode-back" href="../../_api/ai2_kit.main.html#ai2_kit.main.ToolGroup">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ToolGroup</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Tools for specific domains.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">ase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -523,7 +523,7 @@ document.write(`
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">hpc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># deprecated, use `oh-my-batch` instead</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The hpc module is deprecated, please use oh-my-batch instead.&#39;</span><span class="p">,</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'The hpc module is deprecated, please use oh-my-batch instead.'</span><span class="p">,</span>
                         <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.tool.hpc</span><span class="w"> </span><span class="kn">import</span> <span class="n">cmd_entry</span>
@@ -540,61 +540,61 @@ document.write(`
         <span class="k">return</span> <span class="n">cmd_entry</span></div>
 
 <div class="viewcode-block" id="FeatureGroup"><a class="viewcode-back" href="../../_api/ai2_kit.main.html#ai2_kit.main.FeatureGroup">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FeatureGroup</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Featuring tools for specific domains.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">catalysis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Catalyst specific tools.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.feat.catalysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">CmdEntries</span>
         <span class="k">return</span> <span class="n">CmdEntries</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">cat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Shortcut for catalyst.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">catalysis</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">spectr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Spectrum specific tools.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.feat.spectrum</span><span class="w"> </span><span class="kn">import</span> <span class="n">CmdEntries</span>
         <span class="k">return</span> <span class="n">CmdEntries</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">nmrnet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        NMRNet specific tools.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">ai2_kit.algorithm.uninmr</span><span class="w"> </span><span class="kn">import</span> <span class="n">CmdEntries</span>
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;In order to use nmrnet, you need to ensure the following packages are installed: &#39;</span><span class="p">)</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;&quot;rdkit&quot;, &quot;scipy&quot; and &quot;unicore&quot;&#39;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'In order to use nmrnet, you need to ensure the following packages are installed: '</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'"rdkit", "scipy" and "unicore"'</span><span class="p">)</span>
             <span class="k">raise</span>
         <span class="k">return</span> <span class="n">CmdEntries</span></div>
 
 
 <span class="n">ai2_kit</span> <span class="o">=</span> <span class="n">CmdGroup</span><span class="p">({</span>
-    <span class="s1">&#39;workflow&#39;</span><span class="p">:</span> <span class="n">WorkflowGroup</span><span class="p">(),</span>
-    <span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="n">AlgorithmGroup</span><span class="p">(),</span>
-    <span class="s1">&#39;tool&#39;</span><span class="p">:</span> <span class="n">ToolGroup</span><span class="p">(),</span>
-    <span class="s1">&#39;feat&#39;</span><span class="p">:</span> <span class="n">FeatureGroup</span><span class="p">(),</span>
+    <span class="s1">'workflow'</span><span class="p">:</span> <span class="n">WorkflowGroup</span><span class="p">(),</span>
+    <span class="s1">'algorithm'</span><span class="p">:</span> <span class="n">AlgorithmGroup</span><span class="p">(),</span>
+    <span class="s1">'tool'</span><span class="p">:</span> <span class="n">ToolGroup</span><span class="p">(),</span>
+    <span class="s1">'feat'</span><span class="p">:</span> <span class="n">FeatureGroup</span><span class="p">(),</span>
 
-<span class="p">},</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Welcome to use ai2-kit!&quot;</span><span class="p">)</span>
+<span class="p">},</span> <span class="n">doc</span><span class="o">=</span><span class="s2">"Welcome to use ai2-kit!"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_setup_logging</span><span class="p">():</span>
-    <span class="n">level_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LOG_LEVEL&#39;</span><span class="p">,</span> <span class="s1">&#39;INFO&#39;</span><span class="p">)</span>
+    <span class="n">level_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'LOG_LEVEL'</span><span class="p">,</span> <span class="s1">'INFO'</span><span class="p">)</span>
     <span class="n">level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">_nameToLevel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">level_name</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> </span><span class="si">%(name)s</span><span class="s1">: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;transitions.core&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">'</span><span class="si">%(asctime)s</span><span class="s1"> </span><span class="si">%(name)s</span><span class="s1">: </span><span class="si">%(message)s</span><span class="s1">'</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">'transitions.core'</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../_api/ai2_kit.main.html#ai2_kit.main.main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
@@ -609,7 +609,7 @@ document.write(`
     <span class="n">Fire</span><span class="p">(</span><span class="n">make_fire_cmd</span><span class="p">(</span><span class="n">ai2_kit</span><span class="p">,</span> <span class="n">json_dumps</span><span class="o">=</span><span class="n">json_dumps</span><span class="p">))</span></div>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

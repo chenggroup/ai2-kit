@@ -437,9 +437,9 @@ document.write(`
 
 
 <div class="viewcode-block" id="load_colvar_from_files"><a class="viewcode-back" href="../../../_api/ai2_kit.lib.plumed.html#ai2_kit.lib.plumed.load_colvar_from_files">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_colvar_from_files</span><span class="p">(</span><span class="o">*</span><span class="n">files</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    load plumed colvar from multiple files and concatenate into a single DataFrame</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">fragments</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -447,24 +447,24 @@ document.write(`
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="load_colvar"><a class="viewcode-back" href="../../../_api/ai2_kit.lib.plumed.html#ai2_kit.lib.plumed.load_colvar">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_colvar</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="s1">&#39;#! FIELDS&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="load_colvar"><a class="viewcode-back" href="../../../_api/ai2_kit.lib.plumed.html#ai2_kit.lib.plumed.load_colvar">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_colvar</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="s1">'#! FIELDS'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    load plumed colvar file as DataFrame</span>
 
 <span class="sd">    :param fp: file pointer</span>
 <span class="sd">    :param skip: skip the header line</span>
 <span class="sd">    :return: DataFrame</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">skip</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid colvar file header: </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Invalid colvar file header: </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">names</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">skip</span><span class="p">):]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_cvs_bias_from_df"><a class="viewcode-back" href="../../../_api/ai2_kit.lib.plumed.html#ai2_kit.lib.plumed.get_cvs_bias_from_df">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_cvs_bias_from_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cv_names</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span> <span class="n">bias_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    get collective variables and bias from pandas dataframe</span>
 
 <span class="sd">    :param df: pandas dataframe</span>
@@ -472,7 +472,7 @@ document.write(`
 <span class="sd">    :param bias_name: name of bias column</span>
 
 <span class="sd">    :return: cvs, bias in numpy array for gaussian_kde</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cv_names</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">cv_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">cv_names</span><span class="p">]</span>
 

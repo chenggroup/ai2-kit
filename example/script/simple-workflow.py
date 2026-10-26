@@ -2,7 +2,6 @@ from ai2_kit.core.executor import HpcExecutor
 from ai2_kit.core.script import BashScript, BashStep, BashTemplate
 from ai2_kit.core.util import list_split
 from ai2_kit.core.job import gather_jobs
-from ai2_kit.core.checkpoint import set_checkpoint_dir
 from typing import List
 import asyncio
 import os
@@ -84,8 +83,6 @@ def main():
         '#SBATCH -partition=small',
     ])
 
-    # set checkpoint file so that the workflow can be resumed
-    set_checkpoint_dir('square-sum-workflow.ckpt')
     # run workflow
     asyncio.run(workflow(n=10,
                          path_prefix='square-sum-workflow',

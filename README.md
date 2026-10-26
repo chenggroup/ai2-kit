@@ -72,6 +72,66 @@ ai2-kit <sub-command> --help
 ai2-kit tool dpdata read --help
 ```
 
+### 2D API Design: MFI/O × Method Chaining
+
+The command-line interface and Python API of `ai2-kit` follow the same 2D
+interface design, formed by two orthogonal conventions:
+Multi-files-in-and-out (MFI/O) along the file dimension, and method chaining
+along the operation dimension.
+
+- **File dimension: Multi-files-in-and-out (MFI/O).** A single API call can
+  operate on a whole collection of files. Inputs are specified by wildcards,
+  while outputs are specified by template variables. This covers both reading
+  many files into one collection and writing many files or task directories
+  from one collection, replacing explicit loops, path bookkeeping, and
+  directory creation.
+- **Operation dimension: method chaining.** A sequence of dependent steps can
+  be composed into a single expression, using `-` as the separator in the CLI
+  or chained calls in Python. A pipeline of reading, transforming, and writing
+  data proceeds without intermediate variables or files.
+
+**2D composition.** MFI/O extends the file dimension and method chaining
+extends the operation dimension. The two dimensions are orthogonal and can be
+extended independently, so the same processing pipeline can be applied to a
+whole collection of inputs while also producing a whole collection of outputs.
+
+For example, the paper's data-handling task---reading all LAMMPS trajectories
+under `./lammps-*/`, randomly sampling 100 structures, and writing them as
+individual VASP POSCAR files---can be expressed equivalently through the CLI
+and the Python API:
+
+<table>
+<thead>
+<tr>
+<th align="left">CLI</th>
+<th align="left">Python API</th>
+</tr>
+</thead>
+<tbody>
+<tr valign="top">
+<td width="50%">
+
+<pre><code>ai2-kit tool ase read "./lammps-*/traj.lammpstrj" --format lammps-dump-text \
+    - sample 100 --method random \
+    - write_frames "./vasp-{i:04d}/POSCAR" --format vasp</code></pre>
+
+</td>
+<td width="50%">
+
+<pre><code>from ai2_kit.tool.ase import AseTool
+
+(
+    AseTool()
+    .read("./lammps-*/traj.lammpstrj", format="lammps-dump-text")
+    .sample(100, method="random")
+    .write_frames("./vasp-{i:04d}/POSCAR", format="vasp")
+)</code></pre>
+
+</td>
+</tr>
+</tbody>
+</table>
+
 ## Manuals
 
 ### General Tools

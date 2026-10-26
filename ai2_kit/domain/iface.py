@@ -2,8 +2,7 @@
 
 from abc import abstractmethod, ABC
 from ai2_kit.core.artifact import Artifact, ArtifactMap
-from ai2_kit.core.resource_manager import ResourceManager
-from typing import List, Literal
+from typing import Any, List, Literal
 from dataclasses import dataclass
 
 
@@ -13,7 +12,7 @@ TRAINING_MODE = Literal['default', 'dpff', 'fep-redox', 'fep-pka']
 @dataclass
 class BaseCllContext:
     path_prefix: str
-    resource_manager: ResourceManager
+    resource_manager: Any
 
 
 class ICllLabelOutput(ABC):

@@ -1,4 +1,3 @@
-from ai2_kit.core.queue_system import inject_cmd_to_script
 from ai2_kit.core.util import dict_remove_dot_keys, expand_globs, num_text_split, nat_sort, slice_from_str
 from ai2_kit.domain.dplr import dump_dplr_lammps_data
 from ai2_kit.domain.lammps import get_types_template_vars, get_ensemble
@@ -6,13 +5,6 @@ from unittest import TestCase
 from pathlib import Path
 
 data_dir = Path(__file__).parent / 'data-sample'
-
-SLURM_SCRIPT_HEADER = """\
-#!/bin/bash
-
-#SBATCH -N 1
-#SBATCH --partition cpu
-"""
 
 MASS_MAP_SECTION = """\
 variable    H                equal 1
@@ -56,20 +48,6 @@ class TestUtil(TestCase):
         }
         dict_remove_dot_keys(d)
         self.assertEqual(d, expect)
-
-    def test_inject_cmd_to_script(self):
-        cmd = "echo $SLUMR_JOB_ID > hello.running"
-        in_script = '\n'.join([
-            SLURM_SCRIPT_HEADER,
-            'echo hello',
-        ])
-        expect_out = '\n'.join([
-            SLURM_SCRIPT_HEADER,
-            cmd,
-            'echo hello',
-        ])
-        out_script = inject_cmd_to_script(in_script, cmd)
-        self.assertEqual(out_script, expect_out)
 
     def test_dump_dplr_lammps_data(self):
         import io

@@ -1,6 +1,7 @@
 from ai2_kit.core.util import dict_remove_dot_keys, expand_globs, num_text_split, nat_sort, slice_from_str
 from ai2_kit.domain.dplr import dump_dplr_lammps_data
-from ai2_kit.domain.lammps import get_types_template_vars, get_ensemble
+from ai2_kit.domain.lammps import get_types_template_vars
+from ai2_kit.domain.lammps_utils import get_ensemble
 from unittest import TestCase
 from pathlib import Path
 

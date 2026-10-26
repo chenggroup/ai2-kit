@@ -96,21 +96,6 @@ class FeatureGroup:
     """
 
     @property
-    def catalysis(self):
-        """
-        Catalyst specific tools.
-        """
-        from ai2_kit.feat.catalysis import CmdEntries
-        return CmdEntries
-
-    @property
-    def cat(self):
-        """
-        Shortcut for catalyst.
-        """
-        return self.catalysis
-
-    @property
     def spectr(self):
         """
         Spectrum specific tools.

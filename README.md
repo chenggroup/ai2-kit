@@ -23,8 +23,8 @@
 
 ### 2D API Design: MFI/O × Method Chaining
 
-The command-line interface and Python API of `ai2-kit` follow the same 2D
-interface design, formed by two orthogonal conventions:
+A key innovation of `ai2-kit` is its 2D API design, shared by the command-line
+interface and Python API. It is formed by two orthogonal conventions:
 Multi-files-in-and-out (MFI/O) along the file dimension, and method chaining
 along the operation dimension.
 

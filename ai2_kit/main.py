@@ -1,6 +1,5 @@
 from fire import Fire
 
-import warnings
 import logging
 import os
 
@@ -62,23 +61,9 @@ class ToolGroup:
         return YamlTool
 
     @property
-    def batch(self):
-        from ai2_kit.tool.batch import BatchTool
-        return BatchTool
-
-    @property
     def frame(self):
         from ai2_kit.tool.frame import FrameTool
         return FrameTool
-
-    @property
-    def hpc(self):
-        # deprecated, use `oh-my-batch` instead
-        warnings.warn('The hpc module is deprecated, please use oh-my-batch instead.',
-                        DeprecationWarning, stacklevel=2)
-
-        from ai2_kit.tool.hpc import cmd_entry
-        return cmd_entry
 
     @property
     def lammps(self):

@@ -35,14 +35,12 @@ scikit-learn = "^1.6.1"
 fire-rpc = {version = "0.1.3", optional = true}
 oh-my-batch = ">=0.7.0"
 
-asaplib = {version = "^0.0.2", optional = true}
 dscribe = {version = "1.2.2", optional = true}
-jupyter-formily = {version = "0.0.7", optional = true}
 ipympl = {version = "^0.9.3", optional = true}
 
 
 [tool.poetry.extras]
-all = ["dscribe", "jupyter-formily", "ipympl", "asaplib", "fire-rpc"]
+all = ["dscribe", "ipympl", "fire-rpc"]
 rpc = ["fire-rpc"]
 
 [[tool.poetry.source]]

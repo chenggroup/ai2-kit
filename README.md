@@ -137,14 +137,10 @@ It provides more flexibility and transparency to run and customize their own wor
 * [TESLA PIMD](./example/use-case/tesla-pimd/): A customizable active learning workflow for training machine learning potentials with path integral molecular dynamics.
 * [TESLA for ec-MLP](./example/use-case/tesla-for-ec-mlp/): A customizable active learning workflow for training machine learning potentials for electrolyte systems.
 
-
-#### Config Driven Workflows
-> [!WARNING]
-> **Deprecated:** Config-driven workflows are deprecated and will be maintained only for backward compatibility.
-> For new projects and future updates, please use the example-driven workflows above, which will be the primary approach going forward.
-
-These workflows are driven by configuration files, which can be easily modified to fit your own research purpose.
-* [CLL MLP Training Workflow](doc/manual/cll-workflow.md) ([zh](doc/manual/cll-workflow.zh.md))
+Configuration-driven CLL/FEP workflows, HPC/Batch commands, checkpoint
+workflows, and the old catalysis toolkit were removed in v2. Users who need
+those legacy features should use the separately maintained `v1-legacy` branch
+once it is available.
 
 
 ### Featuring Tools
@@ -152,7 +148,6 @@ These workflows are driven by configuration files, which can be easily modified 
 * [Proton Transfer Analysis Toolkit](doc/manual/proton-transfer.md)
 * [Amorphous Oxides Structure Analysis Toolkit](doc/manual/aos-analysis.md)
 * [Re-weighting Toolkit](doc/manual/reweighting.md)
-* [ai2-cat](doc/manual/ai2cat.md): A toolkit for dynamic catalysis researching.
 
 
 ### Online Apps and Notebooks

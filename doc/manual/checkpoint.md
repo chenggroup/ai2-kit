@@ -28,7 +28,3 @@ apply_checkpoint('time_consuming_step')(a_time_consuming_step)(10)
 # The first time you run this script, it will take 10 seconds to finish.
 # The second time you run this script, it will skip the time consuming step and finish immediately.
 ```
-
-You can find some real world examples of using the checkpoint mechanism in the following source files:
-
-* [ai2_kit/workflow/fep_mlp.py](../../ai2_kit/workflow/fep_mlp.py)

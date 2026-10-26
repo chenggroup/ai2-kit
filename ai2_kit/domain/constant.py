@@ -45,44 +45,6 @@ compute peratom all pressure NULL virial
 """
 
 
-DEFAULT_ASAP_ASCF_DESC = {
-    'preset': None,
-    # those params following the convention of dscribe
-    # https://singroup.github.io/dscribe/latest/tutorials/descriptors/acsf.html
-    'r_cut': 3.5,
-
-    'reducer_type': 'average',
-    'element_wise': False,
-    'zeta': 1,
-}
-
-
-DEFAULT_ASAP_SOAP_DESC = {
-    'preset': None,
-
-    # those params following the convention of dscribe
-    # https://singroup.github.io/dscribe/latest/tutorials/descriptors/soap.html
-    'r_cut': 3.5,
-    'n_max': 6,
-    'l_max': 6,
-    'sigma': 0.5,
-
-    'crossover': False,
-    'rbf': 'gto',
-
-    'reducer_type': 'average',
-    'element_wise': False,
-    'zeta': 1,
-}
-
-DEFAULT_ASAP_PCA_REDUCER = {
-    'type': 'PCA',
-    'parameter': {
-        'n_components': 3,
-        'scalecenter': True,
-    }
-}
-
 # LAMMPS
 
 _DEFAULT_LAMMPS_TOP = '''\

@@ -36,21 +36,6 @@ class AlgorithmGroup:
         return ReweightingTool()
 
 
-class WorkflowGroup:
-    """
-    Workflows for specific domains.
-    """
-
-    @property
-    def cll_mlp_training(self):
-        from ai2_kit.workflow.cll_mlp import run_workflow
-        return run_workflow
-
-    @property
-    def fep_mlp_training(self):
-        from ai2_kit.workflow.fep_mlp import run_workflow
-        return run_workflow
-
 class ToolGroup:
     """
     Tools for specific domains.
@@ -148,7 +133,6 @@ class FeatureGroup:
 
 
 ai2_kit = CmdGroup({
-    'workflow': WorkflowGroup(),
     'algorithm': AlgorithmGroup(),
     'tool': ToolGroup(),
     'feat': FeatureGroup(),

@@ -243,14 +243,14 @@ class TestDPLRSorted(unittest.TestCase):
         self.sel_type = [0, 2]
 
         self.data_sorted = dpdata_read_cp2k_dplr_data(
-            str(Path(__file__).parent / "data-sample/cp2k_wannier_sort_test/sorted"),
+            str(Path(__file__).parent / "data/cp2k_wannier_sort_test/sorted"),
             self.cp2k_output,
             self.wannier_file,
             self.type_map,
             self.sel_type,
         )
         self.data_random = dpdata_read_cp2k_dplr_data(
-            str(Path(__file__).parent / "data-sample/cp2k_wannier_sort_test/random"),
+            str(Path(__file__).parent / "data/cp2k_wannier_sort_test/random"),
             self.cp2k_output,
             self.wannier_file,
             self.type_map,
@@ -260,7 +260,7 @@ class TestDPLRSorted(unittest.TestCase):
         self.random_ids = np.loadtxt(
             str(
                 Path(__file__).parent
-                / "data-sample/cp2k_wannier_sort_test/random_ids.txt"
+                / "data/cp2k_wannier_sort_test/random_ids.txt"
             ),
             dtype=int,
         )

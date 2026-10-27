@@ -147,10 +147,6 @@ def short_hash(s: str) -> str:
     return base64.urlsafe_b64encode(digest).decode('utf-8')[:-2]
 
 
-async def to_awaitable(value: T) -> T:
-    return value
-
-
 class JoinTag:
     """a tag to join strings in a list"""
 

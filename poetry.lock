@@ -188,24 +188,27 @@ files = [
 
 [[package]]
 name = "ase"
-version = "3.22.1"
+version = "3.29.0"
 description = "Atomic Simulation Environment"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "ase-3.22.1-py3-none-any.whl", hash = "sha256:66cc481e3d82bea8931d5fe677119932ea0bd1bc08b901fd84f36b37fa681c9e"},
-    {file = "ase-3.22.1.tar.gz", hash = "sha256:004df6b0ea04b1114c790fadfe45d4125eb0e53125c66a93425af853d82ab432"},
+    {file = "ase-3.29.0-py3-none-any.whl", hash = "sha256:7b9dd103f007810339c24acfee2f6b677c0c48443b21d3c98e52959246cf4ebf"},
+    {file = "ase-3.29.0.tar.gz", hash = "sha256:ef4e2caa38169e3fbbc4164764a060d1877a6692519a4bed82521328eeb0d9aa"},
 ]
 
 [package.dependencies]
-matplotlib = ">=3.1.0"
-numpy = ">=1.15.0"
-scipy = ">=1.1.0"
+matplotlib = ">=3.5.2"
+numpy = ">=1.21.6"
+scipy = ">=1.8.1"
+typing_extensions = ">=4.13.1"
 
 [package.extras]
-docs = ["pillow", "sphinx", "sphinx-rtd-theme"]
-test = ["pytest (>=5.0.0)", "pytest-mock (>=3.3.0)", "pytest-xdist (>=1.30.0)"]
+docs = ["pillow", "sphinx", "sphinx-gallery", "sphinx_book_theme", "sphinxcontrib-video"]
+lint = ["mypy", "ruff", "types-PyMySQL", "types-docutils"]
+spglib = ["spglib (>=1.9)"]
+test = ["pytest (>=7.4.0)", "pytest-xdist (>=3.2.0)"]
 
 [[package]]
 name = "asttokens"
@@ -4326,14 +4329,14 @@ test = ["argcomplete (>=2.0)", "pre-commit", "pytest", "pytest-mock"]
 
 [[package]]
 name = "typing-extensions"
-version = "4.12.2"
-description = "Backported and Experimental Type Hints for Python 3.8+"
+version = "4.16.0"
+description = "Backported and Experimental Type Hints for Python 3.9+"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["main", "doc"]
 files = [
-    {file = "typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d"},
-    {file = "typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8"},
+    {file = "typing_extensions-4.16.0-py3-none-any.whl", hash = "sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8"},
+    {file = "typing_extensions-4.16.0.tar.gz", hash = "sha256:dc983d19a509c94dba722ee6abd33940f7c05a89e243c47e907eb4db6f1a43e5"},
 ]
 
 [[package]]
@@ -4544,4 +4547,4 @@ rpc = ["fire-rpc"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.15"
-content-hash = "29faad7e6015102db701a32f63deafcb4e2543362775d850417317e1ba1cda36"
+content-hash = "77679ed42460e4cf067955f45004057356e6a35843a762cb260760c5e30b7c12"

@@ -39,7 +39,7 @@ class TestDataTransform(TestCase):
             list(cell[1, :]),
             list(cell[2, :]),
         ]
-        self.assertEqual(str(cell), str(self.cell))
+        np.testing.assert_allclose(cell, self.cell)
 
     def test_ase_lammps_to_cp2k_input(self):
         atoms_list: List[Atoms] = read(self.lammps_dump_file, ':', format='lammps-dump-text', order=False, specorder=self.type_map)  # type: ignore
@@ -47,8 +47,7 @@ class TestDataTransform(TestCase):
         coords = [atom.symbol + ' ' + ' '.join(str(x) for x in atom.position) for atom in atoms]  # type: ignore
         self.assertEqual(coords[0], self.coords_0)
 
-        cell = [ list(row) for row in atoms.cell ]  # type: ignore
-        self.assertEqual(str(cell), str(self.cell))
+        np.testing.assert_allclose(atoms.cell, self.cell)
 
     def test_dpdata_to_ase(self):
         dp_system = dpdata.LabeledSystem(self.cp2k_output_file, fmt='cp2k/output')

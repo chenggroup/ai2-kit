@@ -121,7 +121,7 @@ class TestDPFFDPData(unittest.TestCase):
 class TestWriteDPData(unittest.TestCase):
     def setUp(self) -> None:
         self.work_dir = str(
-            Path(__file__).parent / "data-sample/cp2k_wannier_localization"
+            Path(__file__).parent / "data/cp2k_wannier_localization"
         )
         self.type_map = ["O", "H", "K", "F", "Pt"]
         self.sel_type = [0, 2, 3]

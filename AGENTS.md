@@ -1,4 +1,4 @@
-## Coding Guidelines (Linus' Rules)
+## Coding Guidelines
 
 To ensure the maintainability, stability, and traceability of the codebase, all substantial changes and large patches must strictly adhere to the following rules derived from Linux kernel development standards:
 
@@ -20,4 +20,7 @@ To ensure the maintainability, stability, and traceability of the codebase, all 
 ### 4. Code Readability & Maintainability
 * **Prioritize maintainer cognitive load:** Keep logic explicit and readable. Do not introduce clever macros or overly dense abstractions just to reduce line counts.
 * **Minimize cross-subsystem coupling:** Isolate large-scale structural changes to the specific module or layer they affect to prevent cascading side-effects.
+
+### 5. Plan Changes During Execution
+* **Update the plan before implementation:** If a plan change requires approval during task execution, obtain that approval first, then update the plan text to reflect the approved change before implementing it.
 

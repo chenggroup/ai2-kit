@@ -29,7 +29,7 @@ def calc_coord_number(atoms, c_ids, neigh_ids, cutoff):
 
 def load_cp2k_nacl_finite_field_data(dplr_only=False):
     cp2k_dir = str(
-        Path(__file__).parent / "data-sample/cp2k_nacl_finite_field"
+        Path(__file__).parent / "data/cp2k_nacl_finite_field"
     )
     cp2k_output = "output"
     wannier_file = "wannier.xyz"

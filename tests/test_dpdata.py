@@ -12,8 +12,10 @@ def test_dpdata_tool_roundtrips_labeled_cp2k_output(tmp_path):
     original = dpdata.LabeledSystem(str(sample), fmt="cp2k/output")
     output = tmp_path / "deepmd"
 
-    DpdataTool(systems=[original]).write(str(output))
-    roundtrip = DpdataTool().read(str(output / "*"), fmt="deepmd/npy")._systems[0]
+    DpdataTool().read(str(sample), fmt="cp2k/output").write(str(output))
+    systems = DpdataTool().read(str(output / "*"), fmt="deepmd/npy")._systems
+    assert len(systems) == 1
+    roundtrip = systems[0]
 
     assert roundtrip.get_nframes() == original.get_nframes()
     np.testing.assert_array_equal(roundtrip.data["atom_names"], original.data["atom_names"])

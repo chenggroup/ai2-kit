@@ -1,10 +1,9 @@
 from pathlib import Path
-import subprocess
-import sys
 
 import numpy as np
 
 from ai2_kit.tool.ase import AseTool
+from tests.helpers import run_cli
 
 
 def test_write_each_frame_delegates_to_write_frames():
@@ -37,26 +36,18 @@ def test_ase_tool_reads_writes_and_reads_back_xyz(tmp_path):
 def test_ase_cli_reads_writes_and_reads_back_xyz(tmp_path):
     sample = Path(__file__).parent / "data/shared/h2o.xyz"
     output = tmp_path / "roundtrip.xyz"
-    subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "ai2_kit.main",
-            "tool",
-            "ase",
-            "read",
-            str(sample),
-            "--index",
-            "0",
-            "-",
-            "write",
-            str(output),
-            "--format",
-            "extxyz",
-        ],
-        check=True,
-        capture_output=True,
-        text=True,
+    run_cli(
+        "tool",
+        "ase",
+        "read",
+        str(sample),
+        "--index",
+        "0",
+        "-",
+        "write",
+        str(output),
+        "--format",
+        "extxyz",
     )
 
     atoms = AseTool().read(str(sample), index=0)

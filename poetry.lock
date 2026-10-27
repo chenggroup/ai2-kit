@@ -274,27 +274,26 @@ files = [
 
 [[package]]
 name = "ase"
-version = "3.29.0"
+version = "3.26.0"
 description = "Atomic Simulation Environment"
 optional = false
-python-versions = ">=3.10"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "ase-3.29.0-py3-none-any.whl", hash = "sha256:7b9dd103f007810339c24acfee2f6b677c0c48443b21d3c98e52959246cf4ebf"},
-    {file = "ase-3.29.0.tar.gz", hash = "sha256:ef4e2caa38169e3fbbc4164764a060d1877a6692519a4bed82521328eeb0d9aa"},
+    {file = "ase-3.26.0-py3-none-any.whl", hash = "sha256:77fd0e609bd3868006d4bb3bb95cdc4081d9e292ac84f6c9fb564b5751d2689e"},
+    {file = "ase-3.26.0.tar.gz", hash = "sha256:a071a355775b0a8062d23e9266e9d811b19d9f6d9ec5215e8032f7d93dc65075"},
 ]
 
 [package.dependencies]
-matplotlib = ">=3.5.2"
-numpy = ">=1.21.6"
-scipy = ">=1.8.1"
-typing_extensions = ">=4.13.1"
+matplotlib = ">=3.3.4"
+numpy = ">=1.19.5"
+scipy = ">=1.6.0"
 
 [package.extras]
-docs = ["pillow", "sphinx", "sphinx-gallery", "sphinx_book_theme", "sphinxcontrib-video"]
-lint = ["mypy", "ruff", "types-PyMySQL", "types-docutils"]
+docs = ["pillow", "sphinx", "sphinx_book_theme"]
+lint = ["coverage", "flake8", "mypy", "ruff", "types-PyMySQL", "types-docutils"]
 spglib = ["spglib (>=1.9)"]
-test = ["pytest (>=7.4.0)", "pytest-xdist (>=3.2.0)"]
+test = ["pytest (>=7.0.0)", "pytest-xdist (>=2.1.0)"]
 
 [[package]]
 name = "asttokens"
@@ -1240,10 +1239,9 @@ pymatgen = ["pymatgen"]
 name = "dscribe"
 version = "2.1.2"
 description = "A Python package for creating feature transformations in applications of machine learning to materials science."
-optional = true
+optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"all\""
 files = [
     {file = "dscribe-2.1.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:62fad02ccfc7027010a8c80fe103c00ccd3197e532e82f251c41c30c546c3ef6"},
     {file = "dscribe-2.1.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:bda889a3d6abbf5184d164e83ccbc6995c442a86220b53dcbea1f4c68fbe9adb"},
@@ -2585,10 +2583,9 @@ test = ["coverage", "pytest", "pytest-cov"]
 name = "llvmlite"
 version = "0.50.0"
 description = "lightweight wrapper around basic LLVM functionality"
-optional = true
+optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "extra == \"all\""
 files = [
     {file = "llvmlite-0.50.0-cp310-cp310-macosx_12_0_arm64.whl", hash = "sha256:211da1b088d566aafa1e444d546f64fc7f13b1af56ff0207a1705d88607be6ab"},
     {file = "llvmlite-0.50.0-cp310-cp310-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:accfc36951230e0e694b41bbfc96ba554284e72f0eab2dde0cf273e4109e51ba"},
@@ -3924,10 +3921,9 @@ parallel = ["mpi4py"]
 name = "numba"
 version = "0.68.0"
 description = "compiling Python code using LLVM"
-optional = true
+optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "extra == \"all\""
 files = [
     {file = "numba-0.68.0-cp310-cp310-macosx_12_0_arm64.whl", hash = "sha256:080bf1d0dc6adaa834400b6f92e5407de2a7dd80a665f71f74597e95508b2f1f"},
     {file = "numba-0.68.0-cp310-cp310-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:791b8d74951e662cb6a4488c8fb382c862459f62c58f4fe69d959a01fc98b6d5"},
@@ -6180,10 +6176,10 @@ files = [
 name = "sparse"
 version = "0.17.0"
 description = "Sparse n-dimensional arrays for the PyData ecosystem"
-optional = true
+optional = false
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "python_version == \"3.10\" and extra == \"all\""
+markers = "python_version == \"3.10\""
 files = [
     {file = "sparse-0.17.0-py2.py3-none-any.whl", hash = "sha256:1922d1d97f692b1061c4f03a1dd6ee21850aedc88e171aa845715f5069952f18"},
     {file = "sparse-0.17.0.tar.gz", hash = "sha256:6b1ad51a810c5be40b6f95e28513ec810fe1c785923bd83b2e4839a751df4bf7"},
@@ -6207,10 +6203,10 @@ tox = ["sparse[tests]", "tox"]
 name = "sparse"
 version = "0.19.3"
 description = "Sparse n-dimensional arrays for the PyData ecosystem"
-optional = true
+optional = false
 python-versions = ">=3.11"
 groups = ["main"]
-markers = "python_version >= \"3.11\" and extra == \"all\""
+markers = "python_version >= \"3.11\""
 files = [
     {file = "sparse-0.19.3-py2.py3-none-any.whl", hash = "sha256:0159d6c8c6c99a63ea6ce441044d472b3f1215f89af0e4ed4c6428d5fb17bebb"},
     {file = "sparse-0.19.3.tar.gz", hash = "sha256:789516f55278b15d27c502e3f16b0d2d35a541af58567c34be54f00c48207288"},
@@ -7368,10 +7364,10 @@ test = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more_it
 type = ["pytest-mypy (>=1.0.1) ; platform_python_implementation != \"PyPy\""]
 
 [extras]
-all = ["dscribe", "fire-rpc"]
+all = ["fire-rpc"]
 rpc = ["fire-rpc"]
 
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.15"
-content-hash = "b10a37e0f7f911f35efcaa65d8a4faefb61399d443244f052d529c2c20d7f31b"
+content-hash = "61c9d23f689c125d13fcab3dafc6389b99d050e43d67fba61a8c4a8a8f709b69"

@@ -15,7 +15,8 @@ ruamel-yaml = "^0.17.21"
 shortuuid = "^1.0.11"
 dpdata = ">=1.1.0"
 pandas = "^2.2.3"
-ase = ">=3.26,<4.0"
+# DScribe 2.1.2 uses the Atoms positional constructor changed in ASE 3.27.
+ase = ">=3.26,<3.27"
 mdanalysis = ">=2.9,<3.0"
 tabulate = "^0.9.0"
 joblib = "^1.2.0"
@@ -26,11 +27,11 @@ netcdf4 = "^1.7.1.post1"
 scikit-learn = "^1.6.1"
 oh-my-batch = ">=0.7.7"
 
-dscribe = {version = ">=2.1.2", optional = true}
+dscribe = ">=2.1.2"
 fire-rpc = {version = ">=0.1.4", optional = true}
 
 [tool.poetry.extras]
-all = ["dscribe", "fire-rpc"]
+all = ["fire-rpc"]
 rpc = ["fire-rpc"]
 
 [[tool.poetry.source]]

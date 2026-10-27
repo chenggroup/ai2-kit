@@ -290,7 +290,7 @@ class TestDPLRZeroAtomicWeight(unittest.TestCase):
         ]
         self.sel_type = [0]
         self.cp2k_dir = str(
-            Path(__file__).parent / "data-sample/cp2k_wannier_zero_atomic_weight/"
+            Path(__file__).parent / "data/cp2k_wannier_zero_atomic_weight/"
         )
 
         self.data = dpdata_read_cp2k_dplr_data(
@@ -324,7 +324,7 @@ class TestDPLRZeroAtomicWeight(unittest.TestCase):
             dpdata_read_cp2k_dplr_data(
                 str(
                     Path(__file__).parent
-                    / "data-sample/cp2k_wannier_zero_atomic_weight/"
+                    / "data/cp2k_wannier_zero_atomic_weight/"
                 ),
                 self.cp2k_output,
                 self.wannier_file,

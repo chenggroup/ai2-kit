@@ -76,8 +76,9 @@ ai2-kit tool ase read "./lammps-*/traj.lammpstrj" --format lammps-dump-text \
 For Windows, most of the `ai2-kit` features are expected to work. However, some third-party libraries (such as *dscribe*) may not function properly on Windows. 
 In such cases, it is recommended to use `ai2-kit` through Windows Subsystem for Linux (WSL).
 
-If you are using the latest version of Python, some third-party libraries may not yet provide pre-built binary releases, 
-which can cause `pip install` to fail. It is therefore suggested to use `ai2-kit` with Python 3.10–3.12.
+The v2 support target is Python 3.10–3.14. Installation and compatibility across
+this range are still being validated. Some third-party libraries may not yet
+provide compatible releases or pre-built binaries for the latest Python versions.
 We strongly recommend creating a dedicated Conda environment to avoid unexpected issues caused by incompatible package versions.
 
 ## Installation
@@ -101,6 +102,32 @@ pip install poetry
 poetry install
 poetry run ai2-kit
 ```
+
+Jupyter Book is now in the optional `doc` dependency group and is not installed
+by default. To include the dependencies needed to build the documentation, run:
+
+```bash
+poetry install --with doc
+```
+
+## Local Tests
+
+Install the runtime and development dependencies from the lockfile, then run
+the lightweight suite from the project root:
+
+```bash
+poetry install --only main,dev
+poetry run python -m pytest -q tests --ignore=tests/test_md_spectra.py -k 'not DPFFDPData'
+```
+
+This suite covers parsing, conversion, numerical helpers, and ASE/dpdata
+roundtrips through both Python and CLI APIs. CLI tests use
+`python -m ai2_kit.main` with the current Python interpreter.
+
+The spectrum test requires a large dataset available only locally. The DPFF
+tests excluded above currently require DeepMD and are outside this lightweight
+test boundary. HPC execution and DeepMD/TensorFlow model loading are also
+outside the v2 Stage 1 test scope.
 
 ## Usage
 All `ai2-kit` commands can be accessed via the command line interface `ai2-kit`.

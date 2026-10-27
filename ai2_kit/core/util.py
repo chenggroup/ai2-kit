@@ -52,6 +52,21 @@ def load_text(path: Union[Path, str], encoding: str = 'utf-8'):
         return f.read()
 
 
+def parse_path_list(path_list_str: Union[str, List[str]], to_abs: bool = False):
+    """
+    Parse path list of environment variable style string
+    """
+    def parse_path(path: str):
+        return os.path.expanduser(path) if path.startswith('~/') else path
+    if isinstance(path_list_str, str):
+        path_list = path_list_str.split(':')
+    else:
+        path_list = path_list_str
+    if to_abs:
+        path_list = [parse_path(path) for path in path_list]
+    return path_list
+
+
 def get_yaml():
     yaml = YAML(typ='safe')
     JoinTag.register(yaml)

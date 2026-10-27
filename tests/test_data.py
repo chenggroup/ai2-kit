@@ -7,7 +7,7 @@ from ase import Atom, Atoms
 import numpy as np
 from typing import List
 
-data_dir = Path(__file__).parent / 'data-sample'
+data_dir = Path(__file__).parent / 'data/shared'
 
 
 class TestDataTransform(TestCase):

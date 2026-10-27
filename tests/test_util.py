@@ -3,7 +3,7 @@ from ai2_kit.domain.dplr import dump_dplr_lammps_data
 from unittest import TestCase
 from pathlib import Path
 
-data_dir = Path(__file__).parent / 'data-sample'
+data_dir = Path(__file__).parent / 'data/shared'
 
 class TestUtil(TestCase):
     def test_dict_remove_dot_keys(self):

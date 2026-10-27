@@ -31,6 +31,13 @@ def test_ase_tool_reads_writes_and_reads_back_xyz(tmp_path):
     np.testing.assert_allclose(
         roundtrip._atoms_arr[0].get_cell(), atoms._atoms_arr[0].get_cell()
     )
+    np.testing.assert_allclose(
+        roundtrip._atoms_arr[0].get_potential_energy(),
+        atoms._atoms_arr[0].get_potential_energy(),
+    )
+    np.testing.assert_allclose(
+        roundtrip._atoms_arr[0].get_forces(), atoms._atoms_arr[0].get_forces()
+    )
 
 
 def test_ase_cli_reads_writes_and_reads_back_xyz(tmp_path):
@@ -62,4 +69,11 @@ def test_ase_cli_reads_writes_and_reads_back_xyz(tmp_path):
     )
     np.testing.assert_allclose(
         roundtrip._atoms_arr[0].get_cell(), atoms._atoms_arr[0].get_cell()
+    )
+    np.testing.assert_allclose(
+        roundtrip._atoms_arr[0].get_potential_energy(),
+        atoms._atoms_arr[0].get_potential_energy(),
+    )
+    np.testing.assert_allclose(
+        roundtrip._atoms_arr[0].get_forces(), atoms._atoms_arr[0].get_forces()
     )

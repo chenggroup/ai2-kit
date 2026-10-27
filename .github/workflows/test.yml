@@ -17,6 +17,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        lfs: ${{ github.ref == 'refs/heads/v2-breaking' || github.base_ref == 'v2-breaking' }}
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5

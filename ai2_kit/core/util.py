@@ -5,7 +5,6 @@ from pathlib import Path
 
 import numpy as np
 import shortuuid
-import asyncio
 import hashlib
 import base64
 import psutil
@@ -66,19 +65,6 @@ def parse_path_list(path_list_str: Union[str, List[str]], to_abs: bool = False):
     if to_abs:
         path_list = [parse_path(path) for path in path_list]
     return path_list
-
-
-def wait_for_change(widget, attribute):
-    """
-    Wait for attribute change of a Jupyter widget
-    """
-    future = asyncio.Future()
-    def getvalue(change):
-        # make the new value available
-        future.set_result(change.new)
-        widget.unobserve(getvalue, attribute)
-    widget.observe(getvalue, attribute)
-    return future
 
 
 def get_yaml():

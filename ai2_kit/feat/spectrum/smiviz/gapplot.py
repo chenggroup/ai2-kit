@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from sklearn.metrics import mean_squared_error
-from scipy.integrate import trapz
+from scipy.integrate import trapezoid
 from typing import Sequence, Optional
 
 
@@ -211,8 +211,8 @@ def plot_ti_results(
     plt.xticks(fontsize=fs - 4)
     plt.yticks(y_ticks, fontsize=fs - 4)
 
-    integral = trapz(vegs, etas)
-    integral_fp = trapz(vegs_fp, etas_fp)
+    integral = trapezoid(vegs, etas)
+    integral_fp = trapezoid(vegs_fp, etas_fp)
 
     plt.text(1.00, 0.8, " MLMD: %5.3f eV" % (integral), color=mlmd_color, fontsize=fs - 4, horizontalalignment="right")
     plt.text(1.00, 0.4, " BLYP-D3: %5.3f eV" % (integral_fp), color=fp_color, fontsize=fs - 4, horizontalalignment="right")

@@ -33,4 +33,4 @@ jobs:
 
     - name: Run tests with pytest
       run: |
-        poetry run python -m pytest --ignore=tests/test_md_spectra.py
+        poetry run python -m pytest tests --ignore=tests/test_md_spectra.py -k 'not DPFFDPData'

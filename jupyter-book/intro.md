@@ -12,7 +12,6 @@ A toolkit featured _**a**rtificial **i**ntelligence × **a**b **i**nitio_ for co
 
 ## Feature Highlights
 * Collection of tools to facilitate the development of automated workflows for computational chemistry research.
-* Utilities to execute and manage jobs in local or remote HPC job scheduler.
 * Utilities to simplified automated workflows development with reusable components. 
 
 ## Installation

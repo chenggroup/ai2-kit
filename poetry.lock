@@ -4489,4 +4489,4 @@ rpc = ["fire-rpc"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.15"
-content-hash = "698d630ed29fc87667e7a960a4151777de755517ecc86dda375356746faf4989"
+content-hash = "ebd6f822a45e0d84bdf2f64e40d7a7ef48a387beee629871ce51d8ae6bc4be1b"

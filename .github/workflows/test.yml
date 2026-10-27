@@ -29,7 +29,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install poetry
-        poetry install --no-interaction
+        poetry install --no-interaction --only main,dev
 
     - name: Run tests with pytest
       run: |

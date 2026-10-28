@@ -30,9 +30,11 @@ oh-my-batch = ">=0.7.7"
 
 dscribe = ">=2.1.2"
 fire-rpc = {version = ">=0.1.4", optional = true}
+cp2kdata = {version = "^0.7.3", optional = true}
 
 [tool.poetry.extras]
-all = ["fire-rpc"]
+all = ["fire-rpc", "cp2kdata"]
+cp2kdata = ["cp2kdata"]
 rpc = ["fire-rpc"]
 
 [[tool.poetry.source]]

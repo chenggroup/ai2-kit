@@ -73,11 +73,17 @@ Install the core package with pip:
 pip install ai2-kit
 ```
 
-To install all optional features and their dependencies, including DeePMD-kit
-and TensorFlow, use:
+To install all optional features and their dependencies, including `fire-rpc`
+and `cp2kdata`, use:
 
 ```bash
 pip install 'ai2-kit[all]'
+```
+
+To install only the optional `cp2kdata` dependency for its supported formats, use:
+
+```bash
+pip install 'ai2-kit[cp2kdata]'
 ```
 
 ## Usage

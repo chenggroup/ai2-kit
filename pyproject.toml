@@ -6,17 +6,16 @@ authors = [{name = "weihong.xu", email = "xuweihong.cn@gmail.com"}]
 readme = "README.md"
 requires-python = ">=3.10,<3.15"
 dependencies = [
-    "fire>=0.7.1,<0.8",
+    "fire>=0.7.1,<1",
     "pydantic>=2.12.0,<3",
-    "ruamel-yaml>=0.17.21,<0.18",
+    "ruamel-yaml>=0.17.21,<1",
     "shortuuid>=1.0.11,<2",
     "dpdata>=1.1.0",
-    "deepmd-kit>2,<4",
     "pandas>=2.2.3,<3",
     # DScribe 2.1.2 uses the Atoms positional constructor changed in ASE 3.27.
     "ase>=3.26,<3.27",
     "mdanalysis>=2.9,<3.0",
-    "tabulate>=0.9.0,<0.10",
+    "tabulate>=0.9.0,<1",
     "joblib>=1.2.0,<2",
     "scipy>=1.13.0,<2",
     "psutil>=5.9.8,<6",
@@ -28,13 +27,21 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-all = ["fire-rpc>=0.1.4", "cp2kdata>=0.7.3,<0.8"]
-cp2kdata = ["cp2kdata>=0.7.3,<0.8"]
+all = [
+    "fire-rpc>=0.1.4",
+    "cp2kdata>=0.7.3,<1",
+    "deepmd-kit>2,<4",
+    "tensorflow>=2.18,<3; python_version < '3.14'",
+]
+cp2kdata = ["cp2kdata>=0.7.3,<1"]
+deepmd = ["deepmd-kit>2,<4"]
+# TensorFlow has no Python 3.14 wheels; its h5py cap also excludes 3.14 wheels.
+tensorflow = ["tensorflow>=2.18,<3; python_version < '3.14'"]
 rpc = ["fire-rpc>=0.1.4"]
 
 [dependency-groups]
 dev = ["autopep8>=2.0.0,<3", "pytest>=8.4.2,<9"]
-doc = ["jupyter-book>=0.15.1,<0.16"]
+doc = ["jupyter-book>=0.15.1,<1"]
 
 [tool.uv]
 # cp2k-input-tools needs Pint 0.26 on Python >=3.12, while mendeleev caps it at 0.25.
@@ -51,7 +58,7 @@ module-name = "ai2_kit"
 module-root = ""
 
 [build-system]
-requires = ["uv_build>=0.11.28,<0.12"]
+requires = ["uv_build>=0.11.28,<1"]
 build-backend = "uv_build"
 
 [project.scripts]

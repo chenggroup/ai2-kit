@@ -78,8 +78,8 @@ Install the core package with pip:
 pip install ai2-kit
 ```
 
-To install all optional features and their dependencies, including `fire-rpc`
-and `cp2kdata`, use:
+To install all optional features and their dependencies, including `fire-rpc`,
+`cp2kdata`, DeePMD-kit, and TensorFlow, use:
 
 ```bash
 pip install 'ai2-kit[all]'
@@ -90,6 +90,17 @@ To install only the optional `cp2kdata` dependency for its supported formats, us
 ```bash
 pip install 'ai2-kit[cp2kdata]'
 ```
+
+For DeePMD model inference, install the `deepmd` extra. Include `tensorflow`
+when using the TensorFlow backend:
+
+```bash
+pip install 'ai2-kit[deepmd]'
+pip install 'ai2-kit[deepmd,tensorflow]'
+```
+
+TensorFlow currently provides wheels for Python 3.10-3.13. The `tensorflow`
+and `all` extras install it only on these Python versions.
 
 ## Usage
 All `ai2-kit` commands can be accessed via the command line interface `ai2-kit`.

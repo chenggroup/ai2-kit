@@ -62,62 +62,23 @@ ai2-kit tool ase read "./lammps-*/traj.lammpstrj" --format lammps-dump-text \
 
 ## Environment Requirements
 
-`ai2-kit` is developed and tested on Linux systems, and it should work on macOS as well.
-For Windows, most of the `ai2-kit` features are expected to work. However, some third-party libraries (such as *dscribe*) may not function properly on Windows. 
-In such cases, it is recommended to use `ai2-kit` through Windows Subsystem for Linux (WSL).
-
-The v2 support target is Python 3.10–3.14. Installation and compatibility across
-this range are still being validated. Some third-party libraries may not yet
-provide compatible releases or pre-built binaries for the latest Python versions.
-We strongly recommend creating a dedicated Conda environment to avoid unexpected issues caused by incompatible package versions.
+`ai2-kit` requires Python 3.10 or later. On Windows, use `ai2-kit` through
+WSL2. We recommend installing it in a Conda environment.
 
 ## Installation
 
-You can use the following command to install `ai2-kit`:
+Install the core package with pip:
 
 ```bash
-# for users who just use most common features
 pip install ai2-kit
-
-# for users who want to use all features
-pip install ai2-kit[all]
 ```
 
-If you want to run `ai2-kit` from source, you can run the following commands in the project folder:
+To install all optional features and their dependencies, including DeePMD-kit
+and TensorFlow, use:
 
 ```bash
-pip install poetry
-# If you meet ConnectionError, you can try to set the max-workers to a smaller number, e.g
-# poetry config installer.max-workers 4
-poetry install
-poetry run ai2-kit
+pip install 'ai2-kit[all]'
 ```
-
-Jupyter Book is now in the optional `doc` dependency group and is not installed
-by default. To include the dependencies needed to build the documentation, run:
-
-```bash
-poetry install --with doc
-```
-
-## Local Tests
-
-Install the runtime and development dependencies from the lockfile, then run
-the lightweight suite from the project root:
-
-```bash
-poetry install --only main,dev
-poetry run python -m pytest -q tests --ignore=tests/test_md_spectra.py -k 'not DPFFDPData'
-```
-
-This suite covers parsing, conversion, numerical helpers, and ASE/dpdata
-roundtrips through both Python and CLI APIs. CLI tests use
-`python -m ai2_kit.main` with the current Python interpreter.
-
-The spectrum test requires a large dataset available only locally. The DPFF
-tests excluded above currently require DeepMD and are outside this lightweight
-test boundary. HPC execution and DeepMD/TensorFlow model loading are also
-outside the v2 Stage 1 test scope.
 
 ## Usage
 All `ai2-kit` commands can be accessed via the command line interface `ai2-kit`.
@@ -146,19 +107,11 @@ ai2-kit tool dpdata read --help
 * [Model Deviation Toolkit](doc/manual/model-deviation.md): a toolkit to filter structures by model deviation
 
 ### Workflows
-#### Example Driven Workflows (Recommended)
-These workflows are built with [oh-my-batch](https://github.com/link89/oh-my-batch) and example shell scripts, which can be easily adapted to your own research purpose.
-It provides more flexibility and transparency to run and customize their own workflows.
+Workflows are built with [oh-my-batch](https://github.com/link89/oh-my-batch) and example shell scripts, which can be easily adapted to your own research purpose.
 
 * [TESLA](./example/use-case/tesla/): A customizable active learning workflow for training machine learning potentials.
 * [TESLA PIMD](./example/use-case/tesla-pimd/): A customizable active learning workflow for training machine learning potentials with path integral molecular dynamics.
 * [TESLA for ec-MLP](./example/use-case/tesla-for-ec-mlp/): A customizable active learning workflow for training machine learning potentials for electrolyte systems.
-
-Configuration-driven CLL/FEP workflows, HPC/Batch commands, checkpoint
-workflows, and the old catalysis toolkit were removed in v2. Users who need
-those legacy features should use the separately maintained `v1-legacy` branch
-once it is available.
-
 
 ### Featuring Tools
 * [NMRNet](doc/manual/nmrnet.md): A toolkit for predict NMR with deep learning network.
@@ -174,3 +127,38 @@ once it is available.
 
 ## Tips
 * [Tips](doc/manual/tips.md): useful tips for using `ai2-kit`
+
+## Developer Guide
+
+### Install from Source
+
+To install `ai2-kit` from source, run the following commands from the project root:
+
+```bash
+pip install poetry
+poetry install
+poetry run ai2-kit
+```
+
+> [!NOTE]
+> If you encounter a `ConnectionError`, reduce Poetry's installer worker count:
+> ```bash
+> poetry config installer.max-workers 4
+> ```
+
+Jupyter Book is in the optional `doc` dependency group and is not installed by
+default. To install the dependencies needed to build the documentation, run:
+
+```bash
+poetry install --with doc
+```
+
+### Local Tests
+
+Install the runtime and development dependencies from the lockfile, then run
+the lightweight suite from the project root:
+
+```bash
+poetry install --only main,dev
+poetry run python -m pytest -q tests --ignore=tests/test_md_spectra.py -k 'not DPFFDPData'
+```

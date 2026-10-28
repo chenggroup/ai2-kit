@@ -38,6 +38,8 @@ doc = ["jupyter-book>=0.15.1,<0.16"]
 
 [tool.uv]
 # cp2k-input-tools needs Pint 0.26 on Python >=3.12, while mendeleev caps it at 0.25.
+# Keep Pint 0.24.4 on older Python versions. Overrides apply only to uv project
+# environments, not to published package metadata or pip installations.
 # https://github.com/robinzyb/cp2kdata/issues/101
 override-dependencies = [
     "pint>=0.24.4,<0.25; python_version < '3.12'",

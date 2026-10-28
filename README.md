@@ -182,11 +182,6 @@ uv sync --locked --extra cp2kdata
 uv run --no-sync python -m pytest -q tests --ignore=tests/test_md_spectra.py -k 'not DPFFDPData'
 ```
 
-The uv environment overrides Pint to `>=0.26,<0.27` on Python 3.12 and later
-to reconcile the `cp2k-input-tools` and `mendeleev` requirements
-([upstream issue](https://github.com/robinzyb/cp2kdata/issues/101)). This override
-applies to uv project environments, not to installations with pip.
-
 ### Build Packages
 
 ```bash
@@ -205,5 +200,8 @@ maintained:
 - **Python 3.10 or later:** v2 drops support for Python 3.9 and earlier. This
   resolves compatibility issues with key dependencies and makes `ai2-kit` easier
   to install and use on newer Python versions.
+- **Build tooling:** v2 replaces Poetry with uv for dependency management and
+  package builds. Use `uv sync --locked` to install dependencies from `uv.lock`,
+  `uv run` to run commands, and `uv build` to build distributions.
 - **v1 maintenance:** The v1 codebase will move to the `v1-legacy` branch for
   continued maintenance.

@@ -14,6 +14,11 @@
 > Our `ai2-kit` paper has been submitted as a preprint: [arXiv:2607.00613](https://arxiv.org/abs/2607.00613).
 > The paper-related examples are available under [example/supplement](./example/supplement/).
 
+> [!NOTE]
+> v2 introduces major changes to workflows and Python support. See
+> [Appendix: Transitioning from v1 to v2](#appendix-transitioning-from-v1-to-v2)
+> for details, including plans for maintaining v1.
+
 
 ## Feature Highlights
 * Collection of tools to facilitate the development of automated workflows for computational chemistry research.
@@ -168,3 +173,18 @@ the lightweight suite from the project root:
 poetry install --only main,dev
 poetry run python -m pytest -q tests --ignore=tests/test_md_spectra.py -k 'not DPFFDPData'
 ```
+
+## Appendix: Transitioning from v1 to v2
+
+v2 makes several significant changes to how `ai2-kit` workflows are built and
+maintained:
+
+- **Example-driven workflows:** v2 replaces v1's configuration-driven workflow
+  system with workflows built from runnable examples. This approach supports a
+  wider range of functionality, makes workflows easier to reuse and adapt, and
+  makes it easier to collaborate with AI coding agents.
+- **Python 3.10 or later:** v2 drops support for Python 3.9 and earlier. This
+  resolves compatibility issues with key dependencies and makes `ai2-kit` easier
+  to install and use on newer Python versions.
+- **v1 maintenance:** The v1 codebase will move to the `v1-legacy` branch for
+  continued maintenance.

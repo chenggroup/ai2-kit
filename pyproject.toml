@@ -1,6 +1,6 @@
 [project]
 name = "ai2-kit"
-version = "1.1.1"
+version = "2.0.0"
 description = ""
 authors = [{name = "weihong.xu", email = "xuweihong.cn@gmail.com"}]
 readme = "README.md"

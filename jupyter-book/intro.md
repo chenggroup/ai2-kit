@@ -27,12 +27,12 @@ ai2-kit --help
 If you want to run `ai2-kit` from source, you can run the following commands in the project folder:
 
 ```bash
-pip install poetry
-poetry install
+pip install uv
+uv sync --locked
 
-./ai2-kit --help
+uv run ai2-kit --help
 ```
-Note that instead of running global `ai2-kit` command, you should run `./ai2-kit` to run the command from source.
+Use `uv run` to run commands in the project's environment.
 
 ## Manuals
 

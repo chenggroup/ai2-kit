@@ -154,22 +154,22 @@ The [supplementary examples](./example/supplement/) accompanying the paper provi
 To install `ai2-kit` from source, run the following commands from the project root:
 
 ```bash
-pip install poetry
-poetry install
-poetry run ai2-kit
+pip install uv
+uv sync --locked
+uv run ai2-kit
 ```
 
 > [!NOTE]
-> If you encounter a `ConnectionError`, reduce Poetry's installer worker count:
+> If you encounter connection errors, reduce uv's download concurrency:
 > ```bash
-> poetry config installer.max-workers 4
+> UV_CONCURRENT_DOWNLOADS=4 uv sync --locked
 > ```
 
 Jupyter Book is in the optional `doc` dependency group and is not installed by
 default. To install the dependencies needed to build the documentation, run:
 
 ```bash
-poetry install --with doc
+uv sync --locked --group doc
 ```
 
 ### Local Tests
@@ -178,8 +178,19 @@ Install the runtime and development dependencies from the lockfile, then run
 the lightweight suite from the project root:
 
 ```bash
-poetry install --only main,dev
-poetry run python -m pytest -q tests --ignore=tests/test_md_spectra.py -k 'not DPFFDPData'
+uv sync --locked --extra cp2kdata
+uv run --no-sync python -m pytest -q tests --ignore=tests/test_md_spectra.py -k 'not DPFFDPData'
+```
+
+The uv environment overrides Pint to `>=0.26,<0.27` on Python 3.12 and later
+to reconcile the `cp2k-input-tools` and `mendeleev` requirements
+([upstream issue](https://github.com/robinzyb/cp2kdata/issues/101)). This override
+applies to uv project environments, not to installations with pip.
+
+### Build Packages
+
+```bash
+uv build
 ```
 
 ## Appendix: Transitioning from v1 to v2

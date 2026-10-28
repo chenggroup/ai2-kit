@@ -7,20 +7,15 @@ To ensure the maintainability, stability, and traceability of the codebase, all 
 * **Maintain strict bisectability:** Every single commit in a patch series **must compile successfully and pass all tests independently**. 
 * **Do not break the build mid-series:** A developer must be able to run `git bisect` smoothly through your branch without hitting a broken state.
 
-### 2. Upstream Timing & Lifecycle
-* **Submit early, front-load reviews:** Large architectural changes or massive pull requests must be submitted at the **beginning of the merge window**, not at the tail end.
-* **No late-stage feature dumping:** Complex, non-critical heavy refactoring will be rejected if submitted during stabilization (`-rc`) phases.
-* **Pre-validate in next-branches:** Ensure large scale changes have already spent sufficient time baking in integration or next-branches before main deployment.
-
-### 3. Commit Integrity & Traceability
+### 2. Commit Integrity & Traceability
 * **Write meaningful descriptions:** Commit messages must focus heavily on **why** a change is necessary, rather than just *what* lines were changed.
 * **Ban meaningless squash merges:** Avoid flattening a rich development history into a single, unreadable blob that destroys individual authorship and `git blame` clarity.
 * **Keep history linear and clean:** Maintain a clean Git tree topology with well-documented merge commits explaining the high-level architecture of the pull request.
 
-### 4. Code Readability & Maintainability
+### 3. Code Readability & Maintainability
 * **Prioritize maintainer cognitive load:** Keep logic explicit and readable. Do not introduce clever macros or overly dense abstractions just to reduce line counts.
 * **Minimize cross-subsystem coupling:** Isolate large-scale structural changes to the specific module or layer they affect to prevent cascading side-effects.
 
-### 5. Plan Changes During Execution
+### 4. Plan Changes During Execution
 * **Update the plan before implementation:** If a plan change requires approval during task execution, obtain that approval first, then update the plan text to reflect the approved change before implementing it.
 

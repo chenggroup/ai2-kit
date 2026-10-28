@@ -120,9 +120,17 @@ ai2-kit tool dpdata read --help
 ### Workflows
 Workflows are built with [oh-my-batch](https://github.com/link89/oh-my-batch) and example shell scripts, which can be easily adapted to your own research purpose.
 
-* [TESLA](./example/use-case/tesla/): A customizable active learning workflow for training machine learning potentials.
-* [TESLA PIMD](./example/use-case/tesla-pimd/): A customizable active learning workflow for training machine learning potentials with path integral molecular dynamics.
-* [TESLA for ec-MLP](./example/use-case/tesla-for-ec-mlp/): A customizable active learning workflow for training machine learning potentials for electrolyte systems.
+* [TESLA](./example/use-case/tesla/): Customizable active learning workflows for training machine learning potentials, with variants for [path integral molecular dynamics](./example/use-case/tesla-pimd/) and [electrolyte systems (ec-MLP)](./example/use-case/tesla-for-ec-mlp/).
+
+The [supplementary examples](./example/supplement/) accompanying the paper provide workflows for specific research applications:
+
+* [TESLA for bulk water](./example/supplement/tesla-h2o/): Active learning for a bulk-water machine learning potential.
+* [TESLA for Au-CO2](./example/supplement/tesla-auco/): Active learning for the Au-CO2 system.
+* [TESLA for pKa](./example/supplement/tesla-pka/): Active learning for pKa calculations using free energy perturbation and thermodynamic integration (FEP-TI).
+* [TESLA for redox potentials](./example/supplement/tesla-redox/): Active learning for redox-potential calculations using FEP-TI.
+* [ec-MLP](./example/supplement/ec-mlp/): Constant-potential molecular dynamics at the Cu(111)/water interface.
+* [Spectroscopy](./example/supplement/spectra/): IR, Raman, and sum-frequency generation spectra at the air-water interface using machine learning molecular dynamics and Deep Wannier models.
+* [AI-agent-generated TESLA](./example/supplement/skill-demo/): A workflow built with the `build-tesla` skill, using MACE, OpenMM, and VASP.
 
 ### Featuring Tools
 * [NMRNet](doc/manual/nmrnet.md): A toolkit for predict NMR with deep learning network.

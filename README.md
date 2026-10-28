@@ -21,33 +21,23 @@
 * Provide reusable skills under [./skills](./skills/) for building code related to `ai2-kit`.
   * [build-tesla](./skills/build-tesla): a skill for building TESLA workflows from existing examples.
 
-### 2D API Design: MFI/O × Method Chaining
+## 2D API Design Pattern
 
-A key innovation of `ai2-kit` is its 2D API design, shared by the command-line
-interface and Python API. It is formed by two orthogonal conventions:
-Multi-files-in-and-out (MFI/O) along the file dimension, and method chaining
-along the operation dimension.
+A key innovation of `ai2-kit` is its 2D API design pattern, shared by the
+command-line interface and Python module. The two dimensions are:
 
-- **File dimension: Multi-files-in-and-out (MFI/O).** A single API call can
-  operate on a whole collection of files. Inputs are specified by wildcards,
-  while outputs are specified by template variables. This covers both reading
-  many files into one collection and writing many files or task directories
-  from one collection, replacing explicit loops, path bookkeeping, and
-  directory creation.
-- **Operation dimension: method chaining.** A sequence of dependent steps can
-  be composed into a single expression, using `-` as the separator in the CLI
-  or chained calls in Python. A pipeline of reading, transforming, and writing
-  data proceeds without intermediate variables or files.
+- **File dimension:** A single API call can operate on a collection of files.
+  Wildcards specify inputs, and template variables specify outputs, making
+  batch processing as straightforward as working with a single file.
+- **Operation dimension:** A sequence of dependent steps can be composed into
+  a single expression. The CLI uses `-` to separate operations, while Python
+  uses chained method calls. Reading, transforming, and writing data can be
+  combined without intermediate variables or files.
 
-**2D composition.** MFI/O extends the file dimension and method chaining
-extends the operation dimension. The two dimensions are orthogonal and can be
-extended independently, so the same processing pipeline can be applied to a
-whole collection of inputs while also producing a whole collection of outputs.
-
-For example, the paper's data-handling task---reading all LAMMPS trajectories
-under `./lammps-*/`, randomly sampling 100 structures, and writing them as
-individual VASP POSCAR files---can be expressed equivalently through both
-interfaces.
+By extending both the file and operation dimensions, `ai2-kit` provides
+powerful tools through a concise interface. For example, the following
+workflow merges trajectory files, samples structures, converts their format,
+and writes each result to a separate file in a single expression:
 
 **Python API**
 

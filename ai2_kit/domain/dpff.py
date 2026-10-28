@@ -191,19 +191,29 @@ def get_pbc_atomic_efield(
     ewald_beta,
 ):
     try:
-        from deepmd.infer.ewald_recp import EwaldRecp
+        from deepmd.tf.env import GLOBAL_TF_FLOAT_PRECISION, default_tf_session_config, op_module, tf
     except ImportError:
-        from deepmd.tf.infer.ewald_recp import EwaldRecp
-        # FIXME: there seems to be a issue of deepmd-kit>=3 that EwaldRecp will stuck forever
+        from deepmd.env import GLOBAL_TF_FLOAT_PRECISION, default_tf_session_config, op_module, tf
 
-    er = EwaldRecp(ewald_h, ewald_beta)
     natoms = dp_sys.get_natoms()
     cell = dp_sys.data["cells"]
-    e, f, v = er.eval(
-        extended_coords.reshape(1, -1),
-        extended_charges.reshape(1, -1),
-        cell.reshape(1, -1),
-    )
+    # EwaldRecp only has a CPU kernel, but its default Session initializes GPUs.
+    # Broken CUDA installations can hang there. Keep this configuration local so
+    # other DeePMD models in the same process can still use GPUs.
+    config = tf.ConfigProto()
+    config.CopyFrom(default_tf_session_config)
+    config.device_count["GPU"] = 0
+    with tf.Graph().as_default() as graph:
+        _, force, _ = op_module.ewald_recp(
+            tf.constant(extended_coords.reshape(-1), dtype=GLOBAL_TF_FLOAT_PRECISION),
+            tf.constant(extended_charges.reshape(-1), dtype=GLOBAL_TF_FLOAT_PRECISION),
+            tf.constant([extended_charges.size], dtype=tf.int32),
+            tf.constant(cell.reshape(-1), dtype=GLOBAL_TF_FLOAT_PRECISION),
+            ewald_h=ewald_h,
+            ewald_beta=ewald_beta,
+        )
+    with tf.Session(graph=graph, config=config) as sess:
+        f = sess.run(force)
     extended_efield = f.reshape(-1, 3) / extended_charges.reshape(-1, 1)
     # natoms * 3
     pbc_efield = extended_efield[:natoms]

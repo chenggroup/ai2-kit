@@ -4,14 +4,17 @@ import glob
 import shutil
 
 import unittest
+from importlib import import_module
+from importlib.util import find_spec
 from pathlib import Path
+from unittest.mock import Mock, patch
 import numpy as np
 from scipy import constants
 from ase import io
 from ase.geometry import cell_to_cellpar
 
 from ai2_kit.domain.dplr import dpdata_read_cp2k_dplr_data, get_sel_ids
-from ai2_kit.domain.dpff import dpdata_read_cp2k_dpff_data
+from ai2_kit.domain.dpff import dpdata_read_cp2k_dpff_data, get_pbc_atomic_efield
 from ai2_kit.tool.dpdata import DpdataTool
 
 from MDAnalysis.lib.distances import distance_array
@@ -116,6 +119,51 @@ class TestDPFFDPData(unittest.TestCase):
             self.data_with_ion.data["atomic_dipole"][0],
         )
 
+
+
+@unittest.skipUnless(find_spec("deepmd") and find_spec("tensorflow"), "Requires DeePMD's TensorFlow backend")
+class TestPbcAtomicEfield(unittest.TestCase):
+    def test_cpu_session_matches_ewald(self):
+        try:
+            ewald = import_module("deepmd.tf.infer.ewald_recp")
+        except ImportError:
+            ewald = import_module("deepmd.infer.ewald_recp")
+
+        coords = np.array([[0.2, 0.3, 0.4], [1.0, 1.5, 2.0], [3.0, 2.0, 1.0]])
+        charges = np.array([1.0, 2.0, -3.0])
+        cell = np.array([[[6.0, 0.0, 0.0], [0.5, 6.0, 0.0], [0.0, 0.5, 6.0]]])
+        dp_sys = Mock(data={"cells": cell})
+        dp_sys.get_natoms.return_value = 2
+        default_config = ewald.default_tf_session_config
+        original_config = default_config.SerializeToString()
+        cpu_config = ewald.tf.ConfigProto()
+        cpu_config.CopyFrom(default_config)
+        cpu_config.device_count["GPU"] = 0
+        with patch.object(ewald, "default_tf_session_config", cpu_config):
+            reference = ewald.EwaldRecp(0.5, 0.4)
+        try:
+            _, force, _ = reference.eval(
+                coords.reshape(1, -1), charges.reshape(1, -1), cell.reshape(1, -1)
+            )
+        finally:
+            reference.sess.close()
+
+        sessions = []
+        session_class = ewald.tf.Session
+
+        def create_session(*args, **kwargs):
+            self.assertEqual(kwargs["config"].device_count["GPU"], 0)
+            self.assertIsNot(kwargs["config"], default_config)
+            session = session_class(*args, **kwargs)
+            sessions.append(session)
+            return session
+
+        with patch.object(ewald.tf, "Session", side_effect=create_session):
+            field = get_pbc_atomic_efield(dp_sys, coords, charges, 0.5, 0.4)
+        np.testing.assert_allclose(field, (force.reshape(-1, 3) / charges[:, None])[:2])
+        self.assertEqual(len(sessions), 1)
+        self.assertTrue(sessions[0]._closed)
+        self.assertEqual(default_config.SerializeToString(), original_config)
 
 
 class TestWriteDPData(unittest.TestCase):

@@ -11,14 +11,11 @@
 `ai2-kit` (pronounced as "AI Squared Kit")  is a command line and python toolkit featured _**a**rtificial **i**ntelligence × **a**b **i**nitio_ for complex chemistry systems research.
 
 > [!NOTE]
-> Our `ai2-kit` paper has been submitted as a preprint: [arXiv:2607.00613](https://arxiv.org/abs/2607.00613).
+> - Our paper has been submitted as a preprint: [arXiv:2607.00613](https://arxiv.org/abs/2607.00613).
 > The paper-related examples are available under [example/supplement](./example/supplement/).
-
-> [!NOTE]
-> v2 introduces major changes to workflows and Python support. See
+> - v2 introduces major changes to workflows and Python support. See
 > [Appendix: Transitioning from v1 to v2](#appendix-transitioning-from-v1-to-v2)
 > for details, including plans for maintaining v1.
-
 
 ## Feature Highlights
 * Collection of tools to facilitate the development of automated workflows for computational chemistry research.
@@ -57,7 +54,7 @@ from ai2_kit.tool.ase import AseTool
 )
 ```
 
-**CLI**
+**Command Line Interface**
 
 ```bash
 ai2-kit tool ase read "./lammps-*/traj.lammpstrj" --format lammps-dump-text \
@@ -78,28 +75,14 @@ Install the core package with pip:
 pip install ai2-kit
 ```
 
-To install all optional features and their dependencies, including `fire-rpc`,
-`cp2kdata`, DeePMD-kit, and TensorFlow, use:
+To install all optional features and their dependencies, including
+`cp2kdata`, DeePMD-kit, and TensorFlow, etc, use:
 
 ```bash
 pip install 'ai2-kit[all]'
 ```
 
-To install only the optional `cp2kdata` dependency for its supported formats, use:
-
-```bash
-pip install 'ai2-kit[cp2kdata]'
-```
-
-For DeePMD model inference, install the `deepmd` extra. Include `tensorflow`
-when using the TensorFlow backend:
-
-```bash
-pip install 'ai2-kit[deepmd]'
-pip install 'ai2-kit[deepmd,tensorflow]'
-```
-
-TensorFlow currently provides wheels for Python 3.10-3.13. The `tensorflow`
+Note that TensorFlow currently provides wheels for Python 3.10-3.13. The `tensorflow`
 and `all` extras install it only on these Python versions.
 
 ## Usage
@@ -111,7 +94,6 @@ ai2-kit
 # e.g.
 ai2-kit tool
 ai2-kit tool dpdata
-
 ```
 For detailed usage of each command, you can run the following command to view the help information:
 

@@ -18,9 +18,9 @@
 > for details, including plans for maintaining v1.
 
 ## Feature Highlights
-* Collection of tools to facilitate the development of automated workflows for computational chemistry research.
+* Collection of tools and workflows to facilitate the development of automated workflows for computational chemistry research.
 * Use with [oh-my-batch](https://github.com/link89/oh-my-batch) to build your own workflow with shell script.
-* Provide reusable skills under [./skills](./skills/) for building code related to `ai2-kit`.
+* Provide reusable [skills](./skills/) for building code related to `ai2-kit`.
   * [build-tesla](./skills/build-tesla): a skill for building TESLA workflows from existing examples.
 
 ## 2D API Design Pattern
@@ -76,7 +76,7 @@ pip install ai2-kit
 ```
 
 To install all optional features and their dependencies, including
-`cp2kdata`, DeePMD-kit, and TensorFlow, etc, use:
+`cp2kdata`, `DeePMD-kit`, and `TensorFlow`, etc, use:
 
 ```bash
 pip install 'ai2-kit[all]'

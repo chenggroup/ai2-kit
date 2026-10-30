@@ -58,9 +58,6 @@ ai2-kit feat spectr viber cp2k-labeling \
 # show generated file
 find ./run-01 
 
-# submit batch scripts and wait for completion
-ai2-kit tool hpc slurm submit ./run-01/cpk2-batch-*.sub - wait
-
 # generate dataset
 ai2-kit tool dpdata read run-01/* --fmt cp2k/viber --lumped_dict '{O:4}' --output_file dipole.out \
   --wannier wannier.xyz --wannier_x wannier_x.xyz --wannier_y wannier_y.xyz --wannier_z wannier_z.xyz \

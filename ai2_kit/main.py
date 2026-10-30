@@ -1,6 +1,5 @@
 from fire import Fire
 
-import warnings
 import logging
 import os
 
@@ -36,21 +35,6 @@ class AlgorithmGroup:
         return ReweightingTool()
 
 
-class WorkflowGroup:
-    """
-    Workflows for specific domains.
-    """
-
-    @property
-    def cll_mlp_training(self):
-        from ai2_kit.workflow.cll_mlp import run_workflow
-        return run_workflow
-
-    @property
-    def fep_mlp_training(self):
-        from ai2_kit.workflow.fep_mlp import run_workflow
-        return run_workflow
-
 class ToolGroup:
     """
     Tools for specific domains.
@@ -77,23 +61,9 @@ class ToolGroup:
         return YamlTool
 
     @property
-    def batch(self):
-        from ai2_kit.tool.batch import BatchTool
-        return BatchTool
-
-    @property
     def frame(self):
         from ai2_kit.tool.frame import FrameTool
         return FrameTool
-
-    @property
-    def hpc(self):
-        # deprecated, use `oh-my-batch` instead
-        warnings.warn('The hpc module is deprecated, please use oh-my-batch instead.',
-                        DeprecationWarning, stacklevel=2)
-
-        from ai2_kit.tool.hpc import cmd_entry
-        return cmd_entry
 
     @property
     def lammps(self):
@@ -109,21 +79,6 @@ class FeatureGroup:
     """
     Featuring tools for specific domains.
     """
-
-    @property
-    def catalysis(self):
-        """
-        Catalyst specific tools.
-        """
-        from ai2_kit.feat.catalysis import CmdEntries
-        return CmdEntries
-
-    @property
-    def cat(self):
-        """
-        Shortcut for catalyst.
-        """
-        return self.catalysis
 
     @property
     def spectr(self):
@@ -148,7 +103,6 @@ class FeatureGroup:
 
 
 ai2_kit = CmdGroup({
-    'workflow': WorkflowGroup(),
     'algorithm': AlgorithmGroup(),
     'tool': ToolGroup(),
     'feat': FeatureGroup(),

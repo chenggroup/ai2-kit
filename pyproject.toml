@@ -1,75 +1,69 @@
-[tool.poetry]
+[project]
 name = "ai2-kit"
-version = "1.1.1"
+version = "2.0.0"
 description = ""
-authors = ["weihong.xu <xuweihong.cn@gmail.com>"]
+authors = [{name = "weihong.xu", email = "xuweihong.cn@gmail.com"}]
 readme = "README.md"
-packages = [{include = "ai2_kit"}]
-include = ["ai2_kit/res/*"]
-
-[tool.poetry.dependencies]
-python = "^3.9"
-fire = "^0.5.0"
-fabric = "^2.7.1"
-pydantic = "2.8.2"
-invoke = "^1.7.3"
-ruamel-yaml = "^0.17.21"
-cloudpickle = "^2.2.0"
-shortuuid = "^1.0.11"
-# dpdata >= 1.1.0 parses newer CP2K output but needs python >= 3.10
-dpdata = [
-    { version = "0.2.18", python = "<3.10" },
-    { version = ">=1.1.0", python = ">=3.10" },
+requires-python = ">=3.10,<3.15"
+dependencies = [
+    "fire>=0.7.1,<1",
+    "pydantic>=2.12.0,<3",
+    "ruamel-yaml>=0.17.21,<1",
+    "shortuuid>=1.0.11,<2",
+    "dpdata>=1.1.0",
+    "pandas>=2.2.3,<3",
+    # DScribe 2.1.2 uses the Atoms positional constructor changed in ASE 3.27.
+    "ase>=3.26,<3.27",
+    "mdanalysis>=2.9,<3.0",
+    "tabulate>=0.9.0,<1",
+    "joblib>=1.2.0,<2",
+    "scipy>=1.13.0,<2",
+    "psutil>=5.9.8,<6",
+    "numpy>=2.0,<3.0",
+    "netcdf4>=1.7.1.post1,<2",
+    "scikit-learn>=1.6.1,<2",
+    "oh-my-batch>=0.7.7",
+    "dscribe>=2.1.2",
 ]
-pandas = "^1.5.3"
-ase = "^3.22.1"
-mdanalysis = "^2.4.3"
-allpairspy = "^2.5.0"
-tabulate = "^0.9.0"
-joblib = "^1.2.0"
-scipy = "^1.13.0"
-psutil = "^5.9.8"
-numpy = "1.24.3"
-netcdf4 = "^1.7.1.post1"
-scikit-learn = "^1.6.1"
-fire-rpc = {version = "0.1.3", optional = true}
-oh-my-batch = ">=0.7.0"
 
-asaplib = {version = "^0.0.2", optional = true}
-dscribe = {version = "1.2.2", optional = true}
-jupyter-formily = {version = "0.0.7", optional = true}
-ipympl = {version = "^0.9.3", optional = true}
+[project.optional-dependencies]
+all = [
+    "fire-rpc>=0.1.4",
+    "cp2kdata>=0.7.3,<1",
+    "deepmd-kit>2,<4",
+    "tensorflow>=2.18,<3; python_version < '3.14'",
+]
+cp2kdata = ["cp2kdata>=0.7.3,<1"]
+deepmd = ["deepmd-kit>2,<4"]
+# TensorFlow has no Python 3.14 wheels; its h5py cap also excludes 3.14 wheels.
+tensorflow = ["tensorflow>=2.18,<3; python_version < '3.14'"]
+rpc = ["fire-rpc>=0.1.4"]
 
+[dependency-groups]
+dev = ["autopep8>=2.0.0,<3", "pytest>=8.4.2,<9"]
+doc = ["jupyter-book>=0.15.1,<1"]
 
-[tool.poetry.extras]
-all = ["dscribe", "jupyter-formily", "ipympl", "asaplib", "fire-rpc"]
-rpc = ["fire-rpc"]
+[tool.uv]
+# cp2k-input-tools needs Pint 0.26 on Python >=3.12, while mendeleev caps it at 0.25.
+# Keep Pint 0.24.4 on older Python versions. Overrides apply only to uv project
+# environments, not to published package metadata or pip installations.
+# https://github.com/robinzyb/cp2kdata/issues/101
+override-dependencies = [
+    "pint>=0.24.4,<0.25; python_version < '3.12'",
+    "pint>=0.26,<0.27; python_version >= '3.12'",
+]
 
-[[tool.poetry.source]]
-name = "ustc"
-url = "https://pypi.mirrors.ustc.edu.cn/simple/"
-priority = "supplemental"
-
-[[tool.poetry.source]]
-name = "pypi"
-priority = "primary"
-
-
-[tool.poetry.group.dev.dependencies]
-autopep8 = "^2.0.0"
-pytest = "^7.2.0"
-
-[tool.poetry.group.doc.dependencies]
-jupyter-book = "^0.15.1"
+[tool.uv.build-backend]
+module-name = "ai2_kit"
+module-root = ""
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.11.28,<1"]
+build-backend = "uv_build"
 
-[tool.poetry.scripts]
+[project.scripts]
 ai2-kit = "ai2_kit.main:main"
 ai2-kit-rpc = "ai2_kit.main:rpc_main"
-ai2-cat = "ai2_kit.feat.catalysis:cli_main"
 ai2-spectr = "ai2_kit.feat.spectrum:cli_main"
 
 [tool.ruff]

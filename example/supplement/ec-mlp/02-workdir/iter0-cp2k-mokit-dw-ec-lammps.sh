@@ -44,14 +44,12 @@ DECAY=$((TRAINING_STEPS / 200))
 [ -f $DW_DIR/dw-setup.done ] && echo "skip dw setup" || {
     # generate 1 random seed to train 1 dw models
     omb combo \
-        add_randint SEED -n 1 -a 0 -b 999999 --uniq - \
+        add_file_set DP_DATASET "$INIT_DATASET_DIR/*" --format json-item --abs - \
         add_var STEPS $TRAINING_STEPS - \
         add_var DECAY $DECAY - \
-        add_file_set DP_DATASET \
-             "$INIT_DATASET_DIR/*" \
-             --format json-item --abs - \
+        add_randint SEED -n 1 -a 0 -b 999999 --uniq - \
         make_files $DW_DIR/dw-model-{i}/dw.json --template $CONFIG_DIR/dw/dw.json - \
-        make_files $DW_DIR/dw-model-{i}/dw.sh     --template $CONFIG_DIR/dw/dw.sh --mode 755 - \
+        make_files $DW_DIR/dw-model-{i}/dw.sh   --template $CONFIG_DIR/dw/dw.sh --mode 755 - \
         done
 
     omb batch \
@@ -62,8 +60,7 @@ DECAY=$((TRAINING_STEPS / 200))
 
     touch $DW_DIR/dw-setup.done
 }
-cd $DW_DIR
-omb job slurm submit "$DW_DIR/dw-train*.slurm" --max_tries 2 --wait --recovery $DW_DIR/slurm-recovery.json
+cd $DW_DIR && omb job slurm submit "$DW_DIR/dw-train*.slurm" --max_tries 2 --wait --recovery $DW_DIR/slurm-recovery.json
 
 # step 4: training ec-mlp model
 
@@ -72,15 +69,13 @@ mkdir -p $EC_DIR
 
 [ -f $EC_DIR/ec-mlp-setup.done ] && echo "skip ec-mlp setup" || {
     omb combo \
-        add_randint SEED -n 4 -a 0 -b 999999 --uniq - \
+        add_file_set DW_MODEL   "$DW_DIR/dw-model-*/dw.pb" --format json-item --abs - \
+        add_file_set DP_DATASET "$INIT_DATASET_DIR/*"      --format json-item --abs - \
         add_var STEPS $TRAINING_STEPS - \
         add_var DECAY $DECAY - \
-        add_file_set DW_MODEL  "$DW_DIR/dw-model-*/dw.pb" --format json-item --abs - \
-        add_file_set DP_DATASET  \
-             "$INIT_DATASET_DIR/*" \
-             --format json-item --abs - \
+        add_randint SEED -n 4 -a 0 -b 999999 --uniq - \
         make_files $EC_DIR/ec-mlp-model-{i}/ec-mlp.json --template $CONFIG_DIR/ec-mlp/ec-mlp.json - \
-        make_files $EC_DIR/ec-mlp-model-{i}/ec-mlp.sh     --template $CONFIG_DIR/ec-mlp/ec-mlp.sh --mode 755 - \
+        make_files $EC_DIR/ec-mlp-model-{i}/ec-mlp.sh   --template $CONFIG_DIR/ec-mlp/ec-mlp.sh --mode 755 - \
         done
 
     omb batch \

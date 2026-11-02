@@ -398,7 +398,7 @@ def predict_with_saved_model(
         original descriptor and the reverse-normalized prediction.
     """
     model = NeuralNetwork(input_dim=input_dim)
-    model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+    model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'), weights_only=True))
     model.eval()
 
     with open(pkl_file_path, 'rb') as f:

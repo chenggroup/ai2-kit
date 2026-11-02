@@ -26,7 +26,7 @@ def load_colvar(fp, skip='#! FIELDS'):
     if not line.startswith(skip):
         raise ValueError(f'Invalid colvar file header: {line}')
     names = line[len(skip):].strip().split()
-    return pd.read_csv(fp, delim_whitespace=True, names=names)
+    return pd.read_csv(fp, sep=r'\s+', names=names)
 
 
 def get_cvs_bias_from_df(df, cv_names: Union[List[str], str], bias_name: str):

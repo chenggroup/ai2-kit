@@ -1,4 +1,14 @@
 # Change Logs
+## v2.0.0
+* breaking: replace legacy configuration-driven workflows with runnable examples; see the [v1 to v2 transition guide](README.md#appendix-transitioning-from-v1-to-v2)
+* breaking: require Python >=3.10,<3.15 and NumPy >=2,<3
+* build: migrate dependency management and package builds from Poetry to uv, with a committed `uv.lock`
+* dependencies: update scientific packages for Python 3.10-3.14 and NumPy 2 compatibility
+* dependencies: make DeePMD-kit optional, add a TensorFlow extra, and widen upper bounds to major versions except for documented compatibility constraints
+* dpdata: add the optional `cp2kdata` extra for additional CP2K formats while preserving the built-in `cp2k/output` parser
+* fix: avoid GPU initialization when computing reciprocal Ewald fields for DPFF
+* tests: add Python API and CLI smoke coverage for ASE, dpdata, and proton transfer analysis
+
 ## v1.1.1
 * dpdata: upgrade dpdata for cp2k 2025 support
 

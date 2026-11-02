@@ -14,7 +14,7 @@ import dpdata
 from ai2_kit.algorithm import reweighting
 from ai2_kit.lib import plumed
 
-data_dir = Path(__file__).parent / 'data-sample'
+data_dir = Path(__file__).parent / 'data/shared'
 
 
 class TestReweighting(TestCase):

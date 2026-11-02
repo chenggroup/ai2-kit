@@ -7,6 +7,15 @@ This toolkit is a command line wrapper of [ASE](https://wiki.fysik.dtu.dk/ase/) 
 
 `ase` tool can be use with [dpdata tool](./dpdata.md) to convert trajectory to DeepMD-kit dataset.
 
+Formats provided by `cp2kdata` require an extra installation:
+
+```bash
+pip install 'ai2-kit[cp2kdata]'
+```
+
+Alternatively, install `ai2-kit[all]` to include all optional dependencies,
+including `cp2kdata`.
+
 ## Usage
 
 ```bash

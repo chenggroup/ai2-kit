@@ -51,6 +51,7 @@ doc = ["jupyter-book>=0.15.1,<1"]
 override-dependencies = [
     "pint>=0.24.4,<0.25; python_version < '3.12'",
     "pint>=0.26,<0.27; python_version >= '3.12'",
+    "Pillow>=13.0.0; python_version >= '3.11'",
 ]
 
 [tool.uv.build-backend]

@@ -7,6 +7,8 @@ readme = "README.md"
 requires-python = ">=3.10,<3.15"
 dependencies = [
     "fire>=0.7.1,<1",
+    "Pillow>=13.0.0; python_version >= '3.11'",
+    "Pillow; python_version < '3.11'",
     "pydantic>=2.12.0,<3",
     "ruamel-yaml>=0.17.21,<1",
     "shortuuid>=1.0.11,<2",
@@ -51,7 +53,6 @@ doc = ["jupyter-book>=0.15.1,<1"]
 override-dependencies = [
     "pint>=0.24.4,<0.25; python_version < '3.12'",
     "pint>=0.26,<0.27; python_version >= '3.12'",
-    "Pillow>=13.0.0; python_version >= '3.11'",
 ]
 
 [tool.uv.build-backend]

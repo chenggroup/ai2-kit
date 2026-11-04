@@ -1,0 +1,32 @@
+language: en-US
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  path_filters:
+    - "!uv.lock"
+  path_instructions:
+    - path: "ai2_kit/**/*.py"
+      instructions: >-
+        Review for correctness, compatibility with Python 3.10 through 3.14,
+        clear error handling, and consistency with existing APIs. Pay particular
+        attention to scientific data transformations, units, array shapes, and
+        numerical edge cases. Avoid speculative findings when behavior cannot
+        be established from the code.
+    - path: "tests/**/*.py"
+      instructions: >-
+        Check that tests cover meaningful behavior and edge cases, remain
+        deterministic, and do not depend on optional heavyweight packages
+        unless the test explicitly targets that integration.
+    - path: "example/**/*.sh"
+      instructions: >-
+        Check shell correctness, safe handling of paths and variables, and
+        consistency with the documented workflow and expected input files.
+
+auto_review:
+  enabled: true
+  drafts: false

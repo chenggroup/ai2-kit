@@ -522,7 +522,22 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="ne">RuntimeError</span><span class="g g-Whitespace">                              </span>Traceback (most recent call last)
+<span class="nn">File ~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/matplotlib/backends/registry.py:407,</span> in <span class="ni">BackendRegistry.resolve_gui_or_backend</span><span class="nt">(self, gui_or_backend)</span>
+<span class="g g-Whitespace">    </span><span class="mi">406</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">407</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_backend</span><span class="p">(</span><span class="n">gui_or_backend</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">408</span> <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># KeyError ?</span>
+
+<span class="nn">File ~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/matplotlib/backends/registry.py:369,</span> in <span class="ni">BackendRegistry.resolve_backend</span><span class="nt">(self, backend)</span>
+<span class="g g-Whitespace">    </span><span class="mi">368</span> <span class="k">if</span> <span class="n">gui</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">369</span>     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2">' is not a recognised backend name"</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">371</span> <span class="k">return</span> <span class="n">backend</span><span class="p">,</span> <span class="n">gui</span> <span class="k">if</span> <span class="n">gui</span> <span class="o">!=</span> <span class="s2">"headless"</span> <span class="k">else</span> <span class="kc">None</span>
+
+<span class="ne">RuntimeError</span>: 'widget' is not a recognised backend name
+
+<span class="n">During</span> <span class="n">handling</span> <span class="n">of</span> <span class="n">the</span> <span class="n">above</span> <span class="n">exception</span><span class="p">,</span> <span class="n">another</span> <span class="n">exception</span> <span class="n">occurred</span><span class="p">:</span>
+
+<span class="ne">RuntimeError</span><span class="g g-Whitespace">                              </span>Traceback (most recent call last)
 <span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># 每次新打开 notebook 或者重启 kernel 后，该模块均需要执行一次</span>
 <span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s1">'matplotlib'</span><span class="p">,</span> <span class="s1">'widget'</span><span class="p">)</span>
@@ -555,41 +570,20 @@ document.write(`
 <span class="g g-Whitespace">   </span><span class="mi">3670</span>     <span class="c1"># If we have our first gui selection, store it</span>
 <span class="g g-Whitespace">   </span><span class="mi">3671</span>     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pylab_gui_select</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
-<span class="nn">File ~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/IPython/core/pylabtools.py:338,</span> in <span class="ni">find_gui_and_backend</span><span class="nt">(gui, gui_select)</span>
-<span class="g g-Whitespace">    </span><span class="mi">321</span> <span class="k">def</span><span class="w"> </span><span class="nf">find_gui_and_backend</span><span class="p">(</span><span class="n">gui</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gui_select</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">322</span><span class="w">     </span><span class="sd">"""Given a gui string return the gui and mpl backend.</span>
-<span class="g g-Whitespace">    </span><span class="mi">323</span><span class="sd"> </span>
-<span class="g g-Whitespace">    </span><span class="mi">324</span><span class="sd">     Parameters</span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">335</span><span class="sd">     'WXAgg','Qt4Agg','module://matplotlib_inline.backend_inline','agg').</span>
-<span class="g g-Whitespace">    </span><span class="mi">336</span><span class="sd">     """</span>
-<span class="ne">--&gt; </span><span class="mi">338</span>     <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
-<span class="g g-Whitespace">    </span><span class="mi">340</span>     <span class="k">if</span> <span class="n">_matplotlib_manages_backends</span><span class="p">():</span>
-<span class="g g-Whitespace">    </span><span class="mi">341</span>         <span class="n">backend_registry</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">backend_registry</span>
+<span class="nn">File ~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/IPython/core/pylabtools.py:349,</span> in <span class="ni">find_gui_and_backend</span><span class="nt">(gui, gui_select)</span>
+<span class="g g-Whitespace">    </span><span class="mi">347</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">348</span>     <span class="n">gui</span> <span class="o">=</span> <span class="n">_convert_gui_to_matplotlib</span><span class="p">(</span><span class="n">gui</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">349</span>     <span class="n">backend</span><span class="p">,</span> <span class="n">gui</span> <span class="o">=</span> <span class="n">backend_registry</span><span class="o">.</span><span class="n">resolve_gui_or_backend</span><span class="p">(</span><span class="n">gui</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">351</span> <span class="n">gui</span> <span class="o">=</span> <span class="n">_convert_gui_from_matplotlib</span><span class="p">(</span><span class="n">gui</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">352</span> <span class="k">return</span> <span class="n">gui</span><span class="p">,</span> <span class="n">backend</span>
 
-<span class="n">File</span> <span class="o">~/</span><span class="n">work</span><span class="o">/</span><span class="n">ai2</span><span class="o">-</span><span class="n">kit</span><span class="o">/</span><span class="n">ai2</span><span class="o">-</span><span class="n">kit</span><span class="o">/.</span><span class="n">venv</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.10</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">matplotlib</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">161</span>
-<span class="g g-Whitespace">    </span><span class="mi">157</span> <span class="kn">from</span><span class="w"> </span><span class="nn">packaging.version</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">parse_version</span>
-<span class="g g-Whitespace">    </span><span class="mi">159</span> <span class="c1"># cbook must import matplotlib only within function</span>
-<span class="g g-Whitespace">    </span><span class="mi">160</span> <span class="c1"># definitions, so it is safe to import from it here.</span>
-<span class="ne">--&gt; </span><span class="mi">161</span> <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">_api</span><span class="p">,</span> <span class="n">_version</span><span class="p">,</span> <span class="n">cbook</span><span class="p">,</span> <span class="n">_docstring</span><span class="p">,</span> <span class="n">rcsetup</span>
-<span class="g g-Whitespace">    </span><span class="mi">162</span> <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib._api</span><span class="w"> </span><span class="kn">import</span> <span class="n">MatplotlibDeprecationWarning</span>
-<span class="g g-Whitespace">    </span><span class="mi">163</span> <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.rcsetup</span><span class="w"> </span><span class="kn">import</span> <span class="n">cycler</span>  <span class="c1"># noqa: F401</span>
+<span class="nn">File ~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/matplotlib/backends/registry.py:409,</span> in <span class="ni">BackendRegistry.resolve_gui_or_backend</span><span class="nt">(self, gui_or_backend)</span>
+<span class="g g-Whitespace">    </span><span class="mi">407</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_backend</span><span class="p">(</span><span class="n">gui_or_backend</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">408</span> <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># KeyError ?</span>
+<span class="ne">--&gt; </span><span class="mi">409</span>     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">410</span>         <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">gui_or_backend</span><span class="si">}</span><span class="s2">' is not a recognised GUI loop or backend name"</span><span class="p">)</span>
 
-<span class="n">File</span> <span class="o">~/</span><span class="n">work</span><span class="o">/</span><span class="n">ai2</span><span class="o">-</span><span class="n">kit</span><span class="o">/</span><span class="n">ai2</span><span class="o">-</span><span class="n">kit</span><span class="o">/.</span><span class="n">venv</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.10</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">matplotlib</span><span class="o">/</span><span class="n">rcsetup</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">28</span>
-<span class="g g-Whitespace">     </span><span class="mi">26</span> <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.backends</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackendFilter</span><span class="p">,</span> <span class="n">backend_registry</span>
-<span class="g g-Whitespace">     </span><span class="mi">27</span> <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.cbook</span><span class="w"> </span><span class="kn">import</span> <span class="n">ls_mapper</span>
-<span class="ne">---&gt; </span><span class="mi">28</span> <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">Colormap</span><span class="p">,</span> <span class="n">is_color_like</span>
-<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib._fontconfig_pattern</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_fontconfig_pattern</span>
-<span class="g g-Whitespace">     </span><span class="mi">30</span> <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib._enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">JoinStyle</span><span class="p">,</span> <span class="n">CapStyle</span>
-
-<span class="n">File</span> <span class="o">~/</span><span class="n">work</span><span class="o">/</span><span class="n">ai2</span><span class="o">-</span><span class="n">kit</span><span class="o">/</span><span class="n">ai2</span><span class="o">-</span><span class="n">kit</span><span class="o">/.</span><span class="n">venv</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.10</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">matplotlib</span><span class="o">/</span><span class="n">colors</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">52</span>
-<span class="g g-Whitespace">     </span><span class="mi">49</span> <span class="kn">from</span><span class="w"> </span><span class="nn">numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Real</span>
-<span class="g g-Whitespace">     </span><span class="mi">50</span> <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="ne">---&gt; </span><span class="mi">52</span> <span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
-<span class="g g-Whitespace">     </span><span class="mi">53</span> <span class="kn">from</span><span class="w"> </span><span class="nn">PIL.PngImagePlugin</span><span class="w"> </span><span class="kn">import</span> <span class="n">PngInfo</span>
-<span class="g g-Whitespace">     </span><span class="mi">55</span> <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named 'PIL'
+<span class="ne">RuntimeError</span>: 'widget' is not a recognised GUI loop or backend name
 </pre></div>
 </div>
 </div>

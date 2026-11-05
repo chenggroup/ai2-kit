@@ -41,7 +41,22 @@ print("Current Directory Is: ", os.getcwd())
 
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+[0;31mRuntimeError[0m                              Traceback (most recent call last)
+File [0;32m~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/matplotlib/backends/registry.py:407[0m, in [0;36mBackendRegistry.resolve_gui_or_backend[0;34m(self, gui_or_backend)[0m
+[1;32m    406[0m [38;5;28;01mtry[39;00m:
+[0;32m--> 407[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mresolve_backend[49m[43m([49m[43mgui_or_backend[49m[43m)[49m
+[1;32m    408[0m [38;5;28;01mexcept[39;00m [38;5;167;01mException[39;00m:  [38;5;66;03m# KeyError ?[39;00m
+
+File [0;32m~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/matplotlib/backends/registry.py:369[0m, in [0;36mBackendRegistry.resolve_backend[0;34m(self, backend)[0m
+[1;32m    368[0m [38;5;28;01mif[39;00m gui [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m:
+[0;32m--> 369[0m     [38;5;28;01mraise[39;00m [38;5;167;01mRuntimeError[39;00m([38;5;124mf[39m[38;5;124m"[39m[38;5;124m'[39m[38;5;132;01m{[39;00mbackend[38;5;132;01m}[39;00m[38;5;124m'[39m[38;5;124m is not a recognised backend name[39m[38;5;124m"[39m)
+[1;32m    371[0m [38;5;28;01mreturn[39;00m backend, gui [38;5;28;01mif[39;00m gui [38;5;241m!=[39m [38;5;124m"[39m[38;5;124mheadless[39m[38;5;124m"[39m [38;5;28;01melse[39;00m [38;5;28;01mNone[39;00m
+
+[0;31mRuntimeError[0m: 'widget' is not a recognised backend name
+
+During handling of the above exception, another exception occurred:
+
+[0;31mRuntimeError[0m                              Traceback (most recent call last)
 Cell [0;32mIn[1], line 2[0m
 [1;32m      1[0m [38;5;66;03m# 每次新打开 notebook 或者重启 kernel 后，该模块均需要执行一次[39;00m
 [0;32m----> 2[0m [43mget_ipython[49m[43m([49m[43m)[49m[38;5;241;43m.[39;49m[43mrun_line_magic[49m[43m([49m[38;5;124;43m'[39;49m[38;5;124;43mmatplotlib[39;49m[38;5;124;43m'[39;49m[43m,[49m[43m [49m[38;5;124;43m'[39;49m[38;5;124;43mwidget[39;49m[38;5;124;43m'[39;49m[43m)[49m
@@ -74,39 +89,18 @@ File [0;32m~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/IPython/co
 [1;32m   3670[0m     [38;5;66;03m# If we have our first gui selection, store it[39;00m
 [1;32m   3671[0m     [38;5;28;01mif[39;00m [38;5;28mself[39m[38;5;241m.[39mpylab_gui_select [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m:
 
-File [0;32m~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/IPython/core/pylabtools.py:338[0m, in [0;36mfind_gui_and_backend[0;34m(gui, gui_select)[0m
-[1;32m    321[0m [38;5;28;01mdef[39;00m[38;5;250m [39m[38;5;21mfind_gui_and_backend[39m(gui[38;5;241m=[39m[38;5;28;01mNone[39;00m, gui_select[38;5;241m=[39m[38;5;28;01mNone[39;00m):
-[1;32m    322[0m [38;5;250m    [39m[38;5;124;03m"""Given a gui string return the gui and mpl backend.[39;00m
-[1;32m    323[0m 
-[1;32m    324[0m [38;5;124;03m    Parameters[39;00m
-[0;32m   (...)[0m
-[1;32m    335[0m [38;5;124;03m    'WXAgg','Qt4Agg','module://matplotlib_inline.backend_inline','agg').[39;00m
-[1;32m    336[0m [38;5;124;03m    """[39;00m
-[0;32m--> 338[0m     [38;5;28;01mimport[39;00m[38;5;250m [39m[38;5;21;01mmatplotlib[39;00m
-[1;32m    340[0m     [38;5;28;01mif[39;00m _matplotlib_manages_backends():
-[1;32m    341[0m         backend_registry [38;5;241m=[39m matplotlib[38;5;241m.[39mbackends[38;5;241m.[39mregistry[38;5;241m.[39mbackend_registry
+File [0;32m~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/IPython/core/pylabtools.py:349[0m, in [0;36mfind_gui_and_backend[0;34m(gui, gui_select)[0m
+[1;32m    347[0m [38;5;28;01melse[39;00m:
+[1;32m    348[0m     gui [38;5;241m=[39m _convert_gui_to_matplotlib(gui)
+[0;32m--> 349[0m     backend, gui [38;5;241m=[39m [43mbackend_registry[49m[38;5;241;43m.[39;49m[43mresolve_gui_or_backend[49m[43m([49m[43mgui[49m[43m)[49m
+[1;32m    351[0m gui [38;5;241m=[39m _convert_gui_from_matplotlib(gui)
+[1;32m    352[0m [38;5;28;01mreturn[39;00m gui, backend
 
-File [0;32m~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/matplotlib/__init__.py:161[0m
-[1;32m    157[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mpackaging[39;00m[38;5;21;01m.[39;00m[38;5;21;01mversion[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m parse [38;5;28;01mas[39;00m parse_version
-[1;32m    159[0m [38;5;66;03m# cbook must import matplotlib only within function[39;00m
-[1;32m    160[0m [38;5;66;03m# definitions, so it is safe to import from it here.[39;00m
-[0;32m--> 161[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01m.[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m _api, _version, cbook, _docstring, rcsetup
-[1;32m    162[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01m_api[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m MatplotlibDeprecationWarning
-[1;32m    163[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mrcsetup[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m cycler  [38;5;66;03m# noqa: F401[39;00m
+File [0;32m~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/matplotlib/backends/registry.py:409[0m, in [0;36mBackendRegistry.resolve_gui_or_backend[0;34m(self, gui_or_backend)[0m
+[1;32m    407[0m     [38;5;28;01mreturn[39;00m [38;5;28mself[39m[38;5;241m.[39mresolve_backend(gui_or_backend)
+[1;32m    408[0m [38;5;28;01mexcept[39;00m [38;5;167;01mException[39;00m:  [38;5;66;03m# KeyError ?[39;00m
+[0;32m--> 409[0m     [38;5;28;01mraise[39;00m [38;5;167;01mRuntimeError[39;00m(
+[1;32m    410[0m         [38;5;124mf[39m[38;5;124m"[39m[38;5;124m'[39m[38;5;132;01m{[39;00mgui_or_backend[38;5;132;01m}[39;00m[38;5;124m'[39m[38;5;124m is not a recognised GUI loop or backend name[39m[38;5;124m"[39m)
 
-File [0;32m~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/matplotlib/rcsetup.py:28[0m
-[1;32m     26[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mbackends[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m BackendFilter, backend_registry
-[1;32m     27[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcbook[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m ls_mapper
-[0;32m---> 28[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcolors[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m Colormap, is_color_like
-[1;32m     29[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01m_fontconfig_pattern[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m parse_fontconfig_pattern
-[1;32m     30[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01m_enums[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m JoinStyle, CapStyle
-
-File [0;32m~/work/ai2-kit/ai2-kit/.venv/lib/python3.10/site-packages/matplotlib/colors.py:52[0m
-[1;32m     49[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mnumbers[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m Real
-[1;32m     50[0m [38;5;28;01mimport[39;00m[38;5;250m [39m[38;5;21;01mre[39;00m
-[0;32m---> 52[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mPIL[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m Image
-[1;32m     53[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01mPIL[39;00m[38;5;21;01m.[39;00m[38;5;21;01mPngImagePlugin[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m PngInfo
-[1;32m     55[0m [38;5;28;01mimport[39;00m[38;5;250m [39m[38;5;21;01mmatplotlib[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[38;5;21;01mmpl[39;00m
-
-[0;31mModuleNotFoundError[0m: No module named 'PIL'
+[0;31mRuntimeError[0m: 'widget' is not a recognised GUI loop or backend name
 

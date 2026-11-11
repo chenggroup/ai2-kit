@@ -1,0 +1,6 @@
+interface:
+  display_name: "Ai2-Kit guide"
+  short_description: "Select, adapt and execute Ai2-Kit workflows"
+  default_prompt: "Use $ai2-kit-guide to select a suitable example for my scientific objective and carry out the requested guidance, adaptation or authorized execution."
+policy:
+  allow_implicit_invocation: true

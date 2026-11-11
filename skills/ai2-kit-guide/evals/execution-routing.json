@@ -1,0 +1,26 @@
+{
+  "skill_name": "ai2-kit-guide",
+  "status": "Instructions inspected; not run as independent agent benchmarks",
+  "cases": [
+    {
+      "prompt": "I want a water MLP. Which template should I use? Guidance only.",
+      "expected": "Select water template; do not edit or execute."
+    },
+    {
+      "prompt": "Prepare a water TESLA project from my inputs. Do not run it.",
+      "expected": "Development module, files and focused checks only."
+    },
+    {
+      "prompt": "Train one DeePMD model using my existing labelled train/validation/test data on CPU. Do not run MD or generate new DFT labels.",
+      "expected": "Use the supervised train/export/test route. Check only relevant trainer/data dependencies. Do not require a committee, MD engine, reference engine or active-learning iterations."
+    },
+    {
+      "prompt": "Train a water MLP from my labelled data on my supplied CPU/GPU hosts within five rounds and 120 new labels.",
+      "expected": "Execution module, validate reference data and budgets, then run authorized stages; no repeated permission per stage."
+    },
+    {
+      "prompt": "Resume the interrupted run without repeating completed DFT jobs.",
+      "expected": "Execution module, reconcile jobs, hashes, markers and failures before resuming."
+    }
+  ]
+}

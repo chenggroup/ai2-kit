@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-02",
+  "source_delivery": "student train-mlff-ai2kit submission",
+  "integration": "Internal execution module in ai2-kit-guide; no second installed skill",
+  "source_files": {
+    "SKILL.md": "47138fbcd8122ad9c1a69253e74e39e3a8c021d90053ad5b7cbc8bcdc73096bd",
+    "SKILL.zh.md": "d7133057aa628ac2e2b57e11f46d303b40c161724727a9df5d85e2b00286a32d",
+    "agents/openai.yaml": "7651d5adcd0d8fc5eb5794e54b6e5166ac84422bd654d6f58a44372e8e1d104e",
+    "references/cross-host-execution.md": "fc44451a197c71b5d622ec9b08e4ed2f1ba3b8f78bdadfef10c62433a2d78368",
+    "references/engine-adaptation.md": "6ce6133f0f88aaf9b187968afca8f2a12f0e8c9236c4fa86200c697087de77ff",
+    "references/example-routing.md": "36005616a2eca5071f74e981a409ae0a3e98cd4595d57e24534e8eb6f28d118b",
+    "references/model-validation.md": "8d05abe5399a7f352edf890a8ac4ec66ddc97ea7ab19fb4d5712e81dfb54a082",
+    "references/tesla-execution.md": "01c3c33f26e026c180ce4a5285b46529e91999d538b0434d9215a38bf06c79e3",
+    "references/upstream-validation.md": "be91c1620675e56b7ea8a72b3a7f3a45d6779d7d7b6f00ec3404a0cf2323be8c",
+    "references/water-case.md": "e982213276333ef32fbf13e26f5213dd3b2b8aa5523fb15e14e02221acc75ceb",
+    "scripts/init_project.py": "2fd0051f6971ec8a4586256048b9748b52ae5ce2985e787d09eafb406941d3bd",
+    "scripts/plot_errors.py": "8630e35e4783b0dbb52a38c524d3c90d29bb3ead1be429c5896efe2967fb953d",
+    "scripts/prepare_deepmd.py": "c55d87ebccf49f0833e5f2d0bbf67277598677c5daf9238442e04730f5b19f5f",
+    "scripts/run_deepmd.py": "06de422d79b5cf5f83eb815b566b693dcef7a24ba12947fb1ecb49b0bc2c3e3f"
+  },
+  "changes": [
+    "Converted execution entry to internal README, preserving stage procedure and helpers",
+    "Updated resource and helper references",
+    "Reconciled cross-host validation scope with example-scoped completion",
+    "Added first-unit, stall and whole-directory transfer monitoring instructions"
+  ],
+  "checks": "Historical checks are listed by stage below; no complete fresh TESLA run of the integrated package is claimed.",
+  "helper_revision": {
+    "date": "2026-11-02",
+    "changes": [
+      "Verify requested training steps and finite native test outputs",
+      "Hash and revalidate input and dataset content before/between stages",
+      "Apply explicit exponential decay override after JSON parsing",
+      "Reject invalid frame axes before reshaping"
+    ],
+    "regression_tests": 26,
+    "real_backend_run": false
+  },
+  "real_backend_smoke": {
+    "date": "2026-11-02",
+    "backend": "TensorFlow",
+    "deepmd": "3.1.3",
+    "device": "CPU",
+    "steps": 20,
+    "result": "passed with environment diagnostics",
+    "full_TESLA_run": false
+  },
+  "documentation_revision": {
+    "date": "2026-11-03",
+    "changes": [
+      "Explicit supervised and active-learning routes",
+      "English reference documents and workflow-adaptation module name",
+      "Portable mock evaluation fixtures and checker",
+      "First-use, preflight and handoff instructions",
+      "Historical water archive explicitly not bundled"
+    ]
+  }
+}

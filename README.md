@@ -20,8 +20,9 @@
 ## Feature Highlights
 * Collection of tools and workflows to facilitate the development of automated workflows for computational chemistry research.
 * Use with [oh-my-batch](https://github.com/link89/oh-my-batch) to build your own workflow with shell script.
-* Provide reusable [skills](./skills/) for building code related to `ai2-kit`.
-  * [build-tesla](./skills/build-tesla): a skill for building TESLA workflows from existing examples.
+* Provide reusable [skills](./skills/) for working with `ai2-kit`.
+  * [ai2-kit-guide](./skills/ai2-kit-guide): an end-to-end guide for selecting examples, adapting TESLA workflows, training MLIPs, and executing or recovering active-learning runs.
+  * [build-tesla](./skills/build-tesla): a focused skill for building TESLA workflows from existing examples.
 
 ## 2D API Design Pattern
 

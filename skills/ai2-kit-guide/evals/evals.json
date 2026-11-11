@@ -1,0 +1,15 @@
+{
+  "skill_name": "ai2-kit-guide",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Adapt the supplied TESLA exploration launcher so a successful job with a nonempty trajectory.out can be restarted without repeating it. A failed engine, absent or empty trajectory.out, or a stale lammps.done without valid output must not leave a completion marker or report success. Preserve the stage interface and the supplied mock engine. Copy the two supplied scripts into a new output directory, modify the launcher, document the behaviour and verify it with local mocked commands only. Do not run scientific programs, training, MD, DFT or cluster jobs.",
+      "expected_output": "Working local launcher with honest test report; no scientific execution.",
+      "files": [
+        "fixtures/restart/lmp-run.sh",
+        "fixtures/restart/engine.sh"
+      ]
+    }
+  ],
+  "file_paths_relative_to": "directory containing evals.json"
+}

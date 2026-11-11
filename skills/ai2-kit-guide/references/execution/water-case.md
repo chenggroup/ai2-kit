@@ -1,0 +1,7 @@
+# Water execution evidence
+
+This is a historical execution case, subsequently incorporated into ai2-kit-guide's execution module. It is not a new run of the merged package. This distribution includes this summary only. The full original execution archive, raw datasets, model weights and case controller are not bundled or linked as a downloadable release. They are not installation or runtime dependencies. Do not direct users to a repository archive path that has not been published.
+
+The case starts from 60 fit frames and completes five TESLA rounds adding 107 DFT labels, followed by four final models trained on all 167 frames. Twenty source validation frames and twenty reserved source test frames are correlated trajectory blocks, not independent trajectories. Sixteen separately labelled frames from subsequent MD were excluded from fitting and provide a supplemental test. The run records workflow completion, not full scientific qualification.
+
+The original archive contains stage records, numerical results, analysis and resource-specific scripts. Its controller required configuration for the original compute resources; it is not a generic launcher supplied by this skill. User interventions recorded in the supplied summary included a reconnect request and a later narrowing of validation scope. The case does not establish zero intervention, repeatability or a clean-start run of the currently packaged guide.

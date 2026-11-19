@@ -14,7 +14,7 @@
 > - Our paper has been submitted as a preprint: [arXiv:2607.00613](https://arxiv.org/abs/2607.00613).
 > The paper-related examples are available under [example/supplement](./example/supplement/).
 > - v2 introduces major changes to workflows and Python support. See
-> [Appendix: Transitioning from v1 to v2](#appendix-transitioning-from-v1-to-v2)
+> [About Transitioning from v1 to v2](#about-transitioning-from-v1-to-v2)
 > for details, including plans for maintaining v1.
 
 ## Feature Highlights
@@ -182,7 +182,7 @@ uv run --no-sync python -m pytest -q tests --ignore=tests/test_md_spectra.py -k 
 uv build
 ```
 
-## Appendix: Transitioning from v1 to v2
+## About Transitioning from v1 to v2
 
 v2 makes several significant changes to how `ai2-kit` workflows are built and
 maintained:

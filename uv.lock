@@ -109,7 +109,7 @@ doc = [
 
 [package.metadata]
 requires-dist = [
-    { name = "ase", specifier = ">=3.26,<3.27" },
+    { name = "ase", specifier = ">=3.26" },
     { name = "cp2kdata", marker = "extra == 'all'", specifier = ">=0.7.3,<1" },
     { name = "cp2kdata", marker = "extra == 'cp2kdata'", specifier = ">=0.7.3,<1" },
     { name = "deepmd-kit", marker = "extra == 'all'", specifier = ">2,<4" },
